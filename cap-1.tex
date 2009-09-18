@@ -1,0 +1,46 @@
+% ch1.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 New Zealand License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Novedades de ``Inmersión en Python 3''}\label{ch:novedades}
+
+\begin{citaCap}
+``¿No es de aquí de donde venimos?''\\
+---Pink Floyd, The Wall
+\end{citaCap}
+
+\section{Alias ``Bajo el nivel del mar''}
+
+Posiblemente hayas leído el libro original \emph{Dive into Python} y puede que hasta lo hayas comprado. (Si es el caso: ¡gracias!) Ya conoces bastante el lenguaje Python. Estás preparado para dar el salto a Python 3. \ldots Si lo dicho es cierto, sigue leyendo. (Si no es así, tal vez sea mejor que comiences desde el principio en el capítulo~\ref{ch:instalandopython}).
+
+Python 3 viene con un script denominado \codigo{2to3}. Aprende a usarlo y a quererlo. El apéndice~\ref{ap:convirtiendocodigo} es una referencia sobre las cosas que la herramienta \codigo{2to3} puede realizar automáticamente. Puesto que muchas cosas son cambios de sintaxis, una buena forma de comenzar es aprender estas diferencias. Por ejemplo: \codigo{print} ahora es una función, `x` no funciona, etc.
+
+El caso de estudio del capítulo~\ref{ch:casodeestudio} documenta mi esfuerzo (¡al fin cumplido con éxito!) de convertir una librería real de Python 2 a Python 3. Puede servirte o no. Es un ejemplo complejo de entender puesto que en primer lugar tienes que comprender algo el funcionamiento de la librería, de forma que puedas entender lo que deja de funcionar y como lo arreglé.  Mucho de lo que se rompió al pasar a la versión 3 de Python fue por causa de las cadenas.  Por cierto, hablando de cadenas\ldots
+
+Cadenas. ¡Uff!. Por dónde podría empezar. Python 2 tenía ``cadenas'' y ``cadenas unicode''. Python 3 tiene ``bytes'' y ``cadenas''. Lo que significa que todas las cadenas ahora son unicode, y si quieres trabajar con un puñado de bytes tienes que usar el tipo \textbf{bold} bytes.
+
+Python 3 nunca convertirá implícitamente entre cadenas y bytes, por lo que si no estas seguro de lo que contiene una variable en un momento dado, el código seguro que fallará en algún momento. Lee el capítulo~\ref{ch:cadenas} sobre cadenas para conocer los detalles.
+
+La división entre ``bytes'' y ``cadenas'' surgirá en diversas partes del libro:
+
+\begin{enumerate}
+\item En el capítulo~\ref{ch:ficheros} dedicado a los ficheros, aprenderás la diferencia entre leer ficheros en modo \emph{binario} o en modo \emph{texto}. La lectura (y escritura) de ficheros en modo \emph{texto} requiere que se utilice el parámetro \codigo{encoding}. Existen métodos que cuentan los caracteres de un fichero y métodos que cuentan bytes. Si el código asume que un carácter es igual a un byte, no funcionará cuando el fichero contenga caracteres multibyte\footnote{En unicode muchos caracteres se representan utilizando más de un byte}.
+
+\item En el capítulo~\ref{ch:httpserviciosweb} dedicado a los servicios web n http, se muestra el módulo \codigo{httplib2} que lee cabeceras y datos de \codigo{HTTP}. Las cabeceras se obtienen como cadenas, pero el contenido del cuerpo se obtiene como bytes.
+
+\item En el capítulo~\ref{ch:serializandoobjetos} aprenderás el motivo por el que el módulo \codigo{pickle} de Python 3 define un formato de datos nuevo que es incompatible con Python 2 (Pista: Se debe a los bytes y cadenas). También afecta al módulo \codigo{JSON}, que no es capaz de manejar el tipo \codigo{bytes}. Te enseñaré como salvar este escollo.
+
+\item En el capítulo~\ref{ch:casodeestudio} sobre la conversión de la librería \codigo{chardet} a Python 3 se verá que la mayor parte de los problemas de conversión provienen de los bytes y cadenas.
+\end{enumerate}
+
+Incluso aunque no tengas interés en Unicode, ¡que tendrás!, querrás leer sobre el formateo de cadenas en Python 3 en el capítulo~\ref{ch:formateodecadenas}, que es completamente diferente a Python 2.
+
+Los iteradores están en todas partes en Python 3, y ahora los entiendo mucho mejor que hace cinco años cuando escribí ``Inmersión en Python''. Debes comprenderlos tú también, puesto que muchas funciones que anteriormente retornaban listas ahora, en Python 3, devuelven iteradores. Como mínimo, deberías leer la segunda parte del capítulo~\ref{ch:iteradores} dedicado a los iteradores y la segunda parte del capítulo~\ref{ch:iteradoresavanzados} sobre el uso avanzado de los iteradores.
+
+Por petición popular, he añadido el apéndice~\ref{ap:nombresdemetodosespeciales} sobre nombres de método especiales que guarda cierta similitud con el apartado similar de la \href{http://www.python.org/doc/3.1/reference/datamodel.html#special-method-names}{documentación oficial de Python 3} pero con cierta ironía.
+
+Cuando estaba escribiendo ``Inmersión en Python'' todas las librerías de XML disponibles eran bastante malas. Entonces Fedrik Lundh escribió \textbf{bold} \href{http://effbot.org/zone/element-index.htm}{ElementTree}, que es todo lo contrario a lo existente anteriormente. Los dioses de Python, actuando inteligentemente, \href{http://docs.python.org/3.1/library/xml.etree.elementtree.html}{incorporaron ElementTree a la librería estándar}. Ahora esta librería es el fundamento del capítulo~\ref{ch:xml} sobre XML. Los viejos métodos para recorrer XML están aún disponibles, pero deberías evitarlos, ¡apestan!
+
+Algo que es también nuevo ---no en el lenguaje, pero sí en la comunidad--- es la creación de repositorios de código como \href{http://pypi.python.org/}{el índice de paquetes de python (PyPI)}. Python dispone de utilidades para empaquetar el código en formatos estándares y distribuirlos en PyPI. Lee el capítulo~\ref{ch:empaquetandolibrerias} sobre  cómo empaquetar librerías en Python.
+\newpage
