@@ -5,3 +5,5 @@ syntax: glob
 *.log
 
 output/**
+output_html/**
+output_html_full/**
