@@ -5,7 +5,7 @@
 
 \documentclass[12pt,leqno,a4paper,spanish]{book}
 \usepackage[dvips]{graphicx}
-\usepackage[usenames]{color}
+\usepackage[dvipsnames,usenames]{color}
 \usepackage{makeidx}
 \usepackage[absolute]{textpos}
 \usepackage{wrapfig}
@@ -13,6 +13,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{mathabx}
 \usepackage{babel}
+\usepackage{listings}
 \usepackage[colorlinks,unicode]{hyperref}
 \hypersetup{
     pdfauthor={Jos\'{e} Miguel Gonz\'{a}lez Aguilera},
@@ -32,6 +33,9 @@
 
 \hyphenation{Python}
 
+\newcommand{\cajaTexto}[1]
+{\begin{wrapfigure}{r}{.4\linewidth}\fbox{\colorbox{gray}{\parbox{.9\linewidth} {#1}}}\end{wrapfigure}}
+
 \newenvironment{citaCap}
 {\begin{flushright}\begin{itshape}}
 {\end{itshape}\end{flushright}}
@@ -39,6 +43,9 @@
 \newenvironment{listing}
 {\begin{list}{}{\setlength{\leftmargin}{1em}}\item\footnotesize\samepage}
 {\end{list}}
+
+\newcommand{\ac}[1]{\textrm{\'{#1}}}
+\newcommand{\til}[1]{\textrm{\~{#1}}}
 
 \newcommand{\codigo}[1]{\textsf{#1}}
 
@@ -61,13 +68,23 @@
 
 \makeindex
 
-\begin{document}
+\definecolor{gray}{rgb}{0.98,0.98,0.98}
+\definecolor{black}{rgb}{0,0,0}
 
+\begin{document}
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
+\lstset{language=Python,showstringspaces=false,numbers=left,
+        numberstyle=\footnotesize,backgroundcolor=\color{gray},
+        rulesep=1pt, rulesepcolor=\color{black},frame=leftline,
+        basicstyle=\footnotesize, mathescape=true}
 \pagestyle{headings}
 \pagenumbering{arabic}
 
 \include{cap-1}
 \include{cap0}
+\include{cap1}
 
 \appendix
 
