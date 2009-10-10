@@ -36,6 +36,9 @@
 \newcommand{\cajaTexto}[1]
 {\begin{wrapfigure}{r}{.4\linewidth}\fbox{\colorbox{gray}{\parbox{.9\linewidth} {#1}}}\end{wrapfigure}}
 
+\newcommand{\cajaTextoAncho}[1]
+{\fbox{\colorbox{gray}{\parbox{0.9\linewidth} {#1}}}}
+
 \newenvironment{citaCap}
 {\begin{flushright}\begin{itshape}}
 {\end{itshape}\end{flushright}}
@@ -82,9 +85,11 @@
 \pagestyle{headings}
 \pagenumbering{arabic}
 
+\include{portada}
 \include{cap-1}
 \include{cap0}
 \include{cap1}
+\include{cap2}
 
 \appendix
 

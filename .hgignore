@@ -3,6 +3,7 @@ syntax: glob
 *.swap
 *.swp
 *.log
+*.pyc
 
 output/**
 output_html/**
