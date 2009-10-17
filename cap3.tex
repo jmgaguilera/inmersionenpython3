@@ -1,0 +1,484 @@
+% ch3.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 New Zealand License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Comprensiones}\label{ch:comprensiones}
+
+\noindent
+Nivel de dificultad:\difll
+
+\begin{citaCap}
+``Nuestra imaginación está desplegada a más no poder, 
+no como en la ficción, para imaginar las cosas que no están realmente ahí,\\
+sino para entender aquellas que sí lo están.''\\
+---\href{http://en.wikiquote.org/wiki/Richard\_Feynman}{Rychard Feynman}
+\end{citaCap}
+
+\section{Inmersión}
+
+Este capítulo te explicará las listas por comprensión, diccionarios por comprensión y conjuntos por comprensión: tres conceptos centrados alrededor de una técnica muy potente. Pero antes vamos a dar un pequeño paseo alrededor de dos módulos que te van a servir para navegar por tu sistema de ficheros.
+
+\section{Trabajar con ficheros y directorios}
+
+Python 3 posee un módulo denominado \codigo{os} que es la contracción de ``operating system''\footnote{Sistema Operativo.}. El módulo \href{http://docs.python.org/3.1/library/os.html}{\codigo{os}} contiene un gran número de funciones para recuperar ---y en algunos casos, modificar--- información sobre directorios, ficheros, procesos y variables del entorno local. Python hace un gran esfuerzo por ofrecer una \codigo{API} unificada en todos los sistemas operativos que soporta, por lo que tus programas pueden funcionar en casi cualquier ordenador con el mínimo de código específico posible.
+
+\subsection{El directorio de trabajo actual}
+
+Cuando te inicias en Python, pasas mucho tiempo en la consola interactiva. A lo largo del libro verás muchos ejemplos que siguen el siguiente patrón:
+
+\begin{enumerate}
+
+\item Se importa uno de los módulos de la carpeta de \codigo{ejemplos}.
+
+\item Se llama a una función del módulo.
+
+\item Se explica el resultado.
+
+\end{enumerate}
+
+Si no sabes cuál es el directorio actual de trabajo, el primer paso probablemente elevará la excepción \codigo{ImportError}. ¿Porqué? Porque Python buscará el módulo en el camino de búsqueda actual (ver capítulo~\ref{instalacion}), pero no lo encontrará porque la carpeta \codigo{ejemplos} no está incluida en él. Para superar este problema hay dos soluciones posibles:
+
+\begin{enumerate}
+
+\item Añadir el directorio de \codigo{ejemplos} al camino de búsqueda de importación.
+
+\item Cambiar el directorio de trabajo actual a la carpeta de \codigo{ejemplos}.
+
+\end{enumerate}
+
+El directorio de trabajo actual es una propiedad invisible que Python mantiene en memoria. Siempre existe un directorio de trabajo actual: en la consola interactiva de Python; durante la ejecución de un programa desde la línea de comando, o durante la ejecución de un programa Python como un \codigo{CGI} de algún servidor web.
+
+El módulo \codigo{os} contiene dos funciones que te permiten gestionar el directorio de trabajo actual.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import os
+>>> print(os.getcwd())
+/home/jmgaguilera
+>>> os.chdir('/home/jmgaguilera/inmersionenpython3/ejemplos')
+>>> print(os.getcwd())
+/home/jmgaguilera/inmersionenpython3/ejemplos
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El módulo \codigo{os} viene instalado con Python. Puedes importarlo siempre que lo necesites.
+
+\item \emph{Línea 2:} Utiliza la función \codigo{os.getcwd()} para recuperar el directorio de trabajo actual. Cuando ejecutas la consola interactiva, Python toma como directorio de trabajo actual aquél en el que te encontrases en el sistema operativo antes de entrar en la consola; si ejecutas la consola desde una opción de menú del sistema operativo, el directorio de trabajo será aquél en el que se encuentre el programa ejecutable de Python o tu directorio de trabajo por defecto\footnote{Esto depende del sistema operativo: windows, linux, ...}.
+
+\item \emph{Línea 4:} Utiliza la función \codigo{os.chdir()} para cambiar de directorio. Conviene utilizar la convención de escribir los separadores en el estilo de Linux (con las barras inclinadas adelantadas) puesto que este sistema es universal y funciona también en Windows. Este es uno de los lugares en los que Python intenta ocultar las diferencias entre sistemas operativos.
+
+\end{enumerate}
+
+\subsection{Trabajar con nombres de ficheros y directorios}
+
+Aprovechando que estamos viendo los directorios, quiero presentarte el módulo \codigo{os.path}, que contiene funciones para manipular nombres de ficheros y directorios.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import os
+>>> print(os.path.join('/home/jmgaguilera/inmersionenpython3/ejemplos/', 
+                       'parahumanos.py'))
+/home/jmgaguilera/inmersionenpython3/ejemplos/parahumanos.py
+>>> print(os.path.join('/home/jmgaguilera/inmersionenpython3/ejemplos', 
+                       'parahumanos.py'))
+/home/jmgaguilera/inmersionenpython3/ejemplos/parahumanos.py
+>>> print(os.path.expanduser('~'))
+/home/jmgaguilera
+>>> print(os.path.join(os.path.expanduser('~'), 
+                       'inmersionenpython3', 'examples', 
+                       'humansize.py'))
+/home/jmgaguilera/inmersionenpython3/ejemplos\parahumanos.py
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La función \codigo{os.path.join()} construye un nombre completo de fichero o directorio (nombre de path) a partir de uno o más partes. En este caso únicamente tiene que concatenar las cadenas.
+
+\item \emph{Línea 5:} Este caso es menos trivial. La función añade una barra inclinada antes de concatenar. Dependiendo de que el ejemplo se construya en Windows o en una versión de Linux o Unix, la barra inclinada será invertida o no. Python será capaz de encontrar el fichero o directorio independientemente del sentido en el que aparezcan las barras inclinadas. En este caso, como el ejemplo lo construí en Linux, la barra inclinada es la típica de Linux.
+
+\item \emph{Línea 8:} La función \codigo{os.path.expanduser()} obtendrá un camino completo al directorio que se exprese y que incluye \codigo{~} como indicador el directorio raíz del usuario conectado. Esto funcionará en todos los sistemas operativos que tengan el concepto de ``directorio raíz del usuario'', lo que incluye OS X, Linux, Unix y Windows. El camino que se retorna no lleva la barra inclinada al final, pero, como hemos visto, a la función \codigo{os.path.join()} no le afecta.
+
+\item \emph{Línea 10:} Si combinamos estas técnicas podemos construir fácilmente caminos completos desde el directorio raíz del usuario. La función \codigo{os.path.join()} puede recibir cualquier número de parámetros. Yo me alegré mucho al descubrir esto puesto que la función \codigo{anyadirBarra()} es una de las típicas que siempre tengo que escribir cuando aprendo un lenguaje de programación nuevo. \emph{No escribas} esta estúpida función en Python, personas inteligentes se ha ocupado de ello por ti.
+
+\end{enumerate}
+
+El módulo \codigo{os.path} también contiene funciones para trocear caminos completos, nombres de directorios y nombres de fichero en sus partes constituyentes.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> nombrepath = '/home/jmgaguilera/inmersionenpython3/parahumanos.py'
+>>> os.path.split(nombrepath)
+('/home/jmgaguilera/inmersionenpython3/ejemplos', 'parahumanos.py')
+>>> (nombredir, nombrefich) = os.path.split(nombrepath)
+>>> nombredir
+'/home/jmgaguilera/inmersionenpython3/ejemplos'
+>>> nombrefich
+'parahumanos.py'
+>>> (nombrecorto, extension) = os.path.splitext(nombrefich)
+>>> nombrecorto
+'parahumanos'
+>>> extension
+'.py'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La función \codigo{split()} divide un camino completo en dos partes que contienen el camino y el nombre de fichero. Los retorna en una tupla.
+
+\item \emph{Línea 4:} ¿Recuerdas cuando dije que podías utilizar la asignación múltiple para devolver varios valores desde una función? \codigo{os.path.split()} hace exactamente eso. Puedes asignar los valores de la tupla que retorna a dos variables. Cada variable recibe el valor que le corresponde al elemento de la tupla.
+
+\item \emph{Línea 5:} La primera variable, \codigo{nombredir}, recibe el valor del primer elemento de la tupla que retorna \codigo{os.path.split()}, el camino al fichero.
+
+\item \emph{Línea 7:} La segunda variable, \codigo{nombrefich}, recibe el valor del segundo elemento de la tupla que retorna \codigo{os.path.split()}, el nombre del fichero.
+
+\item \emph{Línea 9:} \codigo{os.path} también posee la función \codigo{os.path.splitext()} que divide el nombre de un fichero en una tupla que contiene el nombre y la extensión separados en dos elementos. Puedes utilizar la misma técnica que antes para asignarlos a dos variables separadas.
+
+\end{enumerate}
+
+\subsection{Listar directorios}
+
+El módulo \codigo{glob} es otra herramienta incluida en la librería estándar de Python. Proporciona una forma sencilla de acceder al contenido de un directorio desde un programa. Utiliza los caracteres \emph{comodín} que suelen usarse en una consola de línea de comandos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> os.chdir('/home/jmgaguilera/inmersionenpython3/')
+>>> import glob
+>>> glob.glob('ejemplos/*.xml')
+['ejemplos\\feed-broken.xml',
+ 'ejemplos\\feed-ns0.xml',
+ 'ejemplos\\feed.xml']
+>>> os.chdir('ejemplos/')
+>>> glob.glob('*test*.py')
+['alphameticstest.py',
+ 'pluraltest1.py',
+ 'pluraltest2.py',
+ 'pluraltest3.py',
+ 'pluraltest4.py',
+ 'pluraltest5.py',
+ 'pluraltest6.py',
+ 'romantest1.py',
+ 'romantest10.py',
+ 'romantest2.py',
+ 'romantest3.py',
+ 'romantest4.py',
+ 'romantest5.py',
+ 'romantest6.py',
+ 'romantest7.py',
+ 'romantest8.py',
+ 'romantest9.py']
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} El módulo \codigo{glob} utiliza comodines y devuelve el camino de todos los ficheros y directorios que coindicen con la búsqueda. En este ejemplo se busca un directorio que contenga ficheros terminados en ``*.xml'', lo que encontrará todos los ficheros xml que se encuentren en el directorio de ejemplos.
+
+\item \emph{Línea 7:} Ahora cambio el directorio de trabajo al subdirectorio \codigo{ejemplos}. La función \codigo{os.chdir()} puede recibir como parámetro un camino relativo a la posición actual.
+
+\item \emph{Línea 8:} Puedes incluir varios comodines de búsqueda. El ejemplo encuentra todos los ficheros del directorio actual de trabajo que incluyan la palabra \codigo{test} en alguna parte del nombre y que, además, terminen con la cadena \codigo{.py}.
+
+\end{enumerate}
+
+\subsection{Obtener metadatos de ficheros}
+
+Todo sistema de ficheros moderno almacena metadatos sobre cada fichero: fecha de creación, fecha de la última modificación, tamaño, etc. Python proporciona una \codigo{API} unificada para acceder a estos metadatos. No necesitas abrir el fichero, únicamente necesitas su nombre.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import os
+>>> print(os.getcwd())
+/home/jmgaguilera/inmersionenpython3/ejemplos
+>>> metadata = os.stat('feed.xml')
+>>> metadata.st_mtime
+1247520344.9537716
+>>> import time
+>>> time.localtime(metadata.st_mtime)
+time.struct_time(tm_year=2009, tm_mon=7, tm_mday=13, tm_hour=17,
+  tm_min=25, tm_sec=44, tm_wday=0, tm_yday=194, tm_isdst=1)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El directorio de trabajo actual es \codigo{ejemplos}.
+
+\item \emph{Línea 4:} \codigo{feed.xml} es un fichero que se encuentra en el directorio \codigo{ejemplos}. La función \codigo{os.stat()} devuelve un objeto que contiene diversos metadatos sobre el fichero.
+
+\item \emph{Línea 5:} \codigo{st\_mtime} contiene la fecha y hora de modificación, pero en un formato que no es muy útil (Técnicamente es el número de segundos desde el inicio de la Época, que está definida como el primer segundo del 1 de enero de 1970 ¡En serio!).
+
+\item \emph{Línea 7:} El módulo \codigo{time} forma parte de la librería estándar de Python. Contiene funciones para convertir entre diferentes representaciones del tiempo, formatear valores de tiempo en cadenas y manipular las referencias a los husos horarios.
+
+\item \emph{Línea 8:} La función \codigo{time.localtime()} convierte un valor de segundos desde el inicio de la época (que procede la propiedad anterior) en una estructura más útil que contiene año, mes, día, hora, minuto, segundo, etc. Este fichero se modificó por última vez el 13 de julio de 2009 a las 5:25 de la tarde.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# continuaci$\ac{o}$n del ejemplo anterior
+>>> metadata.st_size
+3070
+>>> import parahumanos
+>>> parahumanos.tamnyo_aproximado(metadata.st_size)
+'3.0 KiB'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La función \codigo{os.stat()} también devuelve el tamaño de un fichero en la propiedad \codigo{st\_size}. El fichero \codigo{feed.xml} ocupa \codigo{3070} bytes.
+
+\item \emph{Línea 5:} Aprovecho la función \codigo{tamanyo\_aproximado()} para verlo de forma más clara.
+
+\end{enumerate}
+
+\subsection{Construcción de caminos absolutos}
+
+En el apartado anterior, se observó cómo la función \codigo{glob.glob()} devolvía una lista de nombres relativa. El primer ejemplo mostraba caminos como \codigo{``ejemplos/feed.xml''}, y el segundo ejemplo incluso tenía nombres más cortos como \codigo{``romantest1.py''}. Mientras permanezcas en el mismo directorio de trabajo los path relativos funcionarán sin problemas para recuperar información de los ficheros. No obstante, si quieres construir un camino absoluto ---Uno que contenga todos los directorios hasta el raíz del sistema de archivos--- lo que necesitas es la función \codigo{os.path.realpath()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import os
+>>> print(os.getcwd())
+/home/jmgaguilera/inmersionenpython3/ejemplos
+>>> print(os.path.realpath('feed.xml'))
+/home/jmgaguilera/inmersionenpython3/ejemplos/feed.xml
+\end{lstlisting}
+\end{minipage}
+
+\section{Listas por comprensión}
+
+La creacion de listas por comprensión proporciona una forma compacta de crear una lista a partir de otra mediante la realización de una operación a cada uno de los elementos de la lista original.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> una_lista = [1, 9, 8, 4]
+>>> [elem * 2 for elem in una_lista]
+[2, 18, 16, 8]
+>>> una_lista
+[1, 9, 8, 4]
+>>> una_lista = [elem * 2 for elem in una_lista]
+>>> una_lista
+[2, 18, 16, 8]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Para explicar esto es mejor leerlo de derecha a izquierda. \codigo{una\_lista} es la lista origen que se va a recorrer para generar la nueva lista. El intérprete de Python recorre cada uno de los elementos de \codigo{una\_lista}, asignando temporalmente el valor de cada elemento a la variable \codigo{elem}. Después Python aplica la operación que se haya indicado, en este caso \codigo{elem * 2}, y el resultado lo añade a la nueva lista.
+
+\item \emph{Línea 4:} Como se observa, la lista original no cambia.
+
+\item \emph{Línea 6:} No pasa nada por asignar el resultado a la variable que tenía la lista original. Python primero construye la nueva lista en memoria y luego asigna el resultado a la variable.
+
+\end{enumerate}
+
+Para crear una lista de esta forma, puedes utilizar cualquier expresión válida de Python, como por ejemplo las funciones del módulo \codigo{os} para manipular ficheros y directorios.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import os, glob
+>>> glob.glob('*.xml')
+['feed-broken.xml', 'feed-ns0.xml', 'feed.xml']
+>>> [os.path.realpath(f) for f in glob.glob('*.xml')]
+['/home/jmgaguilera/inmersionenpython3/ejemplos/feed-broken.xml',
+ '/home/jmgaguilera/inmersionenpython3/ejemplos/feed-ns0.xml',
+ '/home/jmgaguilera/inmersionenpython3/ejemplos/feed.xml']
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Esta llamada retorna una lista con todos los ficheros terminados en \codigo{.xml} del directorio de trabajo.
+
+\item \emph{Línea 4:} Esta lista generada por comprensión toma la lista original y la transforma en una nueva lista con los nombres completos de ruta.
+
+\end{enumerate}
+
+Las listas por comprensión también permiten filtrar elementos, generando una lista cuyo tamaño sea menor que el original.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import os, glob
+>>> [f for f in glob.glob('*.py') if os.stat(f).st_size > 6000]
+['pluraltest6.py',
+ 'romantest10.py',
+ 'romantest6.py',
+ 'romantest7.py',
+ 'romantest8.py',
+ 'romantest9.py']
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Para filtrar una lista puedes incluir la claúsula \codigo{if} al final de la comprensión. Esta expresión se evalúa para cada elemento de la lista original. Si el resultado es verdadero, el elemento será calculado e incluido en el resultado. En este caso se seleccionan todos los ficheros que terminan en \codigo{.py} que se encuentren en el directorio de trabajo, se comprueba si son de tamaño mayor a \codigo{6000} bytes. Seis de ellos cumplen este requisito, por lo que son los que aparecen en el resultado final.
+
+\end{enumerate}
+
+Hasta el momento, todos los ejemplos de generación de listas por comprensión han utilizado expresiones muy sencillas ---multiplicar un número por una constante, llamada a una función o simplemente devolver el elemento original de la lista--- pero no existe límite en cuanto a la complejidad de la expresión.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import os, glob
+>>> [(os.stat(f).st_size, os.path.realpath(f)) for f in glob.glob('*.xml')]
+[(3074, 'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed-broken.xml'),
+ (3386, 'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed-ns0.xml'),
+ (3070, 'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed.xml')]
+>>> import parahumanos
+>>> [(parahumanos.tamanyo_aproximado(os.stat(f).st_size), f) 
+     for f in glob.glob('*.xml')]
+[('3.0 KiB', 'feed-broken.xml'),
+ ('3.3 KiB', 'feed-ns0.xml'),
+ ('3.0 KiB', 'feed.xml')]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} En este caso se buscan los ficheros que finalizan en \codigo{.xml} en el directorio de trabajo actual, se recupera su tamaño (mediante una llamada a la función \codigo{os.stat()}) y se construye una tupla con el tamaño del fichero y su ruta completa (mediante una llamada a \codigo{os.path.realpath()}.
+
+\item \emph{Línea 7:} En este caso se aprovecha la lista anterior para generar una nueva con el tamaño aproximado de cada fichero.
+
+\end{enumerate}
+ 
+\section{Diccionarios por comprensión}
+
+Es similar al apartado anterior pero genera un diccionario en lugar de una lista.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import os, glob
+>>> metadata = [(f, os.stat(f)) for f in glob.glob('*test*.py')]
+>>> metadata[0]
+('alphameticstest.py', nt.stat_result(st_mode=33206, st_ino=0, st_dev=0,
+ st_nlink=0, st_uid=0, st_gid=0, st_size=2509, st_atime=1247520344,
+ st_mtime=1247520344, st_ctime=1247520344))
+>>> metadata_dict = {f:os.stat(f) for f in glob.glob('*test*.py')}
+>>> type(metadata_dict)
+<class 'dict'>
+>>> list(metadata_dict.keys())
+['romantest8.py', 'pluraltest1.py', 'pluraltest2.py', 'pluraltest5.py',
+ 'pluraltest6.py', 'romantest7.py', 'romantest10.py', 'romantest4.py',
+ 'romantest9.py', 'pluraltest3.py', 'romantest1.py', 'romantest2.py',
+ 'romantest3.py', 'romantest5.py', 'romantest6.py', 'alphameticstest.py',
+ 'pluraltest4.py']
+>>> metadata_dict['alphameticstest.py'].st_size
+2509
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Esto no genera un diccionario por comprensión, genera una lista por comprensión. Encuentra todos los ficheros terminados en \codigo{.py} con el texto \codigo{test} en el nombre y luego construye una tupla con el nombre y los metadatos del fichero (llamando a la función \codigo{os.stat()}).
+
+\item \emph{Línea 3:} Cada elemento de la lista resultante es una tupla.
+
+\item \emph{Línea 7:} Esto sí es una generación de un diccionario por comprensión. La sintaxis es similar a la de la generación de listas, con dos diferencias: primero, se encierra entre llaves en lugar de corchetes; segundo, en lugar de una única expresión para cada elemento, contiene dos expresiones separadas por dos puntos. La expresión que va delante de los dos puntos es la clave del diccionario y la expresión que va detrás es el valor (\codigo{os.stat(f)} en este ejemplo).
+
+\item \emph{Línea 8:} El resultado es un diccionario.
+
+\item \emph{Línea 10:} La claves de este caso particular son los nombres de los ficheros.
+
+\item \emph{Línea 16:} El valor asociado a cada clave es el valor que retornó la función \codigo{os.stat()}. Esto significa que podemos utilizar este diccionario para buscar los metadatos de un fichero a partir de su nombre. Uno de los elementos de estos metadatos es \codigo{st\_size}, el tamaño de fichero. Para el fichero \codigo{alphameticstest.py} el valor es \codigo{2509} bytes.
+
+\end{enumerate}
+
+Como con las listas, puedes incluir la claúsula \codigo{if} para filtrar los elementos de entrada mediante una expresión que se evalúa para cada uno de los elementos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import os, glob, parahumanos
+>>> dict = {os.path.splitext(f)[0]:parahumanos.tamanyo_aproximado(
+            os.stat(f).st_size) \     
+...         for f in glob.glob('*') if os.stat(f).st_size > 6000}
+>>> list(dict.keys())
+['romantest9', 'romantest8', 'romantest7', 'romantest6', 
+ 'romantest10', 'pluraltest6']
+>>> dict['romantest9']
+'6.5 KiB'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} Este ejemplo construye una lista con todos los ficheros del directorio de trabajo actual (\codigo{glob.glob('*')}), filtra la lista para incluir únicamente aquellos ficheros mayores de \codigo{6000} bytes (\codigo{if os.stat(f).s\_size $>$ 6000}) y utiliza la lista filtrada para construir un diccionario cuyas claves son los nombres de fichero menos la extensión (\codigo{os.path.splitext(f)[0]}) y los valores el tamaño de cada uno de ellos (\codigo{parahumanos.tamanyo\_aproximado(os.stat(f).st\_size)}).
+
+\item \emph{Línea 5:} Como viste en el ejemplo anterior son seis ficheros, por lo que hay seis elementos en el diccionario.
+
+\item \emph{Línea 7:} El valor de cada elemento es la cadena que retorna la función \codigo{tamanyo\_aproximado()}.
+
+\end{enumerate}
+
+\subsection{Trucos que se pueden hacer}
+
+Te presento un truco que puede serte de utilidad: intercambiar las claves y valores de un diccionario.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> dict = {'a': 1, 'b': 2, 'c': 3}
+>>> {value:key for key, value in a_dict.items()}
+{1: 'a', 2: 'b', 3: 'c'}
+\end{lstlisting}
+\end{minipage}
+
+\section{Conjuntos por comprensión}
+
+Por último mostraré la sintaxis para generar conjuntos por comprensión. Es muy similiar a la de los diccionarios, con la única diferencia de que únicamente se incluyen valores en lugar de parejas clave-valor.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> conjunto = set(range(10))
+>>> conjunto
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+>>> {x ** 2 for x in conjunto}
+{0, 1, 4, 81, 64, 9, 16, 49, 25, 36}
+>>> {x for x in conjunto if x % 2 == 0}
+{0, 8, 2, 4, 6}
+>>> {2**x for x in range(10)}
+{32, 1, 2, 4, 8, 64, 128, 256, 16, 512}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} Los conjuntos generados por comprensión pueden partir de otro conjunto en lugar de una lista. En este ejemlo se calcula el cuadrado de cada uno de los elementos (los números del 0 al 9).
+
+\item \emph{Línea 6:} Como en el caso de las listas y diccionarios, puedes incluir una claúsula \codigo{if} para filtrar elementos antes de calcularlos e incluirlos en el resultado.
+
+\item \emph{Línea 8:} Los conjuntos por comprensión no necesitan tomar un conjunto como entrada, pueden partir de cualquier tipo de secuencia.
+
+\end{enumerate}
+
+\section{Lecturas complementarias}
+
+\begin{itemize}
+
+\item \href{http://docs.python.org/3.1/library/os.html}{módulo \codigo{os}}
+
+\item \href{http://www.doughellmann.com/PyMOTW/os/}{\codigo{os} --- Portabilidad en el acceso a características específicas del sistema operativo}
+
+\item \href{http://docs.python.org/3.1/library/os.path.html}{módulo \codigo{os.path}}
+
+\item \href{http://www.doughellmann.com/PyMOTW/ospath/}{Manipulación de los nombres de fichero independiente de la plataforma --- \codigo{os.path}}
+
+\item \href{http://docs.python.org/3.1/library/glob.html}{módulo \codigo{glob}}
+
+\item \href{http://www.doughellmann.com/PyMOTW/glob/}{Patrones de búsqueda de ficheros --- \codigo{glob}}
+
+\item \href{http://docs.python.org/3.1/library/time.html}{módulo \codigo{time}}
+
+\item \href{http://www.doughellmann.com/PyMOTW/time/}{Funciones para manipulación de hora -- \codigo{time}}
+
+
+\item \href{http://docs.python.org/3.1/tutorial/datastructures.html#list-comprehensions}{Listas por comprensión}
+
+\item \href{http://docs.python.org/3.1/tutorial/datastructures.html#nested-list-comprehensions}{Comprensiones anidadas}
+
+\item \href{http://docs.python.org/3.1/tutorial/datastructures.html#looping-techniques}{Técnicas para hacer bucles}
+
+\end{itemize}

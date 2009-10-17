@@ -4,6 +4,7 @@
 % or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 
 \documentclass[12pt,leqno,a4paper,spanish]{book}
+\usepackage{savesym}
 \usepackage[dvips]{graphicx}
 \usepackage[dvipsnames,usenames]{color}
 \usepackage{makeidx}
@@ -15,6 +16,12 @@
 \usepackage{babel}
 \usepackage{listings}
 \usepackage[colorlinks,unicode]{hyperref}
+\savesymbol{Sun}
+\savesymbol{pi}
+\usepackage{CJKutf8}
+\usepackage{pinyin}
+\restoresymbol{TXF}{Sun}
+\restoresymbol{TXF}{pi}
 \hypersetup{
     pdfauthor={Jos\'{e} Miguel Gonz\'{a}lez Aguilera},
     pdftitle={Inmersi\'{o}n en Python 3},
@@ -90,6 +97,8 @@
 \include{cap0}
 \include{cap1}
 \include{cap2}
+\include{cap3}
+\include{cap4}
 
 \appendix
 
