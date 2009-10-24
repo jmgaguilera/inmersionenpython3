@@ -1,0 +1,668 @@
+% ch5.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Expresiones regulares}\label{ch:expresionesregulares}
+
+\noindent
+Nivel de dificultad:\diflll
+
+\begin{citaCap}
+``Algunas personas, cuando se enfrentan a un problema, piensan: \\
+"¡Ya sé! usaré expresiones regulares". Y así, acaban \\
+enfrentándose a dos problemas.'' \\
+---\href{http://www.jwz.org/hacks/marginal.html}{Jamie Zawinski}
+\end{citaCap}
+
+\section{Inmersión}
+
+Todo lenguaje de programación moderno dispone de funciones internas para trabajar con cadenas. En Python las cadenas de texto tienen métodos para buscar y reemplazar: \codigo{index()}, \codigo{find()}, \codigo{split()}, \codigo{count()}, \codigo{replace()}, etc. Pero esos métodos están limitados a los casos más simples. Por ejemplo, el método \codigo{index()} busca por una única subcadena, y la búsqueda siempre distingue entre mayúsculas y minúsculas. Para poder hacer búsquedas que no distingan entre ellas debes utilizar \codigo{s.lower()} o \codigo{s.upper()} y asegurarte de que tus cadenas de búsqueda se encuentran en el mismo caso. Los métodos \codigo{replace()} y \codigo{split()}.
+
+Si tu objetivo se cumple con estos métodos deberías usarlos. Son rápidos, simples y sencillos de leer; y hay mucho que decir a favor del código legible, simple y rápido. Pero si te descubres escribiendo un montón de funciones para manipular cadenas con sentencias \codigo{if} para contemplar casos especiales, o te encuentras encadenando llamadas a \codigo{split()} y \codigo{join()} para trocear tus cadenas de texto, puede que necesites utilizar \emph{expresiones regulares}.
+
+Las expresiones regualres son una forma poderosa y (en su mayor parte) estándar de búsqueda, reemplazo y análisis de texto con patrones de caracteres complejos. Aunque la sintaxis de las expresiones regulares es compacta y muy diferente del código \emph{normal}, el resultado puede resultar ser más legible que una solución manual que utilice un montón de funciones de cadenas de texto encadenadas. Incluso existe un modo estándar de incluir comentarios dentro de las expresiones regulares, por lo que puedes incluir una documentación detallada dentro de ellas.
+
+\begin{quote}
+Si has utilizado expresiones regulares en otros lenguajes (como Perl, JavaScript o PHP), la sintaxis de Python te será muy familiar. Puedes limitarte a leer las funciones disponibles y sus parámetros en el resumen de la documentación del \href{http://docs.python.org/dev/library/re.html\#module-contents}{módulo \codigo{re}}\footnote{\href{http://docs.python.org/dev/library/re.html\#module-contents}{http://docs.python.org/dev/library/re.html\#module-contents}}
+\end{quote}
+
+\section{Caso de estudio: direcciones de calles}
+
+Esta serie de ejemplos se inspira en un problema de la vida real que tuve en en el trabajo hace varios años, cuando necesité depurar y estandarizar una lista de direcciones postales exportadas de un sistema heredado antes de importarlas en un nuevo sistema\footnote{Como ves no me invento cosas de la nada, los ejemplos son realmente útiles.}. Este ejemplo muestra la forma en la que abordé el problema:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>> s = '100 NORTH MAIN ROAD'
+>>> s.replace('ROAD', 'RD.')
+'100 NORTH MAIN RD.'
+>>> s = '100 NORTH BROAD ROAD'
+>>> s.replace('ROAD', 'RD.')
+'100 NORTH BRD. RD.'
+>>> s[:-4] + s[-4:].replace('ROAD', 'RD.')
+'100 NORTH BROAD RD.'
+>>> import re
+>>> re.sub('ROAD$', 'RD.', s)
+'100 NORTH BROAD RD.'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Mi objetivo es estandarizar las direcciones postales de forma que \codigo{'ROAD'} siempre se escribiera como \codigo{'RD.'}. En un primer vistazo pensé que era lo suficientemente simple como para que pudiera utilizar el método \codigo{replace()}. Después de todo, las cadenas de texto estaban en mayúsculas por lo que no sería un problema la existencia de posibles minúsculas. Y la cadena de búsqueda, \codigo{'ROAD'}, era una constante. Y en este simple ejemplo \codigo{s.replace()}, de hecho, funciona.
+
+\item \emph{Línea 5:} La vida, desafortunadamente, está llena de contraejemplos, y rápidamente encontré este caso. El problema aquí es que \codigo{'ROAD'} aparece dos veces en la dirección, una de ellas siendo parte del nombre de la calle \codigo{'BROAD'} y otra por sí misma. El método \codigo{replace()} encuentra ambos casos y los reemplaza ciegamente; destruyendo las direcciones.
+
+\item \emph{Línea 7:} Para resolver el problema de las direcciones con más de una ocurrencia de la cadena de texto \codigo{'ROAD'} puedes recurrir a algo como esto: únicamente buscar y reemplazar \codigo{'ROAD'} en los últimos cuatro caracteres de la dirección \codigo{s[-4:]}, y dejar el resto de la cadena igual, \codigo{s[:-4]}. Como ves, se está volviendo inmanejable. Por ejemplo, la forma la solución depende del tamaño de la cadena de búsqueda. Si intentases sustituir \codigo{'STREET'} por \codigo{'ST.'}, necesitarías utilizar \codigo{s[:-6]} y \codigo{s[-6:].replace(...)}. ¿Te gustaría volver dentro de seis meses a depurar este código? Sé que yo no.
+
+\item \emph{Línea 9:} Es el momento de pasar a las expresiones regulares. En Python esta funcionalidad se incluye en el módulo \codigo{re}.
+
+\item \emph{Línea 10:} Echa un vistazo al primer parámetro: \codigo{'ROAD\$'}. Esta  simple expresión regular únicamente encuentra los casos en los que \codigo{'ROAD'} aparece al final de la línea. El símbolo \codigo{\$} significa ``fin de la cadena''. Exite otro carácter, el circunflejo: \codigo{\^}, que significa ``inicio de la cadena ''. Mediante el uso de la función \codigo{re.sub()}, se busca en la cadena \codigo{s} la existencia de la expresión regular \codigo{'ROAD\$'} para sustituirla por \codigo{'RD.'}. Esto permite encontrar \codigo{ROAD} al final de la cadena \codigo{s}, pero no la parte contenida en \codigo{BROAD} puesto que se encuentra en medio de la cadena \codigo{s}.
+
+\end{enumerate}
+
+\cajaTexto{\^ encuentra el comienzo de una cadena. \$ encuentra el final.}
+
+Continuando con mi relato sobre la depuración de las direcciones postales, pronto descubrí que el ejemplo anterior, encontrar \codigo{'ROAD'} al final de la dirección, no era suficiente; no todas las direcciones incluían la destinación de la calle. Algunas direcciones simplemente terminaban con el nombre de la calle. La mayor parte de las veces no pasaba nada, pero si el nombre de la calle era \codigo{'BROAD'} la expresión regular encontraba \codigo{'ROAD'} al final de la cadena como parte de la palabra, que no era lo que quería yo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> s = '100 BROAD'
+>>> re.sub('ROAD$', 'RD.', s)
+'100 BRD.'
+>>> re.sub('\bROAD$', 'RD.', s)
+'100 BROAD'
+>>> re.sub(r'\bROAD$', 'RD.', s)
+'100 BROAD'
+>>> s = '100 BROAD ROAD APT. 3'
+>>> re.sub(r'\bROAD$', 'RD.', s)
+'100 BROAD ROAD APT. 3'
+>>> re.sub(r'\bROAD\b', 'RD.', s)
+'100 BROAD RD. APT 3'
+\end{lstlisting}
+\end{minipage}
+
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} Lo que yo realmente \emph{quería} era buscar \codigo{'ROAD'} cuando estuviera al final de la línea y fuese una palabra por sí misma (y no parte de una palabra mayor). Para expresar esto en una expresión regular debes utilizar \codigo{$\backslash$b}, que indica ``que un límite de palabra debe existir en ese lugar''. En Python, expresar esta cadena es algo complicado debido a que el símbolo \codigo{'$\backslash$'} suele indicar un carácter de escape, y hay que escribirlo dos veces para representarlo como tal. Esto hay quien lo llama la \emph{plaga de las barras inclinadas invertidas}, y es el argumento para decir que las expresiones regulares son más sencillas en Perl que en Python. En el lado negativo, Perl mezcla la sintaxis de las expresiones regulares con otra sintaxis, por lo que si tienes un error, es más difícil saber si el error es en la sintaxis o en la expresión regular.
+
+\item \emph{Línea 6:} Para evitar la plaga de las barras inclinadas invertidas puedes utilizar lo que se llaman \emph{cadenas de texto ``crudas''\footnote{Nota del traductor: ``raw'' en inglés.}} mediante el uso del prefijo \codigo{r} delante de la cadena de texto. Este tipo de cadena de texto le dice a Python que nada de lo que contiene es un carácter de escape: la cadena \codigo{'$\backslash$t'} representa al carácter tabulador, pero \codigo{r'$\backslash$t'} es una cadena que contiene como primer carácter la barrra inclinada invertida seguida de la letra \codigo{t}. Por eso, recomiendo que siempre utilices cadenas de texto ``crudas'' cuando vayas a escribir una expresión regular; en caso contrario, las cosas se vuelven confusas en cuanto la expresión regular es algo compleja (y las expresiones regulares ya confunden suficientemente por sí mismas).
+
+\item \emph{Línea 9:} Desafortunadamente rápidamente encontré más casos que contradijeron mi razonamiento. En este caso la dirección contenía la palabra \codigo{'ROAD'} pero no al final de la cadena de texto, ya que contenía también el número del apartamento después de la designación de la calle. Al no encontrarse al final de la cadena, no se sustituye nada porque la expresión regular no coincide. 
+
+\item \emph{Línea 11:} Para resolver este problema acabé quitando el carácter \codigo{\$} y poniendo otro \codigo{$\backslash$b}. De esta forma la expresión regular significa ``encuentra \codigo{ROAD} cuando es una palabra completa en cualquier parte de la cadena'', tanto si está al principio, al final o en cualquier otra parte.
+
+\end{enumerate}
+
+\section{Caso de estudio: números romanos}
+
+Es muy probable que hayas visto números romanos en alguna parte incluso aunque no los hayas reconocido. Puedes haberlos visto en los crédidos de las películas antiguas o programas de televisión (``Copyright MCMXLVI'') o en las paredes de las bibliotecas y universidades (``Establecido en MDCCCLXXXVIII'' en lugar de ``establecido en 1888''). Puede que incluso los hayas visto en referencias bibliográficas. Es un sistema de representación numérica que se remonta a la época del imperio romano (de ahí el nombre).
+
+En los números romanos existen siete caracteres que se repiten y combinan de diferentes formas para representar números:
+
+\begin{itemize}
+\item \codigo{I = 1}
+\item \codigo{V = 5}
+\item \codigo{X = 10}
+\item \codigo{L = 50}
+\item \codigo{C = 100}
+\item \codigo{D = 500}
+\item \codigo{M = 1000}
+\end{itemize}
+
+Existen una reglas generales para construir números romanos:
+
+\begin{itemize}
+
+\item{Los caracteres son aditivos, \codigo{I} es \codigo{1}, \codigo{II} es \codigo{2} y \codigo{III} es \codigo{3}. \codigo{VI} es \codigo{6} (literalmente 5 + 1), \codigo{VII} es \codigo{7} (5+1+1) y \codigo{XVIII} es \codigo{18} (10+5+1+1+1).
+
+\item Los caracteres que representan unidades, decenas, centenas y unidades de millar (\codigo{I, X, C y M}) pueden aparecer juntos hasta tres veces como máximo. Para el \codigo{4} debes restar del carácter \codigo{V, L ó D} (cinco, cincuenta, quinientos) que se encuentre más próximo a la derecha. No se puede representar el cuatro como \codigo{IIII}, en su lugar hay que poner \codigo{IV} (5-1). El número \codigo{40} se representa como \codigo{XL} (\codigo{10} menos que \codigo{50}: 50-10). \codigo{41 = XLI}, \codigo{42 = XLII}, \codigo{43 = XLIII} y luego \codigo{44 = XLIV} (diez menos que cincuenta más uno menos que cinco: 50-10+5-1).
+
+\item De forma similar, para el número \codigo{9}, debes restar del número siguiente más próximo que represente unidades, decenas, centenas o unidades de millar (\codigo{I, X, C y M}). \codigo{ 8 = VIII}, pero \codigo{9 = IX} (\codigo{1} menos que \codigo{10}), no \codigo{9 = VIIII} puesto que el carácter \codigo{I} no puede repetirse cuatro veces seguidas. El número \codigo{90} se representa con \codigo{XC} y el \codigo{900} con \codigo{CM}.
+
+\item Los caracteres \codigo{V, L y D} no pueden repetirse; el número \codigo{10} siempre se representa como \codigo{X} y no como \codigo{VV}. El número \codigo{100} siempre se representa como \codigo{C} y nunca como \codigo{LL}.
+
+\item Los números romanos siempre se escriben de los caracteres que representan valores mayores a los menores y se leen de izquierda a derecha por lo que el orden de los caracteres importa mucho. \{DC} es el número \codigo{600}; \codigo{CD} otro número, el \codigo{400} (500 - 100). \codigo{CI} es \codigo{101}, mientras que \codigo{IC} no es un número romano válido porque no puedes restar \codigo{I} del \codigo{C}\footnote{Para representar el \codigo{99} deberías usar: \codigo{XCIL} (100 - 10 + 10 - 1)}.
+
+\end{itemize}
+
+\subsection{A búsqueda de coincidencias de las unidades de millar}.
+
+¿Qué costaría conocer que una cadena de texto es un número romano válido? Vamos a hacerlo dígito a dígito para facilitar la tarea y la explicación. Puesto que los números romanos siempre se escriben del mayor al menor, vamos a comenzar por el mayor: las unidades de millar. Para los números \codigo{1000} y superiores los miles se representan por una serie de caracteres \codigo{M}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> import re
+>>> pattern = '^M?M?M?$'
+>>> re.search(pattern, 'M')
+<SRE_Match object at 0106FB58>
+>>> re.search(pattern, 'MM')
+<SRE_Match object at 0106C290>
+>>> re.search(pattern, 'MMM')
+<SRE_Match object at 0106AA38>
+>>> re.search(pattern, 'MMMM')
+>>> re.search(pattern, '')
+<SRE_Match object at 0106F4A8>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Este  patrón tiene tres partes: \codigo{\^} identifica el comienzo de la línea únicamente. Si no lo indicáramos así, el resto del patrón validaría cualquier posición dentro de una cadena en la que se encontrase, cosa que no quieres. Lo que quieres es estar seguro de que los caracteres \codigo{M} se encuentran al comienzo de la cadena. \codigo{M?} indica que se valide si existe un carácter \codigo{M} de forma opcional en la posición indicada. Como se repite tres veces, lo que estás diciendo es que se valide si existe el carácter \codigo{M} de cero a tres veces (al principio de la cadena debido al \codigo{\^}). Y por último, \codigo{\$} valida el final de la línea. Cuando se combina con el carácter \codigo{\^} al comienzo, significa que el patrón debe coincidir con la cadena de texto completa, por lo que en este caso únicamente es posible que tenga de cero a tres caracteres \codigo{M'}.
+
+\item \emph{Línea 3:} La esencia del módulo \codigo{re} es la función \codigo{search()}, que toma como primer parámetro una expresión regular (\codigo{pattern}) y como segundo una cadena de texto que es la que se comprobará para ver si coincide con la expresión regular. Si se encuentra una cadena identificada por las expresión regular, esta función retorna un objeto que tiene diversos métodos para describir la cadena encontrada. Si no se encuentra nada equivalente al patrón, la función retorna \codigo{None}. Por ahora lo único que te interesa es conocer si una cadena cumple el patrón, y para ello basta ver qué valor retorna la función \codigo{search}. \codigo{'M'} cumple la expresión regular, porque el primer \codigo{M} opcional coincide con el primer caracter de la cadena y las siguientes \codigo{M} del patrón son ignoradas.
+
+\item \emph{Línea 5:} \codigo{'MM'} cumple la expresión regular porque el primer y segundo \codigo{M} opcional coinciden con la primera y segunda letra \codigo{M} de la cadena. La tercera \codigo{M} opcional se ignora.
+
+\item \emph{Línea 7:} \codigo{'MMM'} cumple la expresión regular porque los tres caracteres \codigo{M} coinciden.
+
+\item \emph{Línea 9:} \codigo{'MMMM} no cumple la expresión regular. Los tres primeros caracteres coinciden, pero en este momento la expresión regular insiste en que se debe terminar la cadena (debido al carácter \$), pero la cadena de texto no ha finalizado aún, existe una cuarta \codigo{M}. Por eso la función \codigo{search()} retorna \codigo{None}.
+
+\item \emph{Línea 10:} La cadena de textos vacía también cumple el patrón puesto que los tres caracteres \codigo{M} son opcionales.
+
+\end{enumerate}
+
+\cajaTextoAncho{? hace que un patrón sea opcional.}
+
+\subsection{A la búsqueda de coincidencias de las centenas}
+
+Las centenas son más difíciles que los miles, porque existen varias formas exclusivas de representación dependiendo del valor.
+
+\begin{itemize}
+
+\item \codigo{100 = C}
+\item \codigo{200 = CC}
+\item \codigo{300 = CCC}
+\item \codigo{400 = CD}
+\item \codigo{500 = D}
+\item \codigo{600 = DC}
+\item \codigo{700 = DCC}
+\item \codigo{800 = DCCC}
+\item \codigo{900 = CM}
+
+\end{itemize}
+
+Por lo que existen cuatro patrones posibles:
+
+
+\begin{itemize}
+
+\item \codigo{CM}
+\item \codigo{CD}
+\item De cero a tres caracteres \codigo{C} (Cero si el lugar de las centenas vale cero).
+\item \codigo{D}, seguido de cero a tres caracteres \codigo{C}.
+
+\end{itemize}
+
+Los dos últimos patrones se pueden combinar:
+
+\begin {itemize}
+\item Una \codigo{D} opcional, seguida de cero a tres caracteres \codigo{C}.
+\end {itemize}
+
+Este ejemplo muestra cómo validar las centenas de un número romano.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> import re
+>>> pattern = '^M?M?M?(CM|CD|D?C?C?C?)$'
+>>> re.search(pattern, 'MCM')
+<SRE_Match object at 01070390>
+>>> re.search(pattern, 'MD')
+<SRE_Match object at 01073A50>
+>>> re.search(pattern, 'MMMCCC')
+<SRE_Match object at 010748A8>
+>>> re.search(pattern, 'MCMC')
+>>> re.search(pattern, '')
+<SRE_Match object at 01071D98>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El patrón de esta expresión regular comienza igual que el anterior, se valida el comienzo de la cadena (\codigo{\^}), luego de cero a tres unidades de millar (\codigo{M?M?M?}). Luego viene la parte nueva, se definen tres conjuntos de patrones mutuamente excluyentes. Para ello se utilizan los paréntesis y la barra vertical: \codigo{CM}, \codigo{CD} y \codigo{D?C?C?C?} (este último representa a una \codigo{D} opcional seguida de cero a tres \codigo{C}). El analizador de expresiones regulares comprueba cada uno de estos patrones en el orden en que se muestran (de izquierda a derecha), toma el primero que coincide e ignora el resto. Si no coincide ninguno, falla la búsqueda en la cadena de texto.
+
+\item \emph{Línea 3:} \codigo{'MCM'} cumple el patrón porque la primera \codigo{M} coincide, la segunda y la tercera del patrón se ignoran, y la \codigo{CM} coincide (los patrones \codigo{CD} y \codigo{D?C?C?C?} no llegan a considerarse). \codigo{MCM} es la representación romana del \codigo{1900}.
+
+\item \emph{Línea 5:} \codigo{'MD'} cumple porque la primera \codigo{M} coincide, la segunda y tercera \codigo{M} del patrón se ignoran, y el patrón \codigo{D?C?C?C?} coincide en la \codigo{D} (los tres caracteres \codigo{C} son opcionales). \codigo{MD} es el número romano \codigo{1500}.
+
+\item \emph{Línea 7:} \codigo{'MMMCCC'} cumple la expresión regular porque coinciden las tres \codigo{M} opcionales, y el patrón \codigo{D?C?C?C?} coincide con \codigo{CCC} (la \codigo{D} es opcional y se ignora). \codigo{MMMCCC} es el número romano que representa el \codigo{3300}.
+
+\item \emph{Línea 9:} \codigo{'MCMC'} no cumple la expresión. La primera \codigo{M} del patrón coincide, las siguientes se ignoran, y \codigo{CM} coincide, pero al final \codigo{\$} porque espera que se haya acabado la cadena pero aún queda la \codigo{C} en la cadena de texto. La \codigo{C} no coincide como parte del patrón \codigo{D?C?C?C?} porque es mutuamente excluyente con el patrón \codigo{CM} que es el que se ha cumplido anteriormente.
+
+\item \emph{Línea 10:} La cadena vacía aún cumple este patrón. puesto que todos los caracteres \codigo{M} son opcionales y la cadena vacía también coincide con el patrón \codigo{D?C?C?C?} en el que todos los caracteres son también opcionales.
+
+\end{enumerate}
+
+¡Vaya! ¿Ves qué fácil es que las expresiones regulares se vayan complicando? Y por ahora únicamente hemos incluido las unidades de millar y las centenas de los números romanos. Pero si has llegado hasta aquí, ahora las decenas y las unidades serán fáciles para tí, porque siguen exactamente el mismo patrón. Vamos a ver otra forma de expresar la expresión regular.
+
+\section{Utilización de la sintaxis \codigo{\{n,m\}}}
+
+En la sección anterior viste casos de caracteres que se podían repetir hasta tres veces. Existe otra forma de representar esto en las expresiones regulares que puede resultar más legible. Primero observa el método que ya hemos usado en el ejemplo anterior.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> import re
+>>> pattern = '^M?M?M?$'
+>>> re.search(pattern, 'M')
+<_sre.SRE_Match object at 0x008EE090>
+>>> pattern = '^M?M?M?$'
+>>> re.search(pattern, 'MM')
+<_sre.SRE_Match object at 0x008EEB48>
+>>> pattern = '^M?M?M?$'
+>>> re.search(pattern, 'MMM')
+<_sre.SRE_Match object at 0x008EE090>
+>>> re.search(pattern, 'MMMM')
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} El patrón coincide con el inicio de la cadena, luego con la primera \codigo{M}, las restantes se ignoran por ser opcionales, para terminar coincidiendo el \codigo{\$} con el final de la cadena.
+
+\item \emph{Línea 6:} El patrón coincide con el inicio de la cadena, luego coinciden la primera y segunda \codigo{M}, la tercera se ignora, para terminar encontrando el final de la cadena.
+
+\item \emph{Línea 9:} El patrón coincide con el inicio de la cadena, luego las tres \codigo{M} para terminar con el final de la cadena.
+
+\item \emph{Línea 11:} El patrón coincide con el inicio de la cadena y las tres \codigo{M}, pero luego no coincide con el final de la cadena, que es lo que se espera, puesto que aún queda en la cadena una letra \codigo{M} que falta por coincidir. Por eso el patrón no se cumple y se devuelve \codigo{None}.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> pattern = '^M{0,3}$'
+>>> re.search(pattern, 'M')
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'MM')
+<_sre.SRE_Match object at 0x008EE090>
+>>> re.search(pattern, 'MMM')
+<_sre.SRE_Match object at 0x008EEDA8>
+>>> re.search(pattern, 'MMMM')
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Este patrón dice: Busca el comienzo de la cadena, luego busca de cero a tres \codigo{M} y termina con el final de la cadena. Los números \codigo{0} y \codigo{3} del ejemplo se pueden sustituir por cualquier combinación; si lo que quisieras fuera que al menos hubiera una \codigo{M} podrías utilizar \codigo{M\{1,3\}}.
+
+\item \emph{Línea 2:} El patrón coincide con el comienzo de la cadena, luego con la \codigo{M} de las tres posibles y termina encontrando el final de la cadena.
+
+\item \emph{Línea 4:} El patrón coincide con el comienzo de la cadena, luego con las dos \codigo{M} de las tres posibles y termina encontrando el final de la cadena.
+
+\item \emph{Línea 6:} El patrón coincide con el comienzo de la cadena, luego con las tres \codigo{M} y termina encontrando el final de la cadena.
+
+\item \emph{Línea 8:} El patrón coincide con el inicio de la cadena y las tres \codigo{M}, pero luego \emph{no coincide} con el final de la cadena, que es lo que se espera, puesto que aún queda en la cadena una letra \codigo{M} que falta por coincidir. Dicho de otro modo, el patrón espera únicamente un máximo de tres \codigo{M} antes del final de la cadena pero en este caso hay cuatro. Por eso el patrón no se cumple y se devuelve \codigo{None}.
+
+\end{enumerate}
+
+
+\cajaTextoAncho{\{1,4\} busca la coincidencia de una a cuatro veces del patrón relacionado.}
+
+\subsection{Comprobación de las decenas y las unidades}
+
+Vamos a completar la expresión regular de búsqueda de números romanos para incluir a las decenas y unidades. Este ejemplo incluye las decenas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> pattern = '^M?M?M?(CM|CD|D?C?C?C?)(XC|XL|L?X?X?X?)$'
+>>> re.search(pattern, 'MCMXL')
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'MCML')
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'MCMLX')
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'MCMLXXX')
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'MCMLXXXX')
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El patrón encuentra el comienzo de la cadena, luego la primera \codigo{M} opcional, luego \codigo{CM}, luego \codigo{XL} y termina detectando el final de la cadena. Recuerda que la sintaxis \codigo{(A|B|C)} significa que se encuentre únicamente una de las tres coincidencias. Al coincidir con \codigo{XL} se ignoran \codigo{XC} y \codigo{L?X?X?X?}. \codigo{MCMXL} es el número romano \codigo{1940}.
+
+\item \emph{Línea 4:} Se encuentra el comienzo de la cadena, luego la primera \codigo{M} opcional, seguido de \codigo{CM}, luego \codigo{L?X?X?X?}. De esta última coincide \codigo{L} y se ignoran las tres \codigo{X}. Se finaliza al encontrar el final de la cadena. El número romano \codigo{MCML} representa al \codigo{1950}.
+
+\item \emph{Línea 6:} Al mirar el patrón en esta cadena se encuentra el comienzo de la misma, luego la primera \codigo{M} opcional, seguido de \codigo{CM}, luego \codigo{L?X?X?X?}. Del patrón \codigo{L?X?X?X?} coincide con la \codigo{L}, luego con la primera \codigo{X} opcional y se ignoran la segunda y tercera \codigo{X}. Se termina encontrando el final de la cadena. El número romano \codigo{MCMLX} es \codigo{1960}.
+
+\item \emph{Línea 8:} El patrón encuentra el comienzo de la misma, luego la primera \codigo{M} opcional, seguido de \codigo{CM}, luego \codigo{L?X?X?X?} sirve para identificar \codigo{LXXX}, terminando al encontrar el final de la cadena. El número romano \codigo{MCMLXXX} es \codigo{1980}.
+
+\item \emph{Línea 10:} Encuentra el comienzo de la cadena, luego la primera \codigo{M} opcional, luego \codigo{CM}, luego la \codigo{L} opcional y las tres \codigo{X} opcionales, después de este punto falla la comprobación, se espera el final de la cadena pero queda una \codigo{X}. Por eso, falla toda la expresión regular y se devuelve \codigo{None}. \codigo{MCMLXXXX} no es un número romano válido.
+
+\end{enumerate}
+
+\cajaTextoAncho{\codigo{(A$\vert$B)} coincide si la cadena contiene o el patrón \codigo{A} o el \codigo{B}}
+
+La expresión para las unidades sigue un patrón idéntico. Te ahorraré los detalles mostrándote el resultado final.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> pattern = '^M?M?M?(CM|CD|D?C?C?C?)(XC|XL|L?X?X?X?)(IX|IV|V?I?I?I?)$'
+\end{lstlisting}
+\end{minipage}
+
+¿Cómo quedaría utilizando la sintaxis \codigo{\{n,m\}} En el siguiente ejemplo observas el resultado.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> pattern = '^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$'
+>>> re.search(pattern, 'MDLV')
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'MMDCLXVI')
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'MMMDCCCLXXXVIII')
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'I')
+<_sre.SRE_Match object at 0x008EEB48>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Encuentra el comienzo de la cadena, luego una de las tres posibles \codigo{M}, luego \codigo{D?C\{0,3\}}. De esta última subexpresión, coincide con la \codigo{D} y con cero de las tres posibles \codigo{C}. Lo siguiente que hace es coincidir con \codigo{L?X\{0,3\}} al encontrar la \codigo{L} y cero de tres \codigo{X}. Luego coincide con \codigo{V?I\{0,3\}} al encontrar la \codigo{V} y cero de tres posibles \codigo{I}. Se termina con la coincidencia satisfecha al encontrar el fin de la cadena. El número romano \codigo{MDLV} representa al \codigo{1555}.
+
+\item \emph{Línea 4:} Encuentra el comienzo de la cadena, luego dos de las tres posibles \codigo{M}; luego \codigo{D?C\{0,3\}} encontrando \codigo{D} y una \codigo{C}; luego coincide con \codigo{L?X\{0,3\}} al encontrar \codigo{L} y una \codigo{X}; luego coincide con \codigo{V?I\{0,3\}} al encontrar \codigo{V} y una de las tres posibles \codigo{I}, y termina con al final de la cadena. El número romano \codigo{MMDCLXVI} es el \codigo{2666}.
+
+\item \emph{Línea 6:} Encuentra el comienzo de la cadena, luego las tres posibles \codigo{M}; luego \codigo{D?C\{0,3\}} encuentra \codigo{D} y tres \codigo{C}; luego coincide con \codigo{L?X\{0,3\}} al encontrar \codigo{L} y tres \codigo{X}; luego coincide con \codigo{V?I\{0,3\}} al encontrar \codigo{V} y las tres posibles \codigo{I}, y termina con al final de la cadena. El número romano \codigo{MMMDCCCLXXXVIII} es el \codigo{3888} y es el mayor que se puede escribir sin utilizar una sintaxis extendida.
+
+\item \emph{Línea 8:} Observa atentamente (me siento como un mago, ``mirad atentamente niños, voy a sacar un conejo de mi chistera''). En este caso se encuentra el comienzo de la cadena, luego ninguna \codigo{M} de las tres posibles, luego coincide con \codigo{D?C\{0,3\}} a saltarse la \codigo{D} opcional y encontrar cero caracteres \codigo{C}, luego coincide con \codigo{L?X\{0,3\}} por el mismo motivo que antes, y lo mismo sucede con \codigo{V?I\{0,3\}}. Luego encuentra el final de la cadena. ¡Fantástico!
+
+\end{enumerate}
+
+Si has seguido todas las explicaciones y las has entendido a la primera ya lo estás haciendo mejor que lo hice yo. Ahora imagínate tratando de comprender las expresiones regulares que haya escrito otra persona en medio de una función crítica para tu programa. O piensa simplemente en tener que volver a ver las expresiones regulares que escribiste hace unos meses. Yo lo he tenido que hacer y no es agradable.
+
+Vamos a ver ahora una sintaxis alternativa que puede ayudarte que las expresiones regulares sean más comprensibles.
+
+\section{Expresiones regulares detalladas}
+
+Hasta ahora has visto lo que llamaré ``expresiones regulares compactas''. Son difíciles de leer e incluso, aunque averigües lo que hacen, no puedes estar seguro de acordarte seis meses después. En realidad, únicamente necesitas documentarlas. Para eso puedes utilizar la documentación ``incrustada''\footnote{Nota del Traductor: \textbf{inline} en inglés.}.
+
+Python te permite hacerlo mediante el uso de las \emph{expresiones regulares detalladas}. Se diferencia de una expresión regular compacta en dos cosas:
+
+\begin{itemize}
+
+\item Los espacios en blanco se ignoran: espacios, tabuladores y retornos de carro o saltos de línea. No se tienen en cuenta para el cumplimiento o no de la expresión regular. Si quieres que exista realmente tal coincidencia será necesario que incluyas el carácter de escape delante de ellos.
+
+\item Se ignoran los comentarios. Un comentario en una expresión regular detallada es exactamente igual que en Python: comienza en el carácter \codigo{\#} termina al acabarse la línea. En este caso, el comentario está incluido en una cadena de texto de varias líneas en lugar de estar directamente en ti código fuente, pero por lo demás es exactamente lo mismo.
+
+\end{itemize}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> pattern = '''
+    ^                 # comienzo de la cadena
+    M{0,3}            # unidades de millar - 0 a 3 M
+    (CM|CD|D?C{0,3})  # centenas - 900 (CM), 400 (CD), 0-300 (0 a 3 C),
+                      #            o 500-800 (D, seguido po 0 a 3 C)
+    (XC|XL|L?X{0,3})  # decenas - 90 (XC), 40 (XL), 0-30 (0 a 3 X),
+                      #           o 50-80 (L, seguido de 0 a 3 X)
+    (IX|IV|V?I{0,3})  # unidades - 9 (IX), 4 (IV), 0-3 (0 a 3 I),
+                      #            o 5-8 (V, seguido de 0 a 3 I)
+    $                 # fin de la cadena
+    '''
+>>> re.search(pattern, 'M', re.VERBOSE)
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'MCMLXXXIX', re.VERBOSE)
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'MMMDCCCLXXXVIII', re.VERBOSE)
+<_sre.SRE_Match object at 0x008EEB48>
+>>> re.search(pattern, 'M')
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 12:} Lo más importante es recordar que cuando utilizas expresiones regulares detalladas debes añadir un parámetro más a la llamada a la función: \codigo{re.VERBOSE} es una constante definida en el módulo \codigo{re} que permite indicar a la función que el patrón debe interpretarse como una expresión regular detallada. Como puedes ver, este patrón tiene muchos espacios (que son ignorados) y varios comentarios (también ignorados). Una vez se han suprimido los espacios y los comentarios, la expresión regular es exactamente la misma que viste en la primera parte de este capítulo, solo que mucho más legible.
+
+\item \emph{Línea 14:} Esta expresión encuentra en primer lugar el comienzo de la cadena, luego una de las tres posibles \codigo{M}, luego \codigo{CM}, luego \codigo{L} y las tres posibles \codigo{X}, luego \codigo{IX} y se termina con el fin de la cadena.
+
+\item \emph{Línea 16:} Esta expresión encuentra en primer lugar el comienzo de la cadena, luego las tres posibles \codigo{M}, luego \codigo{D} y las tres posibles \codigo{C}, luego \codigo{L} y las tres posibles \codigo{X}, luego \codigo{V} y las tres posibles \codigo{I} y se termina con el fin de la cadena.
+
+\item \emph{Línea 18:} No se cumple. ¿Porqué? Porque no se le ha pasado el parámetro \codigo{re.VERBOSE}, por lo que la función \codigo{re.search()} está tratando a la expresión regular como si no fuese detallada, por lo que ha intentado encontrar en la cadena \codigo{'M'} todos los espacios y comentarios que hemos introducido en el patrón. Python no puede detectar automáticamente si una expresión es detallada o no. Python asume siempre que una expresión regular es compacta, a no ser que se le diga lo contrario.
+
+\end{enumerate}
+
+\section{Caso de estudio: análisis de números de teléfono}
+
+Hasta el momento te has concentrado en identificar patrones completos. O el patrón coincide o no. Pero las expresiones regulares permiten hacer mucho más. Cuando una cadena de texto coincide con el patrón de la expresión regular puedes recuperar trozos de la cadena a partir del objeto que se retorna. Puedes recuperar qué partes de la cadena han coincidido con qué partes de la expresión regular.
+
+\cajaTexto{\codigo{$\backslash$d} coincide con cualquier dígito numérico (0-9). \codigo{$\backslash$D} coincide con cualquier carácter que no sea dígito.}
+
+Este ejemplo está sacado de otro problema real que me encontré en el trabajo. El problema: analizar un número de teléfono americano. El cliente quería que el número se introdujese de forma libre (en un único campo de texto en pantalla), pero luego quería almacenar en la base de datos de la compañía de forma separada el código de área, principal, número y opcionalmente, una extensión. Miré un poco en la web buscando ejemplos de expresiones regulares que hicieran esto, pero no encontré ninguna suficientemente permisiva.
+
+A continuación muestro algunos ejemplos de números de teléfono que necesitaba que se pudieran aceptar:
+
+\begin{itemize}
+
+\item \codigo{800-555-1212}
+\item \codigo{800 555 1212}
+\item \codigo{800.555.1212}
+\item \codigo{(800) 555-1212}
+\item \codigo{800-555-1212-1234}
+\item \codigo{800-555-1212x1234}
+\item \codigo{800-555-1212 ext. 1234}
+\item \codigo{work 1-(800) 555.1212 \#1234}
+
+\end{itemize}
+
+¡Cuánta variedad! En cada uno de los casos anteriores necesitaba identificar el código de área \codigo{800}, el troncal \codigo{500} y el resto del número \codigo{1212}. Asimismo, para aquellos que presentaban la extensión necesitaba conocer que era \codigo{1234}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> phonePattern = re.compile(r'^(\d{3})-(\d{3})-(\d{4})$')
+>>> phonePattern.search('800-555-1212').groups()
+('800', '555', '1212')
+>>> phonePattern.search('800-555-1212-1234')
+>>> phonePattern.search('800-555-1212-1234').groups()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'NoneType' object has no attribute 'groups'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Las expresiones regulares siempre se leen de izquierda a derecha. Esta detecta el comienzo de la línea y luego \codigo{($\backslash$d\{3\})}. ¿Qué es \codigo{($\backslash$d\{3\})}? Bueno, \codigo{$\backslash$d} significa ``cualquier dígito numérico'' (0 a 9). El \codigo{\{3\}} significa que ``coincida exactamente tres veces'' (tres dígitos en este caso), es una variación de la sintaxis \codigo{\{n,m\}} que viste antes. Al ponerlo todo entre paréntesis se está diciendo ``identifica exactamente tres dígitos numéricos y \emph{recuérdalos como un grupo para que te pueda preguntar por ellos más tarde}''
+
+\item \emph{Línea 2:} Para acceder a los grupos, que se guardan durante la búsqueda de la coincidencia de la cadena con expresión regular, se utiliza el método \codigo{groups()} en el objeto que devuelve el método \codigo{search()}. Este métod (\codigo{groups()}) retornará una tupla con tantos elementos como grupos se definieran en la expresion regular. En este caso se han definido tres grupos, dos con tres dígitos y un tercero con cuatro.
+
+\item \emph{Línea 4:} Esta expresión regular no es perfecta, porque no es capaz de manejar números telefónicos con extensiones. Por eso será necesario expandir la expresión regular.
+ 
+\item \emph{Línea 5:} Y en esta línea se observa el porqué no debes encadenar en una única sentencia \codigo{search()} y \codigo{group()}. Si la función \codigo{search()} no encuentra ninguna coincidencia en la cadena devuelve \codigo{None}, no un objeto de coincidencia. La llamada a \codigo{None.groups()} eleva una excepción perfectamente clara: \codigo{None} no dispone de la función \codigo{groups()}. (Por supuesto, no será tan fácil ni tan obvio si la excepción sucede en lo más profundo de tu programa. Sí, hablo por experiencia.)
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> phonePattern = re.compile(r'^(\d{3})-(\d{3})-(\d{4})-(\d+)$')
+>>> phonePattern.search('800-555-1212-1234').groups()
+('800', '555', '1212', '1234')
+>>> phonePattern.search('800 555 1212 1234')
+>>> 
+>>> phonePattern.search('800-555-1212')
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Esta expresion regular es prácticamente igual a la anterior. Como antes, coincide con el inicio de la cadena, luego con un grupo de tres dígitos decimales, luego con el guión, otro grupo de tres dígitos decimales, otro guión, y luego con el grupo de cuatro dígitos decimales. Lo que es nuevo es que después debe coincidir con otro guión seguido de uno o más dígitos decimales, para terminar con el fin de la cadena.
+
+\item \emph{Línea 2:} El método \codigo{groups()} ahora retorna una tupla de cuatro elementos, puesto que la expresión regular ahora define cuatro grupos a recordar.
+
+\item \emph{Línea 4:} Desafortunadamente esta expresión regular tampoco es la solución definitiva, porque asume siempre que las diferentes partes del teléfono están separadas por guiones. ¿Qué pasa si están separadas por puntos, espacios o comas? Necesitas una solución más general para que coincida con diferentes tipos de separadores.
+
+\item \emph{Línea 6:} ¡Ups! No solamente no hace todo lo que queremos sino que en realidad es un paso atrás, puesto que ahora no es capaz de identificar números de teléfono sin extensiones. Esto no era lo que querías, si la extensión está ahí quieres conocerla, pero si no está sigues queriendo conocer las diferentes partes del número de teléfono.
+
+\end{enumerate}
+
+El siguiente ejemplo muestra una expresión regular para manejar diferentes separadores entre las diferentes partes del número de teléfono.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> phonePattern = re.compile(r'^(\d{3})\D+(\d{3})\D+(\d{4})\D+(\d+)$')
+>>> phonePattern.search('800 555 1212 1234').groups()
+('800', '555', '1212', '1234')
+>>> phonePattern.search('800-555-1212-1234').groups()
+('800', '555', '1212', '1234')
+>>> phonePattern.search('80055512121234')
+>>> 
+>>> phonePattern.search('800-555-1212')
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Agárrate a tu sombrero. Primero se busca la coincidencia del inicio de la cadena, luego un grupo de tres caracteres y luego \codigo{$\backslash$D+}. ¿Qué es eso? Bueno, \codigo{$\backslash$D} coincide con cualquier carácter que no sea dígito, y \codigo{+} significa ``1 o más''. Por eso esta expresión \codigo{$\backslash$D+} encuentra uno o más caracteres que no sean dígitos. Esto es lo que vamos a utilizar para intentar identificar muchos tipos diferentes de separadores (en lugar de únicamente el guión).
+
+\item \emph{Línea 2:} El uso de \codigo{$\backslash$D+} en lugar de \codigo{-} significa que puedes encontrar números de teléfono que utilicen espacios como separadores en lugar de guiones.
+
+\item \emph{Línea 4:} Por supuesto aún se encuentran los números de teléfonos que utilizan como separador el guión.
+
+\item \emph{Línea 6:} Desafortunadamente aún no tenemos la respuesta final porque se está asumiendo que debe haber al menos un separador. ¿Qué pasa si el número no tiene ningún separador?
+
+\item \emph{Línea 8:} ¡Ups! Y aún no se ha arreglado el problema de que sea opcional, y no obligatoria, la existencia de las extensiones. Ahora tienes dos problemas, pero se pueden resolver ambos con la misma técnica.
+
+\end{enumerate}
+
+El siguiente ejemplo muestra una expresión regular para manejar números telefónicos sin separadores.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> phonePattern = re.compile(r'^(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+>>> phonePattern.search('80055512121234').groups()
+('800', '555', '1212', '1234')
+>>> phonePattern.search('800.555.1212 x1234').groups()
+('800', '555', '1212', '1234')
+>>> phonePattern.search('800-555-1212').groups()
+('800', '555', '1212', '')
+>>> phonePattern.search('(800)5551212 x1234')
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El único cambio que has hecho desde el último caso es cambiar \codigo{+} por \codigo{*}. En lugar de \codigo{$\backslash$D+} entre las partes del número de teléfono, ahora utilizas \codigo{$\backslash$D*}. ¿Recuerdas que \codigo{+} significa ``1 o más''? Pues \codigo{*} significa ``0 o más''. Por eso ahora deberías ser capaz de encontrar los números de teléfono incluso cuando no exista ningún separador.
+
+\item \emph{Línea 2:} ¡Funciona! ¿Porqué? Encuentras el comienzo de la cadena, luego un grupo de tres dígitos (\codigo{800}), luego cero caracteres no númericos, luego otro grupo de tres dígitos (\codigo{555}), luego cero caracteres no numéricos, luego un grupo de cuatro dígitos (\codigo{1212}), luego cero caracteres no numéricos, luego un grupo arbitrario de dígitos (\codigo{1234}) y luego el fin de la cadena.
+
+\item \emph{Línea 4:} También funcionan otras variaciones: puntos en lugar de guiones, y espacios o \codigo{x} antes de la extensión.
+
+\item \emph{Línea 6:} También se ha resuelto finalmente el problema de las extensiones. Vuelven a ser opcionales. Si no se encuentra la extensión, la función \codigo{groups()} sigue retornando una tupla de cuatro elementos, pero el cuarto elemento es una cadena vacía.
+
+\item \emph{Línea 8:} Odio tener que ser el portador de malas noticias, pero aún no hemos terminado. ¿Cuál es el problema aquí? Existe un carácter extra antes del código de área pero la expresión regular asume que el primer carácter debe ser lo primero de la cadena. No pasa nada, puedes utilizar la misma técnica de ``cero o más caracteres no numéricos'' para saltarte todos los caracteres no numéricos iniciales. 
+
+\end{enumerate}
+ 
+El siguiente ejemplo muestra como manejar los caracteres previos al número de teléfono:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> phonePattern = re.compile(r'^\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+>>> phonePattern.search('(800)5551212 ext. 1234').groups()
+('800', '555', '1212', '1234')
+>>> phonePattern.search('800-555-1212').groups()
+('800', '555', '1212', '')
+>>> phonePattern.search('work 1-(800) 555.1212 #1234')
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Esto es igual que en el ejemplo anterior salvo que ahora estás buscando \codigo{$\backslash$D*}, cero o más caracteres numéricos, antes del primero grupo (el código de área). Observa que no se ``recuerdan'' esos caracteres, no están en un grupo (no están entre paréntesis). Si aparecen, simplemente se saltan y luego se comienza a reconocer el codigo de área que será almacenado por la búsqueda (al encontrarse entre paréntesis). 
+
+\item \emph{Línea 2:} Ahora puedes reconocer satisfactoriamente el número de teléfono incluso con el paréntesis de la izquierda antes del código de área. El paréntesis de la derecha del código de área ya estaba controlado, se trata como un carácter no numérico y se detecta con el \codigo{$\backslash$D*} posterior al primer grupo.
+
+\item \emph{Línea 4:} Solamente, para tener la seguridad de que no has roto nada que funcionase. Puesto que los caracteres iniciales son totalmente opcionales, primero detecta el comienzo de la cadena, luego cero caracteres no numéricos, luego un grupo de tres dígitos de área \codigo{(800)}, luego un carácter no numérico (el guión), luego un grupo de tres dígitos \codigo{(555)}, luego un carácter no numérico (el guión), luego un grupo de cuatro dígitos \codigo{(1212)}, luego cero caracteres no numéricos, luego un grupo de cero dígitos opcionales, para terminar con el final de la cadena.
+
+\item \emph{Línea 6:} Por eso las expresiones regulares me hacen querer sacarme los ojos con un objeto punzante. ¿Porqué no funciona con este número de teléfono? Porque hay un \codigo{1} antes del código de área pero has asumido que todos los caracteres que van delante del código de área serán no numéricos (\codigo{$\backslash$D*}), ¡¡¡Aarggghhhh!!!
+
+\end{enumerate}
+
+Vamos a resumir por un momento. Hasta ahora todas las expresiones regulares han buscado desde el comienzo de la cadena. Pero ahora ves que existe un número indeterminado de cosas al comienzo que puede interesarte ignorar. En lugar de intentar hacer coincidir todas las combinaciones posibles lo mejor es que las ignores. Vamos a intentarlo de una forma distinta: sin expresar explícitamente el comienzo de la cadena. Esta opción se muestra en el siguiente ejemplo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+>>> phonePattern.search('work 1-(800) 555.1212 #1234').groups()
+('800', '555', '1212', '1234')
+>>> phonePattern.search('800-555-1212')
+('800', '555', '1212', '')
+>>> phonePattern.search('80055512121234')
+('800', '555', '1212', '1234')
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Observa la ausencia del \codigo{\^} en esta expresión regular, ya no vas a obligar a que la coincidencia sea desde el comienzo de la cadena. No hay nada que diga que tienes que hacer coincidir la cadena completa. El motor de proceso de las expresiones regulares se encargará de hacer el trabajo duro descubriend el lugar en el que la cadena de entrada comienza a coincidir.
+
+\item \emph{Línea 2:} Ahora puedes analizar un número de teléfono que incluya caracteres y un dígito previo, además de cualquier clase de separadores alrededor de cada parte del número.
+
+\item \emph{Línea 4:} Test de seguridad. Aún funciona.
+
+\item \emph{Línea 6:} Y esto también.
+
+\end{enumerate}
+
+¿Ves qué rápido comienza uno a perder el control de las expresiones regulares? Échale un vistazo a cualquiera de los ejemplos anteriores. ¿Puedes identificar aún las diferencias entre uno y otro?
+
+Aunque puedas comprender la respuesta final (y es la última respuesta, y si encuentras un caso para el que no funcione ¡no quiero conocerlo!), vamos a escribir la expresión regular de forma detallada antes de que se te olvide porqué elegiste las opciones que elegiste:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> phonePattern = re.compile(r'''
+            # No busca el inicio, puede empezar en cualquier sitio
+    ($\backslash$d{3}) # el c$\ac{o}$digo de $\ac{a}$rea tiene tres d$\ac{i}$gitos (ej. '800')
+    $\backslash$D*      # separador opcional
+    ($\backslash$d{3}) # el troncal sin 3 d$\ac{i}$gitos (ej. '555')
+    $\backslash$D*      # separador opcional
+    ($\backslash$d{4}) # el resto del n$\ac{u}$mero: 4 d$\ac{i}$gitos (ej. '1212')
+    $\backslash$D*      # separador opcional
+    ($\backslash$d*)    # extensi$\ac{o}$n opcional, cualquier n$\ac{u}$mero de d$\ac{i}$gitos
+    $\$$        # fin de la cadena
+    ''', re.VERBOSE)
+>>> phonePattern.search('work 1-(800) 555.1212 #1234').groups()
+('800', '555', '1212', '1234')
+>>> phonePattern.search('800-555-1212')
+('800', '555', '1212', '')
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 12:} Aparte de estar escrita en varias líneas, esta expresión es exactamente la misma que la del ejemplo anterior, por lo que analiza las mismas cadenas.
+
+\item \emph{Línea 14:} Validación final de seguridad. Sí, aún funciona. Has finalizado.
+
+\end{enumerate}
+
+\section{Resumen}
+
+Solamente has visto la punta más pequeña del iceberg de lo que las expresiones regulares pueden hacer. En otras palabras, aunque estés totalmente abrumado por ellas ahora mismo, creéme, no has visto casi nada de ellas aún.
+
+Deberías estar familiarizado con las siguientes técnicas:
+
+\begin{itemize}
+\item \codigo{$\backslash$\^} coincide con el comienzo de la cadena.
+\item \codigo{$\backslash\$$} coincide con el final de la cadena.
+\item \codigo{$\backslash$b} coincide con un límite de palabra.
+\item \codigo{$\backslash$d} coincide con cualquier dígito numérico.
+\item \codigo{$\backslash$D} coincide con cualquier carácter no numérico.
+\item \codigo{x?} coincide con un carácter \codigo{x} 0 a 1 veces.
+\item \codigo{x*} coincide con un carácter \codigo{x} 0 o más veces.
+\item \codigo{x+} coincide con un carácter \codigo{x} 1 o más veces.
+\item \codigo{x\{n,m\}} coincide con carácter \codigo{x} entre \codigo{n} y \codigo{m} veces.
+\item \codigo{(a|b|c)} coincide con \codigo{a} o \codigo{b} o \codigo{c}.
+\item \codigo{(x)} en general es un \emph{grupo a recordar}. Puedes obtener el valor de lo que ha coincidido mediante el método \codigo{group()} del objeto retornado por la llamada a \codigo{re.search()}.
+\end{itemize}
+
+Las expresiones regulares son muy potentes pero no son la solución a todos los problemas. Deberías aprender a manejarlas de forma que sepas cuándo son apropiadas, cuándo pueden ayudarte a resolver un problema y cuándo te producirán más problemas que los que resuelven.
+
