@@ -1,0 +1,556 @@
+% ch6.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Cierres y generadores}\label{ch:cierres}
+
+\noindent
+Nivel de dificultad:\diflll
+
+\begin{citaCap}
+``Mi forma de deletrear es temblorosa. \\
+Deletreo bien pero me tiembla la voz  \\
+así que las letras acaban en los lugares equivocados.'' \\
+---Winnie the Pooh
+\end{citaCap}
+
+\section{Inmersión}
+
+Por razones que superan toda comprensión, siempre he estado fascinado por los lenguajes. No por los lenguajes de programación. Bueno sí, lenguajes de programación, pero también idiomas naturales. Toma como ejemplo el inglés, es un idioma esquizofrénico que toma prestadas palabras del Alemán, Francés, Español y latín (por decir algunos). En realidad ``tomar prestado'' es una frase equivocada, ``saquea'' sería más adecuada. O quizás ``asimila'' -- como los Borg, sí eso me gusta:
+
+\begin{quote}
+Somos los Borg. Añadiremos tus particularidades linguísticas y etimológicas a las nuestras. Es inútil que te resistas. 
+\end{quote}
+
+En este capítulo vas a aprender sobre nombres en plural. También sobre funciones que retornan otras funciones, expresiones regulares avanzadas y generadores. Pero primero hablemos sobre cómo crear nombres en plural. (Si no has leído el capítulo~\ref{ch:expresionesregulares} sobre expresiones regulares ahora puede ser un buen momento; este capítulo asume una comprensión básica de ellas y rápidamente desciende a usos más avanzados). 
+
+Si has crecido en un país de habla inglesa o has aprendido inglés en el ámbito escolar, probablemente estés familiarizado con sus reglas básicas de formación del plural:
+
+\begin{itemize}
+
+\item Si una palabra termina en \codigo{S}, \codigo{X} o \codigo{Z} añádele \codigo{ES}. \emph{Bass} se convierte en \emph{basses}, \emph{fax} en \emph{faxes} y \codigo{waltz} en \codigo{waltzes}.
+
+\item Si una palabra termina en una \codigo{H} sonora, añade \codigo{ES}, si termina en una \codigo{H} muda, añade \codigo{S}. ¿Qué es una \codigo{H} sonora? una que se combina con otras letras para crear un sonido que se puede escuchar. Por eso \emph{coach} se convierte en \emph{coaches} y \codigo{rash} en \codigo{rashes}, porque se pronuncian tanto la \codigo{CH} como la \codigo{SH}. Pero \emph{cheetah} se convierte en \emph{cheetahs}, puesto que la \codigo{H} es muda.
+
+\item Si una palabra termina en una \codigo{Y} que suene como \codigo{I}, se cambia la \codigo{Y} por \codigo{IES}; si la \codigo{Y} se combina con una vocal para de otro modo, simplemente añade una \codigo{S}. Por eso \emph{vacancy} se convierte en \emph{vacancies} y \codigo{day} se convierte en \codigo{days}.
+
+\item Si todo lo demás falla, simplemente añadie uan \codigo{S} y cruza los dedos por que hayas acertado.
+
+\end{itemize}
+
+(Sé que hay muchas excepciones, \emph{man} se convierte en \emph{men}, \emph{woman} en \emph{women}, sin embargo \emph{human} se convierte en \emph{humans}. \emph{Mouse} se convierte en \emph{mice} y \emph{louse} en \emph{lice}, pero \emph{house} se convierte en \emph{houses}. \emph{Knife} en \emph{knives} y \emph{wife} en \emph{wives}, pero \emph{lowlife} se convierte en \emph{lowlifes}. Y todo ello sin meterme con las palabras que tienen su propio plural, como \emph{sheep}, \emph{deer} y \emph{haiku}).
+
+Otros idiomas, por supuesto, son completamente diferentes.
+
+Vamos a diseñar una librería de Python que pase a plural los nombres ingleses de forma automática. Vamos a comenzar con estas cuatro reglas, pero recuerda que, inevitablemente, necesitarás añadir más.
+
+\section{Lo sé, ¡vamos a usar expresiones regulares!}
+
+Así que estás analizando palabras, lo que, al menos en inglés, significa que estás analizando cadenas de caracteres. Tienes reglas que requieren la existencida de diferentes combinaciones de caracteres, y después de encontrarlas necesitas hacerles modificaciones. ¡Esto parece un buen trabajo para las expresiones regulares!
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+import re
+
+def plural(nombre):          
+    if re.search('[sxz]$', nombre):
+        return re.sub('$', 'es', nombre)
+    elif re.search('[^aeioudgkprt]h$', nombre):
+        return re.sub('$', 'es', nombre)       
+    elif re.search('[^aeiou]y$', nombre):      
+        return re.sub('y$', 'ies', nombre)     
+    else:
+        return nombre + 's'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} Esto es una expresión regular que utiliza una sintaxis que no has visto en el capítulo dedicado a ellas. Los corchetes cuadrados indican que se encuentre exactamente uno de los caracteres encerrados entre ellos. Por eso \codigo{[xyz]} significa ``o \codigo{s} o \codigo{x} o \codigo{z}, pero únicamente uno de ellos''. El símbolo \codigo{\$} sí debería serte familiar, coincide con el final de la cadena. Al combinarlos esta expresión regular comprueba si la variable \codigo{nombre} finaliza con \codigo{s}, \codigo{x} o \codigo{z}.
+
+\item \emph{Línea 5:} La función \codigo{re.sub()} ejecuta una sustitución de cadena de texto basándose en una expresión regular.
+
+\end{enumerate}
+
+Vamos a ver en detalle las sustituciones de texto utilizando expresiones regulares.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> import re
+>>> re.search('[abc]', 'Mark')
+<_sre.SRE_Match object at 0x001C1FA8>
+>>> re.sub('[abc]', 'o', 'Mark')
+'Mork'
+>>> re.sub('[abc]', 'o', 'rock')
+'rook'
+>>> re.sub('[abc]', 'o', 'caps')
+'oops'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La cadena \codigo{Mark} ¿contiene \codigo{a}, \codigo{b} o \codigo{c}? sí, contiene la \codigo{a}.
+
+\item \emph{Línea 4:} Ok, ahora vamos a buscar \codigo{a}, \codigo{b} o \codigo{c} y reemplazarlos por una \codigo{o}. \codigo{Mark} se convierte en \codigo{Mork}.
+
+\item \emph{Línea 6:} La misma función convierte \codigo{rock} en \codigo{rook}.
+
+\item \emph{Línea 8:} Podrías creer que \codigo{caps} se convierte en \codigo{oaps}, pero no lo hace. \codigo{re.sub()} reemplaza \emph{todas} las coincidencias, no solamente la primera. Por eso, esta expresión regular convierte \codigo{caps} en \codigo{oops}, porque coinciden tanto la \codigo{c} como la \codigo{a}, así que ambas se convierten en \codigo{o}.
+
+\end{enumerate}
+
+Y ahora volvamos a la función \codigo{plural()}...
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+def plural(nombre):          
+    if re.search('[sxz]$', nombre):            
+        return re.sub('$', 'es', nombre)
+    elif re.search('[^aeioudgkprt]h$', nombre):
+        return re.sub('$', 'es', nombre)
+    elif re.search('[^aeiou]y$', nombre):
+        return re.sub('y$', 'ies', nombre)     
+    else:
+        return nombre + 's'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} Aquí estás reemplazando el final de la cadena (que se encuentra con \codigo{\$}) con la cadena \codigo{es}. En otras palabras, estás añadiendo \codigo{es} al final de la cadena. Podrías conseguir lo mismo con la concatenación de cadenas, por ejemplo \codigo{nombre + 'es'}, pero he elegido utilizar expresiones regulares para cada regla, por razones que quedarán claras más adelante.
+
+\item \emph{Línea 4:} Mira atentamente, esta es otra variación nueva. El \codigo{\^} en el primer carácter de los corchetes indica  algo especial: negación. \codigo{[\^abc]} significa ``busca por un único carácter pero que sea cualquiera salvo \codigo{a}, \codigo{b} o \codigo{c}''. Por eso \codigo{[\^aeioudgkprt]} significa que se busque por cualquier carácter salvo los indicados. Luego ese carácter deberá tener detrás una \codigo{h} y después de ella debe venir el final de la cadena. Estamos buscando por palabras que terminen en \codigo{H} sonoras.
+
+\item \emph{Línea 6:} Aquí seguimos el mismo patrón, busca palabras que terminen en \codigo{Y}, en las que delante de ella no exista una vocal. Estamos buscando por palabras que terminen en \codigo{Y} que suenen como \codigo{I}. 
+
+\end{enumerate}
+
+Veamos en detalle el uso de la negación en expresiones regulares.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> import re
+>>> re.search('[^aeiou]y$', 'vacancy')
+<_sre.SRE_Match object at 0x001C1FA8>
+>>> re.search('[^aeiou]y$', 'boy')
+>>> 
+>>> re.search('[^aeiou]y$', 'day')
+>>> 
+>>> re.search('[^aeiou]y$', 'pita')
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La palabra \codigo{vacancy} coincide con esta expresión regular, porque finaliza en \codigo{cy}, y la \codigo{c} no es una vocal.
+
+\item \emph{Línea 4:} La palabra \codigo{boy} no coincide porque finaliza en \codigo{oy}, y la expresión regular dice expresamente que delante de la \codigo{y} no puede haber una \codigo{o}. La palabra \codigo{day} tampoco coincide por una causa similar, puesto que termina en \codigo{ay}.
+
+\item \emph{Línea 8:} La palabra \codigo{pita} no coincide, puesto que no termina en \codigo{y}.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> re.sub('y$', 'ies', 'vacancy')
+'vacancies'
+>>> re.sub('y$', 'ies', 'agency')
+'agencies'
+>>> re.sub('([^aeiou])y$', r'\1ies', 'vacancy')
+'vacancies'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Esta expresión regular convierte \codigo{vacancy} en \codigo{vacancies} y \codigo{agency} en \codigo{agencies}, que es lo que querías. Observa que también convierte \codigo{boy} en \codigo{boies}, pero eso no pasará porque antes habremos efectuado un \codigo{re.search()} para descubrir si debemos hacer la sustitución \codigo{re.sub()}.
+
+\item \emph{Línea 5:} Aunque sea de pasada, me gustaría apuntar que es posible combinar las dos expresiones regulares en una única sentencia (la primera expresión regular para descubrir si se debe aplicar una regla y la segunda para aplicarla manteniendo el texto correcto). Se muestra como quedaría. La mayor parte te debe ser familiar del capítulo dedicado a las expresiones regulares. Utilizamos un grupo para recordar el carácter que se encuentra delante de la letra \codigo{y}. Luego, en la cadena de sustitución se utiliza una sintaxis nueva \codigo{$\backslash$1}, que sirve para indicar que en ese punto se debe poner el valor del grupo guardado. En este ejemplo, el valor del grupo es la letra \codigo{c} de delante de la letra \codigo{y}; cuando se efectúa la sustitución, se sustituye la \codigo{c} en su mismo lugar, y los caracteres \codigo{ies} en el lugar de la \codigo{y}. (Si se hubiesen guardado más grupos, se podrían incluir con \codigo{$\backslash$2}, \codigo{$\backslash$3} y así sucesivamente.
+
+\end{enumerate}
+
+Las sustitución mediante el uso de expresiones regulares es un mecanismo muy potente, y la sintaxis \codigo{\\1} lo hace aún más. Pero combinar toda la operación en una única expresión regular la hace mucho más difícil de leer al no describir directamente la forma en la que se explicaron las reglas del plural. Estas reglas decían originalmente algo así como ``si la palabra termina en S, X o Z, entonces añade ES''. Si se echa un vistazo al código de la función, las dos líneas de código dicen casi exactemente eso mismo.
+
+\section{Una lista de funciones}
+
+Ahora vas a añadir un nuevo nivel de abstración. Comenzaste por definir una lista de reglas: si pasa esto, haz esto oto, en caso contrario ve a la siguiente regla. Vamos a complicar un poco parte del programa para poder simplificar otra parte.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+import re
+
+def match_sxz(noun):
+    return re.search('[sxz]$', noun)
+
+def apply_sxz(noun):
+    return re.sub('$', 'es', noun)
+
+def match_h(noun):
+    return re.search('[^aeioudgkprt]h$', noun)
+
+def apply_h(noun):
+    return re.sub('$', 'es', noun)
+
+def match_y(noun):
+    return re.search('[^aeiou]y$', noun)
+        
+def apply_y(noun):
+    return re.sub('y$', 'ies', noun)
+
+def match_default(noun):
+    return True
+
+def apply_default(noun):
+    return noun + 's'
+
+rules = ((match_sxz, apply_sxz),
+         (match_h, apply_h),
+         (match_y, apply_y),
+         (match_default, apply_default)
+         )
+
+def plural(noun):           
+    for matches_rule, apply_rule in rules:
+        if matches_rule(noun):
+            return apply_rule(noun)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Función \textbf{match\_y}:} Ahora cada regla de búsqueda se convierte en una  función que devuelve el resultado de la búsqueda: \codigo{re.search()}. 
+
+\item \emph{Función \textbf{apply\_y}:} Cada regla de sustitución tine su propia función que llama a \codigo{re.sub()} para aplicar la regla apropiada.
+
+\item \emph{Línea 27:} En lugar de tener una función \codigo{plural()} con múltiples reglas, tenemos la estructura \codigo{rules}, que es una secuencia formada por parejas en la que cada una de ellas está formada, a su vez, por dos funciones.
+
+\item \emph{Línea 34:} Puesto que las reglas se han pasado las funciones contenidas en la estructura de datos, la nueva función \codigo{plural()} puede reducirse a unas cuantas líneas de código. Mediante el uso de un bucle \codigo{for} puedes obtener en cada paso las funciones de búsqueda y sustitución de la estructura de datos \codigo{rules}. En la primera iteración del bucle \codigo{for} la variable \codigo{matches\_rule} referenciará a la función \codigo{match\_sxz} y la variable \codigo{apply\_rule} referenciará a la función \codigo{apply\_sxz}. En la segunda iteración (asumiendo que alcanzas a ello), se le asigna \codigo{match\_h} a \codigo{matches\_rule} y \codigo{apply\_h} a \codigo{apply\_rule}. Está garantizado que la función retorna algo en todos los caso, porque la última regla de búsqueda (\codigo{match\_default}) retorna \codigo{True} siempre, lo que significa que se aplicaría en última instancia la regla correspondiente (\codigo{match\_default}).
+
+\end{enumerate}
+
+\cajaTexto{La variable ``rules'' es una secuencia de pares de funciones.}
+
+La razón por la que esta técnica funciona es que ``todo en Python es un objeto'', funciones incluidas. La estructura de datos \codigo{rules} contiene funciones --nombres de función, sino objetos función reales. Cuando se asignan en el bucle \codigo{for} las variables \codigo{matches\_rule} y \codigo{apply\_rule} apuntan a funciones reales que puedes llamar. En la primera iteración del bucle \codigo{for} esto supone que se llama la función \codigo{matches\_sxz(noun)} y si retorna una coincidencia se llama a la función \codigo{apply\_sxz(noun)}.
+
+Si este nivel adicional de abstracción te resulta confuso, intenta verlo así. Este bucle \codigo{for} es equivalente a lo siguiente:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def plural(noun):
+    if match_sxz(noun):
+        return apply_sxz(noun)
+    if match_h(noun):
+        return apply_h(noun)
+    if match_y(noun):
+        return apply_y(noun)
+    if match_default(noun):
+        return apply_default(noun)
+\end{lstlisting}
+\end{minipage}
+
+La ventaja es que ahora la función \codigo{plural()} es más simple. Toma una secuencia de reglas, definidas en otra parte y cuyo número puede variar, e itera a través de ella de forma genérica.
+
+\begin{enumerate}
+
+\item Obtiene una pareja: función de búsqueda - función de sustitución.
+
+\item Comprueba si la función de búsqueda retorna \codigo{True}.
+
+\item ¿Coincide? Entonces ejecuta la función de sustitución y devuelve el resultado.
+
+\item ¿No coincide? Vuelve al paso uno.
+
+\end{enumerate}
+
+La reglas pueden definirse en otra parte, de cualquier forma. A la función \codigo{plural()} no le importa.
+
+¿Merecía la pena añadir este nivel de abstracción? Tal vez aún no te lo parezca. Vamos a considerar lo que supondría añadir una nueva regla. En el primer ejemplo, requeriría añadir una sentencia \codigo{if} a la función \codigo{plural()}. En este segundo ejemplo, requeriria añadir dos funciones \codigo{match\_algo()} y \codigo{apply\_algo()} y luego añadirlas a la secuencia \codigo{rules} para especificar en qué orden deben llamarse estas nuevas funciones en relación a las reglas que ya existían.
+
+Pero realmente esto que hemos hecho es un hito en el camino hacia la siguiente sección. Sigamos...
+
+\section{Una lista de patrones}
+
+Realmente no es necesario definir una función para cada patrón de búsqueda y de sustitución. Nunca los llamas directamente; los añades a la secuencia de reglas (\codigo{rules}) y los llamas desde ahí. Es más, cada función sigue uno de los dos patrones. Todas las funciones de búqueda llaman a \codigo{re.search()} y todas las funciones de sustitución llaman a \codigo{re.sub()}. Vamos a sacar los patrones para que definir nuevas reglas sea más sencillo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+import re
+
+def build_match_and_apply_functions(pattern, search, replace):
+    def matches_rule(word):
+        return re.search(pattern, word)
+    def apply_rule(word):
+        return re.sub(search, replace, word)
+    return (matches_rule, apply_rule)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} \codigo{build\_match\_and\_apply\_functions} es una función que construye otras funciones dinámicamente. Toma los parámetros y define la función \codigo{matches\_rule()} que llama a \codigo{re.search()} con el \codigo{pattern} que se haya pasado y el parámetro \codigo{word} que se pasará a la función cuando se llame en el futuro. ¡Vaya!
+
+\item \emph{Línea 6:} La construcción de la función de sustitución es similar. Es una función que toma un parámetro \codigo{word} y llama a \codigo{re.sub()} con él y los parámetros \codigo{search} y \codigo{replace} que se pasaron a la función constructora. Esta técnica de utilizar los valores de los parámetros exteriores a una función dentr ode una función dinámica se denomina \emph{closures}\footnote{Nota del Traductor: en español se utiliza la palabra ``cierre'' para referirse a este término.}. En el fondo se están definiendo constantes que se utilizan dentro detro de la función que se está construyendo: la función construida toma un único parámetro (\codigo{word}) y los otros dos valores utilizados (\codigo{search} y \codigo{replace}) son los que tuvieran almacenados en el momento en que se definió la función.
+
+\item \emph{Línea 8:} Finalmente, la función retorna una tupla con las dos funciones recién creadas. Las constantes definidas dentro de esas funciones (\codigo{pattern} en la función \codigo{match\_rule()}, y \codigo{search} y \codigo{replace} en la función \codigo{apply\_rule()}) conservan los valores dentro de cada una de ellas, incluso después de finalizar la ejecución de la función constructora. Esto resulta ser muy práctico.
+
+\end{enumerate}
+
+Si te resulta muy confuso (y debería, puesto que es algo bastante avanzado y extraño), puede quedarte más claro cuando veas cómo usarlo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+patterns = \
+  (
+    ('[sxz]$',           '$',  'es'),
+    ('[^aeioudgkprt]h$', '$',  'es'),
+    ('(qu|[^aeiou])y$',  'y$', 'ies'),
+    ('$',                '$',  's')
+  )
+rules = [build_match_and_apply_functions(pattern, search, replace)
+         for (pattern, search, replace) in patterns]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Ahora las reglas se definen como una tupla de tuplas de cadenas (no son funciones). La primera cadena en cada trío es el patrón de búsqueda que se usará en \codigo{re.search()} para descubrir si una cadena coincide. La segunda y la tercera cadenas de cada grupo es la expresión de búsqueda y reemplazo que se utilizarán en \codigo{re.sub()} para modificar un nombre y ponerlo en plural.
+
+\item \emph{Línea 6:} Hay un ligero cambio aquí, en la regla por defecto. En el ejemplo anterior, la función \codigo{match\_default()} retornaba \codigo{True}, dando a entender que si ninguna otra regla coincidía, el código simplemente debería añadir una \codigo{s} al final de la palabra. Este ejemplo hacer algo que es funcionalmente equivalente. La expresión regular final simplemente pregunta si la palabra tiene final (\codigo{\$} coincide con el final de la cadena). Desde luego todas las cadenas tienen final, incluso la cadena vacía, por lo que esta expresión siempre coincide. Así que sirve para el mismo propósito que la función \codigo{match\_default()} del ejemplo anterior: asegura que si no coincide una regla más específica, el código añade una \codigo{s} al final de la palabra.
+
+\item \emph{Línea 8:} Esta línea es magia. Toma la secuencia de cadenas de \codigo{patterns} y la convierte en una secuencia de funciones. ¿Cómo? ``mapeando'' las cadenas con la función \codigo{build\_match\_and\_apply\_functions}. Toma un triplete de cadenas y llama a la función con las tres cadenas como argumentos. La función retorna una tupla de dos funciones. Esto significa que las variable \codigo{rules} acaba siendo equivalente a la del ejemplo anterior: una lista de tuplas, en la que cada una de ellas contiene un par de funciones. La primera función es la función de búsqueda que llama a \codigo{re.search()} y la segunda que es la función de sustitución que llama a \codigo{re.sub()}.
+
+\end{enumerate}
+
+Para finalizar esta versión del programa se muestra el punto de entrada al mismo, la función \codigo{plural()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def plural(noun):
+    for matches_rule, apply_rule in rules:
+        if matches_rule(noun):
+            return apply_rule(noun)
+\end{lstlisting}
+\end{minipage}
+
+Como la lista \codigo{rules} es igual que en el ejemplo anterior (realmente lo es), no deberías sorprenderte al ver que la función \codigo{plural()} no ha cambiado en nada. Es totalmente genérica; toma una lista de funciones de reglas y las llama en orden. No le importa cómo se han definido las reglas. En el ejemplo anterior, se definieron funciones separadas. Ahora se han creado funciones dinámicas al mapearlas con la función \codigo{build\_match\_and\_apply\_functions} a partir de una serie de cadenas de texto. No importa, la función \codigo{plural()} sigue funcionando igual.
+
+\section{Un fichero de patrones}
+
+Hemos eliminado todo el código duplicado y añadido suficientes abstracciones para que las reglas de formación de plurales del inglés queden definidas en una lista de cadenas. El siguiente paso lógico es extraer estas reglas y ponerlas en un fichero separado, en el que se puedan modificar de forma separada del código que las utiliza.
+
+Primero vamos a crear el fichero de texto que contenga las reglas que necesitas. No vamos a crear estructuras de datos complejas, simplemente cadenas de texto separadas por espacios en blanco en tres columnas. Vamos a llamarlo \codigo{plural4-rules.txt}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+[sxz]$              $       es
+[^aeioudgkprt]h$    $       es
+[^aeiou]y$          y$      ies
+$                   $       s
+\end{lstlisting}
+\end{minipage}
+
+Ahora veamos cómo utilizar este fichero de reglas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+import re
+
+def build_match_and_apply_functions(pattern, search, replace):
+    def matches_rule(word):
+        return re.search(pattern, word)
+    def apply_rule(word):
+        return re.sub(search, replace, word)
+    return (matches_rule, apply_rule)
+
+rules = []
+with open('plural4-rules.txt', encoding='utf-8') as pattern_file:
+    for line in pattern_file:
+        pattern, search, replace = line.split(None, 3)
+        rules.append(build_match_and_apply_functions(
+                pattern, search, replace))
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} La función \codigo{build\_match\_and\_apply\_functions} no ha cambiado. Aún utilizamos los cierres para construir dos funciones dinámicas por cada llamada, que utilizan las variables definidas en la función externa.
+
+\item \emph{Línea 11:} La función global \codigo{open()} abre un fichero y devuelve un objeto fichero. En este caso, el fichero que estamos abriendo contiene las cadenas de texto que son los patrones de formación de los nombres en plural La sentencia \codigo{with} crea un \emph{contexto}: cuando el bloque \codigo{with} termina, Python cerrará automáticamente el fichero, incluso si sucede una excepción dentro del bloque \codigo{with}. Lo verás con más detalle en el capítulo~\ref{ch:ficheros} dedicado a los ficheros.
+
+\item \emph{Línea 12:} La sentencia \codigo{for} lee los datos de un fichero abierto: una línea cada vez, y asigna el valor de dicha línea a la variable \codigo{line}. Lo veremos en mayor detalle en el capítulo~\ref{ch:ficheros} dedicado a los ficheros.
+
+\item \emph{Línea 13:} Cada línea del fichero contiene tres valores que están separados por espacios en blanco o tabuladores. Para obtenerlos, se utiliza el método de cadenas de texto \codigo{split()}. El primer parámetro del método \codigo{split()} es \codigo{None}, que significa que ``trocea la cadena en cualquier espacio en blanco (tabuladores incluidos, sin distinción)''. El segundo parámetro es \codigo{3}, que signfica que ``trocea la cadena hasta 3 veces, y luego deje el resto de la línea''. Una línea como \codigo{[sxy]\$~\$~es} se trocea en la siguiente lista \codigo{['[sxy]\$', '\$', 'es']}, lo que significa que \codigo{pattern} contendrá el valor \codigo{'[sxy]\$'}, \codigo{search} el valor \codigo{'\$'} y \codigo{replace} el valor \codigo{'es'}. Como ves, esto hace mucho para tan poco código escrito.
+
+\item \emph{Línea 14:} Finlmente, pasas los valores \codigo{pattern}, \codigo{search} y \codigo{replace} a la función \codigo{build\_match\_and\_apply\_functions}, que retorna una tupla con las dos funciones creadas. Esta tupla se añade a la lista \codigo{rules}, por lo que, al finalizar, la lista \codigo{rules} contiene la lista de funciones de búsqueda y sustitución que la función \codigo{plural()} necesita.
+
+\end{enumerate}
+
+\section{Generadores}
+
+¿No sería estupendo tener una función genérica que fuese capaz de recuperar el fichero de reglas? Obtener las reglas, validar si hay coincidencia, aplicar la transformación apropiada y seguir con la siguiente regla. Esto es lo único que la función \codigo{plural()} tiene que hacer.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def rules(rules_filename):
+    with open(rules_filename, encoding='utf-8') as pattern_file:
+        for line in pattern_file:
+            pattern, search, replace = line.split(None, 3)
+            yield build_match_and_apply_functions(pattern, search, replace)
+
+def plural(noun, rules_filename='plural5-rules.txt'):
+    for matches_rule, apply_rule in rules(rules_filename):
+        if matches_rule(noun):
+            return apply_rule(noun)
+    raise ValueError('no matching rule for {0}'.format(noun))
+\end{lstlisting}
+\end{minipage}
+
+¿Cómo funciona este código? Vamos a verlo primero con un ejemplo interactivo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> def make_counter(x):
+...     print('entrando en  make_counter')
+...     while True:
+...         yield x
+...         print('incrementando x')
+...         x = x + 1
+... 
+>>> counter = make_counter(2)
+>>> counter
+<generator object at 0x001C9C10>
+>>> next(counter)
+entrando en make_counter
+2
+>>> next(counter)
+incrementando x
+3
+>>> next(counter)
+incrementando x
+4
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} La presencia de la sentencia \codigo{yield} en la función \codigo{make\_counter} significa que ésta no es una función ``normal''. Al llamarla lo que sucede es que se retorna un \emph{generador} que puede utilizarse para generar sucesivos valores de \codigo{x}.
+
+\item \emph{Línea 8:} Para crear una instancia del generador \codigo{make\_counter} simplemente hay que llamarlo como a cualquier otra función. Observa que esto en realidad no ejecuta el código de la función. Lo puedes comprobar porque la primera línea de la función \codigo{make\_counter()} llama a la función \codigo{print()} y en esta llamada no se ha imprimido nada en pantalla.
+
+\item \emph{Línea 9:} La función \codigo{make\_counter()} retorna un objeto generador.
+
+\item \emph{Línea 11:} El método \codigo{next()} del generador retorna su siguiente valor. La primera vez que ejecutas \codigo{next()} se ejecuta el código de la función \codigo{make\_counter()} hasta la primera sentencia \codigo{yield} que se ejecute, y se retorna el valor que aparece en la sentencia \codigo{yield}\footnote{N.del T.: En español ``yield'' puede traducirse como ``ceder''. En Python es como si al llegar la ejecución de esta sentencia, se cediera el paso devolviendo el valor que aparezca como si fuese un return pero sin terminar la función. La siguiente vez que se ejecute el \codigo{next()} continuará por el lugar en el que se cedío el paso.}. En este caso, el valor será \codigo{2}, porque originalmente se creó el generador con la llamdada \codigo{make\_counter(2)}.
+
+\item \emph{Línea 14:} Al llamar repetidas veces al método \codigo{next()} del mismo objeto generador, la ejecución del objeto se reinicia en el mismo lugar en el que se quedó (después del \codigo{yield} anterior) y continua hasta que vuelve a encontrar otra sentencia \codigo{yield}. Todas las variables y, en general, el estado local de la función queda almacenado al llegar a la sentencia \codigo{yield} y se recupera al llamar de nuevo a la función \codigo{next()}. La siguiente línea de código que se ejecuta llama a un \codigo{print()} que muestra \codigo{incrementando x}. Después de eso se ejecuta la sentencia \codigo{x = x + 1}. Luego se ejecuta el bucle \codigo{while} y lo primero que sucede es que se vuelve a ejecutar \codigo{yield x}, lo que salva el estado en la situación actual y devuelve el valor que tiene \codigo{x} (que ahora es \codigo{3}).
+
+\item \emph{Línea 17:} La siguiente vez que  llamas a \codigo{next(counter)}, sucede lo mismo de nuevo, pero ahora el valor de \codigo{x} es \codigo{4}.
+
+\end{enumerate}
+
+
+Puesto que \codigo{make\_counter()} establece un bucle infinito, teóricamente se puede ejecutar infinitas veces la llamada al método \codigo{next()}, y se mantendría el incremento de \codigo{x} y la impresión de sus sucesivos valores. Pero vamos a ser un poco más productivos en el uso de los generadores.
+
+\section{Un generador de la serie de Fibonacci}
+
+\cajaTextoAncho{``yield'' pausa la función, ``next()'' continúa desde donde se quedó.}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def fib(max):
+    a, b = 0, 1
+    while a < max:
+        yield a
+        a, b = b, a + b
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La serie de Fibonacci es una secuencia números en la que cada uno de los números es la suma de los dos números anteriores de la serie. Comienza en \codigo{0} y \codigo{1}. Va subiendo lentamente al principio, y luego más rápidamente. Para comenzar la secuencia necesitas dos variables: \codigo{a} comienza valiendo \codigo{0} y \codigo{b} comienza en \codigo{1}.
+
+\item \emph{Línea 4:} \codigo{a} es el número actual de la secuencia, por lo que se puede ceder el control y retornar dicho valor.
+
+\item \emph{Línea 5:} \codigo{b} es el siguiente número de la secuencia, por lo que hay que asignarlo a \codigo{a}, pero también hay que calcular antes el nuevo valor siguiente (\codigo{a + b}) y asignarlo a \codigo{b} para su uso posterior. Observa que esto sucede en paralelo; si \codigo{a} es \codigo{3} y \codigo{b} es \codigo{5}, entonces \codigo{a, b = b, a + b} hará que \codigo{a} valga \codigo{5} (el valor previo de \codigo{b}) y \codigo{b} valdrá \codigo{8} (la suma de los valores previos de \codigo{a} y \codigo{b}).
+
+\end{enumerate}
+
+De este modo tienes una función que va retornando los sucesivos números de la serie de Fibonacci. Es evidente que también podrías hacer esto con recursión, pero de este modo es más fácil de leer. Además, así también es más fácil trabajar con los bucles \codigo{for}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> from fibonacci import fib
+>>> for n in fib(1000):
+...     print(n, end=' ')
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987
+>>> list(fib(1000))
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Los generadores, como \codigo{fib()}, se pueden utilizar directamente en los bucles \codigo{for}. El bucle \codigo{for} llamará automáticamente a la función \codigo{next()} para recuperar los valores del generador \codigo{fib()} y lo asignará a la variable del índice (\codigo{n}).
+
+\item \emph{Línea 3:} Cada vez que se pasa por el bucle \codigo{for}, \codigo{n} guarda un nuevo valor obtenido de la sentencia \codigo{yield} de la función \codigo{fib()}, y todo lo que hay que hacer en el bucle es imprimirlo. Una vez la función \codigo{fib()} se queda sin números (\codigo{a} se hace mayor que el valor \codigo{max}, que en este caso es \codigo{1000}), el bucle \codigo{for} termina sin problemas.
+
+\item \emph{Línea 5:} Esta es una forma idiomática de Python muy útil: pasar un generador a la función \codigo{list()} que iterará a través de todo el generador (como en el bucle \codigo{for} del ejemplo anterior) y retorna la lista con todos los valores.
+
+\end{enumerate}
+
+\section{Un generador de reglas de plurales}
+
+Volvamos al código con las reglas de formación del plural para ver como funciona \codigo{plural()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def rules(rules_filename):
+    with open(rules_filename, encoding='utf-8') as pattern_file:
+        for line in pattern_file:
+            pattern, search, replace = line.split(None, 3)
+            yield build_match_and_apply_functions(pattern, search, replace)
+
+def plural(noun, rules_filename='plural5-rules.txt'):
+    for matches_rule, apply_rule in rules(rules_filename):
+        if matches_rule(noun):
+            return apply_rule(noun)
+    raise ValueError('no matching rule for {0}'.format(noun))
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} No hay ninguna magia aquí. Recuerda que las líneas del fichero de reglas tienen tres valores separados por espacios en blanco, por lo que utilizas \codigo{line.split(None, 3)} para retornar las tres ``columnas'' y asignarlas a las tres variables locales.
+
+\item \emph{Línea 5:} \emph{Y lo siguiente es un \codigo{yield}}. ¿Qué es lo que se cede? las dos funciones que se construyen dinámicamente con la ya conocida \codigo{build\_match\_and\_apply\_functions}, que es idéntica a los ejemplos anteriores. En otras palabras, \codigo{rules()} es un generador que va retornando funciones de búsqueda y sustitución \emph{bajo demanda}.
+
+\item \emph{Línea 8:} Puesto que \codigo{rules()} es un generador, puedes utilizarlo directamente en un bucle \codigo{for}. La primera vez, el bucle \codigo{for} llama a la función \codigo{rules()}, que abre el fichero de patrones, lee la primera línea, construye de forma dinámica las funciones de búsqueda y sustitución de los patrones de esa línea y cede el control devolviendo ambas funciones. La segunda vuelta en el bucle \codigo{for} continúa en el lugar exacto en el que se cedió el control por parte del generador \codigo{rules()}. Lo primero que hará es leer la siguiente línea del fichero (que continúa abierto), construirá dinámicamente otras dos funciones de búsqueda y sustitución basadas en los patrones de esa línea del fichero y, de nuevo, cederá el control devolviendo las dos nuevas funciones.
+
+\end{enumerate}
+
+¿Qué es lo que hemos ganado con respecto de la versión anterior? Tiempo de inicio. En la versión anterior, cuando se importaba el módulo, se leía el fichero completo y se construía una lista con todas las reglas posibles. Todo ello, antes de que se pudiera ejecuta la función \codigo{plural()}. Con los generadores, puedes hacero todo de forma ``perezosa'': primero lees la primera regla, creas las funciones y las pruebas, si con ello se pasa el nombre a plural, no es necesario seguir leyendo el resto del fichero, ni crear otras funciones.
+
+¿Qué se pierde? ¡Rendimiento! Cada vez que llamas a la función \codigo{plural()}, el generador \codigo{rules()} vuelve a iniciarse desde el principio (se genera un nuevo objeto cada vez que se llama a la función generador \codigo{rules()}) ---lo que significa que se reabre el fichero de patrones y se lee desde el comienzo, una línea cada vez.
+
+¿Cómo podríamos tener lo mejor de los dos mundos?: coste mínimo de inicio (sin ejecutar ningún código en el \codigo{import}), y máximo rendimiento (sin construir las mismas funciones una y otra vez). ¡Ah! y todo ello manteniendo las reglas en un fichero separado (porque el código es código y los datos son datos) de forma que no haya que leer la misma línea del fichero dos veces.
+
+Para hacer eso, necesitas construir un \emph{iterador}. Pero antes de hacerlo, es necesario que aprendas a manejar las clases de objetos en Python.
+
+\section{Lecturas recomendadas}
+
+\begin{itemize}
+
+\item Generadores simples (PEP 255): \href{http://www.python.org/dev/peps/pep-0255/}{http://www.python.org/dev/peps/pep-0255/}
+
+\item Comprendiendo la sentencia ``with'' de Python: \href{http://effbot.org/zone/python-with-statement.htm}{http://effbot.org/zone/python-with-statement.htm}
+
+\item Cierres en Python: \href{http://ynniv.com/blog/2007/08/closures-in-python.html}{http://ynniv.com/blog/2007/08/closures-in-python.html}
+
+\item Números de Fibonacci: \href{http://en.wikipedia.org/wiki/Fibonacci\_number}{http://en.wikipedia.org/wiki/Fibonacci\_number}
+
+\item Nombres plurales irregulares en inglés: \href{http://www2.gsu.edu/~wwwesl/egw/crump.htm}{http://www2.gsu.edu/$\tilde{ }$wwwesl/egw/crump.htm}
+
+\end{itemize}
+
