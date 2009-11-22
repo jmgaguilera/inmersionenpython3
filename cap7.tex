@@ -1,0 +1,517 @@
+% ch7.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Clases e iteradores}\label{ch:clases}
+
+\noindent
+Nivel de dificultad:\diflll
+
+\begin{citaCap}
+``El Este está al Este y el Oeste al Oeste, \\
+y nunca ambos se encontrarán.''\\
+---\href{http://en.wikiquote.org/wiki/Rudyard_Kipling}{Ruyard Kipling}
+\end{citaCap}
+
+\section{Inmersión}
+
+Los generadores son únicamente un caso especial de iteradores. Una función que entrega valores es una forma buena de crear un iterador sin llegar a crearlo. Déjame enseñarte lo que quiero decir.
+
+¿Recuerdas el generador de la serie de Fibonacci? Aquí lo tienes construido como un iterador:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class Fib:
+    '''iterador que genera los n$\ac{u}$meros de la secuencia de Fibonacci'''
+
+    def __init__(self, max):
+        self.max = max
+
+    def __iter__(self):
+        self.a = 0
+        self.b = 1
+        return self
+
+    def __next__(self):
+        fib = self.a
+        if fib > self.max:
+            raise StopIteration
+        self.a, self.b = self.b, self.a + self.b
+        return fib
+\end{lstlisting}
+\end{minipage}
+
+Vamos a ver una línea cada vez.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class Fib:
+\end{lstlisting}
+\end{minipage}
+
+¿\codigo{class}? ¿Qué es una clase?
+
+\section{Cómo se definen clases}
+
+Python es un lenguaje orientado a objetos: Puedes definir tus propias clases de objetos, heredar de tus clases o de las preexistentes y crear instancias de las clases que has definido.
+
+Es sencillo definir una clase en Python. Como con las funciones no existe una definición del interface separada. Simplemente define la clase y el código. Una clase en Python comienza con la palabra reservada \codigo{class}, seguida del nombre de la clase. Técnicamente es todo lo que se necesita puesto que no necesita heredar de ninguna otra.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class PapayaWhip:
+    pass
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El nombre de esta clase es \codigo{PapayaWhip} y no hereda de ninguna otra. Los nombres de las clases se suelen escribir con el primer carácter en mayúsculas, \codigo{CadaPalabraDeEstaForma} pero esto es únicamente por convención, no es un requisito obligatorio.
+
+\item \emph{Línea 2:} Probablemente lo hasta adivinado, pero el contenido de la clase está siempre indentado, como pasa con el código de una función, una sentencia \codigo{if}, un bucle \codigo{for} o cualquier otro bloque de código. La primera línea no indentada indica el final de la clase y se encuentra fuera de la misma.
+
+\end{enumerate}
+
+Esta clase \codigo{PapayaWhip} no define ningún método o atributos, pero es correcta sintácticamente. Como necesita que exista algo en el contenido de la clase se escribe la sentencia \codigo{pass}. Esta palabra reservada de Python significa únicamente ``sigue adelante, no hay nada que hacer aquí''. Es una palabra reservada que no hace nada y, por ello, una buena forma de marcar un sitio cuando tienes funciones o clases a medio escribir.
+
+\begin{quote}
+La sentencia \codigo{pass} de Python es como una pareja vacía de llaves (\codigo{\{\}}) en Java o C.
+\end{quote}
+
+Muchas clases heredan de otras, pero esta no. Muchas clases definen métodos, pero esta no. No hay nada que tenga que tener obligatoriamente una clase de Python, salvo el nombre. En particular, los programadores de C++ pueden encontrar extraño que las clases de Python no tengan que tener constructores y destructores explicitos. Aunque no es obligatorio, las clases de Python pueden tener algo parecido a un constructor: el método \codigo{\_\_init\_\_()}.
+
+\subsection{El método \codigo{\_\_init\_\_()}}
+
+Este ejemplo muestra la inicializacion de la clase \codigo{Fib} utilizando el método \codigo{\_\_init\_\_()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class Fib:
+    '''iterador que genera los n$\ac{u}$meros de la secuencia de Fibonacci'''
+
+    def __init__(self, max):
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Las clases pueden (y deberían) tener \codigo{docstrings}, tal y como sucede con los módulos y funciones.
+
+\item \emph{Línea 4:} El método \codigo{\_\_init\_\_()} se llama de forma automática por Python inmediatamente después de que se haya creado una instancia de la clase. Es tentador ---pero técnicamente incorrecto--- llamar a este método el ``constructor'' de la clase. Es tentador, porque recuerda a los constructores de C++ (por convención, el método \codigo{\_\_init\_\_()} se suele poner como el primer método de la clase), e incluso suena como uno. Es incorrecto, porque cuando se llama a este método en Python, el objeto ya ha sido construido y ya dispones de una referencia a una instancia válida de la clase (\codigo{self}).
+
+\end{enumerate}
+
+El primer parámetro de todo método de una clase, incluyendo el método \codigo{\_\_init\_\_()}, siempre es una referencia al objeto actual, a la instancia actual de la clase. Por convención, este parámetro se suele llamar \codigo{self}. Este parámetro ocupa el rol de la palabra reservada \codigo{this} de C++ o Java, pero \codigo{self} no es una palabra reservada en Python, es simplemente una convención en para el nombre del primer parámetro de los métodos de una clase. En cualquier caso, por favor no lo llames de otra forma que no sea \codigo{self}; esta convención es muy fuerte y todo el mundo la usa.
+
+En el método \codigo{\_\_init\_\_()}, \codigo{self} se refiere al objeto recién creado; en otros métodos de la clase se refiere a la instancia cuyo método se llamó. Aunque necesitas especificar \codigo{self} explícitamente cuando defines el método, no lo especificas cuando se llama. Python lo hace por ti automáticamente.
+
+\section{Instanciar clases}
+
+Instanciar clases en Python es inmediato. Para crear un objeto de la clase, simplemente llama a la clase como si fuese una función, pasándole los parámetros que requiera el método \codigo{\_\_init\_\_()}. El valor de retorno será el nuevo objeto.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import fibonacci2 
+>>> fib = fibonacci2.Fib(100)
+>>> fib
+<fibonacci2.Fib object at 0x00DB8810>
+>>> fib.__class__
+<class 'fibonacci2.Fib'>
+>>> fib.__doc__
+'''iterador que genera los n$\ac{u}$meros de la secuencia de Fibonacci'''
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Se crea una instancia de la clase \codigo{Fib} (definida en el módulo \codigo{fibonacci2}) y se asigna la instancia creada a la variable \codigo{fib}. Se pasa un parámetro que será el parámetro \codigo{max} del método \codigo{\_\_init\_\_()} de la clase \codigo{Fib}.
+
+\item \emph{Línea 3:} La variable \codigo{fib} se refiere ahora a un objeto que es instancia de la clase \codigo{Fib}.
+
+\item \emph{Línea 5:} Toda instancia de una clase tiene el atributo interno \codigo{\_\_class\_\_} que es la clase del objeto. Muchos programadores java estarán familiarizados con la clase \codigo{Class}, que contiene métodos como \codigo{getName()} y \codigo{getSuperClass()} para conseguir información de metadatos del objeto. En Python, esta clase de metadados está disponible mediante el uso de atributos, pero la idea es la misma.
+
+\item \emph{Línea 7:} Puedes acceder al \codigo{docstring} de la instancia como se hace con cualquier otro módulo o función. Todos los objetos que son instancia de una misma clase comparten el mismo \codigo{docstring}
+
+\end{enumerate}
+
+\begin{quote}
+En Python, basta con llamar a una clase como si fuese una función para crear un nuevo objeto de la clase. No existe ningún operador \codigo{new} como sucede en C++ o Java.
+\end{quote}
+
+\section{Variables de las instancias}
+
+En el siguiente código:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class Fib:
+    def __init__(self, max):
+        self.max = max
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} ¿Qué es \codigo{self.max}? Es una variable de la instancia. Completamente diferente al parámetro \codigo{max}, que se pasa como parámetro del método. \codigo{self.max} es una variable del objeto creado. Lo que significa que puedes acceder a ella desde otros métodos.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class Fib:
+    def __init__(self, max):
+        self.max = max
+    .
+    .
+    .
+    def __next__(self):
+        fib = self.a
+        if fib > self.max:
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} \codigo{self.max} se crea en el método \codigo{\_\_init\_\_()}, por ser el primero que se llama.
+
+\item \emph{Línea 9:} ...y se utiliza en el método \codigo{\_\_next\_\_()}. 
+
+\end{enumerate}
+
+Las variables de instancia son específicas de cada objeto de la clase. Por ejemplo, si creas dos objetos \codigo{Fib} con diferentes valores máximos cada uno de ellos recordará sus propios valores.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import fibonacci2
+>>> fib1 = fibonacci2.Fib(100)
+>>> fib2 = fibonacci2.Fib(200)
+>>> fib1.max
+100
+>>> fib2.max
+200
+\end{lstlisting}
+\end{minipage}
+
+\section{Un iterador para la serie de Fibonacci}
+
+Ahora estás preparado para aprender cómo construir un iterador. Un iterador es una clase que define el método \codigo{\_\_iter\_\_()}.
+
+\cajaTextoAncho{Los tres métodos de clase, \codigo{\_\_init\_\_}, \codigo{\_\_iter\_\_} y \codigo{\_\_next\_\_}, comienzan y terminan con un par de guiones bajos (\codigo{\_}). ¿Porqué? No es nada mágico, pero habitualmente significa que son métodos ``especiales''. Lo único que tienen en ``especial'' estos métodos especiales es que no se llaman directamente; Python los llama cuando utilizas otra sintaxis en la clase o en una instancia de la clase.}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class Fib:                 
+    def __init__(self, max):
+        self.max = max
+
+    def __iter__(self):   
+        self.a = 0
+        self.b = 1
+        return self
+
+    def __next__(self):  
+        fib = self.a
+        if fib > self.max:
+            raise StopIteration
+        self.a, self.b = self.b, self.a + self.b
+        return fib            
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Para poder construir un iterador desde cero \codigo{fib} necesita ser una clase, no una función.
+
+\item \emph{Línea 2:} Al llamar a \codigo{Fib(max)} se está creando un objeto que es instancia de esta clase y llamándose a su método \codigo{\_\_init\_\_()} con el parámetro \codigo{max}. El método \codigo{\_\_init\_\_()} guarda el valor máximo como una variable del objeto de forma que los otros métodos de la instancia puedan utilizarlo más tarde.
+
+\item \emph{Línea 5:} El método \codigo{\_\_iter\_\_()} se llama siempre que alguien llama a \codigo{iter(fib)} (Como verás en un minuo, el bucle \codigo{for} llamará a este método automáticamente, pero tú también puedes llamarlo manualmente). Después de efectuar la inicialización necesaria de comienzo de la iteración (en este caso inicializar \codigo{self.a} y \codigo{self.b}) el método \codigo{\_\_iter\_\_()} puede retornar cualquier objeto que implemente el método \codigo{\_\_next\_\_()}. En este caso (y en la mayoría), \codigo{\_\_iter\_\_()} se limita a devolver \codigo{self}, puesto que la propia clase implementa el método \codigo{\_\_next\_\_()}.
+
+\item \emph{Línea 10:} El método \codigo{\_\_next\_\_()} se llama siempre que alguien llame al método \codigo{next()} sobre un iterador de una instancia de una clase. Esto adquirirá todo su sentido en un minuto.
+
+\item \emph{Línea 13:} Cuando el método \codigo{\_\_next\_\_()} lanza la excepción \codigo{StopIteration} le está indicando a quién lo haya llamado que el iterador se ha agotado. Al contrario que la mayoría de las excepciones, no se trata de un error. es una condición normal que simplemente significa que no quedan más valores que generar. Si el llamante es un bucle \codigo{for} se dará cuenta de que se ha elevado esta excepción y finalizará el bucle sin que se produzca ningún error (En otras palabrás, se tragará la excepción). Esta pequeña magia es el secreto clave del uso de iteradores en los bucles \codigo{for}.
+
+\item \emph{Línea 15:} Para devolver el siguiente valor del iterador, el método \codigo{\_\_next\_\_()} simplemente utiliza \codigo{return} para devolver el valor. No se utiliza \codigo{yield}, que únicamente se utiliza para los generadores. Cuando se está creando un iterador desde cero, se utiliza \codigo{return} en el método \codigo{\_\_next\_\_()}.
+
+\end{enumerate}
+
+¿Estás ya totalmente confundido? Excelente. Veamos cómo utilizar el iterador.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> from fibonacci2 import Fib
+>>> for n in Fib(1000):
+...     print(n, end=' ')
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987
+\end{lstlisting}
+\end{minipage}
+
+¡Exactamente igual que en el ejemplo del generador! Es idéntico a como usabas el generador. Pero... ¿cómo?.
+
+Existe algo de trabajo ejecutándose en los bucles \codigo{for}.
+
+\begin{itemize}
+
+\item El bucle \codigo{for} llama a \codigo{Fib(1000)}, que retorna un objeto que es instancia de la clase \codigo{Fib}. Llamémoslo \codigo{fib\_inst}. 
+
+\item En secreto, pero de forma inteligente, el bucle \codigo{for} llama a \codigo{iter(fib\_inst)}, que retorna un objeto iterador. Vamos a llamar a este objeto \codigo{fib\_iter}. En este caso, \codigo{fib\_iter == fib\_inst}, porque el método \codigo{fib\_inst.\_\_iter\_\_()} retorna \codigo{self}, pero el bucle \codigo{for} no lo sabe, ni le importa.
+
+\item Para recorrer el bucle a través del iterador, el bucle \codigo{for} llama a \codigo{next(fib\_iter)}, que, a su vez, llama a \codigo{fib\_iter.\_\_next\_\_()}, el método \codigo{\_\_next\_\_()} del objeto \codigo{fib\_iter}, que realiza los cálculos necesarios y devuelve el siguiente elemento de la serie de fibonacci. El bucle \codigo{for} toma este valor y lo asigna a \codigo{n}, luego ejecuta el cuerpo del bucle para ese valor de \codigo{n}.
+
+\item ¿Cómo sabe el bucle \codigo{for} cuando parar? ¡Me alegro de que lo preguntes! Cuando \codigo{next(fib\_iter)} eleva la excepción \codigo{StopIteration} el bucle for la captura finaliza sin error (Cualquier otra excepción se elevaría normalmente). ¿Y dónde has visto que se lanze esta excepción \codigo{StopIteration}? En el método \codigo{\_\_next\_\_()} ¡Por supuesto!
+
+\end{itemize}
+
+\section{Un iterador para reglas de formación de plurales}
+
+Ahora es el final. Vamos a reescribir el generador de reglas de formación de plural como un iterador.
+
+\cajaTextoAncho{\codigo{iter(f)} llama a \codigo{f.\_\_iter\_\_()}. \codigo{next(f)} llama a \codigo{f.\_\_next\_\_()}.}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class LazyRules:
+    rules_filename = 'plural6-rules.txt'
+
+    def __init__(self):
+        self.pattern_file = open(self.rules_filename, encoding='utf-8')
+        self.cache = []
+
+    def __iter__(self):
+        self.cache_index = 0
+        return self
+
+    def __next__(self):
+        self.cache_index += 1
+        if len(self.cache) >= self.cache_index:
+            return self.cache[self.cache_index - 1]
+
+        if self.pattern_file.closed:
+            raise StopIteration
+
+        line = self.pattern_file.readline()
+        if not line:
+            self.pattern_file.close()
+            raise StopIteration
+
+        pattern, search, replace = line.split(None, 3)
+        funcs = build_match_and_apply_functions(
+            pattern, search, replace)
+        self.cache.append(funcs)
+        return funcs
+
+rules = LazyRules()
+\end{lstlisting}
+\end{minipage}
+
+Como esta clase implementa los métodos \codigo{\_\_iter\_\_()} y \codigo{\_\_next\_\_()} puede utilizarse como un iterador. Al final del código se crea una instancia de la clase y se asigna a la variable \codigo{rules}.
+
+Vamos a ver la clase poco a poco.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class LazyRules:
+    rules_filename = 'plural6-rules.txt'
+
+    def __init__(self):
+        self.pattern_file = open(self.rules_filename, encoding='utf-8')
+        self.cache = []
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} Cuando instanciamos la clase \codigo{LazyRules}, se abre el fichero de patrones pero no se lee nada de él (Eso se hace más tarde).
+
+\item \emph{Línea 6:} Después de abrir el fichero de patrones se inicializa la caché. Utilizarás la caché más tarde (en el método \codigo{\_\_next\_\_()}) según se lean las filas del fichero de patrones.
+
+\end{enumerate}
+
+Antes de continuar vamos a echarle un vistazo a \codigo{rules\_filename}. No está definida en el método \codigo{\_\_iter\_\_()}. De hecho no está definida dentro de \emph{ningún} método. Está definida al nivel de la clase. Es una \emph{variable de clase} y, aunque puedes acceder a ella igual que a cualquier variable de instancia (\codigo{self.rules\_filename}), es compartida en todas las instancias de la clase \codigo{LazyRules}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import plural6 
+>>> r1 = plural6.LazyRules() 
+>>> r2 = plural6.LazyRules() 
+>>> r1.rules_filename
+'plural6-rules.txt'
+>>> r2.rules_filename 
+'plural6-rules.txt' 
+>>> r2.rules_filename = 'r2-override.txt'
+>>> r2.rules_filename 
+'r2-override.txt'
+>>> r1.rules_filename 
+'plural6-rules.txt' 
+>>> r2.__class__.rules_filename
+'plural6-rules.txt'
+>>> r2.__class__.rules_filename = 'papayawhip.txt'
+>>> r1.rules_filename 
+'papayawhip.txt' 
+>>> r2.rules_filename
+'r2-overridetxt'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} Cada instancia de la clase hereda el atributo \codigo{rules\_filename} con el valor definido para la clase.
+
+\item \emph{Línea 8:} La modificación del valor de la variable en una instancia no afecta al valor de las otras instancias...
+
+\item \emph{Línea 13:} ...ni cambia el atributo de la clase. Puedes acceder al atributo de la clase (por oposición al atributo de la instancia individual) mediante el uso del atributo especial \codigo{\_\_class\_\_} que accede a la clase.
+
+\item \emph{Línea 15:} Si modificas el atributo de la clase, todas las instancias que heredan ese atributo (como \codigo{r1} en este ejemplo) se verán afectadas.
+
+\item \emph{Línea 18:} Todas las instancias que han modificado ese atributo, sustituyendo su valor (como \codigo{r2} aquí) no se verán afectadas.
+
+\end{enumerate}
+
+Y ahora volvamos a nuestro espectáculo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+  def __iter__(self):
+        self.cache_index = 0
+        return self
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El método \codigo{\_\_iter\_\_()} se llamará cada vez que alguien ---digamos un bucle \codigo{for}--- llame a \codigo{iter(rules)}.
+
+\item \emph{Línea 3:} Todo método \codigo{\_\_iter\_\_()} debe devolver un iterador. En este caso devuelve \codigo{self} puesto que esta clase define un método \codigo{\_\_next\_\_()} que será responsable de devolver los diferentes valores durante las iteraciones.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+   def __next__(self):
+        .
+        .
+        .
+        pattern, search, replace = line.split(None, 3)
+        funcs = build_match_and_apply_functions(
+            pattern, search, replace)
+        self.cache.append(funcs)
+        return funcs
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El método \codigo{\_\_next\_\_()} se llama cuando alguien ---digamos que un bucle \codigo{for}--- llama a \codigo{next(rules)}. La mejor forma de explicar este método es comenzando del final hacia atrás. Por lo que vamos a hacer eso.
+
+\item \emph{Línea 6:} La última parte de esta función debería serte familiar. La función \codigo{build\_match\_and\_apply\_functions()} no ha cambiado; es igual que siempre.
+
+\item \emph{Línea 8:} La única diferencia es que, antes de retornar el valor (que se almacena en la tupla \codigo{funcs}), vamos a salvarlas en \codigo{self.cache}.
+
+\end{enumerate}
+ 
+Sigamos viendo la parte anterior...
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+    def __next__(self):
+        .
+        .
+        .
+        line = self.pattern_file.readline()
+        if not line:
+            self.pattern_file.close()
+            raise StopIteration
+        .
+        .
+        .
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} Veamos una técnica avanzada de acceso a ficheros. El método \codigo{readline()} (nota: singular, no el plural \codigo{readlines()}) que lee exactamente una línea de un fichero abierto. Específicamente, la siguiente línea (Los objetos \emph{fichero} también son iteradores...).
+
+\item \emph{Línea 6:} Si el método \codigo{readline()} lee algo (quedaban líneas por leer en el fichero), la variable \codigo{line} no será vacía. Incluso si la línea fuese vacía, la variable contendría una cadena de un carácter \codigo{'\\n'} (el retorno de carro). Si la variable \codigo{line} es realmente una cadena vacía significará que no quedan líneas por leer en el fichero.
+
+\item \emph{Línea 8:} Cuando alcanzamos el final del fichero deberíamos cerrarlo y elevar la excepción mágica \codigo{StopIteration}. Recuerda que llegamos a esta parte de la función porque necesitamos encontrar una función de búsqueda y otra de sustitución para la siguiente regla. La siguiente regla tiene que venir en la siguiente línea del fichero... ¡pero si no hay línea siguiente! Entonces, no tenemos que retornar ningún valor. Las iteraciones han terminado (Se acabó la fiesta...).
+
+\end{enumerate}
+
+Si seguimos moviéndonos hacia el comienzo del método \codigo{\_\_next\_\_()}...
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+    def __next__(self):
+        self.cache_index += 1
+        if len(self.cache) >= self.cache_index:
+            return self.cache[self.cache_index - 1]
+
+        if self.pattern_file.closed:
+            raise StopIteration
+        .
+        .
+        .
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} \codigo{self.cache} contendrá una lista con las funciones que necesitamos para buscar y aplicar las diferentes reglas (¡Al menos esto te debería resultar familiar!). \codigo{self.cache\_index} mantiene el índice del elemento de la caché que se debe retornar. Si no hemos consumido toda la caché (si la longitud de \codigo{self.cache} es mayor que \codigo{self.cache\_index}), ¡tenemos un elemento en la caché para retornar! Podemos devolver las funciones de búsqueda y sustitución de la caché en lugar de construirlas desde cero.
+ 
+\item \emph{Línea 7:} Por otra parte, si no obtenemos un elemento de la caché \emph{y} el fichero se ha cerrado (lo que podrá haber sucedido en la parte de más abajo del método, como se vio anteriormente) entonces ya no hay nada más que hacer. Si el fichero se ha cerrado, significa que lo hemos leido completamente ---ya hemos recorrido todas las líneas del fichero de patrones y hemos construido y cacheado las funciones de búsqueda y sustitución de cada patrón. El fichero se ha agotado y la caché también, ¡Uff! ¡yo también estoy agotado! Espera un momento, casi hemos terminado.
+
+\end{enumerate}
+
+Si lo ponemos todo junto esto es lo que sucede cuando:
+
+\begin{itemize}
+
+\item Cuando el módulo es importado crea una única instancia de la clase \codigo{LazyRules}, que denominamos \codigo{rules}, que abre el fichero de patrones pero no lo lee.
+
+\item Cuando pedimos la primera pareja de funciones de búsqueda y sustitución, busca en la caché pero está vacía. Por lo que lee una línea del fichero de patrones, construye la pareja de funciones de búsqueda y sustitución para ellas y las guarda en la caché (además de retornarlas).
+
+\item Digamos, por simplicidad, que la primera regla coincidió con la búsqueda. Si es así no se busca ndad más y no se lee nada más del fichero de patrones.
+
+\item Además, por continuar con el argumento, supón que el programa que está usando este objeto llama a la función \codigo{plural()} de nuevo para pasar al plural una palabra diferente. El bucle \codigo{for} de la función \codigo{plural()} llamará a la función \codigo{iter(rules)}, que resetea el índice de la caché pero no resetea el fichero abierto.
+
+\item La primera vez en esta nueva iteración, el bucle \codigo{for} pedirá el valor de \codigo{rules}, que llama al método \codigo{\_\_next\_\_()}. Esta vez, sin embargo, la caché tiene ya una pareja de funciones de búsqueda y sustitución, la correspondiente a los patrones de la primera línea del fichero de patrones, puesto que fueron construidas y cacheadas al generar el plural de la palabra anterior y por eso están en la caché. El índice de la caché se incrementa y no se toca el fichero abierto.
+
+\item Vamos a decir, en aras de continuar el argumento, que esta vez la primera regla no coincide, por lo que el bucle \codigo{for} da otra vuelta y pide otro valor de la variable \codigo{rules}. Por lo que se invoca por segunda vez al método \codigo{\_\_next\_\_()}. Esta vez la caché está agotada ---solamente contenía un elemento, y estamos solicitando un segundo--- por lo que el método \codigo{\_\_next\_\_()} continúa. Se lee otra línea del fichero abierto, se construyen las funciones de búsqueda y sustitución de los patrones y se introducen en la caché.
+
+\item Este proceso de lectura, construcción y caché continua mientras las reglas del fichero no coincidan con la palabra que estamos intentando poner en plural. Si se llega a encontrar una coincidencia antes del final del fichero, se utiliza y termina, con el fichero aún abierto. El puntero del fichero permanecerá dondequiera que se parase la lectura, a la espera de la siguiente sentencia \codigo{readline()}. Mientras tanto, la caché ha ido ocupándose con más elementos y si se volviera a intentar poner en plural a otra palabra, se probará primero con los elementos de la caché antes de intentar leer la siguiente línea del fichero de patrones.
+
+\end{itemize}
+
+Hemos alcanzado el nirvana de la generación de plurales.
+
+\begin{enumerate}
+
+\item \textbf{Coste de inicio mínimo.} Lo único que se hace al realizar el \codigo{import} es instanciar un objeto de una clase y abrir un fichero (pero sin leer de él).
+
+\item \textbf{Máximo rendimiento.} El ejemplo anterior leería el fichero cada vez que hubiera que poner en plural una palabra. Esta versión cachea las funciones según se van construyendo y, en el peor caso, solamente leerá del fichero de patrones una única vez, no importa cuantas palabras pongas en plural.
+
+\item \textbf{Separación de código y datos.} Todos los patrones se almacenan en un fichero separado. El código es código y los datos son datos y nunca se deberán de encontrar.
+
+\end{enumerate}
+
+
+\begin{quote}
+¿Es realmente el nirvana? Bueno, sí y no. Hay algo que hay que tener en cuenta con el ejemplo de \codigo{LazyRules}: El fichero de patrones se abre en el método \codigo{\_\_init\_\_()} y permanece abierto hasta que se alcanza la regla final. Python cerrará el fichero cuando se acabe la ejecución, o después de que la última instancia de la clase \codigo{LazyRules} sea destruida, pero eso puede ser \emph{mucho} tiempo. Si esta clase es parte de un proceso de larga duración, el intérprete de Python puede que no acabe nunca y el objeto \codigo{LazyRules} puede que nunca sea destruido.
+\end{quote}
+
+Hay formas de evitar esto. En lugar de abrir el fichero durante el método \codigo{\_\_init\_\_()} y dejarlo abierto mientras lees las reglas una línea cada vez, podrías abrir el fichero, leer todas las reglas y cerrarlo inmediatamente. O podrías abrir el fichero, leer una regla, guardar la posición del fichero con el método \codigo{tell()}, cerrar el fichero y, más tarde, reabrirlo y utilizar el método \codigo{seek()} para continuar leyendo donde lo dejaste. O podrías no preocuparte de dejar el fichero abierto, como pasa en este ejemplo. Programar es diseñar, y diseñar es siempre una continua elección entre decisiones que presentan ventajas e inconvenientes. Dejar un fichero abierto demasiado tiempo puede suponer un problema; hacer el código demasiado complejo podría ser un problema. Cuál es el problema mayor depende del equipo de desarrollo, la aplicación y tu entorno de ejecución. 
+
+\section{Lecturas recomendadas}
+
+\begin{itemize}
+
+\item Tipos de iteradores: \href{http://docs.python.org/3.1/library/stdtypes.html\#iterator-types}{http://docs.python.org/3.1/library/stdtypes.html\#iterator-types}
+
+\item PEP 234: Iteradores: \href{http://www.python.org/dev/peps/pep-0234/}{http://www.python.org/dev/peps/pep-0234/}
+
+\item PEP 255: Generadores simples: \href{http://www.python.org/dev/peps/pep-0255/}{http://www.python.org/dev/peps/pep-0255/}
+
+\item Técnicas de generadores para programadores de sistemas:\newline \href{http://www.dabeaz.com/generators/}{http://www.dabeaz.com/generators/}
+
+\end{itemize}
+
