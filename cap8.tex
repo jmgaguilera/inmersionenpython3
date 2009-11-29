@@ -1,0 +1,832 @@
+% ch8.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Iteradores avanzados}\label{ch:clases}
+
+\noindent
+Nivel de dificultad:\difllll
+
+\begin{citaCap}
+``Las pulgas grandes tienen pulgas más pequeñas sobre sus espaldas que les pican \\
+y las pulgas pequeñas tienen pulgas aún más pequeñas, y así hasta el infinito.''\\
+---August de Morgan
+\end{citaCap}
+
+\section{Inmersión}
+
+\codigo{Hawaii + idaho + iowa + ohio == states}. O, por ponerlo de otra manera, \codigo{510199 + 98153 + 9301 + 3593 == 621246}. ¿Estoy hablando en clave? No, solamente es un rompecabezas.
+
+Déjame aclarártelo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+HAWAII + IDAHO + IOWA + OHIO == STATES
+510199 + 98153 + 9301 + 3593 == 621246
+
+H = 5
+A = 1
+W = 0
+I = 9
+D = 8
+O = 3
+S = 6
+T = 2
+E = 4
+\end{lstlisting}
+\end{minipage}
+
+Las letras forman palabras existentes, pero si sustituyes cada palabra por un dígito del \codigo{0 a 9}, también forman una equación aritmética. El truco consiste en descubrir cómo se emparejan letras y dígitos. Todas las apariciones de una misma letra deben sustituirse por el mismo dígito, no de puede repetir ningún dígito y ninguna palabra debe comenzar por el dígito \codigo{0}.
+
+\cajaTextoAncho {El rompecabezas más conocido de este tipo es: \codigo{SEND + MORE = MONEY}.}
+
+A este tipo de rompecabezas se les llama \emph{alfaméticos} o \emph{criptaritmos}. En este capitulo nos sumergiremos en un increíble programa escrito originariamente por Raymond Hettinger. Este programa resuelve este tipo de rompecabezas en \emph{únicamente 14 líneas de código}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+import re
+import itertools
+
+def solve(puzzle):
+    words = re.findall('[A-Z]+', puzzle.upper())
+    unique_characters = set(''.join(words))
+    assert len(unique_characters) <= 10, 'Demasiadas letras'
+    first_letters = {word[0] for word in words}
+    n = len(first_letters)
+    sorted_characters = ''.join(first_letters) + \
+        ''.join(unique_characters - first_letters)
+    characters = tuple(ord(c) for c in sorted_characters)
+    digits = tuple(ord(c) for c in '0123456789')
+    zero = digits[0]
+    for guess in itertools.permutations(digits, len(characters)):
+        if zero not in guess[:n]:
+            equation = puzzle.translate(dict(zip(characters, guess)))
+            if eval(equation):
+                return equation
+
+if __name__ == '__main__':
+    import sys
+    for puzzle in sys.argv[1:]:
+        print(puzzle)
+        solution = solve(puzzle)
+        if solution:
+            print(solution)
+\end{lstlisting}
+\end{minipage}
+
+Puedes ejecutar este programa desde la línea de comando. En Linux sería así. (Puede tardar un poco, dependiendo de la velocidad de tu ordenador, y no hay barra de progreso, ¡sé paciente!)
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~/diveintopython3/examples$ python3 alphametics.py 
+ "HAWAII + IDAHO + IOWA + OHIO == STATES"
+HAWAII + IDAHO + IOWA + OHIO = STATES
+510199 + 98153 + 9301 + 3593 == 621246
+you@localhost:~/diveintopython3/examples$ python3 alphametics.py
+ "I + LOVE + YOU == DORA"
+I + LOVE + YOU == DORA
+1 + 2784 + 975 == 3760
+you@localhost:~/diveintopython3/examples$ python3 alphametics.py
+ "SEND + MORE == MONEY"
+SEND + MORE == MONEY
+9567 + 1085 == 10652
+\end{lstlisting}
+\end{minipage}
+
+\section{Encontrar todas las ocurrencias de un patrón}
+Lo primero que este solucionador de rompecabezas hace es encontrar todas las letras de la A a la Z del puzzle.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import re 
+>>> re.findall('[0-9]+', '16 2-by-4s in rows of 8')
+['16', '2', '4', '8'] 
+>>> re.findall('[A-Z]+', 'SEND + MORE == MONEY')
+['SEND', 'MORE', 'MONEY']
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El módulo \codigo{re} contiene la implementación de Python de las expresiones regulares. Tiene una función muy simple de usar denominada \codigo{findall()} que toma un patrón de expresión regular y una cadena y encuentra todas las ocurrencias del patrón en la cadena. En este caso, el patrón debe coincidir con una secuencia de números. La función \codigo{findall()} devuelve una lista de las subcadenas que han coincidido con el patrón.
+
+\item \emph{Línea 4:} En este caso el patrón de la expresión regular coincide con una secuencia de letras. De nuevo, el valor de retorno es una lista y cada elemento de la lista es una cadena que representa una ocurrencia del patrón en la cadena original.
+
+\end{enumerate}
+
+
+Aquí hay otro ejemplo que te servirá para forzar tu cerebro un poco.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> re.findall(' s.*? s', "The sixth sick sheikh's sixth sheep's sick.")
+[' sixth s', " sheikh's s", " sheep's s"]
+\end{lstlisting}
+\end{minipage}
+
+\cajaTexto{Este es el trabalenguas más difícil en el idioma inglés.}
+
+¿Sorprendido? La expresión regular busca un espacio, una letra \codigo{s}, y luego la serie de caacteres más corta posible formada por cualquier carácter \codigo{(.*?)}, luego un espacio y luego otra \codigo{s}. Bien, echando un vistazo a la cadena de entrada vemos cinco coincidencias.
+
+\begin{enumerate}
+
+\item The\hl{ sixth s}ick sheikh's sixth sheep's sick.
+\item The sixth\hl{ sick s}heikh's sixth sheep's sick.
+\item The sixth sick\hl{ sheikh's s}ixth sheep's sick.
+\item The sixth sick sheikh's\hl{ sixth s}heep's sick.
+\item The sixth sick sheikh's sixth\hl{ sheep's s}ick.
+
+\end{enumerate}
+
+Pero la función \codigo{re.findall()} solamente devolvió tres coincidencias. En concreto, la primera, la tercera y la quinta. ¿Porqué? porque \emph{no devuelve coincidencias solapadas}. La primera coincidencia se solapa con la segunda, por lo que se devuelve la primera y la segunda se salta. Luego la tercera se solapa con la cuarta, por lo que se devuelve la tercera y la cuarta se salta. Finalmente se devuelve la quinta coincidencia. Tres coincidencias, no cinco.
+
+Esto no tiene nada que ver con el solucionador de rompecabezas alfaméticos, simplemente pensé que era interesante.
+
+\section{Encontrar los elementos únicos de una secuencia}
+
+Los conjuntos hacen que esta tarea sea trivial.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> a_list = ['The', 'sixth', 'sick', "sheik's", 'sixth', "sheep's", 'sick']
+>>> set(a_list)
+{'sixth', 'The', "sheep's", 'sick', "sheik's"}
+>>> a_string = 'EAST IS EAST'
+>>> set(a_string)
+{'A', ' ', 'E', 'I', 'S', 'T'}
+>>> words = ['SEND', 'MORE', 'MONEY']
+>>> ''.join(words)
+'SENDMOREMONEY'
+>>> set(''.join(words))
+{'E', 'D', 'M', 'O', 'N', 'S', 'R', 'Y'}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Dada una lista de varias cadenas, la funcion \codigo{set()} devolverá un conjunto de cadenas únicas de la lista. Esto cobra sentido si piensas en ello como si fuese un bucle \codigo{for}. Toma el primer elemento de la lista y lo pone en el conjunto. Luego el segundo, tercero, cuarto, quinto ---un momento, este ya está en el conjunto, por lo que no se vuelve a incluir, porque los conjuntos de Python no permiten duplicados. El sexto, séptimo ---de nuevo un duplicado, por lo que se no se vuelve a incluir. ¿El resultado final? Todos los elementos sin repeticiones de la lista original. La lista original ni siquiera necesita estar ordenada primero.
+
+\item \emph{Línea 5:} La misma técnica funciona con cadenas, puesto que una cadena es simplemente una secuencia de caracteres.
+
+\item \emph{Línea 8:} Dada una lista de cadenas, \codigo{''.join(a\_list)} concatena todas las cadenas en una única cadena.
+
+\item \emph{Línea 10:} Dada una cadena (secuencia de caracteres -al usar la función \codigo{join}-), esta línea de código retorna todos los caracteres sin duplicados.
+
+\end{enumerate}
+
+El solucionador de rompecabezas alfaméticos utiliza esta técnica para construir un conjunto con todos los caracteres, sin repeticiones, existentes en el rompecabezas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+unique_characters = set(''.join(words))
+\end{lstlisting}
+\end{minipage}
+
+Esta lista se utiliza después para asignar dígitos a los caracteres según el solucionador itera a través de las posibles soluciones.
+
+\section{Hacer aserciones}
+
+Como en muchos lenguajes de programación, en Python existe la sentencia \codigo{assert}. Veamos cómo funciona.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> assert 1 + 1 == 2
+>>> assert 1 + 1 == 3
+Traceback (most recent call last):
+ File "<stdin>", line 1, in <module>
+AssertionError 
+>>> assert 2 + 2 == 5, "Solamente para valores muy grandes de 2"
+Traceback (most recent call last):
+ File "<stdin>", line 1, in <module> 
+AssertionError: Only for very large values of 2
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} La sentencia \codigo{assert} va seguida de cualquier expresión válida en Python. En este caso, la expresion es \codigo{1 + 1 == 2} que se evalúa a \codigo{True}, por lo que la sentencia \codigo{assert} no hace nada.
+
+\item \emph{Línea 2:} Sin embargo, si la expresión evalúa a \codigo{False}, la sentencia \codigo{assert} eleva una excepción \codigo{AssertionError}.
+
+\item \emph{Línea 6:} Puedes incluir un mensaje legible por una persona, que se imprime si se eleva la excepción \codigo{AssertionError}.
+
+\end{enumerate}
+ 
+Por ello, esta línea de código:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+assert len(unique_characters) <= 10, 'Demasiadas letras'
+\end{lstlisting}
+\end{minipage}
+
+...es equivalente a ésta:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+if len(unique_characters) > 10:
+    raise AssertionError('Demasiadas letras')
+\end{lstlisting}
+\end{minipage}
+
+El solucionador de rompecabezas alfaméticos utiliza esta sentencia \codigo{assert} para terminar en caso de que el rompecabezas contenga más de diez letras diferentes. Como a cada letra se le asigna un dígito único y únicamente existen diez dígitos, un rompecabezas con más de diez letras diferentes no tendría solución posible.
+
+\section{Expresiones generadoras}
+
+Una expresión generadora es como una función generadora, pero sin escribir la función.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> unique_characters = {'E', 'D', 'M', 'O', 'N', 'S', 'R', 'Y'} 
+>>> gen = (ord(c) for c in unique_characters)
+>>> gen
+<generator object <genexpr> at 0x00BADC10> 
+>>> next(gen)
+69 
+>>> next(gen) 
+68 
+>>> tuple(ord(c) for c in unique_characters)
+(69, 68, 77, 79, 78, 83, 82, 89)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Una expresión generadora es como una función anónima que va devolviendo valores. La expresión en sí misma se parece bastante a una \emph{lista por compresión}, pero se envuelve entre paréntesis en lugar de corchetes.
+
+\item \emph{Línea 3:} La expresión generadora devuelve... un iterador.
+
+\item \emph{Linea 5:} Al llamar a la función \codigo{next(gen)} se devuelve el siguiente valor del iterador.
+
+\item \emph{Línea 9:} Si quieres, puedes iterar a través de todos los valores convertirlo en una tupla, lista o conjunto, simplemente pasando la expresión generadora como parámetro de las funciones constructoras \codigo{tupla()}, \codigo{list()} o \codigo{set()}. En estos casos no necesitas utilizar el conjunto extra de paréntesis ---simplemente pasa la expresión ``desnuda'' \codigo{ord(c) for c unique\_characters} a la función \codigo{tuple()} y Python es capaz de saber que se trata de una expresión generadora.
+
+\end{enumerate}
+
+\begin{quote}
+El uso de una expresión generadora en lugar de una lista por compresión puede ahorrar \codigo{procesador} y \codigo{memoria RAM}. Si necesitas construir una lista únicamente para luego tirarla (por ejemplo, para pasarla como parámetro a una función \codigo{tuple()} o \codigo{set()}), utiliza en su lugar una expresión generadora.
+\end{quote}
+
+Esta es otra forma de hacer lo mismo pero utilizando una función generadora.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def ord_map(a_string):
+    for c in a_string:
+        yield ord(c)
+
+gen = ord_map(unique_characters)
+\end{lstlisting}
+\end{minipage}
+
+La expresión generadora es más compacta pero funcionalmente equivalente.
+
+\section{Cálculo de permutaciones... ¡De forma perezosa!}
+
+Ante todo ¿qué diablos son las permutaciones? Se trata de un concepto matemático. En realidad existen diferentes definiciones dependiendo del tipo de matemáticas que esté haciendo. Aquí estamos hablando de combinatoria, pero si no tiene sentido para ti, no te preocupes. Como siempre ``la wikipedia es tu amiga'': \href{http://es.wikipedia.org/wiki/Permutaci%C3%B3n}{http://es.wikipedia.org/wiki/Permutación}
+
+La idea es que tomes una lista de cosas (podrían ser números, letras o osos bailarines) y encuentres todas las formas posibles de dividirlos en listas más pequeñas. Todas las listas más pequeñas tendrán el mismo tamaño, que puede ser desde 1 al número total de elementos. ¡Ah! y no se pueden repetir. Los matemáticos dicen ``vamos a encontrar las permutaciones de tres elementos tomados de dos en dos'', lo que significa que la secuencia original tiene tres elementos y quieren encontrar todas las posibles listas ordenadas formadas por dos de ellos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import itertools
+>>> perms = itertools.permutations([1, 2, 3], 2)
+>>> next(perms)
+(1, 2)
+>>> next(perms)
+(1, 3)
+>>> next(perms)
+(2, 1)
+>>> next(perms)
+(2, 3)
+>>> next(perms)
+(3, 1)
+>>> next(perms)
+(3, 2)
+>>> next(perms)
+Traceback (most recent call last):
+ File "<stdin>", line 1, in <module> 
+StopIteration
+\end{lstlisting}
+\end{minipage}
+
+\cajaTexto{El módulo \codigo{itertools} contiene muchas utilidades}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El módulo \codigo{itertools} contiene toda clase de funciones útiles, incluida una denominada \codigo{permutations()} que hace el trabajo duro de encontrar permutaciones.
+
+\item \emph{Línea 2:} La función \codigo{permutations()} toma como parámetros una secuencia (en este caso una lista de tres enteros) y un número, que es el número de elementos que debe contener cada grupo más pequeño. La función retorna un iterador, que puedes utilizar en un bucle \codigo{for} o en cualquier sitio en el que haya que iterar. En este ejemplo vamos a ir paso a paso con el iterador de forma manual para mostrar todos los valores.
+
+\item \emph{Línea 3:} La primera permutación de \codigo{[1, 2, 3]} tomando dos elementos cada vez es \codigo{(1, 2)}.
+
+\item \emph{Línea 8:} Observa que las permutaciones que se van obteniendo son ordenadas: \codigo{(2, 1)} es diferente a \codigo{(1, 2)}.
+
+\item \emph{Línea 15:} ¡Eso es! ya están todas las permutaciones de \codigo{[1, 2, 3]} tomadas de dos en dos. Las parejas \codigo{(1, 1)} y \codigo{(2, 2)} no se muestran nunca porque contienen repeticiones del mismo elemento por lo que no son permutaciones. Cuando un existen más permutaciones el iterador eleva una excepción \codigo{StopIteration}.
+
+\end{enumerate}
+
+La función \codigo{permutations()} no necesita tomar una lista, puede tomar como parámetro cualquier secuencia ---incluso una cadena de caracteres.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import itertools 
+>>> perms = itertools.permutations('ABC', 3)
+>>> next(perms) 
+('A', 'B', 'C')
+>>> next(perms) 
+('A', 'C', 'B') 
+>>> next(perms) 
+('B', 'A', 'C') 
+>>> next(perms) 
+('B', 'C', 'A') 
+>>> next(perms) 
+('C', 'A', 'B') 
+>>> next(perms) 
+('C', 'B', 'A') 
+>>> next(perms) 
+Traceback (most recent call last):
+ File "<stdin>", line 1, in <module> 
+StopIteration 
+>>> list(itertools.permutations('ABC', 3))
+[('A', 'B', 'C'), ('A', 'C', 'B'),
+ ('B', 'A', 'C'), ('B', 'C', 'A'),
+ ('C', 'A', 'B'), ('C', 'B', 'A')]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Una cadena de caracteres es una secuencia de caracteres. Para los propósitos de obtener permutaciones, la cadena \codigo{'ABC'} es equivalente a la lista \codigo{['A', 'B', 'C']}.
+
+\item \emph{Línea 4:} La primera permutación de los tres elementos \codigo{['A', 'B', 'C']} tomados de tres en tres, es \codigo{('A', 'B', 'C')}. Hay otras cinco permutaciones ---los mismos tres caracteres en cualquier orden posible.
+
+\item \emph{Línea 19:} Puesto que la función \codigo{permutations()} retorna siempre un iterador, una forma fácil de depurar las permutaciones es pasar ese iterador a la función interna \codigo{list()} para ver de forma inmediata todas las permutaciones posibles.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import itertools
+>>> list(itertools.product('ABC', '123'))
+[('A', '1'), ('A', '2'), ('A', '3'), 
+ ('B', '1'), ('B', '2'), ('B', '3'), 
+ ('C', '1'), ('C', '2'), ('C', '3')]
+>>> list(itertools.combinations('ABC', 2))
+[('A', 'B'), ('A', 'C'), ('B', 'C')]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La función \codigo{itertools.product()} devuelve un iterador que contiene el producto cartesiano de dos secuencias.
+
+\item \emph{Línea 6:} La función \codigo{itertools.combinations()} devuelve un iterador con todas las posibles combinaciones de una longitud determinada. Es como la función \codigo{itertools.permutation()}, con la diferencia que las combinaciones no contienen los elementos repetidos en los que la única diferencia es el orden. Por eso \codigo{itertools.permutations('ABC', 2)} retorna \codigo{('A', 'B')} y \codigo{('B', 'A')} (entre otros), pero \codigo{itertools.combinations('ABC', 2)} no retornará \codigo{('B', 'A')} al ser un uplicado de \codigo{('A', 'B')} en orden diferente.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> names = list(open('examples/favorite-people.txt', encoding='utf-8'))
+>>> names
+['Dora\n', 'Ethan\n', 'Wesley\n', 'John\n', 'Anne\n',
+'Mike\n', 'Chris\n', 'Sarah\n', 'Alex\n', 'Lizzie\n']
+>>> names = [name.rstrip() for name in names]
+>>> names
+['Dora', 'Ethan', 'Wesley', 'John', 'Anne',
+'Mike', 'Chris', 'Sarah', 'Alex', 'Lizzie']
+>>> names = sorted(names)
+>>> names
+['Alex', 'Anne', 'Chris', 'Dora', 'Ethan',
+'John', 'Lizzie', 'Mike', 'Sarah', 'Wesley']
+>>> names = sorted(names, key=len)
+>>> names
+['Alex', 'Anne', 'Dora', 'John', 'Mike',
+'Chris', 'Ethan', 'Sarah', 'Lizzie', 'Wesley']
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Esta forma de leer un fichero retorna una lista formada por todas las líneas del fichero de texto.
+
+\item \emph{Línea 5:} Desafortunadamente (para este ejemplo), también incluye los retornos de carro al final de cada línea. Esta lista por compresión utiliza el método de cadenas \codigo{rstrip()} para eliminar los espacios en blanco del final de cada línea (Las cadenas de texto también tienen una función \codigo{lstrip()} para eliminar los espacios del comienzo de la cadena y un método \codigo{strip()} para eliminarlos por ambos lados).
+
+\item \emph{Línea 9:} La función \codigo{sorted()} toma una lista y la retorna ordenada. Por defecto, la ordena alfabéticamente.
+
+\item \emph{Línea 13:} Pero la función \codigo{sorted()} puede tomar un parámetro más denominado \codigo{key} que se utiliza para ordenar con él. En este caso, la función que se utiliza es \codigo{len()} por lo que ordena mediante \codigo{len(cada elemento)}, por lo que los nombres más cortos van al principio, seguidos de los más largos.
+
+\end{enumerate}
+
+¿Qué tiene esto que ver con el módulo \codigo{itertools}? Me alegro de que me hagas esa pregunta.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+(...como continuaci$\ac{o}$n de la consola interactiva anterior...)
+>>> import itertools
+>>> groups = itertools.groupby(names, len)
+>>> groups
+<itertools.groupby object at 0x00BB20C0>
+>>> list(groups)
+[(4, <itertools._grouper object at 0x00BA8BF0>),
+ (5, <itertools._grouper object at 0x00BB4050>),
+ (6, <itertools._grouper object at 0x00BB4030>)]
+>>> groups = itertools.groupby(names, len)
+>>> for name_length, name_iter in groups:
+...     print('Nombres con {0:d} letras:'.format(name_length))
+...     for name in name_iter:
+...         print(name)
+... 
+Nombres con 4 letras:
+Alex
+Anne
+Dora
+John
+Mike
+Nombres con 5 letras:
+Chris
+Ethan
+Sarah
+Nombres con 6 letras:
+Lizzie
+Wesley
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} La función \codigo{itertools.groupby()} toma una secuencia y una función clave para retornar un iterador que genera parejas. Cada una de ellas contiene el resultado de la función que se usa como clave (\codigo{key(cada elemento)}) y otro iterador que contiene a todos los elementos que comparten el mismo resultado de la función clave.
+
+\item \emph{Línea 10:} Al haber utilizado la función \codigo{list()} en la línea anterior el iterador se consumió, puesto que ya se ha recorrido cada elemento del iterador para construir la lista. No hay un botón ``reset'' en un iterador, no puedes volver a usarlo una vez se ha ``gastado''. Si quieres volver a iterar por él (como en el bucle \codigo{for} que viene a continuación), necesitas llamar de nuevo a \codigo{itertools.groupby()} para crear un nuevo iterador.
+
+\item \emph{Línea 11:} En este ejemplo, dada una lista de nombres \emph{ya ordenada por longitud}, la función \codigo{itertools.groupby(names, len)} pondrá todos los nombres de cuatro letras en un iterador, los de cinco letras en otro, y así sucesivamente. La función \codigo{groupby()} es completamente genérica; podería agrupar cadenas por la primera letra, los números por el número de factores o cualuqier otra función \emph{clave} que puedas imaginar.
+
+\end{enumerate}
+
+\begin{quote}
+La función \codigo{itertools.groupby()} solamente funciona si la secuencia de entrada ya está ordenada por la función de ordenación. En el ejemplo anterior, agrupamos una lista de nombres mediante la función \codigo{len()}. Esto funcionó bien porque la lista de entrada ya estaba ordenada por longitud.
+\end{quote}
+
+¿Estás atento?
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> list(range(0, 3))
+[0, 1, 2]
+>>> list(range(10, 13))
+[10, 11, 12]
+>>> list(itertools.chain(range(0, 3), range(10, 13)))
+[0, 1, 2, 10, 11, 12]
+>>> list(zip(range(0, 3), range(10, 13)))           
+[(0, 10), (1, 11), (2, 12)]
+>>> list(zip(range(0, 3), range(10, 14)))          
+[(0, 10), (1, 11), (2, 12)]
+>>> list(itertools.zip_longest(range(0, 3), range(10, 14)))
+[(0, 10), (1, 11), (2, 12), (None, 13)]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} La función \codigo{itertools.chain()} toma dos iteradores y retorna un iterador que contiene todos los elementos del primer iterador seguidos de todos los elementos del segundo iterador (en realidad puede tomar como parámetros cualquier número de iteradores, los encadenará a todos en el orden en el que se pasaron a la función).
+
+\item \emph{Línea 7:} La función \codigo{zip()} hace algo que suele ser extremadamente útil: toma cualquier número de secuencias y retorna un iterador que retorna tuplas con un elemento de cada secuencia (comenzando por el principio), la primera tupla contiene el primer elemento de cada secuencia, la segunda el segundo de cada secuencia, luego el tercero, y así sucesivamente.
+
+\item \emph{Línea 9:} La función \codigo{zip()} para cuando se acaba la secuencia más corta. \codigo{range(10,14)} tiene cuatro elementos (10, 11, 12 y 13), pero \codigo{range(0,3)} solamente tiene tres, por lo que la función \codigo{zip()} retorna un iterador con tres tuplas.
+
+\item \emph{Línea 11:} De otra parte, la función \codigo{itertools.zip\_longest()} itera hasta el final de la secuencia más larga, insertando valores \codigo{None} en los elementos que corresponden a las secuencias que, por ser más cortas, ya se han consumido totalmente.
+
+\end{enumerate}
+
+De acuerdo, todo eso es muy interesante, pero ¿cómo se relaciona con el solucionador de rompecabezas alfaméticos? Así:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> characters = ('S', 'M', 'E', 'D', 'O', 'N', 'R', 'Y')
+>>> guess = ('1', '2', '0', '3', '4', '5', '6', '7')
+>>> tuple(zip(characters, guess))
+(('S', '1'), ('M', '2'), ('E', '0'), ('D', '3'),
+ ('O', '4'), ('N', '5'), ('R', '6'), ('Y', '7'))
+>>> dict(zip(characters, guess))
+{'E': '0', 'D': '3', 'M': '2', 'O': '4',
+ 'N': '5', 'S': '1', 'R': '6', 'Y': '7'}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} Dada una lista de letras y una lista de dígitos (cada uno representado aquí por una cadena de un carácter de longitud), la función \codigo{zip()} creará parejas de letras y dígitos en orden.
+
+\item \emph{Línea 6:} ¿Porqué es tan útil? Porque esta estructura de datos es exactamente la estructura adecuada para pasarla a la función \codigo{dict()} con el fin de crear un diccionario que utilice letras como claves y los dígitos asociados como valores (No es la única forma de hacerlo, por supuesto. Podrías utilizar un diccionario por compresión para crear el diccionario directamente). Aunque la representación impresa del diccionario muestra las parejas en orden diferente (los diccionarios no tiene ``orden'' por sí mismos), puedes observar que cada letra está asociada con el dígito en base a la ordenación original de las secuencias \codigo{characters} y \codigo{guess}.
+
+\end{enumerate}
+
+El solucionador de rompecabezas alfaméticos utiliza esta técnica para crear un diccionario que empareja las letras del rompecabezas con los dígitos de la solución, para cada posible solución.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+characters = tuple(ord(c) for c in sorted_characters)
+digits = tuple(ord(c) for c in '0123456789')
+...
+for guess in itertools.permutations(digits, len(characters)):
+    ...
+    equation = puzzle.translate(dict(zip(characters, guess)))
+\end{lstlisting}
+\end{minipage}
+
+Pero ¿qué hace el método \codigo{translate()} ---línea 6---? Ahora es cuando estamos llegando a la parte \emph{realmente} divertida.
+
+\section{Una nueva forma de manipular listas}
+
+Las cadenas de Python tienen muchos métodos. Algunos de ellos los aprendiste en el capítulo dedicado a las cadenas: \codigo{lower()}, \codigo{count()} y \codigo{format()}. Ahora quiero explicarte una técnica potente pero poco conocida de manipulación de listas: el método \codigo{translate()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> translation_table = {ord('A'): ord('O')}
+>>> translation_table                      
+{65: 79}
+>>> 'MARK'.translate(translation_table)   
+'MORK'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} La traducción de cadenas comienza con una tabla de traducción, que es un diccionario que empareja un carácter con otro. En realidad, decir ``carácter'' es incorrecto ---la tabla de traducción realmente empareja un \emph{byte} con otro.
+
+\item \emph{Línea 2:} Recuerda que en Python 3 los bytes son enteros. La función \codigo{ord()} devuelve el valor \codigo{ASCII} de un carácter, lo que, en el caso de \codigo{A-Z}, siempre es un byte entre el 65 y el 90.
+
+\item \emph{Línea 4:} El método \codigo{translate()} se aplica sobre una cadena de texto utilizando una tabla de traducción. Reemplaza todas las ocurrencias de las claves de la tabla de traducción por los valores correspondientes. En este caso se ``traduce'' \codigo{MARK} a \codigo{MORK}.
+
+\end{enumerate}
+
+¿Qué tiene esto que ver con la resolución de rompecabezas alfaméticos?. Como verás a continuación: todo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> characters = tuple(ord(c) for c in 'SMEDONRY')
+>>> characters
+(83, 77, 69, 68, 79, 78, 82, 89)
+>>> guess = tuple(ord(c) for c in '91570682')
+>>> guess
+(57, 49, 53, 55, 48, 54, 56, 50)
+>>> translation_table = dict(zip(characters, guess))
+>>> translation_table
+{68: 55, 69: 53, 77: 49, 78: 54, 79: 48, 82: 56, 83: 57, 89: 50}
+>>> 'SEND + MORE == MONEY'.translate(translation_table)
+'9567 + 1085 == 10652'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Mediante una expresión generadora calculamos rápidamente los valores de los bytes de cada carácter de una cadena. \codigo{characters} es un ejemplo del valor que puede contener \codigo{sorted\_characters} en la función \codigo{alphametics.solve()}.
+
+\item \emph{Línea 4:} Mediante el uso de otra expresión generadora calculamos rápidamente los valores de los bytes de cada dígito de esta cadena. El resultado, \codigo{guess}, se encuentra en la forma que retorna la función \codigo{itertools.permutations()} en la función \codigo{alphametics.solve()}.
+
+\item \emph{Línea 7:} Esta tabla de traducción se genera mediante la función \codigo{zip()} uniendo los \codigo{characters} y \codigo{guess} en un diccionario. Esto es exactamente lo que la función \codigo{alphametics.solve()} hace en el bucle \codigo{for}.
+
+\item \emph{Línea 10:} Finalmente, pasamos esta tabla de traducción al método \codigo{translate()} aplicándolo a la cadena original del rompecabezas. Esto convierte cada letra de la cadena en el dígito que le corresponde (basado en las letras existentes en \codigo{characters} y los dígitos de \codigo{guess}). El resultado es una expresión válida de Python, aunque en forma de cadena de texto.
+
+\end{enumerate}
+
+Esto es impresionante. Pero ¿Qué puedes hacer con una cadena que representa a una expresión válida de Python?
+
+\section{Evaluación de cadenas de texto como expresiones de Python}
+
+Esta es la pieza final del rompecabezas (o mejor dicho, la pieza final del solucionador de rompecabezas). Después de tanta manipulación de cadenas tan moderna, nos ha quedado una cadena como \codigo{'9567 + 1085 == 10652'}. Pero es una cadena de texto, y ¿para qué nos vale una cadena de texto? Pide paso \codigo{eval()}, la herramienta universal para evaluación de expresiones en Python.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> eval('1 + 1 == 2')
+True
+>>> eval('1 + 1 == 3')
+False
+>>> eval('9567 + 1085 == 10652')
+True
+\end{lstlisting}
+\end{minipage}
+
+Pero espera, ¡hay más! La función \codigo{eval()} no se limita a expresiones booleanas. Puede manejar \emph{cualquier} expresión en Python y devolver \emph{cualquier} tipo de datos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> eval('"A" + "B"')
+'AB'
+>>> eval('"MARK".translate({65: 79})')
+'MORK'
+>>> eval('"AAAAA".count("A")')
+5
+>>> eval('["*"] * 5')
+['*', '*', '*', '*', '*']
+\end{lstlisting}
+\end{minipage}
+
+Pero espera, ¡que eso no es todo!
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> x = 5
+>>> eval("x * 5")
+25
+>>> eval("pow(x, 2)")
+25
+>>> import math
+>>> eval("math.sqrt(x)")
+2.2360679774997898
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La expresión que \codigo{eval()} recibe como parámetro puede referenciar a cualquier variable global definida fuera de la función \codigo{eval()}. Si se llama desde una función, también puede referenciar variables locales.
+
+\item \emph{Línea 4:} Y funciones.
+
+\item \emph{Línea 7:} Y módulos.
+
+\end{enumerate}
+
+Pero espera un minuto...
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import subprocess
+>>> eval("subprocess.getoutput('ls ~')")
+'Desktop         Library         Pictures \
+ Documents       Movies          Public   \
+ Music           Sites'
+>>> eval("subprocess.getoutput('rm /some/random/file')")
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El módulo \codigo{subprocess} te permite ejecutar comandos de la línea de comandos y obtener el resultado como una cadena de Python.
+
+\item \emph{Línea 6:} Los comandos de la línea de comandos pueden producir resultados permanentes.
+
+\end{enumerate}
+
+Es incluso peor que esto, porque existe una función global \codigo{\_\_import\_\_()} que toma como parámetro el nombre de un módulo como cadena de texto, importa el módulo y devuelve una referencia a él. Combinado con el poder de la función \codigo{eval()} puedes construir una expresión que te borre todos los ficheros:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> eval("__import__('subprocess').getoutput('rm /some/random/file')")
+\end{lstlisting}
+\end{minipage}
+
+Ahora imagina la salida de \codigo{'rm -rf ~'}. Realmente no habría ninguna salida por pantalla, pero tampoco te habría quedado ningún fichero en tu cuenta de usuario.
+
+{
+
+\Huge \center eval() es MALIGNO
+
+}
+
+Bueno, lo maligno de de eval es la posibilidad de evaluar expresiones procedentes de fuentes que no sean de confianza.  Solamente deberías utilizar \codigo{eval()} para entradas ``de confianza''. Lo complicado es saber qué es de ``confianza''. Pero hay algo que debes tener seguro: no deberías tomar este solucionador de rompecabezas alfaméticos y ponerlo en Internet como un servicio web. No cometas el error de pensar, ``la función hace un montón de manipulaciones de cadenas antes de evaluar la cadena; \codigo{no puedo imaginar} cómo alguien podría explotar eso''. Alguien descubrirá una forma de introducir algún código maligno que traspase toda la manipulación de cadenas previa(echa un vistazo a: \href{http://www.securityfocus.com/blogs/746}{http://www.securityfocus.com/blogs/746} y verás que cosas más raras han pasado), y podrás irte despidiendo de tu servidor.
+
+Pero... ¿Seguro que existe una forma de evaluar expresiones de forma segura? ¿Para que \codigo{eval()} se ejecute en un entorno aislado en el que no se pueda acceder a él desde el exterior? Sí y no.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> x = 5
+>>> eval("x * 5", {}, {})
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 1, in <module>
+NameError: name 'x' is not defined
+>>> eval("x * 5", {"x": x}, {})
+>>> import math
+>>> eval("math.sqrt(x)", {"x": x}, {})
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 1, in <module>
+NameError: name 'math' is not defined
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El segundo y tercer parámetro que se pasen a la función \codigo{eval()} actúan como los espacios de nombre local y global para evaluar la expresión. En este caso ambos están vacíos, lo que significa que cuando se evalúa la cadena ``x * 5'' no existe referencia a \codigo{x} ni en el espacio de nombres local ni en el global, por lo que \codigo{eval()} genera una excepción.
+
+\item \emph{Línea 7:} Puedes incluir selectivamente valores específicos en el espacio de nombres global listándolos individualmente. Entonces, serán las únicas variables que estarán disponibles durante la evaluación.
+
+\item \emph{Línea 9:} Incluso aunque hayas importado el módulo \codigo{math}, no se incluyó en el espacio de nombres que se pasó a la función \codigo{eval()}, por lo que la evaluación falla.
+
+\end{enumerate}
+
+Parece que fue fácil. ¡Déjame ya que haga un servicio web con el solucionador de rompecabezas alfamético!
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> eval("pow(5, 2)", {}, {})
+25
+>>> eval("__import__('math').sqrt(5)", {}, {})
+2.2360679774997898
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Incluso aunque hayas pasado diccionarios vacíos para el espacio de nombres local y global, siguien estando disponibles todas las funciones internas de Python. Por eso \codigo{pow(5, 2)} funciona, porque \codigo{5} y \codigo{2} son literales y \codigo{pow()} es una función interna.
+
+\item \emph{Línea 3:} Desafortunadamente (y si no ves porqué es desafortunado, sigue leyendo), la función \codigo{\_\_import\_\_()} es interna, por lo que también funciona.
+
+\end{enumerate}
+
+Vale, eso significa que aún puedes hacer cosas malignas, incluso aunque explicitamente establezcas los espacios de nombre local y global a diccionarios vacíos, cuando llamas a la función \codigo{eval()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> eval("__import__('subprocess').getoutput('rm /some/random/file')", {}, {})
+\end{lstlisting}
+\end{minipage}
+
+Vale, estoy contento de no haber hecho el servicio web del solucionador de rompecabezas alfamético. ¿Hay \emph{algún} modo de usar \codigo{eval()} de forma segura? Bueno, sí y no.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> eval("__import__('math').sqrt(5)",
+...     {"__builtins__":None}, {})
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 1, in <module>
+NameError: name '__import__' is not defined
+>>> eval("__import__('subprocess').getoutput('rm -rf /')",
+...     {"__builtins__":None}, {})
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 1, in <module>
+NameError: name '__import__' is not defined
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Para evaluar de forma segura expresiones en las que no confíes, necesitas definir el diccionario del espacio de nombres global para que mapee \codigo{"\_\_builtins\_\_"} a \codigo{None}, el valor nulo de Python. Internamente, las funciones ``internas'' se encuentran en un pseudo-módulo denominado \codigo{"\_\_builtins\_\_"}. Este pseudo-módulo (el conjunto de funciones internas) está disponible para evaluar expresiones a menos que expresamente lo sustituyas.
+
+\item \emph{Línea 8:} Asegúrate de que sustituyes \codigo{"\_\_builtins\_\_"}. No \codigo{\_\_builtin\_\_}, \codigo{\_\_built-ins\_\_} o alguna otra variación parecida que te exponga a riesgos catastróficos.
+
+\end{enumerate}
+
+¿Así que ahora ya es seguro utilizar \codigo{eval()}? Bueno, sí y no.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> eval("2 ** 2147483647",
+...     {"__builtins__":None}, {})
+\end{lstlisting}
+\end{minipage}
+
+Incluso sin acceso a las funciones internas, puedes lanzar aún un ataque de denegación del servicio. Por ejemplo, elevar \codigo{2} a la potencia \codigo{2147483647} hará que el uso de la \codigo{CPU} del servidor se eleve al 100\% durante algún tiempo (si pruebas esto en modo interactivo pulsa \codigo{Ctrl-C} varias veces hasta que se cancele). Técnicamente esta expresión \emph{retornará} un valor en algún momento, pero mientras tanto el servidor estará ocupado.
+
+Al final, \emph{es} posible evaluar de forma segura expresiones Python de fuentes que no sean de confianza, para una definición de ``seguro'' que no es muy útil en la vida real. Está bien que hagas pruebas, y está bien si solamente le pasas datos de fuentes de confianza. Pero cualquier otra cosa es está \emph{buscando problemas}.
+
+\section{Juntándolo todo}
+
+Para recapitular: este programa resuelve rompecabezas alfaméticos mediante la fuerza bruta, a través de la búsqueda exhaustiva de todas las posibles combinaciones de solución. Para hacer esto, los pasos que sigue son:
+
+\begin{enumerate}
+
+\item Encuentra todas las letras del rompecabezas con la función \codigo{re.findall()}.
+
+\item Determina las letras que son, sin repetición, utilizando conjuntos y la función \codigo{set()}.
+
+\item Comprueba si hay más de 10 letras diferentes (lo que significaría que el rompecabezas no tiene solución) con la sentencia \codigo{assert}.
+
+\item Convierte las letras a sus equivalentes en \codigo{ASCII} con un objeto generador.
+
+\item Calcula todas las posibles soluciones con la función \codigo{itertools.permutations()}.
+
+\item Convierte cada una de las soluciones posibles a una expresión en Python con el método de cadenas de texto \codigo{translate()}.
+
+\item Prueba cada una de las posibles soluciones evaluando la expresión Python con la función \codigo{eval()}.
+
+\item Devuelve la primera solución que se evalúa a \codigo{True}.
+
+\end{enumerate}
+
+...en sólo catorce líneas de código.
+
+\section{Lecturas recomendades}
+
+\begin{itemize}
+
+\item el módulo \codigo{itertools}:\newline\href{http://docs.python.org/3.1/library/itertools.html}{http://docs.python.org/3.1/library/itertools.html}
+
+\item \codigo{itertools}---Funciones iteradoras para bucles eficientes:\newline\href{http://www.doughellmann.com/PyMOTW/itertools/}{http://www.doughellmann.com/PyMOTW/itertools/}
+
+\item Video de Raymond Hettinger con la charla ``Inteligencia Artificial sencilla con Python'' en la PyCon 2009:\newline\href{http://blip.tv/file/1947373/}{http://blip.tv/file/1947373/}
+
+\item Receta 576615 - solucionador de rompecabezas alfaméticos de Raymond Hettinger para Python 2:\newline\href{http://code.activestate.com/recipes/576615/}{http://code.activestate.com/recipes/576615/}
+
+\item Más recetas de Raymond Kettinger en el repositorio de código ActiveState:\newline\href{http://code.activestate.com/recipes/users/178123/}{http://code.activestate.com/recipes/users/178123/}
+
+\item Alfamética en la wikipedia:\newline\href{http://en.wikipedia.org/wiki/Verbal\_arithmetic}{http://en.wikipedia.org/wiki/Verbal\_arithmetic}
+
+\item Indice alfamético:\newline\href{http://www.tkcs-collins.com/truman/alphamet/index.shtml}{http://www.tkcs-collins.com/truman/alphamet/index.shtml}\newline Con muchos rompecabezas:\newline\href{http://www.tkcs-collins.com/truman/alphamet/alphamet.shtml}{http://www.tkcs-collins.com/truman/alphamet/alphamet.shtml}\newline Y un generador de rompecabezas alfaméticos:\newline\href{http://www.tkcs-collins.com/truman/alphamet/alpha\_gen.shtml}{http://www.tkcs-collins.com/truman/alphamet/alpha\_gen.shtml}
+
+\end{itemize}
+
+Muchas gracias a Raymond Hattinger por permitirme relicenciar su código para que pudiera portarlo a Python 3 y utilizarlo como base para este capítulo.
