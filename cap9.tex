@@ -1,0 +1,1080 @@
+% ch9.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Pruebas unitarias}\label{ch:pruebas_unitarias}
+
+\noindent
+Nivel de dificultad:\difll
+
+\begin{citaCap}
+``La certidumbre no es prueba de que algo sea cierto. \\
+ Hemos estado tan seguros de tantas cosas que luego no lo eran.'' \\
+---\href{http://en.wikiquote.org/wiki/Oliver\_Wendell\_Holmes,\_Jr.}{Oliver Wendell Holmes, Jr}
+\end{citaCap}
+
+\section{(Sin) Inmersión}
+
+En este capítulo vas a escribir y depurar un conjunto de funciones de utilidad para convertir números romanos (en ambos sentidos). En el caso de estudio de los números romanos ya vimos cual es la mecánica para construir y validar números romanos. Ahora vamos a volver a él para considerar lo que nos llevaría expandirlo para que funcione como una utilidad en ambos sentidos.
+
+Las reglas para los números romanos sugieren una serie de interesantes observaciones:
+
+\begin{itemize}
+
+\item Solamente existe una forma correcta de representar un número cualquiera con los dígitos romanos.
+
+\item Lo contrario también es verdad: si una cadena de caracteres es un número romano válido, representa a un único número (solamente se puede interpretar de una forma).
+
+\item Existe un rango limitado de valores que se puedan expresar como números romanos, en concreto del \codigo{1} al \codigo{3999}. Los romanos tenían varias maneras de expresar números mayores, por ejemplo poniendo una barra sobre un número para indicar que el valor normal que representaba tenía que multiplicarse por \codigo{1000}. Para los propósitos que perseguimos en este capítulo, vamos a suponer que los números romanos van del \codigo{1} al \codigo{3999}. 
+
+\item No existe ninguna forma de representar el \codigo{0} en números romanos.
+
+\item No hay forma de representar números negativos en números romanos.
+
+\item No hay forma de representar fracciones o números no enteros con números romanos.
+
+\end{itemize}
+
+Vamos a comenzar explicando lo que el módulo \codigo{roman.py} debería hacer. Tendrá que tener dos funciones principales \codigo{to\_roman()} y \codigo{from\_romman()}. La función \codigo{to\_roman()} debería tomar como parámetro un número entero de \codigo{1} a \codigo{3999} y devolver su representación en números Romanos como una cadena...
+
+Paremos aquí. Vamos a comenzar haciendo algo un poco inesperado: escribir un caso de prueba que valide si la función \codigo{to\_roman()} hace lo que quieres que haga. Lo has leído bien: vas a escribir código que valide la función que aún no has escrito.
+
+A esto se le llama \emph{desarrollo dirigido por las pruebas ---test driven development, o TDD---}. El conjunto formado por las dos funciones de conversión ---\codigo{to\_roman()}, y \codigo{from\_roman()}--- se puede escribir y probar como una unidad, separadamente de cualquier programa mayor que lo utilice. Python dispone de un marco de trabajo (framework) para pruebas unitarias, el módulo se llama, apropiadamente, \codigo{unittest}.
+
+La prueba unitaria es una parte importante de una estrategia de desarrollo centrada en las pruebas. Si escribes pruebas unitarias es importante escribirlas pronto y mantenerlas actualizadas con el resto del código y con los cambios de requisitos. Muchas personas dicen que las pruebas se escriban antes que el código que se vaya a probar, y este es el estilo que voy a enseñarte en este capítulo. De todos modos, las pruebas unitarias son útiles independientemente de cuando las escribas.
+
+\begin{itemize}
+
+\item Antes de escribir el código, el escribir las pruebas unitarias te oblica a detallar los requisitos de forma útil.
+
+\item Durante la escritura del código, las pruebas unitarias evitan que escribas demasiad código. Cuando pasan los todos los casos de prueba, la función está completa.
+
+\item Cuando se está reestructurando el código\footnote{refactoring}, pueden ayudar a probar que la nueva versión se comporta de igual manera que la vieja.
+
+\item Cuando se mantiene el código, disponer de pruebas te ayuda a cubrirte el trasero cuando alquien viene gritando que tu último cambio en el código ha roto el antiguo que ya funcionaba.
+
+\item Cuando codificas en un equipo, disponer de un juego de pruebas completo disminuye en gran medida la probabilidad de que tu código rompa el de otra persona, ya que puedes ejecutar los casos de prueba antes de introducir cambios (He visto esto pasar en las competiciones de código. Un equipo trocea el trabajo asignado, todo el mundo toma las especificaciones de su tarea, escribe los casos de prueba para ella en primer lugar, luego comparte sus casos de prueba con el resto del equipo. De ese modo, nadie puede perderse demasiado desarrollando código que no funcione bien con el del resto).
+
+\end{itemize}
+
+\section{Una única pregunta}
+
+Un caso de prueba (unitaria) contesta a una única pregunta sobre el código que está probando. Un caso de prueba (unitaria) debería ser capaz de...
+
+\cajaTexto{Toda prueba es una isla.}
+
+\begin{itemize}
+
+\item ...ejecutarse completamente por sí mismo, sin necesidad de ninguna entrada manual. Las pruebas unitarias deben ser automáticas.
+
+\item ...determinar por sí misma si la función que se está probando ha funcionado correctamente o a fallado, sin la necesidad de que exista una persona que interprete los resultados.
+
+\item ...ejecutarse de forma aislada, separada de cualquier otro caso de prueba (incluso aunque estos otros prueben las mismas funciones). Cada caso de prueba es una isla.
+
+\end{itemize}
+
+Dado esto, construyamos un caso de prueba para el primer requisito:
+
+\begin{itemize}
+
+\item La función \codigo{to\_roman()} debería devolver el número Romano que represente a los números enteros del \codigo{1} al \codigo{3999}.
+
+\end{itemize}
+
+Lo que no es obvio es cómo el código siguiente efectúa dicho cálculo. Define una clase que no tiene método \codigo{\_\_init\_\_()}. La clase \emph{tiene} otro método, pero nunca se llama. El código tiene un bloque \codigo{\_\_main\_\_}, pero este bloque ni referencia a la clase ni a su método. Pero hace algo, te lo juro.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# romantest1.py
+import roman1
+import unittest
+
+class KnownValues(unittest.TestCase):
+    known_values = ( (1, 'I'), (2, 'II'),
+                     (3, 'III'), (4, 'IV'),
+                     (5, 'V'), (6, 'VI'),
+                     (7, 'VII'), (8, 'VIII'),
+                     (9, 'IX'), (10, 'X'),
+                     (50, 'L'), (100, 'C'),
+                     (500, 'D'), (1000, 'M'),
+                     (31, 'XXXI'), (148, 'CXLVIII'),
+                     (294, 'CCXCIV'), (312, 'CCCXII'),
+                     (421, 'CDXXI'), (528, 'DXXVIII'),
+                     (621, 'DCXXI'), (782, 'DCCLXXXII'),
+                     (870, 'DCCCLXX'), (941, 'CMXLI'),
+                     (1043, 'MXLIII'), (1110, 'MCX'),
+                     (1226, 'MCCXXVI'), (1301, 'MCCCI'),
+                     (1485, 'MCDLXXXV'), (1509, 'MDIX'),
+                     (1607, 'MDCVII'), (1754, 'MDCCLIV'),
+                     (1832, 'MDCCCXXXII'), (1993, 'MCMXCIII'),
+                     (2074, 'MMLXXIV'), (2152, 'MMCLII'),
+                     (2212, 'MMCCXII'), (2343, 'MMCCCXLIII'),
+                     (2499, 'MMCDXCIX'), (2574, 'MMDLXXIV'),
+                     (2646, 'MMDCXLVI'), (2723, 'MMDCCXXIII'),
+                     (2892, 'MMDCCCXCII'), (2975, 'MMCMLXXV'),
+                     (3051, 'MMMLI'), (3185, 'MMMCLXXXV'),
+                     (3250, 'MMMCCL'), (3313, 'MMMCCCXIII'),
+                     (3408, 'MMMCDVIII'), (3501, 'MMMDI'),
+                     (3610, 'MMMDCX'), (3743, 'MMMDCCXLIII'),
+                     (3844, 'MMMDCCCXLIV'), (3888, 'MMMDCCCLXXXVIII'),
+                     (3940, 'MMMCMXL'), (3999, 'MMMCMXCIX'))
+
+    def test_to_roman_known_values(self):
+        '''to_roman should give known result with known input'''
+        for integer, numeral in self.known_values:
+            result = roman1.to_roman(integer)
+            self.assertEqual(numeral, result)
+
+if __name__ == '__main__':
+    unittest.main()
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} Para escribir un caso de prueba, lo primero es crear una subclase de \codigo{TestCase} del módulo \codigo{unittest}. Esta clase proporciona muchos métodos útiles que se puedne utilizar en los casos de prueba para comprobar condiciones específicas.
+
+\item \emph{Línea 33:} Esto es una lista de pares de números enteros y sus números romanos equivalentes que he verificado manualmente. Incluye a los diez primeros números, el mayor, todos los números que se convierten un único carácter romano, y una muestra aleatoria de otros números válidos. No es necesario probar todas las entradas posibles, pero deberían probarse los casos de prueba límite.
+
+\item \emph{Línea 35:} Cada caso de prueba debe escribirse en su propio método, que no debe tomar parámetros y no debe devolver ningún valor. Si el método finaliza normalmente sin elevar ninguna excepción, se considera que la prueba ha pasado; si el método eleva una excepción, se considera que la prueba ha fallado.
+
+\item \emph{Línea 38:} Este es el punto en el que se llama a la función \codigo{to\_roman()} (bueno, la función aún no se ha escrito, pero cuando esté escrita, esta será la línea que la llamará). Observa que con esto has definido la \codigo{API} de la función \codigo{to\_roman()}: debe tomar como parámetro un número entero (el número a convertir) y devolver una cadena (la representación del número entero en números romanos). Si la \codigo{API} fuese diferente a esta, este test fallará. Observa también que no estamos capturando excepciones cuando llamamos a la función \codigo{to\_roman()}. Es intencionado, \codigo{to\_roman()} no debería devolver una excepción cuando la llames con una entrada válida, y todas las entradas previstas en este caso de prueba son válidas. Si \codigo{to\_roman()} elevase una excepción, esta prueba debería considerarse fallida.
+
+\item \emph{Línea 38:} Asumiendo que la función \codigo{to\_roman()} fuese definida correctamente, llamada correctamente, ejecutada correctamente y retornase un valor, el último paso es validar si el valor retornado es el \emph{correcto}. Esta es una pregunta habitual, y la clase \codigo{TestCase} proporciona un método, \codigo{assertEqual}, para validar si dos valores son iguales. Si el resultado que retorna \codigo{to\_roman() (result)} no coincide con el valor que se estaba esperando (\codigo{numeral}), \codigo{assertEqual} elevará una excepción y la prueba fallará. Si los dos valores son iguales, \codigo{assertEqual} no hará nada. Si todos los valores que retorna \codigo{to\_roman()} coinciden con los valores esperados, la función \codigo{assertEqual} nunca eleva una excepción, por lo que la función \codigo{test\_to\_roman\_known\_values} termina normalmente, lo que significa que la función \codigo{to\_roman()} ha pasado esta prueba.
+
+\end{enumerate}
+
+\cajaTexto{Escribe un caso de prueba que falle, luego codifica hasta que funcione.}
+
+Cuando ya tienes un caso de prueba, puedes comenzar a codificar la función \codigo{to\_roman()}. Primero deberías crearla como una función vacía y asegurarte de que la prueba falla. Si la prueba funciona antes de que hayas escrito ningún código, ¡¡tus pruebas no están probando nada!! La prueba unitaria es como un baile: la prueba va llevando, el código la va siguiendo. Escribe una prueba que falle, luego codifica hasta que el código pase la prueba.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# roman1.py
+
+def to_roman(n):
+    '''convert integer to Roman numeral'''
+    pass
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} En este momento debes definir la \codigo{API} de la función \codigo{to\_roman()}, pero no quieres codificarla aún (Las pruebas deben fallar primero). Para conseguirlo, utiliza la palabra reservada de Python \codigo{pass} que, precisamente, sirve para no hacer nada.
+
+\end{enumerate}
+
+Ejecuta \codigo{romantest1.py} en la línea de comando para ejecutar la prueba. Si lo llamas con la opción \codigo{-v} de la línea de comando, te mostrará una salida con más información de forma que puedas ver lo que está sucediendo conforme se ejecutan los casos de prueba. Con suerte, la salida deberá parecerse a esto:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~/diveintopython3/examples$ python3 romantest1.py -v
+test_to_roman_known_values (__main__.KnownValues)
+to_roman should give known result with known input ... FAIL
+
+======================================================================
+FAIL: to_roman should give known result with known input
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest1.py", line 73, in test_to_roman_known_values
+    self.assertEqual(numeral, result)
+AssertionError: 'I' != None
+
+----------------------------------------------------------------------
+Ran 1 test in 0.016s
+
+FAILED (failures=1)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Al ejecutar el programa se ejecuta \codigo{unittest.main()}, que ejecuta el caso de prueba. Cada caso de prueba es un método de una clase en \codigo{romantest.py}. No se requiere ninguna organización de estas clases de prueba; pueden contener un método de prueba cada una o puede existir una única clase con muchos métodos de prueba. El único requisito es que cada clase de prueba debe heredar de \codigo{unittest.TestCase}.
+
+\item \emph{Línea 3:} Para cada caso de prueba, el módulo \codigo{unittest} imprimirá el \codigo{docstring} (cadena de documentación) del méotodo y si la prueba ha pasado o ha fallado. En este caso, como se esperaba, la prueba ha fallado.
+
+\item \emph{Línea 11:} Para cada caso de prueba que falle, \codigo{unittest} muestra la información de traza que muestra exactamente lo que ha sucedido. En este caso la llamada a \codigo{assertEqual()} elevó la excepción \codigo{AssertionError} porque estaba esperando que \codigo{to\_roman(1)} devolviese \codigo{'I'}, y no o ha devuelto (Debido a que no hay valor de retorno explícito, la función devolvió \codigo{None}, el valor nulo de Python).
+
+\item \emph{Línea 14:} Después del detalle de cada prueba, \codigo{unittest} muestra un resumen de los test que se han ejecutado y el tiempo que se ha tardado.
+
+\item \emph{Línea 16:} En conjunto, la ejecución de la prueba ha fallado puesto que al menos un caso de prueba lo ha hecho. Cuando un caso de prueba no pasa, \codigo{unittest} distingue entre fallos y errores. Un fallo se produce cuando se llama a un método \codigo{assertXYZ}, como \codigo{assertEqual} o \codigo{assertRaises}, que fallan porque la condición que se evalúa no sea verdadera o la excepción que se esperaba no ocurrió. Un error es cualquier otra clase de excepción en el código que estás probando o en el propio caso de prueba.
+
+\end{enumerate}
+
+Ahora, finalmente, puedes escribir la función \codigo{to\_roman()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+roman_numeral_map = (('M',  1000),
+                     ('CM', 900),
+                     ('D',  500),
+                     ('CD', 400),
+                     ('C',  100),
+                     ('XC', 90),
+                     ('L',  50),
+                     ('XL', 40),
+                     ('X',  10),
+                     ('IX', 9),
+                     ('V',  5),
+                     ('IV', 4),
+                     ('I',  1))
+
+def to_roman(n):
+    '''convert integer to Roman numeral'''
+    result = ''
+    for numeral, integer in roman_numeral_map:
+        while n >= integer:
+            result += numeral
+            n -= integer
+    return result
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 13:} La variable \codigo{roman\_numeral\_map} es una tupla de tuplas que define tres cosas: las representaciones de caracteres de los números romanos básicos; el orden de los números romanos (en orden descendente, desde \codigo{M} a \codigo{I}), y el valor de cada número romano. Cada tupla interna es una pareja \codigo{(número romano, valor)}. No solamente define los números romanos de un único carácter, también define las parejas de dos caracteres como \codigo{CM} ("cien menos que mil"). Así el código de la función \codigo{to\_roman} se hace más simple.
+
+\item \emph{Línea 19:} Es aquí en donde la estructura de datos \codigo{roman\_numeral\_map} se muestra muy útil, porque no necesitas ninguna lógica especial para controlar la regla de restado. Para convertir números romanos solamente tienes que iterar a través de la tupla \codigo{roman\_numeral\_map} a la búsqueda del mayor valor entero que sea menor o igual al valor introducido. Una vez encontrado, se concatena su representación en número romano al final de la salida, se resta el valor correspondiente del valor inicial y se repite hasta que se consuman todos los elementos de la tupla.
+
+\end{enumerate}
+
+Si aún no ves claro cómo funciona la función \codigo{to\_roman()} añade una llamada a \codigo{print()} al final del bucle \codigo{while}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+...
+while n >= integer:
+    result += numeral
+    n -= integer
+    print('restando {0} de la entrada, sumando {1} a la salida'.format(
+                                                      integer, numeral)
+         )
+...
+\end{lstlisting}
+\end{minipage}
+
+Con estas sentencias, la salida es la siguiente:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import roman1
+>>> roman1.to_roman(1424)
+restando 1000 de la entrada, sumando M a la salida
+restando 400 de la entrada, sumando CD a la salida
+restando 10 de la entrada, sumando X a la salida
+restando 10 de la entrada, sumando X a la salida
+restando 4 de la entrada, sumando IV a la salida
+'MCDXXIV'
+\end{lstlisting}
+\end{minipage}
+
+Por lo que parece que funciona bien la función \codigo{to\_roman()}, al menos en esta prueba manual. Pero, ¿Pasará el caso de prueba que escribimos antes?
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~/diveintopython3/examples$ python3 romantest1.py -v
+test_to_roman_known_values (__main__.KnownValues)
+to_roman should give known result with known input ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.016s
+
+OK
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} ¡Bien! la función \codigo{to\_roman()} pasa los valores conocidos del caso de prueba. No es exhaustivo, pero revisa la función con una amplia variedad de entradas. Incluyendo entradas cuyo resultado son todos los números romanos de un único carácter, el valor mayor (\codigo{3999}) y la entrada que produce el número romano más largo posible (\codigo{3888}). En este punto puedes confiar razonablemente en que la función está bien hecha y funciona para cualquier valor de entrada válido que puedas consultar.
+
+\end{enumerate}
+
+¿Valores "válidos"? ¿Qué es lo que pasará con valores de entrada no válidos?
+
+
+\section{``Para y préndele fuego''}
+
+\cajaTexto{La forma de parar la ejecución para indicar un fallo es elevar una excepción}
+
+No es suficiente con probar que las funciones pasan las pruebas cuando éstas incluyen valores correctos; tienes que probar que las funciones fallan cuando se les pasa una entrada no válida. Y que el fallo no es uno cualquiera; deben fallar de la forma que esperas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import roman1
+>>> roman1.to_roman(4000)
+'MMMM'
+>>> roman1.to_roman(5000)
+'MMMMM'
+>>> roman1.to_roman(9000)
+'MMMMMMMMM'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 6:} Esto no es lo que querías ---ni siquiera es un número romano válido. De hecho, todos estos números están fuera del rango de los que son aceptables como entrada a la función, pero aún así, la función devuelve valores falsos. Devolver valores ``malos'' sin advertencia alguna es algo \emph{maaaalo}. Si un programa debe fallar, lo mejor es que lo haga lo más cerca del error, rápida y evidentemente. Mejor ``parar y prenderle fuego'' como diche el dicho. La forma de hacerlo en Python es elevar una excepción.
+
+\end{enumerate}
+
+La pregunta que te tienes que hacer es, \emph{¿Cómo puedo expresar esto como un requisito que se pueda probar?} ¿Qué tal esto para comenzar?:
+
+\begin{quote}
+La función \codigo{to\_roman()} debería elevar una excepción \codigo{OutOfRangeError} cuando se le pase un número entero mayor que \codigo{3999}.
+\end{quote}
+
+¿Cómo sería esta prueba?
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class ToRomanBadInput(unittest.TestCase):
+    def test_too_large(self):
+        '''to_roman deber$\ac{i}$a fallar con una entrada muy grande'''
+        self.assertRaises(roman2.OutOfRangeError, roman2.to_roman, 4000)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Como en el caso de prueba anterior, has creado una clase que hereda de \codigo{unittest.TestCase}. Puedes crear más de una prueba por cada clase (como verás más adelante en este mismo capítulo), pero aquí he elegido crear una clase nueva porque esta prueba es algo diferente a la anterior. En este ejemplo, mantendremos todas las pruebas sobre entradas válidas en una misma clase y todas las pruebas que validen entradas no válidas en otra clase.
+
+\item \emph{Línea 2:} Como en el ejemplo anterior, la prueba es un método de la clase que tenga un nombre que comience por \codigo{test}.
+
+\item \emph{Línea 4:} La clase \codigo{unittest.TestCase} proporciona el método \codigo{assertRaises}, que toma los siguientes parámetros: la excepción que se debe esperar, la función que se está probando y los parámetros que hay que pasarle a la función (Si la función que estás probando toma más de un parámetro hay que pasarlos todos \codigo{assertRaises} en el orden que los espera la función, para que \codigo{assertRaises} los pueda pasar, a su vez, a la función a probar.
+
+\end{enumerate}
+
+Presta atención a esta última línea de código. En lugar de llamar directamente a la función \codigo{to\_roman()} y validar a mano si eleva una excepción concreta (mediante un bloque \codigo{try ... except}), el método \codigo{assertRaises} se encarga de ello por nosotros. Todo lo que hay que hacer es decirle la excepción que estamos esperado (\codigo{roman.OutOfRangeError}, la función (\codigo{to\_roman()}) y los parámetros de la función (\codigo{4000}). El método \codigo{assertRaises} se encarga de llamar a la función \codigo{to\_roman()} y valida que eleve \codigo{roman2.OutRangeError}.
+
+Observa también que estás pasando la propia función \codigo{to\_roman()} como un parámetro; no estás ejecutándola y no estás pasando el nombre de la función como una cadena. ¿He mencionado ya lo oportuno que es que todo en Python sea un objeto?
+
+¿Qué sucede cuando ejecutas esta ``suite'' de pruebas con esta nueva prueba?
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest2.py -v
+test_to_roman_known_values ($\_\_$main$\_\_$.KnownValues)
+to_roman should give known result with known input ... ok
+test_too_large ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman deber$\ac{i}$a fallar con una entrada muy grande ... ERROR
+
+======================================================================
+ERROR: to_roman deber$\ac{i}$a fallar con una entrada muy grande
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest2.py", line 78, in test_too_large
+    self.assertRaises(roman2.OutOfRangeError, roman2.to_roman, 4000)
+AttributeError: 'module' object has no attribute 'OutOfRangeError'
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+FAILED (errors=1)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} Deberías esperar que fallara (puesto que aún no has escrito ningún código que pase la prueba), pero... en realidad no ``falló'', en su lugar se produjo un ``error''. Hay una sutil pero importante diferencia. Una prueba unitaria puede terminar con tres tipos de valores: pasar la prueba, fallar y error. Pasar la prueba significa que el código hace lo que se espera. ``fallar'' es lo que hacía la primera prueba que hicimos (hasta que escribimos el código que permitía pasar la prueba) ---ejecutaba el código pero el resultado no era el esperado. ``error'' significa que el código ni siquiera se ejecutó apropiadamente.
+
+\item \emph{Línea 13:} ¿Porqué el código no se ejecutó correctamente? La traza del error lo indica. El módulo que estás probando no dispone de una excepción denominada \codigo{OutOfRangeError}. Recuerda, has pasado esta excepción al método \codigo{assertRaises()} porque es la excepción que quieres que que la función eleve cuando se le pasa una entrada fuera del rango válido de valores. Pero la excepción aún no existe, por lo que la llamada al método \codigo{assertRaises()} falla. Ni siquiera ha tenido la oportunidad de probar el funcionamiento de la función \codigo{to\_roman()}; no llega tan lejos.
+
+\end{enumerate}
+
+Para resolver este problema necesitas definir la excepción \codigo{OutOfRangeError} en el fichero \codigo{roman2.py}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class OutOfRangeError(ValueError):
+    pass
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Las excepciones son clases. Un error ``fuera de rango'' es un tipo de error del valor ---el parámetro está fuera del rango de los valores aceptables. Por ello esta excepción hereda de la excepción propia de Python \codigo{ValueError}. Esto no es estrictamente necesario (podría heredar directamente de la clase \codigo{Exception}), pero parece más correcto.
+
+\item \emph{Línea 2:} Las excepciones no suelen hacer nada, pero necesitas al menos una línea de código para crear una clase. Al llamar a la sentencia \codigo{pass} conseguimos que no se haga nada y que exista la línea de código necesaria, así que ya tenemos creada la clase de la excepción.
+
+\end{enumerate}
+
+
+Ahora podemos intentar ejecutar la suite de pruebas de nuevo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest2.py -v
+test_to_roman_known_values ($\_\_$main$\_\_$.KnownValues)
+to_roman should give known result with known input ... ok
+test_too_large ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman deber$\ac{i}$a fallar con una entrada muy grande ... FAIL
+
+======================================================================
+FAIL: to_roman deber$\ac{i}$a fallar con una entrada muy grande
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest2.py", line 78, in test_too_large
+    self.assertRaises(roman2.OutOfRangeError, roman2.to_roman, 4000)
+AssertionError: OutOfRangeError not raised by to_roman
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.016s
+
+FAILED (failures=1)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} Aún no pasa la nueva prueba, pero ya no devuelve un error. En su lugar, la prueba falla. ¡Es un avance! Significa que la llamada al método \codigo{assertRaises()} se completó con éxito esta vez, y el entorno de pruebas unitarias realmente comprobó el funcionamiento de la función \codigo{to\_roman()}.
+
+\item \emph{Línea 13:} Es evidente que la función \codigo{to\_roman()} no eleva la excepción \codigo{OutOfRangeError} que acabas de definir, puesto que aún no se lo has dicho. ¡Son noticias excelentes! significa que es una prueba válida ---falla antes de que escribas el código que hace falta para que pueda pasar.
+
+\end{enumerate}
+
+Ahora toca escribir el código que haga pasar esta prueba satisfactoriamente.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def to_roman(n):
+    '''convert integer to Roman numeral'''
+    if n > 3999:
+        raise OutOfRangeError('number out of range (must be less than 4000)')
+
+    result = ''
+    for numeral, integer in roman_numeral_map:
+        while n >= integer:
+            result += numeral
+            n -= integer
+    return result
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} Es inmediato: si el valor de entrada (\codigo{n}) es mayor de \codigo{3999}, eleva la excepción \codigo{OutOfRangeError}. El caso de prueba no valida la cadena de texto que contiene la excepción, aunque podrías escribir otra prueba que hiciera eso (pero ten cuidado con los problemas de internacionalización de cadenas que pueden hacer que varíen en función del idioma del usuario y de la configuración del equipo).
+
+\end{enumerate}
+
+¿Pasará ahora la prueba? veámoslo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest2.py -v
+test_to_roman_known_values ($\_\_$main$\_\_$.KnownValues)
+to_roman should give known result with known input ... ok
+test_too_large ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with large input ... ok 
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} Bien, pasan las dos pruebas. Al haber trabajado iterativamente, yendo y viniendo entre la prueba y el código, puedes estar seguro de que las dos líneas de código que acabas de escribir son las causantes de que una de las pruebas pasara de ``fallar'' a ``pasar''. Esta clase de confianza no es gratis, pero revierte por sí misma conforme vas desarrollando más y más código.
+
+\section{Más paradas, más fuego}
+
+\end{enumerate}
+
+Además de probar con números que son demasiado grandes, también es necesario probar con números demasiado pequeños. Como indicamos al comienzo, en los requisitos funcionales, los números romanos no pueden representar ni el cero, ni los números negativos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import roman2
+>>> roman2.to_roman(0)
+''
+>>> roman2.to_roman(-1)
+''
+\end{lstlisting}
+\end{minipage}
+
+No está bien, vamos a añadir pruebas para cada una de estas condiciones.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class ToRomanBadInput(unittest.TestCase):
+    def test_too_large(self):
+        '''to_roman should fail with large input'''
+        self.assertRaises(roman3.OutOfRangeError, roman3.to_roman, 4000)
+
+    def test_zero(self):
+        '''to_roman should fail with 0 input'''
+        self.assertRaises(roman3.OutOfRangeError, roman3.to_roman, 0)
+
+    def test_negative(self):
+        '''to_roman should fail with negative input'''
+        self.assertRaises(roman3.OutOfRangeError, roman3.to_roman, -1)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} El método \codigo{test\_too\_large()} no ha cambiado desde el paso anterior. Se muestra aquí para enseñar el sitio en el que se incorpora el nuevo código.
+
+\item \emph{Línea 8:} Aquí hay una nueva prueba: el método \codigo{test\_zero()}. Como el método anterior, indica al método \codigo{assertRaises()}, definido en \codigo{unittest.TestCase}, que llame a nuestra función \codigo{to\_roma()} con el parámetro \codigo{0}, y valida que se eleve la excepción correcta, \codigo{OutOfRangeError}.
+
+\item \emph{Línea 12:} El método \codigo{test\_negative()} es casi idéntico, excepto que pasa \codigo{-1} a la función \codigo{to\_roman()}. Si alguna d estas pruebas no eleva una excepción \codigo{OutOfRangeError} (O porque la función retorna un valor o porque eleva otra excepción), se considera que la prueba ha fallado.
+
+\end{enumerate}
+
+Vamos a comprobar que la prueba falla:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest3.py -v
+test_to_roman_known_values ($\_\_$main$\_\_$.KnownValues)
+to_roman should give known result with known input ... ok
+test_negative ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with negative input ... FAIL
+test_too_large ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with large input ... ok
+test_zero ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with 0 input ... FAIL
+
+======================================================================
+FAIL: to_roman should fail with negative input
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest3.py", line 86, in test_negative
+    self.assertRaises(roman3.OutOfRangeError, roman3.to_roman, -1)
+AssertionError: OutOfRangeError not raised by to_roman
+
+======================================================================
+FAIL: to_roman should fail with 0 input
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest3.py", line 82, in test_zero
+    self.assertRaises(roman3.OutOfRangeError, roman3.to_roman, 0)
+AssertionError: OutOfRangeError not raised by to_roman
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+FAILED (failures=2)
+\end{lstlisting}
+\end{minipage}
+
+Estupendo, ambas pruebas fallan como se esperaba. Ahora vamos a volver al código a ver lo que podemos hacer para que pasen las pruebas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def to_roman(n):
+    '''convert integer to Roman numeral'''
+    if not (0 < n < 4000):
+        raise OutOfRangeError('number out of range (must be 1..3999)')
+
+    result = ''
+    for numeral, integer in roman_numeral_map:
+        while n >= integer:
+            result += numeral
+            n -= integer
+    return result
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} Esta es una forma muy Phytónica de hacer las cosas: dos comparaciones a la vez. Es equivalente a \codigo{if not ((0<n) and (n<400))}, pero es mucho más fácil de leer. Esta línea de código debería capturar todas las entradas que sean demasiado grandes, negativas o cero.
+
+\item \emph{Línea 4:} Si cambias las condiciones, asegúrate de actualizar las cadenas de texto para que coincidan con la nueva condición. Al paquete \codigo{unittest} no le importará, pero será más difícil depurar el código si lanza excepciones que están descritas de forma incorrecta.
+
+\end{enumerate}
+
+Podría mostrarte una serie completa de ejemplos sin relacionar para enseñarte cómo funcionan las comparaciones múltiples, pero en vez de eso, simplemente ejecutaré unas pruebas unitarias y lo probaré.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest3.py -v
+test_to_roman_known_values ($\_\_$main$\_\_$.KnownValues)
+to_roman should give known result with known input ... ok
+test_negative ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with negative input ... ok
+test_too_large ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with large input ... ok
+test_zero ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with 0 input ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.016s
+
+OK
+\end{lstlisting}
+\end{minipage}
+
+\section{Y una cosa más...}
+
+Había un requisito funcional más para convertir números a números romanos: tener en cuenta a los números no enteros.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import roman3
+>>> roman3.to_roman(0.5)
+''
+>>> roman3.to_roman(1.0)
+'I'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} ¡Oh! qué mal.
+
+\item \emph{Línea 4:} ¡Oh! incluso peor. Ambos casos deberían lanzar una excepción. En vez de ello, retornan valores falsos.
+
+\end{enumerate}
+
+La validación sobre los no enteros no es difícil. Primero  define una excepción \codigo{NotIntegerError}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# roman4.py
+class OutOfRangeError(ValueError): pass
+class NotIntegerError(ValueError): pass
+\end{lstlisting}
+\end{minipage}
+
+Lo siguiente es escribir un caso de prueba que compruebe si se lanza una excepción \codigo{NotIntegerError}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class ToRomanBadInput(unittest.TestCase):
+    .
+    .
+    .
+    def test_non_integer(self):
+        '''to_roman should fail with non-integer input'''
+        self.assertRaises(roman4.NotIntegerError, roman4.to_roman, 0.5)
+\end{lstlisting}
+\end{minipage}
+
+Ahora vamos a validar si la prueba falla apropiadamente.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest4.py -v
+test_to_roman_known_values ($\_\_$main$\_\_$.KnownValues)
+to_roman should give known result with known input ... ok
+test_negative ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with negative input ... ok
+test_non_integer ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with non-integer input ... FAIL
+test_too_large ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with large input ... ok
+test_zero ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with 0 input ... ok
+
+======================================================================
+FAIL: to_roman should fail with non-integer input
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest4.py", line 90, in test_non_integer
+    self.assertRaises(roman4.NotIntegerError, roman4.to_roman, 0.5)
+AssertionError: NotIntegerError not raised by to_roman
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+FAILED (failures=1)
+\end{lstlisting}
+\end{minipage}
+
+Escribe ahora el código que haga que se pase la prueba.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def to_roman(n):
+    '''convert integer to Roman numeral'''
+    if not (0 < n < 4000):
+        raise OutOfRangeError('number out of range (must be 1..3999)')
+    if not isinstance(n, int):
+        raise NotIntegerError('non-integers can not be converted')
+
+    result = ''
+    for numeral, integer in roman_numeral_map:
+        while n >= integer:
+            result += numeral
+            n -= integer
+    return result
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} La función interna de Python \codigo{isinstance()} comprueba si una variable es de un determinado tipo (o técnicamente, de cualquier tipo descendiente).
+
+\item \emph{Línea 6:} Si el parámetro \codigo{n} no es \codigo{int} elevará la nueva excepción \codigo{NotIntegerError}.
+
+\end{enumerate}
+
+Por último, vamos a comprobar si realmente el código pasa las pruebas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest4.py -v
+test_to_roman_known_values ($\_\_$main$\_\_$.KnownValues)
+to_roman should give known result with known input ... ok
+test_negative ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with negative input ... ok
+test_non_integer ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with non-integer input ... ok
+test_too_large ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with large input ... ok
+test_zero ($\_\_$main$\_\_$.ToRomanBadInput)
+to_roman should fail with 0 input ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+OK
+\end{lstlisting}
+\end{minipage}
+
+La función \codigo{to\_roman} pasa todas las pruebas y no se me ocurren nuevas pruebas, por lo que es el momento de pasar a la función \codigo{from\_roman()}
+
+
+\section{Una agradable simetría}
+
+Convertir una cadena de texto que representa un número romano a entero parece más difícil que convertir un entero en un número romano. Es cierto que existe el tema de la validación. Es fácil validar si un número entero es mayor que cero, pero un poco más difícil comprobar si una cadena es un número romano válido. Pero ya habíamos construido una expresión regular para comprobar números romanos, por lo que esa parte está hecha.
+
+Eso nos deja con el problema de convertir la cadena de texto. Como veremos en un minuto, gracias a la rica estructura de datos que definimos para mapear los números romanos a números enteros, el núcleo de la función \codigo{from\_roman()} es tan simple como el de la función \codigo{to\_roman()}.
+
+Pero primero hacemos las puertas. Necesitaremos una prueba de valores válidos conocidos para comprobar la precisión de la función. Nuestro juego de pruebas ya contiene una mapa de valores conocidos; vamos a reutilizarlos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+...
+
+    def test_from_roman_known_values(self):
+        '''from_roman should give known result with known input'''
+        for integer, numeral in self.known_values:
+            result = roman5.from_roman(numeral)
+            self.assertEqual(integer, result)
+...
+\end{lstlisting}
+\end{minipage}
+
+Existe una agradable simetría aquí. Las funciones \codigo{to\_roman()} y \codigo{from\_roman()} son la inversa una de la otra. La primera convierte números enteros a cadenas formateadas que representan números romanos, la segunda convierte cadenas de texto que representan a números romanos a números enteros. En teoría deberíamos ser capaces de hacer ciclos con un número pasándolo a la función \codigo{to\_roman()} para recuperar una cadena de texto, luego pasar esa cadena a la función \codigo{from\_roman()} para recuperar un número entero y finalizar con el mismo número que comenzamos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+n = from_roman(to_roman(n)) for all values of n
+\end{lstlisting}
+\end{minipage}
+
+En este caso ``all values'' significa cualquier número entre el \codigo{1..3999}, puesto que es el rango válido de entradas a la función \codigo{to\_roman()}. Podemos expresar esta simetría en un caso de prueba que recorrar todos los valores \codigo{1..3999}, llamar a \codigo{to\_roman()}, llamar a \codigo{from\_roman()} y comprobar que el resultado es el mismo que la entrada original.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class RoundtripCheck(unittest.TestCase):
+    def test_roundtrip(self):
+        '''from_roman(to_roman(n))==n for all n'''
+        for integer in range(1, 4000):
+            numeral = roman5.to_roman(integer)
+            result = roman5.from_roman(numeral)
+            self.assertEqual(integer, result)
+\end{lstlisting}
+\end{minipage}
+
+Estas pruebas ni siquiera fallarán. No hemos definido aún la función \codigo{from\_roman()} por lo que únicamente se elevarán errores.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest5.py
+E.E....
+======================================================================
+ERROR: test_from_roman_known_values ($\_\_$main$\_\_$.KnownValues)
+from_roman should give known result with known input
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest5.py", line 78, in test_from_roman_known_values
+    result = roman5.from_roman(numeral)
+AttributeError: 'module' object has no attribute 'from_roman'
+
+======================================================================
+ERROR: test_roundtrip ($\_\_$main$\_\_$.RoundtripCheck)
+from_roman(to_roman(n))==n for all n
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest5.py", line 103, in test_roundtrip
+    result = roman5.from_roman(numeral)
+AttributeError: 'module' object has no attribute 'from_roman'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.019s
+
+FAILED (errors=2)
+\end{lstlisting}
+\end{minipage}
+
+Una función vacía resolverá este problema:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# roman5.py
+def from_roman(s):
+    '''convert Roman numeral to integer'''
+\end{lstlisting}
+\end{minipage}
+
+(¿Te has dado cuenta? He definido una función simplemente poniendo un docstring. Esto es válido en Python. De hecho, algunos programadores lo toman al pie de la letra. ``No crees una función vacía, ¡documéntala!'')
+
+Ahora los casos de prueba sí que fallarán.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest5.py
+F.F....
+======================================================================
+FAIL: test_from_roman_known_values ($\_\_$main$\_\_$.KnownValues)
+from_roman should give known result with known input
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest5.py", line 79, in test_from_roman_known_values
+    self.assertEqual(integer, result)
+AssertionError: 1 != None
+
+======================================================================
+FAIL: test_roundtrip ($\_\_$main$\_\_$.RoundtripCheck)
+from_roman(to_roman(n))==n for all n
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest5.py", line 104, in test_roundtrip
+    self.assertEqual(integer, result)
+AssertionError: 1 != None
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+FAILED (failures=2)
+\end{lstlisting}
+\end{minipage}
+
+Ahora ya podemos escribir la función \codigo{from\_roman()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def from_roman(s):
+    """convert Roman numeral to integer"""
+    result = 0
+    index = 0
+    for numeral, integer in roman_numeral_map:
+        while s[index:index+len(numeral)] == numeral:
+            result += integer
+            index += len(numeral)
+    return result
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 6:} El patrón aquí es el mismo que el de la función \codigo{to\_roman()}. Iteras a través de la estructura de datos de números romanos (la tupla de tuplas), pero en lugar de encontrar el mayor número entero tantas veces como sea posible, compruebas coincidencias del carácter romano más ``alto'' tantas veces como sea posible.
+
+\end{enumerate}
+
+Si no te queda claro cómo funciona \codigo{from\_roman()} añade una sentencia \codigo{print} al final del bucle \codigo{while}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def from_roman(s):
+    """convert Roman numeral to integer"""
+    result = 0
+    index = 0
+    for numeral, integer in roman_numeral_map:
+        while s[index:index+len(numeral)] == numeral:
+            result += integer
+            index += len(numeral)
+            print('found', numeral, 'of length', len(numeral), ', adding', integer)
+>>> import roman5
+>>> roman5.from_roman('MCMLXXII')
+found M of length 1, adding 1000
+found CM of length 2, adding 900
+found L of length 1, adding 50
+found X of length 1, adding 10
+found X of length 1, adding 10
+found I of length 1, adding 1
+found I of length 1, adding 1
+1972
+\end{lstlisting}
+\end{minipage}
+
+Es el momento de volver a ejecutar las pruebas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest5.py
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.060s
+
+OK
+\end{lstlisting}
+\end{minipage}
+
+Tenemos dos buenas noticias aquí. Por un lado que la función \codigo{from\_roman()} pasa las pruebas ante entradas válidas, al menos para los valores conocidos. Por otro, la prueba de ida y vuelta también ha pasado. Combinada con las pruebas de valores conocidos, puedes estar razonablemente seguro de que ambas funciones \codigo{to\_roman()} y \codigo{from\_roman()} funcionan correctamente para todos los valores válidos (Esto no está garantizado: es teóricamente posible que la función \codigo{to\_roman()} tuviera un fallo que produjera un valor erróneo de número romano y que la función \codigo{from\_roman()} tuviera un fallo recíproco que produjera el mismo valor erróneo como número entero. Dependiendo de la aplicación y de los requisitos, esto puede ser más o menos preocupante; si es así, hay que escribir un conjunto de casos de prueba mayor hasta que puedas quedar razonablemente traquilo en cuanto a la fiabilidad del código desarrollado).
+
+\section{Más entradas erróneas}
+
+Ahora que la función \codigo{from\_roman()} funciona correctamente con entradas válidas es el momento de poner la última pieza del puzzle: hacer que funcione correctamente con entradas incorrectas. Eso significa encontrar un modo de mirar una cadena para determinar si es un número romano correcto. Esto es inherentemente más difícil que validar las entradas numéricas de la función \codigo{to\_roman()}, pero dispones de una poderosa herramienta: las expresiones regulares (si no estás familiarizado con ellas, ahora es un buen momento para leer el capítulo sobre las expresiones regulares).
+
+Como viste en el caso de estudio: números romanos, existen varias reglas simples para construir un número romano utilizando las letras \codigo{M, D, C, L, X, V} e \codigo{I}. Vamos a revisar las reglas:
+
+\begin{itemize}
+
+\item{Algunas veces los caracteres son aditivos, \codigo{I} es \codigo{1}, \codigo{II} es \codigo{2} y \codigo{III} es \codigo{3}. \codigo{VI} es \codigo{6} (literalmente 5 + 1), \codigo{VII} es \codigo{7} (5+1+1) y \codigo{XVIII} es \codigo{18} (10+5+1+1+1).
+
+\item Los caracteres que representan unidades, decenas, centenas y unidades de millar (\codigo{I, X, C y M}) pueden aparecer juntos hasta tres veces como máximo. Para el \codigo{4} debes restar del carácter \codigo{V, L ó D} (cinco, cincuenta, quinientos) que se encuentre más próximo a la derecha. No se puede representar el cuatro como \codigo{IIII}, en su lugar hay que poner \codigo{IV} (5-1). El número \codigo{40} se representa como \codigo{XL} (\codigo{10} menos que \codigo{50}: 50-10). \codigo{41 = XLI}, \codigo{42 = XLII}, \codigo{43 = XLIII} y luego \codigo{44 = XLIV} (diez menos que cincuenta más uno menos que cinco: 50-10+5-1).
+
+\item De forma similar, para el número \codigo{9}, debes restar del número siguiente más próximo que represente unidades, decenas, centenas o unidades de millar (\codigo{I, X, C y M}). \codigo{ 8 = VIII}, pero \codigo{9 = IX} (\codigo{1} menos que \codigo{10}), no \codigo{9 = VIIII} puesto que el carácter \codigo{I} no puede repetirse cuatro veces seguidas. El número \codigo{90} se representa con \codigo{XC} y el \codigo{900} con \codigo{CM}.
+
+\item Los caracteres \codigo{V, L y D} no pueden repetirse; el número \codigo{10} siempre se representa como \codigo{X} y no como \codigo{VV}. El número \codigo{100} siempre se representa como \codigo{C} y nunca como \codigo{LL}.
+
+\item Los números romanos siempre se escriben de los caracteres que representan valores mayores a los menores y se leen de izquierda a derecha por lo que el orden de los caracteres importa mucho. \{DC} es el número \codigo{600}; \codigo{CD} otro número, el \codigo{400} (500 - 100). \codigo{CI} es \codigo{101}, mientras que \codigo{IC} no es un número romano válido porque no puedes restar \codigo{I} del \codigo{C}\footnote{Para representar el \codigo{99} deberías usar: \codigo{XCIL} (100 - 10 + 10 - 1)}.
+
+\end{itemize}
+
+Así, una prueba apropiada podría ser asegurarse de que la función \codigo{from\_roman()} falla cuando pasas una cadena que tiene demasiados caracteres romanos repetidos. Pero, ¿cuánto es ``demasiados'? ...depende del carácter.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class FromRomanBadInput(unittest.TestCase):
+    def test_too_many_repeated_numerals(self):
+        '''from_roman should fail with too many repeated numerals'''
+        for s in ('MMMM', 'DD', 'CCCC', 'LL', 'XXXX', 'VV', 'IIII'):
+            self.assertRaises(roman6.InvalidRomanNumeralError,$\newline$ 
+                                roman6.from_roman, s)
+\end{lstlisting}
+\end{minipage}
+
+Otra prueba útil sería comprobar que ciertos patrones no están repetidos. Por ejemplo, \codigo{IX} es \codigo{9}, pero \codigo{IXIX} no es válido nunca.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+...
+ def test_repeated_pairs(self):
+        '''from_roman should fail with repeated pairs of numerals'''
+        for s in ('CMCM', 'CDCD', 'XCXC', 'XLXL', 'IXIX', 'IVIV'):
+            self.assertRaises(roman6.InvalidRomanNumeralError, $\newline$
+                                roman6.from_roman, s)
+...
+\end{lstlisting}
+\end{minipage}
+
+Una tercera prueba podría comprobar que los caracteres aparecen en el orden correcto, desde el mayor al menor. Por ejemplo, \codigo{CL} es \codigo{150}, pero \codigo{LC} nunca es válido, porque el carácter para el \codigo{50} nunca puede aparecer antes del carácter del \codigo{100}. Esta prueba incluye un conjunto no válido de conjuntos de caracteres elegidos aleatoriamente: \codigo{I} antes que \codigo{M}, \codigo{V} antes que \codigo{X}, y así sucesivamente.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+...
+def test_malformed_antecedents(self):
+        '''from_roman should fail with malformed antecedents'''
+        for s in ('IIMXCC', 'VX', 'DCM', 'CMM', 'IXIV',
+                  'MCMC', 'XCX', 'IVI', 'LM', 'LD', 'LC'):
+            self.assertRaises(roman6.InvalidRomanNumeralError, 
+                                roman6.from_roman, s)
+...
+\end{lstlisting}
+\end{minipage}
+
+Cada una de estas pruebas se basan en que la función \codigo{from\_roman()} eleve una excepción, \codigo{InvalidRomanNumeralError}, que aún no hemos definido.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# roman6.py
+class InvalidRomanNumeralError(ValueError): pass
+\end{lstlisting}
+\end{minipage}
+
+Las tres pruebas deberían fallar, puesto que \codigo{from\_roman()} aún no efectúa ningún tipo de validación de la entrada (Si no fallan ahora, ¿qué demonios están comprobando?).
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest6.py
+FFF.......
+======================================================================
+FAIL: test_malformed_antecedents ($\_\_$main$\_\_$.FromRomanBadInput)
+from_roman should fail with malformed antecedents
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest6.py", line 113, in test_malformed_antecedents
+    self.assertRaises(roman6.InvalidRomanNumeralError, $\newline$
+                      roman6.from_roman, s)
+AssertionError: InvalidRomanNumeralError not raised by from_roman
+
+======================================================================
+FAIL: test_repeated_pairs ($\_\_$main$\_\_$.FromRomanBadInput)
+from_roman should fail with repeated pairs of numerals
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest6.py", line 107, in test_repeated_pairs
+    self.assertRaises(roman6.InvalidRomanNumeralError, $\newline$
+                      roman6.from_roman, s)
+AssertionError: InvalidRomanNumeralError not raised by from_roman
+
+======================================================================
+FAIL: test_too_many_repeated_numerals ($\_\_$main$\_\_$.FromRomanBadInput)
+from_roman should fail with too many repeated numerals
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "romantest6.py", line 102, in test_too_many_repeated_numerals
+    self.assertRaises(roman6.InvalidRomanNumeralError, $\newline$
+                      roman6.from_roman, s)
+AssertionError: InvalidRomanNumeralError not raised by from_roman
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.058s
+
+FAILED (failures=3)
+\end{lstlisting}
+\end{minipage}
+
+Está bien. Ahora lo que necesitamos es añadir la expresión regular para comprobar números romanos válidos en la función \codigo{from\_roman()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+roman_numeral_pattern = re.compile('''
+    ^                   # beginning of string
+    M{0,3}              # thousands - 0 to 3 Ms
+    (CM|CD|D?C{0,3})    # hundreds - 900 (CM), 400 (CD), 0-300 (0 to 3 Cs),
+                        #            or 500-800 (D, followed by 0 to 3 Cs)
+    (XC|XL|L?X{0,3})    # tens - 90 (XC), 40 (XL), 0-30 (0 to 3 Xs),
+                        #        or 50-80 (L, followed by 0 to 3 Xs)
+    (IX|IV|V?I{0,3})    # ones - 9 (IX), 4 (IV), 0-3 (0 to 3 Is),
+                        #        or 5-8 (V, followed by 0 to 3 Is)
+    $\$$                   # end of string
+    ''', re.VERBOSE)
+
+def from_roman(s):
+    '''convert Roman numeral to integer'''
+    if not roman_numeral_pattern.search(s):
+        raise InvalidRomanNumeralError( $\newline$
+                'Invalid Roman numeral: {0}'.format(s))
+
+    result = 0
+    index = 0
+    for numeral, integer in roman_numeral_map:
+        while s[index : index + len(numeral)] == numeral:
+            result += integer
+            index += len(numeral)
+    return result
+\end{lstlisting}
+\end{minipage}
+
+Y ahora a ejecutar de nuevo las pruebas...
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3/examples$\$$ python3 romantest7.py
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.066s
+
+OK
+\end{lstlisting}
+\end{minipage}
+
+Y el premio al anticlimax del año va para... la palabra ``OK'', que se imprime por parte del módulo \codigo{unittest} cuando todas pruebas pasan correctamente.
+
