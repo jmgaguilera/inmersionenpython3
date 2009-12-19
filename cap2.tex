@@ -1,0 +1,1377 @@
+% ch2.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 New Zealand License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Tipos de dato nativos}\label{ch:tiposdedato}
+
+\noindent
+Nivel de dificultad:\difll
+
+\begin{citaCap}
+``La curiosidad es la base de toda la filosofía, \\
+las preguntas alimentan su progreso, \\
+la ignorancia su fin.''\\
+---Michel de Montaigne
+\end{citaCap}
+
+\section{Inmersión}
+
+Aparta tu primer programa en Python durante unos minutos, y vamos a hablar sobre tipos de dato. En Python cada valor que exista, tiene un tipo de dato, pero no es necesario declarar el tipo de las variables. ¿Como funciona? Basado en cada asignación a la variable, Python deduce el tipo que es y lo conserva internamente.
+
+Python proporciona muchos tipos de dato nativos. A continuación se muestran los más importantes:
+
+\begin{enumerate}
+
+\item \textbf{Booleanos:} Su valor es \codigo{True} o \codigo{False}.
+
+\item \textbf{Números:} Pueden ser enteros (1, 2, 3,...), flotantes (1.1, 1.2, 1.3,...)\footnote{Nota del traductor: los números decimales se representan utilizando \emph{punto decimal}. Aunque en español utilizamos la \emph{coma decimal} en este libro usamos el punto decimal por ser el formato que se requiere en Python.}, fracciones (1/2, 1/3, 2/3,...), o incluso números complejos ($i = \sqrt{-1}$).
+
+\item \textbf{Cadenas:} Son secuencias de caracteres Unicode, por ejemplo, un documento HTML.
+
+\item \textbf{Bytes y arrays de bytes:} por ejemplo, un fichero de imágenes JPEG.
+
+\item \textbf{Listas:} Son secuencias ordenadas de valores.
+
+\item \textbf{Tuplas:} Son secuencias ordenadas e inmutables de valores.
+
+\item \textbf{Conjuntos:} Son ``bolsas'' de valores sin ordenar.
+
+\item \textbf{Diccionarios:} Son ``bolsas'' de sin ordenar de parejas clave-valor. Es posible buscar directamente por clave.
+
+\end{enumerate}
+
+Aparte de estos, hay bastantes más tipos. Todo es un objeto en Python, por lo que existen tipos \emph{module, function, class, method, file}, e incluso \emph{compiled code}\footnote{Nota del traductor: Son tipos de dato del lenguaje Python que representan a: módulos, funciones, clases, métodos, ficheros y código compilado.}. Ya has visto alguno de ellos en el capítulo anterior. En el capítulo~\ref{ch:claseseiteradores} aprenderás las clases, y en el capítulo~\ref{ch:ficheros} los ficheros (también llamados archivos).
+
+Las cadenas y bytes son suficientemente importantes ---y complejas--- como para merecer un capítulo aparte. Vamos a ver los otros tipos de dato en primer lugar.
+
+\section{Booleanos}
+
+\cajaTexto{En la práctica, puedes utilizar casi cualquier expresión en un contexto booleano.}
+
+El tipo de datos booleano solamente tiene dos valores posibles: verdadero o fals. Python dispone de dos constantes denominadas \codigo{True} y \codigo{False}, que se pueden utilizar para asignar valores booleanos directamente. Las expresiones también se pueden evaluar a un valor booleano. En algunos lugares (como las sentencias \codigo{if}, Python espera una expresión que se pueda evaluar a un valor booleano. Estos sitios se denominan \emph{contextos booleanos}. Puedes utilizar casi cualquier expresión en un contexto booleano, Python intentará determinar si el resultado puede ser verdadero o falso. Cada tipo de datos tiene sus propias reglas para identificar qué valores equivalen a verdadero y falso en un contexto booleano (Esto comenzará a tener un sentido más claro para ti cuando veas algunos ejemplos concretos).
+
+Por ejemplo:
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+    if tamanyo < 0:
+        raise ValueError('el n$\ac{u}$mero debe ser no negativo')
+\end{lstlisting}
+\end{minipage}
+
+La variable \codigo{tamanyo} contiene un valor entero, \codigo{0} es un entero, y \codigo{<} es un operador numérico. El resultado de la expresión es siempre un valor de tipo booleano. Puedes comprobarlo en la consola interactiva de Python:
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> tamanyo = 1
+>>> tamanyo < 0
+False
+>>> tamanyo = 0
+>>> tamanyo < 0
+False
+>>> tamanyo = -1
+>>> tamanyo < 0
+True
+\end{lstlisting}
+\end{minipage}
+
+Debido a la herencia que se conserva de Python 2, los booleanos se pueden tratar como si fuesen números. \codigo{True} es \codigo{1} y \codigo{False} es \codigo{0}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> True + True
+2
+>>> True - False
+1
+>>> True * False
+0
+>>> True / False
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ZeroDivisionError: int division or modulo by zero
+\end{lstlisting}
+\end{minipage}
+
+Aún así, no hagas esto. ¡Olvida incluso que lo he mencionado!\footnote{Nota del traductor: se trata de una práctica heredada de Python 2 pero que no puede considerarse buena práctica de programación.}
+
+\section{Números}
+
+Los números son maravillosos. Tienes un montón donde elegir. Python proporciona enteros y números de coma flotante, pero no existen declaraciones de tipo para distinguirlos. Python los distingue por la existencia o no del punto decimal\footnote{Nota del traductor: En español se dice ``coma decimal'', como vamos a mostrar puntos decimales en todo el libro, por coherencia se utilizará también el término ``punto decimal''.}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> type(1)
+<class 'int'>
+>>> isinstance(1, int)
+True
+>>> 1 + 1
+2
+>>> 1 + 1.0
+2.0
+>>> type(2.0)
+<class 'float'>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} la función \codigo{type()} permite consultar el tipo de cualquier valor o variable. Como era de esperar \codigo{1} es un valor de tipo \codigo{int}.
+
+\item \emph{Línea 3:} la función \codigo{isinstance()} permite chequear si un valor o variable es de un tipo determinado.
+
+\item \emph{Línea 5:} La suma de dos valores de tipo \codigo{int} da como resultado otro valor de tipo \codigo{int}.
+
+\item \emph{Línea 7:} La suma de un valor \codigo{int} con otro de tipo \codigo{float} da como resultado un valor de tipo \codigo{float}. Python transforma el valor entero en un valor de tipo \codigo{float} antes de hacer la suma. El valor que se devuelve es de tipo \codigo{float}.
+
+\end{enumerate}
+
+\subsection{Convertir enteros en flotantes y viceversa}
+
+Como acabas de ver, algunos operadores (como la suma) convierten los números enteros en flotantes si es necesario. También puedes convertirlos tú mismo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> float(2)
+2.0
+>>> int(2.0)
+2
+>>> int(2.5)
+2
+>>> int(-2.5)
+-2
+>>> 1.12345678901234567890
+1.1234567890123457
+>>> type(1000000000000000)
+<class 'int'>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Utilizando la función \codigo{float()} puedes convertir explícitamente un valor de tipo \codigo{int} en \codigo{float}.
+
+\item \emph{Línea 3:} Como era de prever, la conversión inversa se hace utilizando la función \codigo{int()}.
+
+\item \emph{Línea 5:} La función \codigo{int()} trunca el valor flotante, no lo redondea.
+
+\item \emph{Línea 7:} La función \codigo{int()} trunca los valores negativos hacia el \codigo{0}. Es una verdadera función de truncado, no es una función de suelo\footnote{Nota del traductor: en inglés ``floor function'', que redondea siempre al entero menor, por lo que el número \codigo{-2.5} sería convertido a \codigo{-3} en el caso de aplicarle una función de \emph{suelo}}.
+
+\item \emph{Línea 9:} En Python, la precisión de los números de punto flotante alcanza 15 posiciones decimales.
+
+\item \emph{Línea 11:} En Python, la longitud de los números enteros no está limitada. Pueden tener tantos dígitos como se requieran.
+
+\end{enumerate}
+
+\begin{quote}
+Python 2 tenía dos tipos separados \codigo{int} y \codigo{long}. El tipo \codigo{int} estaba limitado por el sistema \codigo{sys.maxint}, siendo diferente según la plataforma, pero usualmente era $2^{32} - 1$. Python 3 tiene un único tipo entero que, en su mayor parte, equivale al tipo \codigo{long} de Python 2. Para conocer más detalles consulta \href{http://www.python.org/dev/peps/pep-0237}{PEP 237}.
+\end{quote}
+
+\subsection{Operaciones numéricas habituales}
+
+Puedes hacer muchos tipos de cálculos con números.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> 11 / 2
+5.5
+>>> 11 // 2
+5
+>>> -11 // 2
+-6
+>>> 11.0 // 2
+5.0
+>>> 11 ** 2
+121
+>>> 11 % 2
+1
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El operador \codigo{/} efectúa una división en punto flotante. El resultado siempre es de tipo \codigo{float}, incluso aunque ambos operadores (dividendo y divisor) sean \codigo{int}.
+
+\item \emph{Línea 3:} El operador \codigo{//} efectúa una división entera algo extraña. Cuando el resultado es positivo, el resultado es \codigo{int} truncado sin decimales (no redondeado).
+
+\item \emph{Línea 5:} Cuando el operador \codigo{//} se usa para dividir un número negativo el resultado se redondea hacia abajo al entero más próximo (en este caso el resultado de la división sería \codigo{-5.5}, que redondeado es \codigo{-5}).
+ 
+\item \emph{Línea 7:} El operador \codigo{**} significa ``elevado a la potencia de''. $11^2$ es \codigo{121}.
+
+\item \emph{Línea 9:} El operador \codigo{\%} devuelve el resto de la división entera. \codigo{11} dividido entre \codigo{2} es \codigo{5} con un resto de \codigo{1}, por lo que el resultado en este caso es \codigo{1}.
+
+\end{enumerate}
+
+\begin{quote}
+En Python 2, el operador \codigo{/} se usaba para representar a la división entera, aunque mediante una directiva de Python 2, podías hacer que se comportase como una división de punto flotante. En Python 3, el operador \codigo{/} siempre es una división de punto flotante. Para consultar más detalles puedes mirar \href{http://www.python.org/dev/peps/pep-0238/}{PEP 238}.
+\end{quote}
+
+\subsection{Fracciones}
+
+Python no está limitado a números enteros y de punto flotante. También puede aplicar toda esa matemática que aprendiste en el instituto y que luego rápidamente olvidaste.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import fractions
+>>> x = fractions.Fraction(1, 3)
+>>> x
+Fraction(1, 3)
+>>> x * 2
+Fraction(2, 3)
+>>> fractions.Fraction(6, 4)
+Fraction(3, 2)
+>>> fractions.Fraction(0, 0)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "fractions.py", line 96, in __new__
+    raise ZeroDivisionError('Fraction(%s, 0)' % numerator)
+ZeroDivisionError: Fraction(0, 0)
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Para comenzar a utilizar fracciones hay que importar el módulo \codigo{fractions}.
+
+\item \emph{Línea 2:} Para definir una fracción crea un objeto \codigo{Fraction} y pásale el numerador y denominador.
+
+\item \emph{Línea 5:} Con las fracciones puedes efectuar los cálculos matemáticos habituales. Estas operaciones devuelven un objeto \codigo{Fraction}, \codigo{2*(1/2)=(2/3)}.
+
+\item \emph{Línea 7:} El objeto \codigo{Fraction} reduce automáticamente las fracciones: \codigo{(6/4) = (3/2)}.
+
+\item \emph{Línea 9:} Python tiene el buen sentido de no crear una fracción con el denominador a cero.
+
+\end{enumerate}
+
+\subsection{Trigonometría}
+
+También puedes hacer cálculos trigonométricos en Python.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import math
+>>> math.pi
+3.1415926535897931
+>>> math.sin(math.pi / 2)
+1.0
+>>> math.tan(math.pi / 4)
+0.99999999999999989
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El módulo \codigo{math} tiene definida una constante que almacena el valor del número $\pi$, la razón de la circunferencia de un círculo respecto de su diámetro.
+
+\item \emph{Línea 4:} En el módulo \codigo{math} se encuentran todas las funciones trigonométricas básicas, incluidas \codigo{sin(), cos(), tan()} y variantes como \codigo{asin()}.
+
+\item \emph{Línea 6:} De todos modos ten en cuenta que Python no tiene precisión infinita, \codigo{tan($\pi$/4)} debería devolver \codigo{1.0}, no \codigo{0.99999999999999989}.
+
+\end{enumerate}
+
+\subsection{Números en un contexto booleano}
+
+\cajaTextoAncho{El valor cero es equivalente a falso y los valores distintos de cero son equivalentes a verdadero.}
+
+Los números se pueden utilizar en contextos booleanos, como en la sentencia \codigo{if}. El valor cero es equivalente a falso y los valores distintos de cero son equivalentes a verdadero.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> def es_true(anything):
+...   if anything:
+...     print("s$\ac{i}$, es true")
+...   else:
+...     print("no, es false")
+...
+>>> es_true(1)
+s$\ac{i}$, es true
+>>> es_true(-1)
+s$\ac{i}$, es true
+>>> es_true(0)
+no, es false
+>>> es_true(0.1)
+s$\ac{i}$, es true
+>>> es_true(0.0)
+no, es false
+>>> import fractions
+>>> es_true(fractions.Fraction(1, 2))
+s$\ac{i}$, es true
+>>> es_true(fractions.Fraction(0, 1))
+no, es false
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} ¿Sabías que puedes definir tus propias funciones en la consola interactiva de Python? Simplemente pulsa \codigo{INTRO} al final de cada línea, y termina pulsando un último \codigo{INTRO} en una línea en planco para finalizar la definición de la función.
+
+\item \emph{Línea 7:} En un contexto booleano, como el de la sentencia \codigo{if}, los números enteros distintos de cero se evalúan a \codigo{True}; el número cero se evalúa a \codigo{False}.
+
+\item \emph{Línea 13:} Los números en punto flotante distintos de cero son \codigo{True}; \codigo{0.0} se evalúa a \codigo{False}. ¡Ten cuidado con este caso! Al más mínimo fallo de redondeo (que no es imposible, como has visto en el apartado anterior) Python se encontraría comprobando el número \codigo{0.0000000000001} en lugar del \codigo{0} y retornaría \codigo{True}. 
+
+\item \emph{Línea 18:} Las fracciones también se pueden utilizar en un contexto booleano. \codigo{Fraction(0, n)} se evalúa a \codigo{False} para cualquier valor de \codigo{n}. Todas las otras fracciones se evalúan a \codigo{True}.
+
+\end{enumerate}
+
+\section{Listas}
+
+El tipo de datos \codigo{List} es el más utilizado en Python. Cuando digo ``lista'', puede que pienses en un ``array\footnote{matriz de una o más dimensiones}, cuyo tamaño he declarado anteriormente a su uso, que únicamente puede contener elementos del mismo tipo''. No pienses eso, las listas son mucho más \emph{guays}.
+
+\begin{quote}
+Una lista de Python es como un array de Perl 5. En Perl 5 las variables que almacenan arrays siempre comienzan con el carácter \codigo{@}. En Python las variables se pueden nombrar como se quiera, ya que Python mantiene el tipo de datos internamente.
+\end{quote}
+
+\begin{quote}
+Una lista de Python es mucho más que un array de Java (aunque puede utilizarse como si lo fuese si eso es lo que quieres). Una analogía mejor sería pensar en la clase \codigo{ArrayList} de Java, que puede almacenar un número arbitrario de objetos y expandir su tamaño dinámicamente al añadir nuevos elementos.
+\end{quote}
+
+\subsection{Crear una lista}
+
+Crear una lista es fácil: utiliza unos corchetes para para delimitar una lista de valores separados por coma.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> lista = ['a', 'b', 'jmgaguilera', 'z', 'ejemplo']
+>>> lista
+['a', 'b', 'jmgaguilera', 'z', 'ejemplo']
+>>> lista[0]
+'a'
+>>> lista[4]
+'ejemplo'
+>>> lista[-1]
+'ejemplo'
+>>> lista[-3]
+'jmgaguilera'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Líneas 1 a 3:} Primero definimos una lista de cinco elementos. Observa que mantiene el orden original. No es por casualidad. Una lista es un conjunto ordenado de elementos.
+
+\item \emph{Línea 4:} Se puede acceder a los elementos de la lista como en el caso de los arrays de Java, teniendo en cuenta que el primer elemento se numera como cero. El primer elemento de cualquier lista no vacía es \codigo{lista[0]}.
+
+\item \emph{Línea 6:} El último elemento de esta lista de cinco elementos es \codigo{lista[4]}, puesto que los elementos se indexan contando desde cero.
+
+\item \emph{Línea 8:} Si se usan índices con valor negativo se accede a los elementos de la lista contando desde el final. El último elemento de una lista siempre se puede indexar utilizando \codigo{lista[-1]}.
+
+\item \emph{Línea 10:} Si los números negativos en los índices te resultan confusos, puedes pensar de esta forma: \codigo{lista[-n] == lista[len(lista)-n]}. Por eso, en esta lista, \codigo{lista[-3] == lista[5 - 3] == lista[2]}.
+
+\end{enumerate}
+
+\subsection{Partición de listas}
+
+\cajaTextoAncho{lista[0] es el primer elemento de la lista.}
+
+Una vez has definido una lista, puedes obtener cualquier parte de ella como una nueva lista. A esto se le llama \emph{particionado}\footnote{En inglés: slicing.} de la lista.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> lista
+['a', 'b', 'jmgaguilera', 'z', 'ejemplo']
+>>> lista[1:3]
+['b', 'jmgaguilera']
+>>> lista[1:-1]
+['b', 'jmgaguilera', 'z']
+>>> lista[0:3]
+['a', 'b', 'jmgaguilera']
+>>> lista[:3]
+['a', 'b', 'jmgaguilera']
+>>> lista[3:]
+['z', 'ejemplo']
+>>> lista[:]
+['a', 'b', 'jmgaguilera', 'z', 'ejemplo']
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} Puedes obtener una parte de una lista especificando dos índices. El valor de retorno es una nueva lista que contiene los elementos de la lista original, en orden, comenzando en el elemento que estaba en la posición del primer índice (en este caso \codigo{lista[1]}), hasta el elemento anterior al indicado por el segundo índice (en este caso \codigo{lista[3]}).
+
+\item \emph{Línea 5:}  El particionado de listas también funciona si uno o ambos índices son negativos. Si te sirve de ayuda puedes imaginártelo así: leyendo la lista de izquierda a derecha, el primer índice siempre especifica el primer elemento que quieres obtener y el segundo índice el primer elemento que no quieres obtener. El valor de retorno es una lista con todos los elementos que están entre ambos índices.
+
+\item \emph{Línea 7:} Los índices de las listas comienzan a contar en cero, por eso un particionado de \codigo{lista[0:3]} devuelve los primeros tres elementos de la lista, comenzando en \codigo{lista[0]}, pero sin incluir \codigo{lista[3]}.
+
+\item \emph{Línea 9:} Si el primer índice es cero, puedes omitirlo. Python lo deducirá. Por eso \codigo{lista[:3]} es lo mismo que \codigo{lista[0:3]}.
+
+\item \emph{Línea 11:} De igual forma, si el segundo índice es la longitud de la cadena, puedes omitirlo. Por eso, en este caso, \codigo{lista[3:]} es lo mismo que \codigo{lista[3:5]}, al tener esta lista cinco elementos. Existe una elegante simetría aquí. En esta lista de cinco elementos \codigo{lista[:3]} devuelve los 3 primeros elementos y \codigo{lista[3:]} devuelve una lista con los restantes. De hecho, \codigo{lista[:n]} siempre retornará los \codigo{n} primeros elementos y \codigo{lista[n:]} los restantes, sea cual sea el tamaño de la lista.
+
+\item \emph{Línea 13:} Si se omiten ambos índices, se obtiene una nueva lista con todos los elementos de la lista original. Es una forma rápida de hacer una copia de una lista.
+
+\end{enumerate}
+
+\subsection{Añadir elementos a una lista}
+
+Existen cuatro maneras de añadir elementos a una lista.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> lista = ['a']
+>>> lista = lista + [2.0, 3]
+>>> lista
+['a', 2.0, 3]
+>>> lista.append(True)
+>>> lista
+['a', 2.0, 3, True]
+>>> lista.extend(['cuatro', 'omega'])
+>>> lista
+['a', 2.0, 3, True, 'cuatro', 'omega']
+>>> lista.insert(0, 'omega')
+>>> lista
+['omega', 'a', 2.0, 3, True, 'cuatro', 'omega']
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El operador \codigo{+} crea una nueva lista a partir de la concatenación de otras dos. Una lista puede contener cualquier número de elementos, no hay límite de tamaño (salvo el que imponga la memoria disponible). Si embargo, si la memoria es importante, debes tener en cuenta que la concatenación de listas crea una tercera lista en memoria. En este caso, la nueva lista se asigna inmediatamente a la variable \codigo{lista}. Por eso, esta línea de código se efectúa en dos pasos ---concatenación y luego asignación--- que puede (temporalmente) consumir mucha memoria cuando las listas son largas.
+
+\item \emph{Línea 3:} Una lista puede contener elementos de cualquier tipo, y cada elemento puede ser de un tipo diferente. Aquí tenemos una lista que contiene una cadena de texto, un número en punto flotante y un número entero.
+
+\item \emph{Línea 5:} El método \codigo{append()} añade un nuevo elemento, único, al final de la lista (¡Ahora ya tenemos \emph{cuatro} tipos de dato diferentes en la lista!).
+
+\item \emph{Línea 8:} Las listas son clases. ``Crear'' una lista realmente consiste en instanciar una clase. Por eso las listas tienen métodos que sirven para operar con ellas. El método \codigo{extend()} toma un parámetro, una lista, y añade cada uno de sus elementos a la lista original.
+
+\item \emph{Línea 11:} El método \codigo{insert()} inserta un único elemento a la lista original. El primer parámetro es el índice del primer elemento de la lista original que se desplazará de su posición para añadir los nuevos. Los elementos no tienen que ser únicos; por ejemplo, ahora hay dos elementos separados en la lista cuyo valor es ``omega'': el primer elemento \codigo{lista[0]} y el último elemento \codigo{lista[6]}.
+
+\end{enumerate}
+
+\begin{quote}
+La llamada al método \codigo{lista.insert(0,valor)} es equivalente a la función \codigo{unshift()} de Perl. Añade un elemento al comienzo de la lista, y los restantes elementos se desplazan para hacer sitio.
+\end{quote}
+
+Vamos a ver más de cerca la diferencia entre \codigo{append()} y \codigo{extend()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> lista = ['a', 'b', 'c']
+>>> lista.extend(['d', 'e', 'f'])
+>>> lista
+['a', 'b', 'c', 'd', 'e', 'f']
+>>> len(lista)
+6
+>>> lista[-1]
+'f'
+>>> lista.append(['g', 'h', 'i'])
+>>> lista
+['a', 'b', 'c', 'd', 'e', 'f', ['g', 'h', 'i']]
+>>> len(lista)
+7
+>>> lista[-1]
+['g', 'h', 'i']
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El método \codigo{extend()} recibe un único parámetro, que siempre es una lista, y añade cada uno de sus elementos al final de la lista original \codigo{lista}.
+
+\item \emph{Línea 5:} Si una lista de tres elementos se extiende con una lista de otros tres elementos, la lista resultante tiene seis elementos.
+
+\item \emph{Línea 9:} Por otra parte, el método \codigo{append()} recibe un único parámetro, que puede ser de cualquier tipo. En este caso estamos ejecutando el método pasándole una lista de tres elementos.
+
+\item \emph{Línea 12:} Si partes de una lista de seis elementos y añades otra lista a ella, finalizas con una lista de... siete elementos. ¿Porqué siete? Porque el último elemento (que acabas de añadir) \emph{es en sí mismo una lista}. Una lista puede contener datos de cualquier tipo, incluídas otras listas. Puede que sea lo que quieras o puede que no. Pero es lo que le has pedido a Python al ejecutar \codigo{append()} con una lista como parámetro. 
+
+\end{enumerate}
+
+\subsection{Búsqueda de valores en una lista}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> lista = ['a', 'b', 'nuevo', 'mpilgrim', 'nuevo']
+>>> lista.count('nuevo')
+2
+>>> 'nuevo' in lista
+True
+>>> 'c' in lista
+False
+>>> lista.index('mpilgrim')
+3
+>>> lista.index('nuevo')
+2
+>>> lista.index('c')
+Traceback (innermost last):
+  File "<interactive input>", line 1, in ?
+ValueError: list.index(x): x not in list
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Como te puedes imaginar, el método \codigo{count()} devuelve el número de veces que aparece un valor específico ---el parámetro--- en la lista.
+
+\item \emph{Línea 4:} Si lo único que quieres saber es si un valor se encuentra o no en la lista, el operador \codigo{in} es ligeramente más rápido que el método \codigo{count()}. El operador \codigo{in} devuelve \codigo{True} o \codigo{False}, no indica en qué lugar de la lista se encuentra el elemento, ni el número de veces que aparece.
+
+\item \emph{Línea 8:} Si necesitas conocer el lugar exacto en el que se encuentra un valor dentro de la lista debes utilizar el método \codigo{index()}. Por defecto, este método buscará en toda la lista, aunque es posible especificar un segundo parámetro para indicar el lugar de comienzo (0 es el primer índice), e incluso, un tercer elemento para indicar el índice en el que parar la búsqueda.
+
+\item \emph{Línea 10:} El método \codigo{index()} encuentra la \emph{primera} ocurrencia del valor en la lista. En este caso el valor ``nuevo'' aparece dos veces, en la posición 2 y en la 4, el método devuelve la posición de la primera ocurrencia: 2.
+
+\item \emph{Línea 12:} Puede que no esperases, pero el método \codigo{index()} eleva una excepción \codigo{ValueError} cuando no es capaz de encontrar el elemento en la lista.
+
+\end{enumerate}
+
+¡Espera un momento! ¿Qué significa eso? Pues lo que he dicho: el método \codigo {index()} eleva una excepción si no es capaz de encontrar el valor en la lista. Esto es diferente de la mayoría de los lenguajes de programación que suelen devolver algún índice no válido, como por ejemplo, -1. Aunque al principio te pueda parecer algo desconcertante, creo que con el tiempo llegarás a apreciarlo. Significa que tu programa fallará en la fuente del problema, en lugar de fallar más tarde en algún otro lugar por no haber contemplado la posibilidad de que un elemento no se encontrara en la lista. Recuerda que \codigo{-1 es un valor de índice válido}. Si el método \codigo{index()} devolviera \codigo{-1}... ¡las sesiones de depuración serían bastante complicadas!
+
+\subsection{Eliminar elementos de una lista}
+
+\cajaTextoAncho{Las listas nunca tienen huecos}
+
+Las listas se expanden y contraen de forma automática. Ya has visto como expandirlas. Existen varios modos de eliminar elementos de una lista.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> lista = ['a', 'b', 'nuevo', 'mpilgrim', 'nuevo']
+>>> lista[1]
+'b'
+>>> del lista[1]
+>>> lista
+['a', 'nuevo', 'mpilgrim', 'nuevo']
+>>> lista[1]
+'nuevo'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} Para eliminar un elemento de una lista puedes utilizar la sentencia \codigo{del}.
+
+\item \emph{Línea 7:} Si intentas acceder al elemento en la posición \codigo{1} después de borrar el índice \codigo{1} \emph{no} da error. Después de borrar un elemento, todos los elementos que iban detrás de él se desplazan a la izquierda para ``rellenar el vacío'' que dejó el elemento eliminado.
+
+\end{enumerate}
+
+¿Y si no conoces la posición del elemento? No hay problema, en vez de la posición, puedes utilizar el valor del elemento para eliminarlo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> lista.remove('nuevo')
+>>> lista
+['a', 'mpilgrim', 'nuevo']
+>>> lista.remove('nuevo')
+>>> lista
+['a', 'mpilgrim']
+>>> lista.remove('nuevo')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: list.remove(x): x not in list
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Puedes eliminar un elemento de una lista utilizando el método \codigo{remove()}. Este método recibe como parámetro un valor y elimina la primera ocurrencia de ese valor en la lista. Como antes, todos los elementos a la derecha del eliminado, se desplazan a la izquierda para ``rellenar el vacío'', puesto que las listas nunca tienen huecos.
+
+\item \emph{Línea 4:} Puedes llamar al método \codigo{remove()} tantas veces como sea necesario. Pero si se intenta eliminar un valor que no se encuentre en la lista, el método elevará una excepción \codigo{ValueError}.
+
+\end{enumerate}
+
+\subsection{Eliminar elementos de una lista: ronda extra}
+
+Otro método de interés que tiene las listas es \codigo{pop()}, que permite eliminar elementos de una lista de un modo especial.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> lista = ['a', 'b', 'nuevo', 'mpilgrim']
+>>> lista.pop()
+'mpilgrim'
+>>> lista
+['a', 'b', 'nuevo']
+>>> lista.pop(1)
+'b'
+>>> lista
+['a', 'nuevo']
+>>> lista.pop()
+'nuevo'
+>>> lista.pop()
+'a'
+>>> lista.pop()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: pop from empty list
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Cuando se llama sin parámetros, el método \codigo{pop()} elimina el último valor de la lista y \emph{devuelve el valor eliminado}.
+
+\item \emph{Línea 6:} Es posible extraer cualquier elemento de una lista. Para ello hay que pasar el índice deseado al método \codigo{pop()}. Se eliminará el elemento indicado, los siguientes se moverán a la izquierda ``rellenar el vacío'' y se devuelve el valor recién eliminado.
+
+\item \emph{Línea 14:} Si llamas al método \codigo{pop()} con una lista vacía se eleva una excepción.
+
+\end{enumerate}
+
+\begin{quote}
+El método \codigo{pop()} sin argumentos se comporta igual que la función \codigo{pop()} de Perl. Elimina el último valor de la lista y lo devuelve. Perl dispone de otra función, \codigo{shift()}, que eliminar el primer elemento y devuelve su valor; en Python es equivalente a \codigo{lista.pop(0)}.
+\end{quote}
+
+\subsection{Listas en contextos booleanos}
+
+\cajaTextoAncho{Las listas vacías equivalen a falso, todas las demás a verdadero.}
+
+Puedes utilizar las listas en contextos booleanos, como en la sentencia \codigo{if}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> def es_true(anything):
+...   if anything:
+...     print("s$\ac{i}$, es true")
+...   else:
+...     print("no, es false")
+...
+>>> es_true([])
+no, es false
+>>> es_true(['a'])
+s$\ac{i}$, es true
+>>> es_true([False])
+s$\ac{i}$, es true
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 7:} En un contexto booleano una lista vacía vale \codigo{False}.
+
+\item \emph{Línea 9:} Cualquier lista con al menos un elemento vale \codigo{True}.
+
+\item \emph{Línea 11:} Cualquier lista con al menos un elemento vale \codigo{True}. El valor de los elementos de la lista es irrelevante.
+
+\end{enumerate}
+
+\section{Tuplas}
+
+Una tupla es una lista inmutable. Una tupla no se puede modificar después de haberla creado.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> tupla = ("a", "b", "mpilgrim", "z", "ejemplo")
+>>> tupla
+('a', 'b', 'mpilgrim', 'z', 'ejemplo')
+>>> tupla[0]
+'a'
+>>> tupla[-1]
+'ejemplo'
+>>> tupla[1:3]
+('b', 'mpilgrim')
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Las tuplas se definen de la misma forma que las listas. La única diferencia es que los elementos se cierran entre paréntesis en lugar de corchetes.
+
+\item \emph{Línea 4:} Los elementos de una tupla están ordenados como los de una lista. Los índices también comienzan a contar en cero, por lo que el primer elemento de una tupla siempre es \codigo{tupla[0]}.
+
+\item \emph{Línea 6:} Los índices negativos cuentan desde el final de la tupla como en las listas.
+
+\item \emph{Línea 8:} El particionado también funciona como en las listas. Una partición de una tupla es una nueva tupla con los elementos seleccionados.
+
+\end{enumerate}
+
+Lo que diferencia a las tuplas de las listas es que las primeras no se pueden modificar. En términos técnicos se dice que son inmutables. En términos prácticos esto significa que no tienen métodos que te permitan modificarlas. Las listas tienen métodos como \codigo{append(), extend(), insert(), remove()} y \codigo{pop()}. Las tuplas no tienen ninguno de estos métodos. Puedes particionar una tupla porque en realidad se crea una nueva tupla, y puedes consultar si contienen un valor determinado, y... eso es todo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# continuaci$\ac{o}$n del ejemplo anterior
+>>> tupla
+('a', 'b', 'mpilgrim', 'z', 'ejemplo')
+>>> tupla.append("nuevo")
+Traceback (innermost last):
+  File "<interactive input>", line 1, in ?
+AttributeError: 'tupla' object has no attribute 'append'
+>>> tupla.remove("z")
+Traceback (innermost last):
+  File "<interactive input>", line 1, in ?
+AttributeError: 'tupla' object has no attribute 'remove'
+>>> tupla.index("ejemplo")
+4
+>>> "z" in tupla
+True
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} No puedes añadir elementos a una tupla. No existen los métodos \codigo{append()} o \codigo{extend()}.
+
+\item \emph{Línea 8:} No puedes eliminar elementos de una tupla. No existen los métodos \codigo{remove()} o \codigo{pop()}.
+
+\item \emph{Línea 12:} Sí puedes buscar elementos en una tupla puesto que consultar no cambia la tupla.
+
+\item \emph{Línea 14:} También puedes utilizar el operador \codigo{in} para chequear si existe un elemento en la tupla.
+
+\end{enumerate}
+
+¿Para qué valen las tuplas?
+
+\begin{itemize}
+
+\item Las tuplas son más rápidas que las listas. Si lo que defines es un conjunto estático de valores y todo lo que vas a hacer es iterar a través de ellos, lo mejor es que uses una tupla en lugar de una lista.
+
+\item Es más seguro, puesto que proteges contra escritura los datos que no necesitas modificar.
+
+\item Algunas tuplas se pueden utilizar como claves de diccionarios como veremos más adelante en el capítulo. Las listas nunca se pueden utilizar como claves de diccionarios.
+
+\end{itemize}
+
+\begin{quote}
+Las tuplas se pueden convertir en listas y viceversa. La función interna \codigo{tuple()} puede recibir como parámetro una lista y devuelve una tupla con los mismos elementos que tenga la lista, y la función \codigo{list()} toma como parámetro una tupla y retorna una lista. En la práctica la función \codigo{tuple()} ``congela'' una lista, y la función \codigo{list()} ``descongela'' una tupla.
+\end{quote}
+
+\subsection{Tuplas en un contexto booleano}
+Las tuplas también se pueden utilizar en un contexto booleano:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> def es_true(anything):
+...   if anything:
+...     print("s$\ac{i}$, es true")
+...   else:
+...     print("no, es false")
+...
+>>> es_true(())
+no, es false
+>>> es_true(('a', 'b'))
+s$\ac{i}$, es true
+>>> es_true((False,))
+s$\ac{i}$, es true
+>>> type((False))
+<class 'bool'>
+>>> type((False,))
+<class 'tuple'>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 7:} Una tupla vacía siempre vale false en un contexto booleano.
+
+\item \emph{Línea 9:} Una tupla con al menos un valor vale true.
+
+\item \emph{Línea 11:} Una tupla con al menos un valor vale true. El valor de los elementos es irrelevante. Pero ¿qué hace esa coma ahí?
+
+\item \emph{Línea 13:} Para crear una tupla con un único elemento, necesitas poner una coma después del valor. Sin la coma Python asume que lo que estás haciendo es poner un par de paréntesis a una expresión, por lo que no se crea una tupla.
+
+\end{enumerate}
+
+\subsection{Asignar varios valores a la vez}
+
+A continuación se observa una forma muy interesante de programar múltiples asignaciones en Python. Para ello utilizamos las tuplas:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> v = ('a', 2, True)
+>>> (x, y, z) = v
+>>> x
+'a'
+>>> y
+2
+>>> z
+True
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} \codigo{v} es una tupla con tres elementos y \codigo{(x, y, z)} es una tupla con tres variables. Al asignar una tupla a la otra, lo que sucede es que cada una de las variables recoge el valor del elemento de la otra tupla que corresponde con su posición.
+
+\end{enumerate}
+
+Esto tiene toda clase de usos. Supón que quieres asignar nombres a un rango de valores, puedes combinar la función \codigo{range()} con la asignación múltiple para hacerlo de una forma rápida:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> (LUNES, MARTES, MIERCOLES, JUEVES,
+... VIERNES, SABADO, DOMINGO) = range(7)
+>>> LUNES
+0
+>>> MARTES
+1
+>>> DOMINGO
+6
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} La función interna \codigo{range()} genera una secuencia de números enteros\footnote{Técnicamente construye un \textbf{iterador}, no una lista o tupla. Lo veremos más adelante.}. Las variables que vas a definir son \codigo{LUNES, MARTES}, etc)\footnote{Este ejemplo procede del módulo \codigo{calendar}, que es un pequeño módulo que imprime un calendario, como el programa de UNIX \codigo{cal}}. El módulo \codigo{calendar} define unas constantes enteras para cada día de la semana).
+
+\item \emph{Línea 3:} Ahora cada variable tiene un valor: \codigo{LUNES} vale \codigo{0}, \codigo{MARTES} vale \codigo{1}, etc.
+
+\end{enumerate}
+
+También puedes utilizar la asignación múltiple para construir funciones que devuelvan varios valores a la vez. Simplemente devolviendo una tupla con los valores. Desde el código que llama a la función se puede tratar el valor de retorno como una tupla o se puede asignar los valores individuales a unas variables. Muchas librerías estándares de Python hacen esto, incluido el módulo \codigo{os}, que utilizaremos en el siguiente capítulo.
+
+\section{Conjuntos}
+
+Un conjunto es una ``bolsa'' sin ordenar de valores únicos. Un conjunto puede contener simultáneamente valores de cualquier tipo de datos. Con dos conjuntos se pueden efectuar las típicas operaciones de unión, intersección y diferencia de conjuntos.
+
+\subsection{Creación de conjuntos}
+
+Comencemos por el principio, crear un conjunto es fácil.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_conjunto = {1}
+>>> un_conjunto
+{1}
+>>> type(un_conjunto)
+<class 'set'>
+>>> un_conjunto = {1, 2}
+>>> un_conjunto
+{1, 2}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Para crear un conjunto con un valor basta con poner el valor entre llaves (\codigo{{}}).
+
+\item \emph{Línea 4:} Los conjuntos son clases, pero no te preocupes por ahora de esto.
+
+\item \emph{Línea 6:} Para crear un conjunto con varios elementos basta con separarlos con comas y encerrarlos entre llaves.
+
+\end{enumerate}
+
+También es posible crear un conjunto a partir de una lista:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> una_lista = ['a', 'b', 'mpilgrim', True, False, 42]
+>>> un_conjunto = set(una_lista)
+>>> un_conjunto
+{'a', False, 'b', True, 'mpilgrim', 42}
+>>> una_lista 
+['a', 'b', 'mpilgrim', True, False, 42]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Para crear un conjunto de una lista utiliza la función \codigo{set()}\footnote{Aquellos que conocen cómo están implementados los conjuntos apuntarán que realmente no se trata de una llamada a una función, sino de la instanciación de una clase. Te \emph{prometo} que en este libro aprenderás la diferencia. Pero por ahora basta con que sepas que \codigo{set()} se comporta como una función que devuelve como resultado un conjunto.}.
+
+\item \emph{Línea 3:} Como comenté anteriormente, un conjunto puede contener valores de cualquier tipo y está \emph{desordenado}. En este ejemplo, el conjunto no recuerda el orden en el que estaba la lista que sirvió para crearlo. Si añadieras algún elemento nuevo no recordaría el orden en el que lo añadiste.
+
+\item \emph{Línea 5:} La lista original no se ha modificado.
+
+\end{enumerate}
+
+¿Tienes un conjunto vacío? Sin problemas. Puedes crearlo y más tarde añadir elementos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_conjunto = set()
+>>> un_conjunto
+set()
+>>> type(un_conjunto)
+<class 'set'>
+>>> len(un_conjunto)
+0
+>>> no_seguro = {}
+>>> type(no_seguro)
+<class 'dict'>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Para crear un conjunto vacío debes utilizar la función \codigo{set()} sin parámetros.
+
+\item \emph{Línea 2:} La representación impresa de un conjunto vacío parece algo extraña. ¿Tal vez estabas esperando \codigo{\{\}}? Esa expresión se utiliza para representar un diccionario vacío, no un conjunto vacío. Aprenderás a usar los diccionarios más adelante en este capítulo.
+
+\item \emph{Línea 4:} A pesar de la extraña representación impresa se trata de un conjunto.
+
+\item \emph{Línea 6:} ...y este conjunto no tiene elementos.
+
+\item \emph{Línea 8:} Debido a razones históricas procedentes de Python 2. No puedes utilizar las llaves para crear un conjunto vacío, puesto que lo que se crea es un diccionario vacío, no un conjunto vacío.
+
+\end{enumerate}
+
+\subsection{Modificación de conjuntos}
+
+Hay dos maneras de añadir valores a un conjunto: el método \codigo{add()} y el método \codigo{update()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_conjunto = {1, 2}
+>>> un_conjunto.add(4)
+>>> un_conjunto
+{1, 2, 4}
+>>> len(un_conjunto)
+3
+>>> un_conjunto.add(1)
+>>> un_conjunto
+{1, 2, 4}
+>>> len(un_conjunto)
+3
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El método \codigo{add()} recibe un parámetro, que puede ser de cualquier tipo, cuyo resultado es añadir el parámetro al conjunto.
+
+\item \emph{Línea 5:} Este conjunto tiene ahora cuatro elementos.
+
+\item \emph{Línea 7:} Los conjuntos son ``bolsas'' de valores \emph{únicos}. Por eso, si intentas añadir un valor que ya exista en el conjunto no hará nada. Tampoco elevará un error. Simplemente no se hace nada.
+
+\item \emph{Línea 10:} Por eso, el conjunto \emph{aún} tiene tres elementos.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_conjunto = {1, 2, 3}
+>>> un_conjunto
+{1, 2, 3}
+>>> un_conjunto.update({2, 4, 6})
+>>> un_conjunto
+{1, 2, 3, 4, 6}
+>>> un_conjunto.update({3, 6, 9}, {1, 2, 3, 5, 8, 13})
+>>> un_conjunto
+{1, 2, 3, 4, 5, 6, 8, 9, 13}
+>>> un_conjunto.update([10, 20, 30])
+>>> un_conjunto
+{1, 2, 3, 4, 5, 6, 8, 9, 10, 13, 20, 30}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} El método \codigo{update()} toma un parámetro, un conjunto, y añade todos sus elementos al conjunto original. Funciona como si llamaras al método \codigo{add()} con cada uno de los elementos del conjunto que pasas como parámetro.
+
+\item \emph{Línea 5:} Los elementos duplicados se ignoran puesto que los conjuntos no pueden contener duplicados.
+
+\item \emph{Línea 7:} Puedes llamar al método \codigo{update()} con cualquier número de parámetros. Cuando lo llamas con dos conjuntos, el método añade todos los elementos de cada conjunto al conjunto original (sin incluir duplicados).
+
+\item \emph{Línea 10:} El método \codigo{update()} puede recibir como parámetro elementos de diferentes tipos de dato, incluidas las listas. Cuando se llama pasándole una lista, el método \codigo{update()} añade todos los elementos de la lista al conjunto original.
+
+\end{enumerate}
+
+\subsection{Eliminar elementos de un conjunto}
+
+Existen tres formas de eliminar elementos individuales de un conjunto: Las dos primeras \codigo{discard()} y \codigo{remove()}, se diferencian de forma sutil:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_conjunto = {1, 3, 6, 10, 15, 21, 28, 36, 45}
+>>> un_conjunto
+{1, 3, 36, 6, 10, 45, 15, 21, 28}
+>>> un_conjunto.discard(10)
+>>> un_conjunto
+{1, 3, 36, 6, 45, 15, 21, 28}
+>>> un_conjunto.discard(10)
+>>> un_conjunto
+{1, 3, 36, 6, 45, 15, 21, 28}
+>>> un_conjunto.remove(21)
+>>> un_conjunto
+{1, 3, 36, 6, 45, 15, 28}
+>>> un_conjunto.remove(21)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 21
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} El método \codigo{discard()} toma un único parámetro y elminia el elemento del conjunto.
+
+\item \emph{Línea 7:} Si llamas al método \codigo{discard()} con un valor que no exista en el conjunto no se produce ningún error. Simplemente no se hace nada.
+
+\item \emph{Línea 10:} El método \codigo{remove()} también recibe un único parámetro y también elimina el elemento del conjunto.
+
+\item \emph{Línea 13:} Aquí esta la diferencia: si el valor no existe en el conjunto, el método \codigo{remove()} eleva la excepción \codigo{KeyError}.
+
+\end{enumerate}
+
+Como pasa con las listas, los conjuntos también tienen el método \codigo{pop()}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_conjunto = {1, 3, 6, 10, 15, 21, 28, 36, 45}
+>>> un_conjunto.pop()
+1
+>>> un_conjunto.pop()
+3
+>>> un_conjunto.pop()
+36
+>>> un_conjunto
+{6, 10, 45, 15, 21, 28}
+>>> un_conjunto.clear()
+>>> un_conjunto
+set()
+>>> un_conjunto.pop()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 'pop from an empty set'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El método \codigo{pop()} elimina un único valor del conjunto y retorna el valor. Sin embargo, como los conjuntos no están ordenados, no hay un ``último'' elemento, por lo que no hay forma de controlar qué elemento es el que se extrae. Es aleatorio.
+
+\item \emph{Línea 10:} El método \codigo{clear()} elimina todos los valores del conjunto dejándolo vacío. Es equivalente a \codigo{un\_conjunto = set()}, que crearía un nuevo conjunto vacío y lo asignaría a la variable, eliminando el conjunto anterior.
+
+\item \emph{Línea 13:} Si se intenta extraer un valor de un conjunto vacío se eleva la excepción \codigo{KeyError}. 
+
+\end{enumerate}
+
+\subsection{Operaciones típicas de conjuntos}
+
+Los conjuntos de Python permiten las operaciones habituales de este tipo de datos:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_conjunto = {2, 4, 5, 9, 12, 21, 30, 51, 76, 127, 195}
+>>> 30 in un_conjunto
+True
+>>> 31 in un_conjunto
+False
+>>> otro_conjunto = {1, 2, 3, 5, 6, 8, 9, 12, 15, 17, 18, 21}
+>>> un_conjunto.union(otro_conjunto)
+{1, 2, 195, 4, 5, 6, 8, 12, 76, 15, 17, 18, 3, 21, 30, 51, 9, 127}
+>>> un_conjunto.intersection(otro_conjunto)
+{9, 2, 12, 5, 21}
+>>> un_conjunto.difference(otro_conjunto)
+{195, 4, 76, 51, 30, 127}
+>>> un_conjunto.symmetric_difference(otro_conjunto)
+{1, 3, 4, 6, 8, 76, 15, 17, 18, 195, 127, 30, 51}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Para comprobar si un valor está contenido en un conjunto se puede utilizar el operador \codigo{in}. Funciona igual que en las listas.
+
+\item \emph{Línea 7:} El método \codigo{union()} retorna un nuevo conjunto que contiene todos los elementos que están en \emph{alguno} de los conjuntos originales.
+
+\item \emph{Línea 9:} El método \codigo{intersection()} retorna un nuevo conjunto con los elementos que están en \emph{ambos} conjuntos originales.
+
+\item \emph{Línea 11:} El método \codigo{difference()} retorna un nuevo conjunto que contiene los elementos que están en \codigo{un\_conjunto} pero no en \codigo{otro\_conjunto}.
+
+\item \emph{Línea 13:} El método \codigo{symmetric\_difference()} retorna un nuevo conjunto que contiene todos los elementos que están únicamente en uno de los conjuntos originales.
+
+\end{enumerate}
+
+Tres de estos métodos son simétricos:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# continuaci$\ac{o}$n del ejemplo anterior
+>>> otro_conjunto.symmetric_difference(un_conjunto)
+{3, 1, 195, 4, 6, 8, 76, 15, 17, 18, 51, 30, 127}
+>>> otro_conjunto.symmetric_difference(un_conjunto) == \
+... un_conjunto.symmetric_difference(otro_conjunto)
+True
+>>> otro_conjunto.union(un_conjunto) == \
+... un_conjunto.union(otro_conjunto)
+True
+>>> otro_conjunto.intersection(un_conjunto) == \
+... un_conjunto.intersection(otro_conjunto)
+True
+>>> otro_conjunto.difference(un_conjunto) == \
+... un_conjunto.difference(otro_conjunto)
+False
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Aunque el resultado de la diferencia simétrica de \codigo{un\_conjunto} y \codigo{otro\_conjunto} parezca diferente de la diferencia simétrica de \codigo{otro\_conjunto} y \codigo{un\_conjunto}, recuerda que los conjuntos están desordenados. Dos conjuntos con los mismos valores se consideran iguales.
+
+\item \emph{Línea 4:} Y eso es lo que sucede aquí. No te despistes por la representación impresa de los conjuntos. Como contienen los mismos valores, son iguales.
+
+\item \emph{Línea 7:} La unión de dos conjuntos también es simétrica. 
+
+\item \emph{Línea 10:} La intersección de dos conjuntos también es simétrica.
+
+\item \emph{Línea 13:} La diferencia de dos conjuntos no es simétrica, lo que tiene sentido, es análogo a la resta de dos números; importa el orden de los operandos.
+
+\end{enumerate}
+
+Finalmente veamos algunas consultas que se pueden hacer a los conjuntos:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_conjunto = {1, 2, 3}
+>>> otro_conjunto = {1, 2, 3, 4}
+>>> un_conjunto.issubset(otro_conjunto)
+True
+>>> otro_conjunto.issuperset(un_conjunto)
+True
+>>> un_conjunto.add(5)
+>>> un_conjunto.issubset(otro_conjunto)
+False
+>>> otro_conjunto.issuperset(un_conjunto)
+False
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} \codigo{un\_conjunto} es un subconjunto de \codigo{otro\_conjunto} ---Todos los miembros de \codigo{un\_conjunto} forman parte de \codigo{otro\_conjunto}.
+
+\item \emph{Línea 5:} Pregunta lo mismo pero al revés. \codigo{otro\_conjunto} es un superconjunto de \codigo{un\_conjunto} ---Todos los miembros de \codigo{un\_conjunto} forman parte de \codigo{otro\_conjunto}.
+
+\item \emph{Línea 7:} Tan pronto como añadas un valor a \codigo{un\_conjunto} que no se encuentre en \codigo{otro\_conjunto} ambas consultas devuelven \codigo{False}.
+
+\end{enumerate}
+
+\subsection{Los conjuntos en contextos booleanos}
+
+Puedes utilizar conjuntos en contextos booleanos, como en una sentencia \codigo{if}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> def es_true(algo):
+...   if algo:
+...     print("s$\ac{i}$, es true")
+...   else:
+...     print("no, es false")
+...
+>>> es_true(set())
+no, es false
+>>> es_true({'a'})
+s$\ac{i}$, es true
+>>> es_true({False})
+s$\ac{i}$, es true
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 7:} En un contexto booleano los conjuntos vacíos valen \codigo{False}.
+
+\item \emph{Línea 9:} Cualquier conjunto con al menos un elemento vale \codigo{True}.
+
+\item \emph{Línea 11:} Cualquier conjunto con al menos un elemento vale \codigo{True}. El valor de los elementos es irrelevante.
+
+\end{enumerate}
+
+\section{Diccionarios}
+
+Un diccionario es un conjunto desordenado de parejas clave-valor. Cuando añades una clave a un diccionario, tienes que añadir también un valor para esa clave\footnote{Más tarde puedes cambiar el valor asignado a la clave si lo deseas.}. Los diccionarios de Python están optimizados para recuperar fácilmente el valor cuando conoces la clave, no al revés\footnote{Nota del Traductor: en otros lenguajes se habla de arrays asociativos o tablas hash para representar este mismo concepto}.
+
+\begin{quote}
+Un diccionario de Python, es como un hash de Perl 5. En Perl 5 las variables que almacenan ``hashes'' siempre comienzan por el carácter \codigo{\%}. En Python, las variables pueden tener el nombre que se quiera porque el tipo de datos se mantiene internamente.
+
+\end{quote}
+
+\subsection{Creación de diccionarios}
+
+Crear diccionarios es sencillo. La sintaxis es similar a la de los conjuntos, pero en lugar de valores, tienes que poner parejas clave-valor. Una vez has creado el diccionario, puedes buscar los valores mediante el uso de su clave.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_dic = {'servidor': 'db.diveintopython3.org', 'basedatos': 'mysql'}
+>>> un_dic
+{'servidor': 'db.diveintopython3.org', 'basedatos': 'mysql'}
+>>> un_dic['servidor']
+'db.diveintopython3.org'
+>>> un_dic['basedatos']
+'mysql'
+>>> un_dic['db.diveintopython3.org']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 'db.diveintopython3.org'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} En el ejemplo creamos primero un diccionario con dos elementos y lo asignamos a la variable \codigo{un\_dic}. Cada elemento es una pareja clave-valor. El conjunto completo de elementos se encierra entre llaves.
+
+\item \emph{Línea 4:} \codigo{``servidor''} es una clave, y su valor asociado se obtiene mediante la referencia \codigo{un\_dic[``servidor'']} cuyo valor es ``db.diveintopython3.org''.
+
+\item \emph{Línea 6:} \codigo{``basedatos''} es una clave y su valor asociado se obtiene mediante la referencia \codigo{un\_dic[``basedatos'']} cuyo valor es ``mysql''.
+
+\item \emph{Línea 8:} Puedes recuperar los valores mediante la clave, pero no puedes recuperar las claves mediante el uso de su valor. Por eso \codigo{un\_dic[``servidor'']} vale \codigo{``db.diveintopython3.org''} pero \codigo{un\_dic[``db.diveintopython3.org'']} eleva una excepción de tipo \codigo{KeyError} al no ser una clave del diccionario.
+
+\end{enumerate}
+
+\subsection{Modificación de un diccionario}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_dic
+{'servidor': 'db.diveintopython3.org', 'basedatos': 'mysql'}
+>>> un_dic['basedatos'] = 'blog'
+>>> un_dic
+{'servidor': 'db.diveintopython3.org', 'basedatos': 'blog'}
+>>> un_dic['usuario'] = 'mark'
+>>> un_dic
+{'servidor': 'db.diveintopython3.org', 'usuario': 'mark', 
+ 'basedatos': 'blog'}
+>>> un_dic['usuario'] = 'dora'
+>>> un_dic
+{'servidor': 'db.diveintopython3.org', 'usuario': 'dora', 
+ 'basedatos': 'blog'}
+>>> un_dic['Usuario'] = 'mark'
+>>> un_dic
+{'Usuario': 'mark', 'servidor': 'db.diveintopython3.org', 
+ 'usuario': 'dora', 'basedatos': 'blog'}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} No puedes tener claves duplicadas en un diccionario. Al asignar un valor a una clave existente el valor anterior se pierde.
+
+\item \emph{Línea 6:} Puedes añadir nuevas parejas clave-valor en cualquier momento. La sintaxis es idéntica a la que se utiliza para modificar valores.
+
+\item \emph{Línea 8:} El elemento nuevo del diccionario (clave \codigo{``usuario''}, valor \codigo{``mark''}) aparece en la mitad. Esto es una mera coincidencia, los elementos de un diccionario no están ordenados.
+
+\item \emph{Línea 10:} Al asignar un valor a una clave existente, simplemente se sustituye el valor anterior por el nuevo.
+
+\item \emph{Línea 14:} Esta sentencia ¿cambia el valor de la clave \codigo{``usuario''} para volverle asignar \codigo{``mark''}? ¡No! Si lo observas atentamente verás que la \codigo{``U''} está en mayúsculas. Las claves de los diccionarios distinguen las mayúsculas y minúsculas, por eso esta sentencia crea una nueva pareja clave-valor, no sobreescribe la anterior. Puede parecerte casi lo mismo, pero en lo que a Python respecta, es totalmente diferente.
+
+\end{enumerate}
+
+\subsection{Diccionarios con valores mixtos}
+
+Los diccionarios no se usan únicamente con cadenas de texto. Los valores de un diccionario pueden ser de cualquier tipo, incluidos enteros, booleanos, cualquier objeto o incluso otros diccionarios. Y en un mismo diccionario, no es necesario que todos los valores sean del mismo tipo, puedes mezclarlos según lo necesites. Los tipos de datos que pueden ser claves de un diccionario están más limitados, pero pueden ser cadenas de texto, enteros, y algunos tipos más. También es factible mezclar diferentes tipos de clave en un mismo diccionario.
+
+De hecho, ya hemos visto un diccionario con valores diferentes a cadenas de texto.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+SUFIJOS = {1000: ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    1024: ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']}
+\end{lstlisting}
+\end{minipage}
+
+Vamos a descomponerlo en la consola interactiva de Python.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> SUFIJOS = {1000: ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+...     1024: ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']}
+>>> len(SUFIJOS)
+2
+>>> 1000 in SUFIJOS
+True
+>>> SUFIJOS[1000]
+['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+>>> SUFIJOS[1024]
+['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+>>> SUFIJOS[1000][3]
+'TB'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} Como sucede con las listas y conjuntos, la función \codigo{len()} devuelve el número de claves que tiene un diccionario.
+
+\item \emph{Línea 5:} También como pasa con las listas y conjuntos puedes utilizar el operador \codigo{in} para comprobar si una clave determinada está en el diccionario.
+
+\item \emph{Línea 7:} \codigo{1000} es una clave del diccionario \codigo{SUFIJOS}; su valor es una lista de ocho elementos (ocho cadenas de texto, por ser más precisos).
+
+\item \emph{Línea 9:} De igual manera, \codigo{1024} es una clave del diccionario \codigo{SUFIJOS}; su valor también es una lista de ocho elmentos.
+
+\item \emph{Línea 11:} Puesto que \codigo{SUFIJOS[1000]} es una lista, puedes utilizar los corchetes para acceder a los elementos individuales. Recuerda que los índices en Python comienzan a contar en cero.
+
+\end{enumerate}
+
+\subsection{Diccionarios en un contexto booleano}
+
+También puedes utilizar un diccionario en un contexto booleano, como en la sentencia \codigo{if}.
+
+\cajaTextoAncho{Todo diccionario vacío equivale a False y todos los demás equivalen a True.}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> def es_true(algo):
+...   if algo:
+...     print("s$\ac{i}$, es true")
+...   else:
+...     print("no, es false")
+...
+>>> es_true({})
+no, es false
+>>> es_true({'a' : 1})
+s$\ac{i}$, es true
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 7:} En un contexto booleano un diccionario vacío equivale a \codigo{False}.
+
+\item \emph{Línea 9:} Cualquier diccionario con, al menos, una pareja clave-valor equivale a \codigo{True}.
+
+\end{enumerate}
+
+\section{\codigo{None}}
+
+\codigo{None} es una constante especial de Python. Representa al valor nulo. \codigo{None} no es lo mismo que \codigo{False}. \codigo{None} tampoco es \codigo{0}. \codigo{None} tampoco es la cadena vacía. Cualquier comparación de \codigo{None} con otra cosa diferente de él mismo se evalúa al valor \codigo{False}.
+
+\codigo{None} es el único valor nulo. Tiene su propio tipo de dato (\codigo{NoneType}). Puedes asignar \codigo{None} a cualquier variable, pero no puedes crear nuevos objetos del tipo \codigo{NoneType}. Todas las variables cuyo valor es \codigo{None} son iguales entre sí.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> type(None)
+<class 'NoneType'>
+>>> None == False
+False
+>>> None == 0
+False
+>>> None == ''
+False
+>>> None == None
+True
+>>> x = None
+>>> x == None
+True
+>>> y = None
+>>> x == y
+True
+\end{lstlisting}
+\end{minipage}
+
+\subsection{\codigo{None} en un contexto booleano}
+
+En un contexto booleano \codigo{None} vale \codigo{False} y \codigo{not None} vale \codigo{True}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+
+>>> def es_true(algo):
+...   if algo:
+...     print("s$\ac{i}$, es true")
+...   else:
+...     print("no, es false")
+...
+>>> es_true(None)
+no, es false
+>>> es_true({not None)
+s$\ac{i}$, es true
+\end{lstlisting}
+\end{minipage}
+
+\section{Lecturas complementarias}
+
+\begin{itemize}
+
+\item \href{http://docs.python.org/3.1/library/stdtypes.html#boolean-operations-and-or-not}{Operaciones booleanas}
+
+\item \href{http://docs.python.org/3.1/library/stdtypes.html#numeric-types-int-float-long-complex}{Tipos numéricos}
+
+\item \href{http://docs.python.org/3.1/library/stdtypes.html#sequence-types-str-unicode-list-tuple-buffer-xrange}{Tipos secuencia}
+
+\item \href{http://docs.python.org/3.1/library/stdtypes.html#set-types-set-frozenset}{Tipos conjunto}
+
+\item \href{http://docs.python.org/3.1/library/stdtypes.html#mapping-types-dict}{Tipos mapa}
+
+\item \href{http://docs.python.org/3.1/library/fractions.html}{módulo \codigo{fractions}}
+
+\item \href{http://docs.python.org/3.1/library/math.html}{módulo \codigo{math}}
+
+\item \href{http://www.python.org/dev/peps/pep-0237/}{PEP 237: Unificación de enteros largos y enteros}
+
+\item \href{http://www.python.org/dev/peps/pep-0238/}{PEP 238: Modificación del operador de división}
+
+\end{itemize}

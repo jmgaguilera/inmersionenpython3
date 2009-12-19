@@ -1,0 +1,613 @@
+% ch4.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 New Zealand License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Cadenas de texto}\label{ch:cadenas}
+
+\noindent
+Nivel de dificultad:\diflll
+
+\begin{citaCap}
+``Te digo esto porque eres uno de mis amigos, \\
+¡Mi vocabulario comienza donde el tuyo termina!'' \\
+---Dr. Seuss, ¡On beyond Zebra!
+\end{citaCap}
+
+\section{Temas aburridos que debes conocer antes de la inmersión}
+
+¿Sabías que la gente de \href{http://en.wikipedia.org/wiki/Bougainville\_Province}{Bougainville} tiene el alfabeto más pequeño del mundo? El alfabeto \href{http://en.wikipedia.org/wiki/Rotokas\_alphabet}{Rotokas} está compuesto únicamente por 12 letras: A, E, G, I, K, O, P, R, S, T, U y V. En el otro lado del espectro los lenguajes como el Chino, Japonés y Koreano tienen miles de caracteres. El inglés, desde luego, tiene 26 letras ---52 si cuentas las mayúsculas y minúsculas de forma separada--- más un puñado de símbolos de puntuación \emph{!@\#\$\%\&?}.
+
+Cuando las personas hablan sobre ``texto'' piensan en ``caracteres y símbolos en la pantalla del ordenador''. Pero los ordenadores no conocen ni símbolos ni caracteres, conocen bits y bytes. Cada elemento textual que ves en la pantalla está almacenado con una \codigo{codificación de caracteres} particular. Explicándolo de manera informal, la codificación de caracteres proporciona una conversión entre lo que ves en la pantalla y lo que el ordenador realmente almacena en memoria o en disco. Existen muchas codificaciones de caracteres diferentes, algunas optimizadas para determinados lenguajes como el ruso, el chino o el inglés, y otras que se pueden utilizar para diferentes lenguajes.
+
+En realidad es más complicado. Muchos caracteres son comunes a diferentes codificaciones, pero cada codificación puede utilizar una secuencia de bytes diferente para almacenar esos caracteres en memoria o disco. Puedes imaginarte que una codificación de caracteres es como una especia de clave de desencriptado. Cuando tengas una secuencia de bytes ---un fichero, una página web o cualquier otra cosa--- y se considere que esos bytes representan ``texto'', necesitas conocer en qué codificación de caracteres se encuentra para poder decodificar los bytes y conocer a qué caracteres representan. Si tienes una clave de decodificación equivocada o no dispones de ninguna, la decodificación no será posible o será errónea (si se usa una decodificación equivocada), y el resultado será un texto sin sentido.
+
+\cajaTexto{Todo lo que que pensabas que sabías sobre las cadenas de texto es erróneo.}
+
+Seguramente  habrás visto a veces paginas web con extraños caracteres de interrogación o similar, en donde esperabas algún caracter como el apóstrofo o vocales acentuadas. Esto suele indicar que el autor de la página no declaró correctamente la codificación de caracteres que utilizó por lo que tu navegador la tiene que adivinar y el resultado es una mezcla de caracteres esperados e inesperados. En inglés esto es simplemente desconcertante, pero en otros lenguajes el resultado puede ser completamente ilegible.
+
+Existen tablas de codificación de caracteres para cada uno de los lenguajes importantes del mundo. Puesto que cada lenguaje es diferente, y la memoria y el espacio en disco ha sido caro históricamente, cada tabla de codificación de caracteres está optimizada para un lenguaje en particular. Lo que quiero decir con esto es que cada una de las codificaciones usa los mismos números (0 - 255) para representar los caracteres de un lenguaje determinado. Por ejemplo, posiblemente estés familiarizado con la codificación \codigo{ASCII}, que almacena los caracteres del inglés como números que van del 0 al 127 (65 es la ``A'', 97 es la ``a'', etc). El inglés es un alfabeto muy simple, por lo que puede expresarse con menos de 128 números. Para aquellos que sepan contar en base 2, eso significa 7 bits de los 8 de un byte.
+
+Algunos lenguajes de Europa como el francés, español y alemán necesitan más letras que el inglés. O, para ser más precisos, tienen letras que se combinan con diversas marcas diacríticas, como el carácter \codigo{ñ} del español. La tabla de codificación de caracteres más común para estos lenguajes es \codigo{CP-1252}, que también es conocida como \codigo{windows-1252} porque se utiliza ampliamente en el sistema operativo Microsoft Windows. La codificación \codigo{CP-1252} comparte con \codigo{ASCII} los primeros 128 caracteres (0-127), pero luego se extiende en el rango de 128 a 255 para los caracteres restantes (241 es la ``ñ'', 252 es la ``ü'', etc). Continúa siendo una tabla de codificación de un único byte. El valor mayor, 255, aún \emph{cabe} en un byte.
+
+Además existen lenguajes como el chino, japonés y coreano, que tienen tantos caracteres que requieren tablas de codificación de caracteres multibyte. Esto significa que cada ``carácter'' se representa como un número de dos bytes lo que abarca del 0 al 65535. Pero las codificaciones multibyte también tienen el mismo problema que las diferentes codificaciones de un único byte: cada una de ellas puede utilizar el mismo número para expresar un carácter diferente. La única diferencia entre ellas es que el rango de caracteres disponible es mayor en las codificaciones multibyte.
+
+Esto no suponía demasiado problema en un mundo desconectado, en donde ``texto'' era algo que tecleabas para tí y ocasionalmente imprimías. No existía mucho ``texto plano''. El código fuente era \codigo{ASCII} y todo el mundo usaba procesadores de textos que definían su propo formato que tenían en cuenta la información de codificación de caracteres junto con la información de estilo, etc. La gente leía estos documentos con el mismo programa procesador de texto que el autor original, por lo que todo funcionaba, más o menos.
+
+Ahora piensa en la aparición de las redes globales y en el correo y la web. Mucho ``texto plano'' anda suelto por el mundo, se crea en un ordenador, se transmite a un segundo y se muestra en un tercero. Los ordenadores únicamente distinguen números, pero los números pueden significar cosas diferentes. ¡Oh no! ¿Qué hacer? Bien, los sistemas tuvieron que diseñarse para transportar la información de codificación junto con el ``texto plano''. Recuerda, se trata de las claves de descodificación que mapean los números entendidos por el ordenador a caracteres legibles por personas. Una clave de descodificación perdida da lugar a texto ilegible.
+
+Ahora piensa en intentar almacenar diversos documentos de texto en el mismo lugar, como en una tabla de una misma base de datos que almacena todo el correo electrónico que hayas recibido. Aún necesitas almacenar la codificación de caracteres junto con cada correo electrónico para que se pueda leer apropiadamente. ¿Parece difícil? Prueba a buscar en tu base de datos de correos, eso significa convertir entre múltiples tablas de codificación de caracteres sobre la marcha. ¿No suena divertido?.
+
+Piensa ahora en la posibilidad de documentos multilíngues, en donde aparecen caracteres en diferentes lenguajes\footnote{Pista: los programas que han intentando hacer esto utilizan habitualmente códigos de escape para conmutar entre ``modos''. Si estás en modo ruso koi8-r el código 241 significa $\reflectbox{R}$. Si cambias a modo Griego el código 241 significa $\stackrel{'}{\omega}$.}. Y, por supuesto, querrás buscar el contenido de \emph{esos} documentos.
+
+Ahora llora un rato, porque todo lo que creías conocer sobre las cadenas de texto es erróneo, y no existe algo así como el ``texto plano''.
+
+\section{Unicode}
+
+\emph{Entra} en Unicode.
+
+Unicode es un sistema diseñado para representar \emph{todos} los caracteres de \emph{todos} los lenguajes. Representa cada letra, carácter o ideograma como un número de cuatro bytes. Cada número representa a un único carácter que se use en al menos uno de los lenguajes del mundo (No se usan todos los números, pero se usan más de 65535 por lo que no es suficiente utilizar dos bytes). Los caracteres que se utilizan en diferentes lenguajes tienen el mismo número generalmente, a menos que exista una buena razón etimológica para que no sea así. De todos modos hay exactamente un número por cada carácter y un carácter por número. De esta forma, cada número siempre significa una única cosa. No existen ``modos'' que rastrear, \codigo{U+0041} siempre corresponde a \codigo{``A''}, incluso si tu lenguaje no usa tal símbolo.
+
+A primera vista parece una gran idea, una tabla de codificación de caracteres para gobernarlos a todos. Múltiples lenguajes por documento, no más ``cambios de modo'' para conmutar entre tablas de codificación en medio de un documento. Pero existe una pregunta obvia. ¿Cuatro bytes? ¿Para cada carácter? Parece un gasto inútil la mayor parte de las ocasiones, especialmente para idiomas como el inglés o el español, que necesitan menos de un byte (256 números) para expresar cada uno de los caracteres posibles. De hecho, es un desperdicio de espacio incluso para los lenguajes basados en ideogramas como el chino, que nunca necesitan más de dos caracteres para cada carácter.
+
+Existe una tabla de codificación Unicode que utiliza cuatro bytes por cada carácter. Se denomina \codigo{UTF-32} porque 32 bits es igual a 4 bytes. \codigo{UTF-32} es una codificación directa; toma cada carácter Unicode (un número de 4 bytes) y representa al carácter con ese mismo número. Esto tiene varias ventajas siendo la más importante que puedes encontrar el ``enésimo'' carácter de una cadena en un tiempo constante ya que se encuentra en a partir del byte $4 * n$. También tiene varios inconvenientes, siendo el más obvio que necesita cuatro bytes para almacenar cada carácter.
+
+Incluso aunque existen muchos caracteres Unicode, resulta que la mayoría de la gente nunca usará nada más allá de los primeros 65535. Por eso existe otra codificación Unicode denominada \codigo{UTF-16} (16 bits son 2 bytes) que codifica cada uno de los caracteres de 0 a 65535 como dos bytes. Además utiliza algunos ``trucos sucios'' por si necesitas representar aquellos caracteres que se usan raramente y que están más allá del 65535. La ventaja más obvia es que esta tabla de codificación de caracteres es el doble de eficiente que la de \codigo{UTF-32} puesto que cada carácter requiere únicamente dos bytes para almacenarse, en lugar de cuatro bytes. Aún se puede encontrar fácilmente el enésimo carácter de una cadena en un tiempo constante, siempre que se asuma que no existen caracteres especiales de los que están por encima de 65535. Lo que suele ser una buena asunción... ¡hasta el momento en que no lo es!
+
+También existen algunos inconvenientes no tan obvios tanto en \codigo{UFT-32} y \codigo{UTF-8}. Los ordenadores de sistemas diferentes suelen almacenar los bytes de diferentes formas. Esto significa que el carácter \codigo{U+4E2D} podría almacenarse en \codigo{UTF-16} bien como \codigo{4E 2D} o como \codigo{2D 4E}, dependiendo de que el sistema sea ``big-endian'' o ``little-endian''\footnote{Almacene los bytes en orden o invirtiendo el mismo.} (para UTF-32 existen más posibilidades de ordenación de los bytes). Mientras tus documentos no dejen tu ordenador estás seguro ---las diferentes aplicaciones del mismo ordenador utilizarán la misma ordenación de bytes. Pero en el momento que transfieras los documentos entre sistemas, tal vez a través de Internet, vas a necesitar una forma de indicar el orden en el que se han almacenado los bytes. De otra forma el sistema que recibe los datos no tiene forma de saber si la secuencia de dos bytes \codigo{4E 2D} significa \codigo{U+4E2D} o \codigo{U+2D4E}.
+
+Para resolver \emph{este} problema, las codificaciones multibyte de Unicode definen el ``Byte Orden Mark'' (BOM)\footnote{Nota del traductor: Marca de ordenación de bytes.}, que es un carácter especial no imprimible que se puede incluir al comienzo de tu documento para indica qué ordenación de bytes tiene el documento. Para \codigo{UTF-16} la marca de ordenación de bytes es \codigo{U+FEFF}, por lo que si recibes un documento \codigo{UTF-16} que comienza con los bytes \codigo{FF FE}, ya sabes en qué forma vienen ordenados los bytes; si comienza con \codigo{FE FF} sabes que el orden es el contrario.
+
+Aún así, \codigo{UTF-16} no es exactamente el ideal, especialmente si la mayor parte de los caracteres que utilizas son \codigo{ASCII}. Si lo piensas, incluso una página web china contendrá muchos caracteres \codigo{ASCII} ---todos los elementos y atributos que rodean a los caracteres imprimibles chinos. Poder encontrar el ``enésimo'' carácter está bien, pero existe el problema de los caracteres que requieren más de dos bytes, lo que significa que no puedes \emph{garantizar} que todos los caracteres ocupan exactamente dos bytes, por lo que en la práctica no puedes encontrar el carácter de la posición ``enésima'' en un tiempo constante a no ser que mantengas un índice separado. Y muchacho, te aseguro que hay mucho texto \codigo{ASCII} por el mundo...
+
+Otras personas valoraron estas preguntas y plantearon una solución:
+
+{
+
+\Huge \center UTF-8
+
+}
+
+\codigo{UTF-8} es un sistema de codificación de \emph{longitud variable} para Unicode. Esto significa que los caracteres pueden utilizar diferente número de bytes. Para los caracteres \codigo{ASCII} utiliza un único byte por carácter. De hecho, utiliza exactamente los mismos bytes que \codigo{ASCII} por lo que los 128 primeros caracteres son indistinguibles. Los caracteres ``latinos extendidos'' como la ñ o la ö utilizan dos bytes\footnote{Los bytes no son únicamente la codificación de Unicode como sucede en \codigo{UTF-16}, se efectúan diversos cambios para obtener la codificación en \codigo{UTF-8}.}. Los caracteres chinos utilizan tres bytes, y los caracteres más ``raros'' utilizan cuatro.
+
+Desventajas: debido a que los caracteres pueden ocupar un número diferente de bytes, encontrar el carácter de la posición ``enésima'' es una operación de orden de complejidad \codigo{O(n)} ---lo que significa que cuanto más larga sea la cadena, más tiempo lleva encontrar un carácter específico. Asimismo, hay que andar codificando y decodificando entre bytes y caracteres.
+
+Ventajas: se trata de una codificación supereficiente de los caracteres \codigo{ASCII}. No es peor que \codigo{UTF-16} para los caracteres latinos extendidos, y es mejor que \codigo{UTF-32} para los caracteres chinos. También (aquí tendrás que confiar en mi, porque no te voy a mostrar la matemática involucrada), debido a la naturaleza exacta de la manipulación de los bits, no existen problemas de ordenación de bits. Un documento codificado en UTF-8 siempre contiene la misma cadena de bytes sea cual sea el ordenador y sistema operativo.
+
+\section{Inmersión}
+
+En Python 3 todas las cadenas de texto son secuencias de caracteres Unicode. En Python 3 no existen cadenas codificadas en \codigo{UTF-8} o en \codigo{CP-1252}. No es correcto decir ¿Es esta cadena una cadena codificada en \codigo{UTF-8}?. \codigo{UTF-8} es una forma de codificar caracteres en una secuencia de bytes. Si quieres convertir una cadena de caracteres en una secuencia de bytes en una codificación de caracteres particular, Python 3 puede ayudarte con ello. Si quieres tomar una secuencia de bytes y convertirla en una cadena de texto, también te puede ayudar Python 3. Los bytes no son caracteres, los bytes son bytes. Los caracteres son una abstracción. Una cadena es una secuencia de esas abstracciones.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True,escapeinside=@@]
+>>> s = '@\begin{CJK}{UTF8}{}快乐\end{CJK}@ Python'
+>>> len(s)
+9
+>>> s[0]
+'@\begin{CJK}{UTF8}{}快\end{CJK}@'
+>>> s + ' 3'
+'@\begin{CJK}{UTF8}{}快乐\end{CJK}@ Python 3'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Para crear una cadena de texto debes utilizar las comillas para delimitarla. Se pueden utilizar comillas simples (\codigo{'}) o dobles (\codigo{"}).
+
+\item \emph{Línea 2:} La función interna \codigo{len()} devuelve la longitud de la cadena, el número de caracteres. Esta función es la misma que utilizas para conocer la longitud de una lista, tupla, conjunto o diccionario. Una cadena es como una tupla de caracteres.
+
+\item \emph{Línea 4:} De la misma forma que puedes obtener elementos individuales de una lista, puedes obtener caracteres individuales de una cadena mediante la notación de índices.
+
+\item \emph{Línea 6:} Como con las listas y tuplas, puedes contatenar las cadenas utilizando el operador \codigo{+}.
+
+\end{enumerate}
+
+\section{Formatear cadenas}
+
+\cajaTextoAncho{Las cadenas de texto se pueden definir utilizando comillas simples o dobles.}
+
+Vamos a echarle otro vistazo a \codigo{parahumanos.py}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# parahumanos.py
+
+SUFIJOS = {1000: ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+           1024: ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 
+                  'YiB']}
+
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+    '''Convierte un tama$\til{n}$o de fichero en formato legible por personas
+
+    Argumentos/par$\ac{a}$metros:
+    tamanyo -- tama$\til{n}$o de fichero en bytes
+    un_kilobyte_es_1024_bytes -- si True (por defecto), 
+                                 usa m$\ac{u}$ltiplos de 1024
+                                 si False, usa m$\ac{u}$ltiplos de 1000
+
+    retorna: string
+
+    '''
+    if tamanyo < 0:
+        raise ValueError('el n$\ac{u}$mero debe ser no negativo')
+
+    multiplo = 1024 if un_kilobyte_es_1024_bytes else 1000
+    for sufijo in SUFIJOS[multiplo]:
+        tamanyo /= multiplo
+        if tamanyo < multiplo:
+            return '{0:.1f} {1}'.format(tamanyo, sufijo)
+
+    raise ValueError('n$\ac{u}$mero demasiado grande')
+
+if __name__ == '__main__':
+    print(tamanyo_aproximado(1000000000000, False))
+    print(tamanyo_aproximado(1000000000000))
+
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} \codigo{'KB', 'MB', 'GB', ...} son cadenas.
+
+\item \emph{Línea 8:} Las cadenas de documentación (docstrings) son cadenas de texto. Como se expanden más allá de una línea se utilizan tres comillas al comienzo y al final para delimitarlas.
+
+\item \emph{Línea 18:} Estas comillas triples finalizan la cadena de documentación de esta función.
+
+\item \emph{Línea 20:} Otra cadena que se pasa como parámetro a la excepción con el fin de que sea legible por una persona.
+
+\item \emph{Línea 26:} Esto es... ¡Uff! ¿Qué car.. es esto?
+
+\end{enumerate}
+
+Python 3 permite formatear valores en cadenas de texto. Aunque este sistema permite expresiones muy complejas, su uso más básico consiste en insertar un valor en una cadena de texto en el lugar definido por un ``marcador''.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> usuario = 'mark'
+>>> clave = 'PapayaWhip'
+>>> "La clave de {0} es {1}".format(usuario, clave)
+"La clave de mark es PapayaWhip"
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Realmente mi clave no es \codigo{PapayaWhip}.
+
+\item \emph{Línea 3:} Aquí hay mucho que contar. Primero, se observa una llamada a un método sobre una cadena de texto. \emph{Las cadenas de texto son objetos}, y los objetos tienen métodos, como ya sabes. Segundo, la expresión completa se evalúa a una cadena. Tercero, \codigo{\{0\}} y \codigo{\{1\}} son \emph{campos de reemplazo}, que se sustituyen con los parámetros que se pasen al método \codigo{format()}.
+
+\end{enumerate}
+
+\subsection{Nombres de campos compuestos}
+
+En el ejemplo anterior se muestra el ejemplo más simple, aquél en el que los campos de reemplazo son números enteros. Los campos de reemplazo enteros se tratan como índices posicionales en la lista de parámetros del método \codigo{format()}. Eso significa que el \codigo{\{0\}} se reemplaza por el primer parámetro (\codigo{usuario} en este caso), \codigo{\{1\}} se reemplaza por el segundo (\codigo{clave} en este caso), etc. Puedes utilizar tantos campos de reemplazo posicional como parámetros se pasen en el método \codigo{format()}. Pero los campos de reemplazo permiten mucha más funcionalidad.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import parahumanos
+>>> mis_sufijos = parahumanos.SUFIJOS[1000]
+>>> mis_sufijos
+['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+>>> '1000{0[0]} = 1{0[1]}'.format(mis_sufijos)
+'1000KB = 1MB'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} En lugar de ejecutar una función del módulo \codigo{parahumanos} únicamente estás capturando una de las estructuras de datos que define; la lista de sufijos que representan las potencias de 1000.
+
+\item \emph{Línea 5:} Esta línea parece complicada, pero no lo es. \codigo{\{0\}} representa el primer párametro del método \codigo{format()}, \codigo{mis\_sufijos}. Por eso \codigo{\{0[0]\}} se refiere al primer elemento de la lista que esté definida como el primer parámetro del método \codigo{format()}: \codigo{'KB'}. Mientras que \codigo{\{0[1]\}} se refiere al segundo elemento de la misma lista: \codigo{'MB'}. Todo lo que está fuera de las llaves ---incluido el \codigo{1000}, los signos de igual, y los espacios--- quedan sin tocar. El resultado final es: \codigo{'1000KB = 1MB'}.
+
+\end{enumerate}
+
+\cajaTextoAncho{El \codigo{\{0\}} se reemplaza por el primer parámetro, \codigo{\{1\}} se reemplaza por el segundo.}
+
+Lo que este ejemplo te enseña es que los \emph{especificadores de formato pueden utilizarse para acceder a los elementos y propiedades de las estructuras de datos utilizando (casi) sintaxis de Python}. Esto se denomina \emph{nombres de campos compuestos}. Estos son los nombres de campos que funcionan:
+
+\begin{itemize}
+
+\item Pasar una lista y acceder a un elemento de la lista utilizando un índice (como en el ejemplo anterior).
+
+\item Pasar un diccionario y acceder a los valores del mismo utilizando una clave.
+
+\item Pasar un módulo y acceder a sus variables y funciones por nombre.
+
+\item Pasar una instancia de clase y acceder a sus propiedades y métodos por nombre.
+
+\item \emph{Cualquier combinación de las anteriores}.
+
+\end{itemize}
+
+Solamente para despejar tu cerebro te muestro aquí un ejemplo que combina todo lo anterior.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import parahumanos
+>>> import sys
+>>> '1MB = 1000{0.modules[parahumanos].SUFIJOS[1000][0]}'.format(sys)
+'1MB = 1000KB'
+\end{lstlisting}
+\end{minipage}
+
+Así es como funciona:
+
+\begin{itemize}
+
+\item El módulo \codigo{sys} almacena información sobre la instancia del lenguaje Python que se está ejecutando en ese momento. Puesto que lo has importado, puedes pasar el propio módulo \codigo{sys} como parámetro del método \codigo{format()}. Así que el campo de sustitución \codigo{\{0\}} se refiere al módulo \codigo{sys}.
+
+\item \codigo{sys.modules} es un diccionario que almacena todos los módulos que se han importando en la instancia de Python que se está ejecutando. Las claves son los nombres de los módulos en formato cadena de texto; los valores son propios módulos (objetos módulo). Por ello \codigo{\{0.modules\}} se refiere al diccionario que contiene todos módulos que se han importado en Python hasta este momento.
+
+\item \codigo{sys.modules['parahumanos']} retorna el objeto \codigo{parahumanos} que acabas de importar. El campo de reemplazo \codigo{sys.modules[parahumanos]} se refiere al módulo \codigo{parahumanos}. Observa que existe una ligera diferencia de sintaxis. En el código de Python, las claves del diccionario es de tipo cadena; para referirse a ellas, es necesario poner comillas alrededor del nombre del módulo (\codigo{'parahumanos'}). Pero dentro de los campos de sustitución no se ponen las comillas alrededor del nombre de la clave del diccionario (\codigo{parahumanos}). Según el \href{http://www.python.org/dev/peps/pep-3101/}{PEP 3101}: Formateo avanzado de cadenas: ``Las reglas para el parseo de la clave de un campo de sustitución son muy simples, si comienza por un dígito, se trata como numérica, en caso contrario se interpreta como una cadena''.
+
+\item \codigo{sys.modules['parahumanos'].SUFIJOS} es el diccionario definido en el módulo \codigo{parahumanos}. El campo de sustitución \codigo{sys.modules[parahumanos].SUFIJOS} se refiere a este diccionario.
+
+\item \codigo{sys.modules['parahumanos'].SUFIJOS[1000]} es la lista de sufijos múltiplos de 1000: \codigo{['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']} Por lo que el campo de sustitución \codigo{sys.modules[parahumanos].SUFIJOS[1000]} se refiere a esta lista.
+
+\item \codigo{sys.modules['parahumanos'].SUFIJOS[1000][0]} es el primer elemento de la lista de sufijos: \codigo{['KB']}. 
+
+\item Por lo tanto el campo de sustitución \codigo{sys.modules[parahumanos].SUFIJOS[1000][0]} se refiere a la cadena \codigo{'KB'}.
+
+\end{itemize}
+
+\subsection{Especificaciones de formato}
+
+¡Pero espera! ¡Hay mas! Vamos a echar otro vistazo a la línea de código más extraña de \codigo{parahumanos.py}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+if tamanyo < multiplo:
+    return '{0:.1f} {1}'.format(tamanyo, sufijo)
+\end{lstlisting}
+\end{minipage}
+
+Como ya sabemos, \codigo{\{1\}} se sustituye por el segundo parámetro \codigo{sufijo} del método \codigo{format()}. Pero ¿qué es \codigo{\{0:.1f\}}? Tiene dos partes, \codigo{\{0\}} que ya conoces, y \codigo{:.f} que no conoces. La segunda parte (desde los dos puntos hasta la letra f) define el especificador de forma que afina cómo debe sustituirse la variable al formatearla.
+
+\begin{quote}
+Los especificadores de formato te permiten indicar cómo se debe efectuar la sustitución del texto, como sucede con la función \codigo{printf()} en el lenguaje \codigo{C}. Puedes añadir ceros o espacios de relleno delante del número, alinear cadenas, controlar la precisión de decimales o convertir el número a hexadecimal.
+\end{quote}
+
+Dentro del campo de sustitución se utiliza el símbolo de dos puntos (\codigo{:}) para marcar el comienzo del especificador de formato. El especificador de formato \codigo{.1} significa que se ``redondee a la décima más próxima'' (que se muestre únicamente un dígito después del punto decimal). El especificador \codigo{``f''} indica que el número debe mostrarse en formato punto fijo (por oposición a la notación exponencial u otra representación de un número). Si la variable \codigo{tamanyo} vale \codigo{698.24} y la variable \codigo{sufijo} vale \codigo{``GB''} la cadena formateada resultante es \codigo{``698.2 GB''}, porque \codigo{698.24} se redondea con un solo dígito después del punto decimal.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> '{0:.1f} {1}'.format(698.24, 'GB')
+'698.2 GB'
+\end{lstlisting}
+\end{minipage}
+
+Para conocer los detalles exactos de los especificadores de formato puedes consultar el apartado \href{http://docs.python.org/3.1/library/string.html#format-specification-mini-language}{Mini-lenguaje de especificación de formato\footnote{\href{http://docs.python.org/3.1/library/string.html\#format-specification-mini-language}{http://docs.python.org/3.1/library/string.html\#format-specification-mini-language}}} de la documentación oficial de Python 3.
+
+\section{Otros métodos habituales de manipulación de cadenas}
+
+Además de formatearlas, es posible hacer muchas otras cosas de utilidad con las cadenas de texto.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> s = '''Los archivos terminados son el re-
+... sultado de a$\til{n}$os de estudio cient$\ac{i}$-
+... fico combinados con la 
+... experiencia de a$\til{n}$os.'''
+>>> s.splitlines()
+['Los archivos terminados son el re-', 
+ 'sultado de a$\til{n}$os de estudio cient$\ac{i}$-', 
+ 'fico combinados con la ', 
+ 'experiencia de a$\til{n}$os.']
+>>> print(s.lower())
+los archivos terminados son el re-
+sultado de a$\til{n}$os de estudio cient$\ac{i}$-
+fico combinados con la 
+experiencia de a$\til{n}$os.
+>>> s.lower().count('l')
+4
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Puedes introducir cadenas multilínea en la consola interactiva de Python. Cuando inicias una cadena de texto multilínea debes pulsar la tecla \codigo{INTRO} para continuar en la siguiente línea. Al teclear las triples comillas del final, se cierra la cadena de texto y el siguiente \codigo{INTRO} que pulses ejecutará la sentencia (en este caso asignará la cadena a la variable \codigo{s}).
+
+\item \emph{Línea 5:} El método \codigo{splitlines()} toma una cadena multilínea y devuelve una lista de cadenas de texto, una por cada línea que contuviese la cadena original. Observa que las líneas no incluyen los retornos de carro o finales de línea que tuviese la cadena original.
+
+\item \emph{Línea 10:} El método \codigo{lower()} convierte toda la cadena de texto a minúsculas (El método \codigo{upper()} convertiría toda la cadena de texto a mayúsculas).
+
+\item \emph{Línea 15:} El método \codigo{count()} cuenta el número de veces que aparece una subcadena en la cadena de texto. ¡Sí! Hay 4 caracteres \codigo{``l''} en la cadena.
+
+\end{enumerate}
+
+Pongamos un caso muy común. Supón que tienes una cadena de texto en forma de parejas clave-valor, \codigo{clave1=valor1\&clave2=valor2}, y quieres dividirla y crear un diccionario de la forma \codigo{\{clave1: valor1, clave2: valor2\}}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> consulta = 'usuario=pilgrim&basededatos=master&clave=PapayaWhip'
+>>> una_lista = consulta.split('&')
+>>> una_lista
+['usuario=pilgrim', 'basededatos=master', 'clave=PapayaWhip']
+>>> una_lista_de_listas = [v.split('=', 1) for v in una_lista]
+>>> una_lista_de_listas
+[['usuario', 'pilgrim'], ['basededatos', 'master'], ['clave', 'PapayaWhip']]
+>>> a_dict = dict(una_lista_de_listas)
+>>> a_dict
+{'clave': 'PapayaWhip', 'usuario': 'pilgrim', 'basededatos': 'master'}
+\end{lstlisting}
+\end{minipage}
+ 
+\begin{enumerate}
+
+\item \emph{Línea 2:} El método \codigo{split()} toma un parámetro, un delimitador, y divide la cadena en una lista de cadenas basándose en el delimitador proporcionado. En este ejemplo, el delimitador es el carácter \codigo{\&}.
+
+\item \emph{Línea 5:} Ahora tenemos una lista de cadenas, cada una de ellas con una clave seguida del símbolo \codigo{=} y de un valor. Podemos utilizar las listas por comprensión para iterar sobre esta lista y dividir cada una de estas cadenas de texto en dos cadenas utilizando el método \codigo{split} pasándole un segundo parámetro que indica que únicamente utilice la primera ocurrencia del carácter separador (En teoría una cadena podría tener más de un símbolo igual si el valor, a su vez, contiene también el símbolo igual, por ejemplo: \codigo{'clave=valor=cero'}, con lo que \codigo{'clave=valor=cero'.split('=')} daría como resultado \codigo{['clave', 'valor', 'cero']}).
+
+\item \emph{Línea 8:} Finalmente, Python puede convertir esa lista de listas en un diccionario con solo pasarla como parámetro a la función \codigo{dict()}.
+
+\end{enumerate}
+
+\begin{quote}
+El ejemplo anterior, explica un caso que se parece a lo que habría que hacer para reconocer los parámetros de una \codigo{URL}. pero en la vida real, el reconocimiento de los parámetros de una \codigo{URL} es más complejo. Si vas a tener que reconocer los parámetros que recibes mediante una \codigo{URL} utiliza la función de la librería \codigo{urlib.parse} denominada \codigo{parse\_qs()}\footnote{\href{http://docs.python.org/3.1/library/urllib.parse.html\#urllib.parse.parse\_qs}{http://docs.python.org/3.1/library/urllib.parse.html\#urllib.parse.parse\_qs}}, que reconoce los casos más complejos.
+\end{quote}
+
+\subsection{Troceado de cadenas}
+
+Cuando ya has definido una cadena puedes recuperar cualquier parte de ella creando una nueva cadena de texto. A esto se denomina troceado/particionado de cadenas\footnote{Nota del traductor: slicing en inglés}. Esto funciona de forma idéntica a como funciona para las listas, lo que tiene sentido, porque las cadenas de texto no son más que cadenas de caracteres.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> una_cadena = 'Mi vocabulario comienza donde el tuyo termina'
+>>> una_cadena[3:14]
+'vocabulario'
+>>> una_cadena[3:-3]
+'vocabulario comienza donde el tuyo term'
+>>> una_cadena[0:2]
+'Mi'
+>>> una_cadena[:23]
+'Mi vocabulario comienza'
+>>> una_cadena[23:]
+' donde el tuyo termina'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Puedes recuperar una parte de la cadena de texto, una parte de ella, especificando dos índices. El valor de retorno es una nueva cadena que comienza en el primer índice y termina en el elemento anterior al segundo índice.
+
+\item \emph{Línea 4:} Como sucede con las listas, puedes utilizar índices negativos para seleccionar.
+
+\item \emph{Línea 6:} Las cadenas también comienzan a contar en cero, por lo que \codigo{una\_cadena[0:2]} devuelve los dos primeros elementos de la cadena, comenzando en la posición \codigo{una\_cadena[0]} hasta la posición \codigo{una\_cadena[2]}, pero sin incluirla.
+
+\item \emph{Línea 8:} Si el índice de la parte izquierda vale \codigo{0} puedes omitirlo. De este modo, \codigo{una\_cadena[:23]} es lo mismo que \codigo{una\_cadena[0:18]}. Ya que en ausencia del primer índice se asume el número \codigo{0}.
+
+\item \emph{Línea 10:} De forma similar, si el índice de la parte derecha de la cadena coincide con la longitud de la cadena, puedes omitirlo. Así que \codigo{una\_cadena[23:]} es lo mismo que \codigo{una\_cadena[23:45]} al medir esta cadena 45 caracteres. Como ves, existe una estupenda simetría en esto, en esta cadena de 45 caracteres \codigo{una\_cadena[0:23]} devuelve los primeros 23 caracteres, y \codigo{una\_cadena[23:]} devuelve todo lo demás, salvo los 23 caracteres iniciales. De hecho \codigo{una\_cadena[:n]} siempre retornará los primeros \codigo{n} caracteres, y \codigo{una\_cadena[n:]} retornará el resto, independientemente de la longitud que tenga la cadena.
+
+\end{enumerate}
+
+\section{Cadenas de texto y Bytes}
+
+Los bytes son bytes; los caracteres son una abstracción. A una secuencia inmutable de caracteres Unicode se le llama \emph{cadena de texto}. Una secuencia inmutable de números entre el 0 y el 255 es un objeto que se denomina \emph{bytes}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> by = b'abcd\x65'
+>>> by
+b'abcde'
+>>> type(by)
+<class 'bytes'>
+>>> len(by)
+5
+>>> by += b'\xff'
+>>> by
+b'abcde\xff'
+>>> len(by)
+6
+>>> by[0]
+97
+>>> by[0] = 102
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'bytes' object does not support item assignment
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Para definir un objeto \codigo{bytes} se usa la sintaxis de ``literal de bytes'' que es \codigo{b''}. Cada byte dentro del literal de bytes se interpreta como un carácter \codigo{ASCII} o un carácter codificado en número hexadecimal desde \codigo{\\x00} a \codigo{\\xFF} (0-255).
+
+\item \emph{Línea 4:} El tipo de un objeto \codigo{bytes} es \codigo{bytes}.
+
+\item \emph{Línea 6:} Como sucede con las listas y cadenas, puedes conocer la longitud de un objeto \codigo{bytes} utilizando la función interna \codigo{len()}.
+
+\item \emph{Línea 8:} Como sucede con las listas y cadenas, puedes utilizar el operador \codigo{+} para concatenar objetos \codigo{bytes}. El resultado es un nuevo objeto \codigo{bytes}.
+
+\item \emph{Línea 11:} Concatenar un objeto \codigo{bytes} de 5 bytes con uno de 1 byte da como resultado un objeto \codigo{bytes} de 6 bytes.
+
+\item \emph{Línea 13:} Como sucede con las listas y cadenas, puedes utilizar la notación de índices para obtener bytes individuales del objeto \codigo{bytes}. Los elementos individuales de una cadena son de tipo cadena; los elementos individuales de un objeto \codigo{bytes} son números enteros. Específicamente, enteros entre 0 y 255.
+
+\item \emph{Línea 15:} Un objeto \codigo{bytes} es inmutable; no puedes asignar bytes individuales. Si necesitas modificar bytes individuales de un objeto \codigo{bytes}, es necesario particionar y concatener para crear un nuevo objeto \codigo{bytes} que contenga los elementos deseados. La alternativa es convertir el objeto \codigo{bytes} en un \codigo{bytearray} que sí permite modificación.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> by = b'abcd\x65'
+>>> barr = bytearray(by)
+>>> barr
+bytearray(b'abcde')
+>>> len(barr)
+5
+>>> barr[0] = 102
+>>> barr
+bytearray(b'fbcde')
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Para convertir un objeto \codigo{bytes} en un objeto modificable de tipo \codigo{bytearray} puedes utilizar la función interna \codigo{bytearray()}.
+
+\item \emph{Línea 5:} Todos los métodos y operaciones que existen en el objeto \codigo{bytes} también están disponibles en el objeto \codigo{bytearray}.
+
+\item \emph{Línea 7:} Una de las diferencias es que al objeto \codigo{bytearray} es posible modificarle bytes individuales utilizando la notación de índice. El valor que se puede asignar debe estar entre 0 y 255.
+
+\end{enumerate}
+
+Algo que \emph{no se puede hacer} es mezclar bytes y cadenas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> by = b'd'
+>>> s = 'abcde'
+>>> by + s
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: can't concat bytes to str
+>>> s.count(by)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: Can't convert 'bytes' object to str implicitly
+>>> s.count(by.decode('ascii'))
+1
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} No puedes concatenar bytes y cadenas. Son dos tipos de dato diferentes.
+
+\item \emph{Línea 7:} No puedes contar las veces que aparece una secuencia de bytes en una cadena, porque no existen bytes en una cadena. Una cadena es una secuencia de caracteres. Tal vez lo que querías contar era las veces que aparece la cadena que obtendrías después de haber decodificado la secuencia de bytes interpretándola a partir de una tabla de codificación de caracteres particular. Si es así, debes decirlo explícitamente. Python 3 no convertirá implicítamente bytes en cadenas o cadenas en bytes.
+
+\item \emph{Línea 11:} Por una sorprendente coincidencia esta línea de código dice ``cuenta las ocurrencias de la cadena que se obtiene después de decodificar la secuencia de bytes en esta tabla de caracteres particular (ASCII)''. 
+
+\end{enumerate}
+
+Y de este modo has llegado a la relación que existe entre las cadenas de texto y los bytes: los objetos \codigo{bytes} tienen un método \codigo{decode()} que toma como parámetro una tabla de codificación de caracteres y retorna una cadena. Y las cadenas de texto tienen un método denominado \codigo{encode()} que toma una tabla de codificación de caracteres y retorna un objeto \codigo{bytes}. En el ejemplo anterior, la decodificación fue relativamente directa ---convertir una secuencia de bytes que estaba en la codificación de caracteres \codigo{ASCII} en una cadena de texto. Pero el mismo proceso funciona con cualquier tabla de codificación de caracteres siempre que dicha tabla soporte los caracteres existentes en la cadena ---incluso con codificaciones heredadas (previas a Unicode).
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True,escapeinside=@@]
+>>> s = '@\begin{CJK}{UTF8}{}快乐\end{CJK}@ Python'
+>>> len(s)
+9
+>>> by = s.encode('utf-8')
+>>> by
+b'\xe5\xbf\xab\xe4\xb9\x90 Python'
+>>> len(by)
+13
+>>> by = s.encode('gb18030')
+>>> by
+b'\xbf\xec\xc0\xd6 Python'
+>>> len(by)
+11
+>>> by = s.encode('utf-16')
+>>> by
+b'\xff\xfe\xeb_PN \x00P\x00y\x00t\x00h\x00o\x00n\x00'
+>>> len(by)
+20
+>>> vuelta = by.decode('utf-16')
+'@\begin{CJK}{UTF8}{}快乐\end{CJK}@ Python'
+>>> vuelta == s
+True
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Esto es una cadena de texto, tiene 9 caracteres.
+
+\item \emph{Línea 4:} El resultado de codificar la cadena en \codigo{UTF-8} es un objeto \codigo{bytes}. Tiene 13 bytes. 
+
+\item \emph{Línea 9:} El resultado de codificar la cadena en \codigo{GB18030} es un objeto \codigo{bytes} de 11 bytes.
+
+\item \emph{Línea 14:} El resultado de codificar la cadena en \codigo{UTF-16} es un objeto \codigo{bytes} de 20 bytes.
+
+\item \emph{Línea 19:} Al decodificar el objeto \codigo{bytes} utilizando la codificación adecuada (la misma que se usó al codificarlo) se obtiene una cadena de texto. En este caso tiene 9 caracteres. Como se puede ver, es una cadena idéntica a la original.
+
+\end{enumerate}
+
+\section{Postdata: Codificación de  caracteres del código fuente de Python}
+
+Python 3 asume que el código fuente ---cada fichero \codigo{.py}--- está codificado en \codigo{UTF-8}.
+
+\begin{quote}
+En Python 2, la codificación de caracteres por defecto de los ficheros \codigo{.py} era \codigo{ASCII}. En Python 3, la codificación por defecto de los ficheros es \codigo{UTF-8}
+\end{quote}
+
+Si quisieras utilizar una codificación de caracteres diferente en el fichero con el código fuente, puedes incluir una declaración de codificación de caracteres en la primera línea cada fichero. La siguiente declaración define que el fichero se encuentra en una codificación \codigo{windows-1252}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# -*- coding: windows-1252 -*-
+\end{lstlisting}
+\end{minipage}
+
+Técnicamente la indicación de la codificación de caracteres puede estar en la segunda línea si la primera línea es una declaración de lanzador de ejecución del estilo de \codigo{UNIX}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+#!/usr/bin/python3
+# -*- coding: windows-1252 -*-
+\end{lstlisting}
+\end{minipage}
+
+Para disponer de más información consulta la propuesta de mejora de Python \href{http://www.python.org/dev/peps/pep-0263/}{PEP 263}\footnote{\href{http://www.python.org/dev/peps/pep-0263/}{http://www.python.org/dev/peps/pep-0263/}}.
+
+\section{Lecturas recomendadas}
+
+Sobre Unicode en Python:
+
+
+\begin{itemize}
+
+\item Unicode en Python - \href{http://docs.python.org/3.0/howto/unicode.html}{http://docs.python.org/3.0/howto/unicode.html} 
+
+\item Qué hay nuevo en Python 3: Texto y datos en lugar de Unicode y 8-bits - \href{http://docs.python.org/3.0/whatsnew/3.0.html\#text-vs-data-instead-of-unicode-vs-8-bit}{http://docs.python.org/3.0/whatsnew/3.0.html\#text-vs-data-instead-of-unicode-vs-8-bit}
+
+\end{itemize}
+
+Sobre Unicode en general:
+
+\begin{itemize}
+
+\item El mínimo absoluto que todo programador debe conocer positiva y absolutamente sobre Unicode y codificación de caracteres (¡Sin excusas!):\\
+\href{http://www.joelonsoftware.com/articles/Unicode.html}{http://www.joelonsoftware.com/articles/Unicode.html}
+
+\item Sobre las bondades de Unicode:\\
+\href{http://www.tbray.org/ongoing/When/200x/2003/04/06/Unicode}{http://www.tbray.org/ongoing/When/200x/2003/04/06/Unicode}
+
+\item Sobre cadenas de caracteres:\\
+\href{http://www.tbray.org/ongoing/When/200x/2003/04/13/Strings}{http://www.tbray.org/ongoing/When/200x/2003/04/13/Strings}
+
+\item Caracteres y bytes:\\
+\href{http://www.tbray.org/ongoing/When/200x/2003/04/26/UTF}{http://www.tbray.org/ongoing/When/200x/2003/04/26/UTF}
+
+\end{itemize}
+
+Sobre codificación de caracteres en otros formatos:
+
+\begin{itemize}
+
+\item Codificación de caracteres en XML:\\
+\href{http://feedparser.org/docs/character-encoding.html}{http://feedparser.org/docs/character-encoding.html}
+
+\item Codificación de caracteres en HTML:\\
+\href{http://blog.whatwg.org/the-road-to-html-5-character-encoding}{http://blog.whatwg.org/the-road-to-html-5-character-encoding}
+
+\end{itemize}
+
+Sobre cadenas y formateo de cadenas:
+
+\begin{itemize}
+
+\item \codigo{string}---Operaciones comunes sobre cadenas:\\
+\href{http://docs.python.org/3.1/library/string.html}{http://docs.python.org/3.1/library/string.html}
+
+\item Sintaxis de formateo de cadenas de texto:\\
+\href{http://docs.python.org/3.1/library/string.html\#formatstrings}{http://docs.python.org/3.1/library/string.html\#formatstrings}
+
+\item Especificación del minilenguaje de formato:\\
+\href{http://docs.python.org/3.1/library/string.html\#format-specification-mini-language}{http://docs.python.org/3.1/library/string.html\#format-specification-mini-language}
+
+\item \codigo{PEP 3101:} Formateo avanzado de cadenas:\\
+\href{http://www.python.org/dev/peps/pep-3101/}{http://www.python.org/dev/peps/pep-3101/}
+
+\end{itemize}
+

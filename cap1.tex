@@ -1,0 +1,510 @@
+% ch1.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 New Zealand License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Tu primer programa en Python}\label{ch:primerprograma}
+
+\noindent
+Nivel de dificultad:\difl
+
+\begin{citaCap}
+``No entierres tu carga en un santo silencio.\\
+¿Tienes un problema? Estupendo. Alégrate, \\
+sumérgete en él e investiga.''\\
+---\href{http://en.wikiquote.org/wiki/Buddhism}{Ven. Henepola Gunarata}
+\end{citaCap}
+
+\section{Inmersión}
+
+Los libros sobre programación suelen comenzar con varios capítulos sobre los fundamentos y van, poco a poco, avanzando hasta llegar a hacer programas útiles. Vamos a saltarnos todo eso. Lo primero que vamos a ver es un programa Python completo. Probablemente no tenga ningún sentido para ti. No te preocupes por eso, vamos a diseccionarlo línea por línea. Primero léelo y trata de interpretarlo.
+
+\begin{lstlisting}[mathescape=True]
+# parahumanos.py
+
+SUFIJOS = {1000: ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+           1024: ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 
+                  'YiB']}
+
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+    '''Convierte un tama$\til{n}$o de fichero en formato legible por personas
+
+    Argumentos/par$\ac{a}$metros:
+    tamanyo -- tama$\til{n}$o de fichero en bytes
+    un_kilobyte_es_1024_bytes -- si True (por defecto), 
+                                 usa m$\ac{u}$ltiplos de 1024
+                                 si False, usa m$\ac{u}$ltiplos de 1000
+
+    retorna: string
+
+    '''
+    if tamanyo < 0:
+        raise ValueError('el n$\ac{u}$mero debe ser no negativo')
+
+    multiplo = 1024 if un_kilobyte_es_1024_bytes else 1000
+    for sufijo in SUFIJOS[multiplo]:
+        tamanyo /= multiplo
+        if tamanyo < multiplo:
+            return '{0:.1f} {1}'.format(tamanyo, sufijo)
+
+    raise ValueError('n$\ac{u}$mero demasiado grande')
+
+if __name__ == '__main__':
+    print(tamanyo_aproximado(1000000000000, False))
+    print(tamanyo_aproximado(1000000000000))
+
+\end{lstlisting}
+
+Antes de analizarlo paso a paso vamos a ejecutar el programa en la línea de comandos. En Linux o en Mac debes teclear: \codigo{python3 parahumanos.py}\footnote{Para que funcione correctamente debes moverte al directorio en el que esté grabado el fichero \codigo{parahumanos.py}.}. El resultado será parecido a lo siguiente:
+
+\begin{lstlisting}
+tu_usuario@tu_ordenador:~/inmersionEnPython3$\$$ python3 parahumanos.py
+1.0 TB
+931.3 GiB
+\end{lstlisting}
+
+En Windows debes teclear lo mismo: \codigo{python3 parahumanos.py}, únicamente varía la forma del prompt de la consola. El resultado será parecido a:
+
+\begin{lstlisting}
+C:\\inmersionenpython3:> python3 parahumanos.py
+1.0 TB
+931.3 GiB
+\end{lstlisting}
+
+¿Qué ha pasado? Acabas de ejecutar tu primer programa Python. Has ejecutado el intérprete de Python en la línea de comandos (\codigo{python3}), y le has pasado como parámetro el nombre del fichero de script (\codigo{parahumanos.py}) que querías ejecutar. 
+
+El fichero de script, a su vez, define una única función de python, la función \codigo{tamnyo\_aproximado}, que toma como parámetros un tamaño de fichero con una precisión de bytes y calcula el tamaño en una unidad mayor en la que el valor quede más \emph{bonito}, a cambio, el resultado es aproximado. (El funcionamiento del Explorador de Windows; del Finder de Mac OS X, o de Nautilus, Dolphin o Thunar de Linux es muy parecido. Si muestras en cualquiera de ellos una carpeta de documentos en modo detalle, de forma que se vean en diferentes columnas, el icono del documento, nombre, tamaño, tipo, fecha de última modificación, etc. Observarás que si un documento determinado ocupa 1093 bytes, en la columna de tamaño no dirá eso, sino que dirá algo así como 1 KB. Esto es lo que hace la función \codigo{tamanyo\_aproximado})
+
+Las líneas de código \codigo{print(tamanyo\_aproximado(\emph{argumentos}))} del final del script, líneas 31 y 32, son dos llamadas a funciones ---primero se llama a la función \codigo{tamanyo\_aproximado()} pasándole unos parámetros (también llamados argumentos), esta función se ejecuta y devuelve un resultado que, posteriormente, se pasa como parámetro a la función \codigo{print()}. Todo ello en la misma línea.
+
+La función \codigo{print()} es interna del lenguaje Python\footnote{En inglés \codigo{built-in}.}; nunca verás una declaración explícita de ella. La puedes usar cuando quieras, en cualquier parte de un programa Python\footnote{Existen montones de funciones internas del lenguaje, y muchas más que están separadas en \emph{módulos}. Lo veremos poco a poco, ten paciencia, pequeño saltamontes.}.
+
+¿Porqué la ejecución del script en la línea de comandos retorna siempre la misma respuesta? Lo veremos más adelante. Primero vamos a ver el funcionamiento de la función \codigo{tamanyo\_aproximado()}.
+
+\section{Declaración de funciones}
+
+Python dispone de funciones como la mayoría de los lenguajes, pero no tiene ficheros de cabecera como \codigo{c++} o secciones de \codigo{interface/implementation} como en Pascal. En Python únicamente hay que declarar la función, como en el siguiente ejemplo:
+
+\begin{lstlisting}
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+\end{lstlisting}
+
+La palabra reservada \codigo{def} inicia la declaración de la función, seguida del nombre que le quieres dar a la misma, seguida de los parámetros de la función entre paréntesis. Separándolos por comas en caso de que sean varios parámetros.
+
+\cajaTexto{En Python cuando necesitas una función, solamente tienes que declararla.}
+
+Observa también que, en Python, las funciones no definen un tipo de datos de retorno. No se especifica el tipo de datos del valor que retornan las funciones. Es más, ni siquiera se especifica si se retorna o no un valor. 
+
+En realidad, todas las funciones de Python tienen un valor de retorno; si dentro del código de la función se ejecuta una sentencia \codigo{return}, el valor que acompaña a la sentencia será el valor de retorno, en caso contrario se retorna el valor \codigo{None}, que es la forma de expresar el vacío (\codigo{null}) en Python.
+
+\begin{quote}
+En algunos lenguajes, las funciones que retornan un valor se declaran con la palabra \codigo{function}, y las subrutinas que no retornan un valor con la palabra \codigo{sub}. En Python no existen las subrutinas. Todas son funciones, todas las funciones devuelven un valor (\codigo{None} si tú no devuelves algo expresamente con la palabra reservada \codigo{return}) y todas las funciones comienzan con la palabra \codigo{def}.
+\end{quote}
+
+La función \codigo{tamanyo\_aproximado()} recibe dos parámetros o argumentos, ---\codigo{tamanyo} y \codigo{un\_kilobyte\_es\_1024\_bytes}--- pero ninguno de ellos especifica un tipo de datos. En Python, las variables nunca se tipifican explícitamente, Python deduce y  mantiene el tipo de datos de la variable de forma interna según el valor que tenga asignado la misma.
+
+\begin{quote}
+En Java y otros lenguajes con tipificación estática, debes especificar el tipo de datos de los parámetros y valor de retorno de cada función. En Python nunca especificas el tipo de datos de nada de forma explícita. Python mantiene el rastro de los tipos de datos de forma interna basándose en los valores que asignes a las variables.
+\end{quote}
+
+\subsection{Parámetros opcionales y con nombre}
+
+Python permite que los parámetros de una función tengan valores por defecto; si la función se llama (para ejecutarla) si indicar el parámetro Python usará el valor por defecto para asignarlo al parámetro que no se ha especificado en la llamada a la función. Asimismo, los parámetros se pueden pasar en la llamada en cualquier orden si se utilizan parámetros con nombre.
+
+Veamos de nuevo la declaración de la función \codigo{tamanyo\_aproximado()}.
+
+\begin{lstlisting}
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+\end{lstlisting}
+
+El segundo parámetro \codigo{un\_kilobyte\_es\_1024\_bytes}, especifica un valor por defecto igual a \codigo{True}. Como consecuencia, este parámetro pasa a ser \emph{opcional}; puedes llamar a la función sin pasarlo en los paréntesis. Python se comportará como si lo hubieras llamado con el valor \codigo{True} como segundo parámetro.
+
+Veamos el final del script\footnote{En Python se les suele llamar también \emph{script} a los ficheros con el código fuente de los programas.}:
+
+
+\begin{lstlisting}
+if __name__ == '__main__':
+    print(tamanyo_aproximado(1000000000000, False))
+    print(tamanyo_aproximado(1000000000000))
+\end{lstlisting}
+
+\begin{enumerate}
+\item La primera llamada a la función (línea 2) utiliza dos parámetros. Durante la ejecución de la función \codigo{tamanyo\_aproximado} \codigo{un\_kilobyte\_es\_1024\_bytes} tendrá el valor \codigo{False}, que es lo que se pasa como segundo parámetro en la llamada a la función.
+
+\item La segunda llamada a la función (línea 3) utiliza un único parámetro. Pero Python no se queja ya que el segundo es opcional. Como no se especifica, el segundo parámetro utiliza su valor por defecto \codigo{True}, de acuerdo a lo que se definió en la declaración de la función.
+\end{enumerate}
+
+También puedes pasar los valores a una función utilizando nombres. Prueba lo siguiente en la consola:
+
+\begin{lstlisting}
+>>> from parahumanos import tamanyo_aproximado
+>>> tamanyo_aproximado(4000, un_kilobyte_es_1024_bytes=False)
+'4.0 KB'
+>>> tamanyo_aproximado(tamanyo=4000, un_kilobyte_es_1024_bytes=False)
+'4.0 KB'
+>>> tamanyo_aproximado(un_kilobyte_es_1024_bytes=False, tamanyo=4000)
+'4.0 KB'
+>>> tamanyo_aproximado(un_kilobyte_es_1024_bytes=False, 4000)
+SyntaxError: non-keyword arg after keyword arg (<pyshell#4>, line 1)
+>>> tamanyo_aproximado(tamanyo=4000, False)
+SyntaxError: non-keyword arg after keyword arg (<pyshell#5>, line 1)
+>>> 
+\end{lstlisting}
+
+\begin{enumerate}
+\item \emph{Línea 2:} Llama a la función \codigo{tamnyo\_aproximado()} pasándole \codigo{4000} al primer parámetro (\codigo{tamanyo}) y el valor \codigo{False} en el denominado \codigo{un\_kilobyte\_es\_1204\_bytes} (En este caso coincide que el parámetro con nombre se está pasando en la segunda posición y también está declarado en la función como segundo parámetro, pero esto es simplemente una coincidencia).
+
+\item \emph{Línea 4:} Llama a la función \codigo{tamanyo\_aproximado()} pasándole \codigo{4000} al parámetro denominado \codigo{tamanyo} y \codigo{False} al parámetro denominado \codigo{un\_kilobyte\_es\_1024\_bytes} (Estos parámetros coinciden en orden con los de la declaración de la función, pero vuelve a ser una simple coincidencia).
+
+\item \emph{Línea 6:} Llama a a la función \codigo{tamanyo\_aproximado()} paándole \codigo{False} al parámetro denominado \codigo{un\_kilobyte\_es\_1024\_bytes} y \codigo{4000} al parámetro denominado \codigo{tamanyo} (Esta es la utilidad de usar nombres en las llamadas a una función, poder pasarlos en cualquier orden, e incluso no pasar alguno de los existentes para que tomen valores por defecto mientras sí que pasas uno de los últimos parámetros de la función).
+
+\item \emph{Línea 8:} Esta llamada a la función falla porque se usa un parámetro con nombre seguido de uno sin nombre (por posición). Esta forma de llamar a la función siempre falla. Python lee la lista de parámetros de izquierda a derecha, en cuanto aparece un parámetro con nombre, el resto de parámetros debe también proporcionarse por nombre. Los primeros pueden ser por posición.
+
+\item \emph{Línea 10:} Esta llamada también falla por la misma razón que la anterior. ¿Te sorprende? Después de todo, el primer parámetro se ha denominado \codigo{tamanyo} y recibe el valor \codigo{4000}, es \emph{obvio} que el valor \codigo{False} debería asignarse al parámetro \codigo{un\_kilobyte\_es\_1024\_bytes}. Pero Python no funciona de esa forma. Tan pronto como lee un parámetro con nombre, todos los parámetros siguientes (a la derecha) tienen que llevar el nombre del parámetro.
+\end{enumerate}
+
+\section{Cómo escribir código legible}
+
+No te voy a aburrir con una larga charla sobre la importancia de documentar el código. Solamente decir que el código se escribe una vez pero se lee muchas veces, y que quien más lo va a leer eres tú, seis meses después de haberlo escrito (por ejemplo: cuando ya no te acuerdes de nada pero necesites corregir o añadir algo). Python hace fácil escribir código legible, aprovéchate de ello. Me lo agradecerás dentro de seis meses.
+
+\subsection{Cadenas de texto de documentación}
+
+Puedes documentar una función proporcionándole una cadena de documentación (abreviando se suele hablar de \codigo{docstring}). En este programa, la función \codigo{tamanyo\_aproximado()} tiene una cadena de documentación (\codigo{docstring}):
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+    '''Convierte un tama$\til{n}$o de fichero en formato legible por personas
+
+    Argumentos/par$\ac{a}$metros:
+    tamanyo -- tama$\til{n}$o de fichero en bytes
+    un_kilobyte_es_1024_bytes -- si True (por defecto), 
+                                 usa m$\ac{u}$ltiplos de 1024
+                                 si False, usa m$\ac{u}$ltiplos de 1000
+
+    retorna: string
+
+    '''
+\end{lstlisting}
+\end{minipage}
+
+La comillas triples sirven para escribir cadenas de texto que ocupen más de una línea. Todo lo que se escribe entre las comillas triples forma parte de una única cadena de texto, incluídos los espacios en blanco, retornos de carro, saltos de línea y otras comillas \emph{sueltas}. Este tipo de cadenas de texto lo puedes utilizar donde quieras dentro del código Python, pero normalmente se utilizan para definir \codigo{docstring} (cadenas de texto de documentación).
+
+\begin{quote}
+Las comillas triples son la manera más simple de escribir cadenas de texto que incluyan, a su vez, comillas simples y/o dobles, como cuando en Perl 5 se utiliza \codigo{q/.../}
+\end{quote}
+
+\cajaTexto{Todas las funciones se merecen un \emph{docstring} que las explique}
+
+En este ejemplo, todo lo que se encuentra entre las comillas triples es el \codigo{docstring} de la función, que sirve para documentar lo que hace la función. Un \codigo{docstring}, si existe, debe ser lo primero que aparece definido en una función (es decir, se debe encontrar en la primera línea que aparece después de la declaración de la función). Técnicamente no necesitas escribir un \codigo{docstring} para cada función, pero deberías. Sé que lo has escuchado en las clases que programación a las que hayas asistido, pero Python te da un incentivo mayor para que lo hagas: los \codigo{docstring} están disponibles en tiempo de ejecución como un atributo de la función.
+
+\begin{quote}
+Muchos entornos integrados de programación (\codigo{IDEs}) utilizan los \codigo{docstring} para proporcionar ayuda y documentación sensible al contexto, de forma que cuando teclees el nombre de una función, aparece su \codigo{docstring} como pista sobre el significado de la función y de sus parámetros. Esto puede ser muy útil, tan útil como explicativos sean los \codigo{docstring} que escribas.
+\end{quote}
+
+\section{El camino de búsqueda para \codigo{import}}
+
+Antes de continuar, quiero mencionar brevemente el camino\footnote{En español se usa también \codigo{ruta de búsqueda}. En inglés se usa la palabra \codigo{path} para referirse a este concepto} de búsqueda de las librerías. Cuando importas un módulo, Python busca en varios lugares hasta encontrarlo. En concreto, busca en todos los directorios que se encuentren definidos en la variable \codigo{sys.path}. Como se trata de una \codigo{lista}, puedes verla fácilmente o modificarla con los métodos estándares de manipulación de listas. (Aprenderás a trabajar con listas en el capítulo ~\ref{tiposdedatonativos} sobre Tipos de Dato Nativos).
+
+\noindent\begin{minipage}{\textwidth}
+
+\begin{lstlisting}[mathescape=True]
+>>> import sys
+>>> sys.path
+['', 
+ '/usr/lib/python3.0',  
+ '/usr/lib/python3.0/plat-linux2',
+ '/usr/lib/python3.0/lib-dynload',
+ '/usr/lib/python3.0/dist-packages',
+ '/usr/local/lib/python3.0/dist-packages']
+>>> sys
+<module 'sys' (built-in)>
+>>> sys.path.insert(0, '/home/jmgaguilera/inmersionenpython3/ejemplos')
+>>> sys.path
+['/home/jmgaguilera/inmersionenpython3/ejemplos',
+ '',
+ '/usr/lib/python3.0',
+ '/usr/lib/python3.0/plat-linux2',
+ '/usr/lib/python3.0/lib-dynload',
+ '/usr/lib/python3.0/dist-packages',
+ '/usr/local/lib/python3.0/dist-packages']
+>>> 
+
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Al importar el paquete \codigo{sys} de esta forma, todas sus funciones y atributos quedan a disposición del programador para su uso.
+
+\item \emph{Líneas 2-8:} \codigo{sys.path} es una variable (\codigo{path}) del paquete \codigo{sys} que contiene una lista de los directorios que constituyen el camino de búsqueda (El tuyo será diferente, ya que depende del sistema operativo, de la versión de Python que tengas instalada, y del lugar en el que está instalada). Siempre que se haga un \codigo{import} en el código, Python buscará en estos directorios (por orden), hasta encontrar un fichero cuyo nombre coincida con el valor que se usa en la sentencia \codigo{import} cmás la extensión \codigo{.py}.
+
+\item \emph{Líneas 9-10:} En realidad te he mentido un poco, la realidad es un poco más compleja, no todos los módulos se almacenan en ficheros con extensión \codigo{.py}. Algunos de ellos, como el módulo \codigo{sys} son módulos internos (\codigo{built-in}); no existen en ficheros, están construidos internamente en el propio lenguaje. En la práctica funcionan exactamente igual que los módulos que están en ficheros, la única diferencia es que no existe el código fuente, ¡Porque no están escritos en Python! (El módulo \codigo{sys} está escrito en lenguaje \codigo{c}).
+
+\item \emph{Línea 11:} En \emph{tiempo de ejecución} puedes añadir un nuevo directorio al camino de búsqueda de Python añadiendo un directorio a la variable \codigo{sys.path}, así Python también buscará en él cada vez que intentes importar un módulo. El efecto de este cambio dura mientras se mantenga en ejecución Python. Al finalizar, y volver a entrar en Python, el camino (la variable \codigo{sys.path}) volverá a tener los valores iniciales.
+
+\item \emph{Líneas 12-19}: Al ejecutar \codigo{sys.path.insert(0, path)} se nsertó un nuevo directorio en la primera posición (en Python la primera posición se numera con el cero) de la lista de \codigo{sys.path}. Casi siempre, será esto lo que quieras hacer. En casos en los que exista algún conflicto de nombres (por ejemplo, si Python tiene su propia versión de una librería y es de la versión 2, pero quieres utilizar otra que sea de la versión 3), así te aseguras que tus módulos se encuentran antes y ejecutan en lugar de los originales.
+
+\end{enumerate}
+
+\section{En Python todo es un Objeto}
+
+En caso de te lo hayas perdido, acabo de decir que las funciones de Python tienen atributos, y que esos atributos están disponibles en tiempo de ejecución. Una función, como todo lo demás en Python, es un objeto.
+
+Abre la consola interactiva de Python y ejecuta lo siguiente:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import parahumanos
+>>> print(parahumanos.tamanyo_aproximado(4096, True))
+4.0 KiB
+>>> print(parahumanos.tamanyo_aproximado.__doc__)
+Convierte un tama$\til{n}$o de fichero en un formato legible por personas
+
+    Argumentos/par$\ac{a}$metros:
+    tamanyo -- tama$\til{n}$o de fichero en bytes
+    un_kilobyte_es_1024_bytes -- si True (por defecto), 
+                                 usa m$\ac{u}$ltiplos de 1024
+                                 si False, usa m$\ac{u}$ltiplos de 1000
+
+    retorna: string
+
+    
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Importa (carga en memoria) el programa \codigo{parahumanos} como un módulo ---un trozo de código que puedes utilizar de forma interactiva o desde un programa Python mayor. Una vez se ha importado el módulo, puedes utilizar (referenciar) cualquiera de sus funciones públicas, clases o atributos. Si desde un módulo se desea utilizar la funcionalidad de otro, basta con hacer exactamente lo mismo que en esta línea de la consola interactiva.
+
+\item \emph{Línea 2:} Cuando quieres utilizar las funciones que estén definidas en los módulos importados, tienes que añadir el nombre del módulo. No es posible utilizar simplemente \codigo{tamanyo\_aproximado}, debes utilizar \codigo{parahumanos.tamanyo\_aproximado}. Si has utilizado Java, esta forma de utilizar una función debería sonarte.
+
+\item \emph{Línea 4:} En este caso, en lugar de llamar a la función como podrías esperar, se consulta uno de los atributos de la función, \codigo{\_\_doc\_\_}.
+
+\end{enumerate}
+
+\begin{quote}
+En Python \codigo{import} es equivalente al \codigo{require} de Perl.
+Cuando importas (\codigo{import}) un módulo de Python puedes acceder a todas sus funciones con la sintaxis \codigo{módulo.función}. En Perl, cuando se requiere (\codigo{require}) un módulo puedes acceder a todas sus funciones con la sintaxis \codigo{módulo::función}
+\end{quote}
+
+\subsection{¿Qué es un objeto?}
+
+En Python todo es un objeto, y todos los objetos pueden tener atributos y métodos. Todas las funciones son objetos, y tienen el atributo \codigo{\_\_doc\_\_}, que retorna el \codigo{docstring} que se haya definido en el código fuente. El módullo \codigo{sys} es también un objeto que tiene (entre otras cosas) un atributo denominado \codigo{path}. Como se ha dicho: todo lo que se defina en Python es un objeto y puede tener atributos y métodos.
+
+Sin embargo, no hemos contestado aún a la pregunta fundamental: ¿Qué es un objeto? Los diferentes lenguajes de programación definen \emph{objeto} de diferente forma. En algunos, significa que \emph{todos} los objetos \emph{deben} tener atributos y métodos; en otros, significa que todos los objetos pueden tener subclases. En Python la definición es más \emph{relajada}. Algunos objetos no tienen ni atributos ni métodos, \emph{pero podrían}. No todos los objetos pueden tener subclases. Pero todo es un objeto en el sentido de que pueden asignarse a variables y pasarse como parámetro de una función.
+
+Puede que hayas oído en otro contexto de programación el término \emph{objeto de primera clase}. En Python, las funciones son \emph{objetos de primera clase}. Puedes pasar una función como parámetro de otra función. Los módulos también son \emph{objetos de primera clase}. Puedes pasar un módulo completo como parámetro de una función. Las clases son \emph{objetos de primera clase}, y las instancias de las clases también lo son.
+
+Esto es importante, por lo que lo voy a repetir en caso de que se te escapara las primeras veces: \emph{en Python, todo es un objeto}. Las cadenas son objetos, las listas son objetos. Las funciones son objetos. Las clases son objetos. Las instancias de las clases son objetos. E incluso los módulos son objetos.
+
+\section{Indentar código}
+
+Las funciones de Python no tienen \codigo{begin} o \codigo{end}, y tampoco existen llaves que marquen donde comienza y acaba el código de una función. El único delimitador es el símbolo de los dos puntos (\codigo{:}) y el propio indentado del código.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+    if tamanyo < 0:
+        raise ValueError('El n$\ac{u}$mero debe ser no negativo')
+    
+    multiplo = 1024 if un_kilobyte_es_1024_bytes else 1000
+    for sufijo in SUFIJO[multiplo]:
+        tamanyo /= multiplo
+        if tamanyo < multiplo:
+            return '{0:.1f} {1}'.format(tamanyo, sufijo)
+
+    raise ValueError('n$\ac{u}$mero demasiado grande')
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Los bloques de código se definen por su indentado. Por ``bloque de código'' se entiende lo siguiente: funciones, sentencias \codigo{if}, bucles \codigo{for}, bucles {while} y similar. Al indentar se inicia el bloque y al desindentar se finaliza. No existen llaves, corchetes o palabras clave para iniciar y finalizar un bloque de forma explícita. Esto implica que los espacios en blanco son significativos, y deben ser consistentes. En este ejemplo, el código de la función está indentado con cuatro espacios. No es necesario que sean cuatro, pero sí que sea consistente y siempre sean los mismos. La primera línea que no esté indentada deliminta el final de la función.
+
+\item \emph{Línea 2:} En Python, la sentencia \codigo{if} debe contener un bloque de código. Si la expresión que sigue al \codigo{if} es verdadera\footnote{Si el resultado de evaluarla es \textbf{True}.} se ejecuta el bloque indentado que contiene el \codigo{if}, en caso contrario lo que se ejecuta es el bloque contenido en el \codigo{else} (si existe). Observa la ausencia de paréntesis alrededor de la expresión.
+
+\item \emph{Línea 3:} Esta línea se encuentra \emph{dentro} del bloque de código del \codigo{if}. La sentencia \codigo{raise} elevará una excepción (del tipo \codigo{ValueError}, pero únicamente si \codigo{tamanyo < 0}.
+
+\item \emph{Línea 4:} Esta línea \emph{no} marca el final de la función. Las líneas que estan completamente en blanco no cuentan. Únicamente sirven para hacer más legible el código, pero no cuentan como delimitadores de código. La función continúa en la línea siguiente.
+
+\item \emph{Línea 6:} El bucle \codigo{for} también marca el comienzo de un bloque de código. Los bloques pueden contener múltiples líneas, siempre que estén indentadas con el mismo número de espacios. Este bucle \codigo{for} contiene tres líneas de código en él. No existe ninguna otra sintáxis especial para los bloques de varias líneas. Basta con indentar y... ¡seguir adelante con el trabajo!
+
+\end{enumerate}
+
+\cajaTexto{Python utiliza los saltos de línea para separar las sentencias y los dos puntos y la indentación para separar los bloques de código. C++ y Java utilizan puntos y coma para separar sentencias y llaves para separar los bloques de código.}
+
+Después de algunas protestas iniciales e insidiosas analogías con Fortran, seguro que harás las paces con esta forma de marcar los bloques de código y comenzarás a apreciar sus beneficios. Uno de los mayores beneficios es que todos los programas Python tienen un formato similar, al ser la indentación un requisito del lenguaje y no un elemento de estilo. La consecuencia inmediata es que los programas Python son más fáciles de leer y comprender por parte de una persona diferente de su programador\footnote{¡o por el propio programador después de unos meses!}.
+
+\section{Excepciones}
+
+Las excepciones están en todas partes en Python. Prácticamente todos los módulos de la librería estándar las utilizan, y el propio lenguaje las lanza en muchas circunstancias. Las verás una y otra vez a lo largo del libro.
+
+¿Qué es una excepción? Normalmente es un error, una indicación de que algo fue mal (No todas las excepciones son errores, pero no te preocupes por eso ahora). Algunos lenguajes de programación fomentan que se retornen códigos de error en las funciones, que los programadores tendrán que \emph{chequear}. Python fomenta el uso de las excepciones, que los programadores tienen que \emph{capturar} y \emph{manejar}.
+
+\cajaTexto{Al contrario que Java, las funciones de Python no declaran las excepciones que podrían elevar. Te corresponde a ti determinar las excepciones que pueden suceder y necesitas capturar.}
+
+Cuando sucede un error se muestra en la consola de Python algunos detalles de la excepción y cómo se produjo. A esto se le llama \emph{excepción sin capturar}. Cuando la excepción se generó, Python no encontró un trozo de código que estuviera previsto que la capturase y respondiera en consecuencia, por eso la excepción se fue \emph{elevando} hasta llegar al nivel más alto en la consola, la cual muestra alguna información útil para la depuración del código y finaliza. Si esto sucede en la consola no es excesivamente preocupante, pero si le sucede a tu programa en plena ejecución, el programa finalizaría de forma incontrolada y no se capturase la excepción. Puede que sea lo que quieras, pero puede que no.
+
+\cajaTexto{Python utiliza bloques \codigo{try...except} para manejar excepciones, y la sentencia \codigo{raise} para generarlas. Java y C++ utilizan bloques \codigo{try...catch} para manejarlas y la sentencia \codigo{throw} para generarlas.}
+
+El hecho de que suceda una excepción no implica necesariamente que el programa tenga que fallar. Las excepciones se pueden \emph{manejar}. Algunas veces una excepcion sucede porque tienes un error en el código (como por ejemplo, acceder al valor de una variable que no existe), pero en otras ocasiones puedes anticiparlo. Si vas a abrir un fichero, puede que no exista. Si vas a importar un módulo, puede que no esté instalado. Si te vas a conectar a una base de datos, puede que no esté disponible, o puede que no tengas las credenciales necesarias para acceder a ella. Si sabes que una línea de código puede \emph{elevar} una excepción, deberías \emph{manejar} la excepción utilizando el bloque \codigo{try...except}.
+
+La función \codigo{tamanyo\_aproximado()} eleva excepciones por dos causas: el tamaño que se pasa es mayor que el previsto, o si es menor que cero.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+    if tamanyo < 0:
+        raise ValueError('El n$\ac{u}$mero debe ser no negativo')
+\end{lstlisting}
+\end{minipage}
+
+La sintaxis para elevar una excepción es muy simple. Utiliza la sentencia \codigo{raise}, seguida del nombre de la excepción y, opcionalmente, se le pasa como parámetro una cadena de texto que sirve para propósitos de depuración. La sintaxis es parecida a la de llamar a una función \footnote{Las excepciones son objetos, como todo en Python ¿recuerdas?. Para implementarlas se utilizan clases (\codigo{class}) de objetos. Al ejecutar en este caso la sentencia \codigo{raise}, en realidad se está creando una instancia de la clase \codigo{ValueError} y pasándole la cadena \codigo{``El número debe ser no negativo''} al método de inicialización. ¡Pero nos estamos adelantando!}.
+
+\begin{quote}
+No necesitas manejar las excepciones en la función que las eleva. Si no se manejan en la función que las eleva, las excepciones pasan a la función que la llamó, luego a la que llamó a esa, y así sucesivamente a través de toda la ``pila de llamadas''. Si una excepción no se manejase en ninguna función, el programa fallará y finalizará, Python imprimirá una \emph{traza} del error, y punto. Puede que fuese lo que querías o no, depende de lo que pretendieras, ¡que para eso eres el programador!
+\end{quote}
+
+\subsection {Capturar errores al importar}
+
+Una de las excepciones internas de Python es \codigo{ImportError}, que se eleva cuando intentas importar un módulo y falla. Esto puede suceder por diversas causas, pero la más simple es que el módulo no exista en tu camino de búsqueda. Puedes utilizar esta excepción para incluir características opcionales a tu programa. Por ejemplo, la librería \codigo{chardet} que aparece en el capítulo~\ref{ch:casodeestudio} autodetecta la codificación de caracteres. Posiblemente tu programa quiera utilizar esta librería si está instalada, pero continuar funcionando si no lo está. Para ello puedes utilizar un bloque \codigo{try...except}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+    try:
+        import chardet
+    except ImportError:
+        chardet = None
+\end{lstlisting}
+\end{minipage}
+
+Posteriormente, en el código, puedes consultar la presencia de la librería con una simple sentencia \codigo{if}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+    if chardet:
+        # hacer algo
+    else:
+        # seguir de todos modos
+\end{lstlisting}
+\end{minipage}
+
+Otro uso habitual de la excepcion \codigo{ImportError} es cuando dos módulos implementan una \codigo{API}\footnote{Application Programming Interface. Interfaz de programación de aplicaciones.} común, pero existe preferencia por uno de ellos por alguna causa (tal vez sea más rápida, o use menos memoria). Puedes probar a importar un módulo y si falla cargar el otro. Por ejemplo, en el capítulo~\ref{ch:xml} sobre XML se habla de dos módulos que implementan una \codigo{API} común, denominada \codigo{ElementTree API}. El primero \codigo{lxml.etree}, es un módulo desarrollado por terceros que requiere descargarlo e instalarlo tú mismo. El segundo, \codigo{xml.etree.ElementTree}, es más lento pero forma parte de la librería estándar de Python 3.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+    try:
+        from lxml import etree
+    except ImportError:
+        import xml.etree.ElementTree as etree
+\end{lstlisting}
+\end{minipage}
+
+Al final de este bloque \codigo{try...except}, has importando \emph{algún} modulo y lo has llamado \codigo{etree}. Puesto que ambos módulos implementan una \codigo{API} común, el resto del código no se tiene que preocupar de qué módulo se ha cargado\footnote{Nota del Traductor:Al implementar la misma \codigo{API} ambos módulos se \emph{comportan} igual por lo que son indistingubles en cuanto a funcionamiento. Así, el resto del código puede funcionar sin conocer qué módulo se ha importado realmente.}. Asimismo, como el módulo que se haya importado termina llamándose \codigo{etree}, el resto del código no tiene que estar repleto de sentencias \codigo{if} para llamar a diferentes módulos con diferente nombre.
+
+\section{Variables sin declarar}
+
+Échale otro vistazo a la siguiente línea de código de la función \codigo{tamanyo\_aproximado}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+    multiplo = 1024 if un_kilobyte_es_1024_bytes else 1000
+\end{lstlisting}
+\end{minipage}
+
+La variable \codigo{multiplo} no se ha declarado en ningún sitio, simplemente se le asigna un valor. En Python es correcto. Lo que no te dejará hacer nunca Python es referenciar a una variable a la que nunca le has asignado un valor. Si intentas hacerlo se elevará la excepción \codigo{NameError}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> x
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'x' is not defined
+>>> x = 1
+>>> x
+1
+\end{lstlisting}
+\end{minipage}
+
+¡Le darás las gracias frecuentemente a Python por avisarte!
+
+\section {Mayúsculas y minúsculas}
+
+En Python, todos los nombres distinguen mayúsculas y minúsculas: los nombres de variables, de funciones, de módulos, de excepciones. De forma que no es el mismo nombre si cambia alguna letra de mayúscula a minúscula o viceversa.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> un_entero = 1
+>>> un_entero
+1
+>>> UN_ENTERO
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'UN_ENTERO' is not defined
+>>> Un_Entero
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'Un_Entero' is not defined
+>>> un_enteRo
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'un_enteRo' is not defined
+\end{lstlisting}
+\end{minipage}
+
+Y así siempre si pruebas todas las combinaciones posibles.
+
+\section {Ejecución de scripts}
+
+\cajaTexto{Todo lo que existe en Python es un Objeto}
+
+Los módulos de Python son objetos, por lo que tienen propiedades muy útiles. Puedes utilizar alguna de ellas para probar tus módulos de una forma sencilla. Para ello puedes incluir un bloque de código especial que se ejecute cuando arrancas el fichero desde la línea de comando. Observa las últimas líneas de \codigo{parahumanos.py}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+if __name__ == '__main__':
+    print(tamanyo_aproximado(1000000000000, False))
+    print(tamanyo_aproximado(1000000000000))
+\end{lstlisting}
+\end{minipage}
+
+\begin{quote}
+Como en C, Python utiliza \codigo{==} para las comparaciones y \codigo{=} para las asignaciones. Al contrario que C, Python no permite la asignación ``en línea'', por lo que no es posible asignar un valor por accidente cuando tu intención fuese comparar.
+\end{quote}
+
+¿Qué es lo que hace este \codigo{if} tan especial? Como los módulos son objetos, tienen propiedades, y una de las propiedades de los módulos es \codigo{\_\_name\_\_}. El valor de la propiedad \codigo{\_\_name\_\_ } depende de la forma en la que estés utilizando el módulo. Si importas el módulo con la sentencia \codigo{import} el valor que contiene \codigo{\_\_name\_\_} es el nombre del fichero del módulo sin la extensión.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import parahumanos
+>>> parahumanos.__name__
+'parahumanos'
+\end{lstlisting}
+\end{minipage}
+
+Pero también puedes ejecutar directamente el módulo como un programa autónomo, en cuyo caso \codigo{\_\_name\_\_} contiene el valor especial \codigo{\_\_main\_\_}. En el ejemplo, Python evaluará la sentencia \codigo{if}, la expresión será verdadera y ejecutará el bloque de código contenido en el \codigo{if}. En este caso, imprimir dos valores:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+jmgaguilera@acerNetbook:~/inmersionEnPython3/src$\$$ python3 parahumanos.py
+1.0 TB
+931.3 GiB
+\end{lstlisting}
+\end{minipage}
+
+¡Y así queda explicado tu primer programa Python!
+
+\section{Lecturas complementarias}
+
+\begin{itemize}
+
+\item \href{http://www.python.org/dev/peps/pep-0257/}{PEP 257: Docstring Conventions} ``Convenciones para escribir docstring''. Explica lo que distingue un buen \codigo{docstring} de un gran \codigo{docstring}.
+
+\item \href{http://docs.python.org/3.1/tutorial/controlflow.html#documentation-strings}{Tutorial de Python: Cadenas de texto para documentación} también aborda la materia.
+
+\item \href{http://www.python.org/dev/peps/pep-0008/}{PEP 8: Guía de estilo para codificación en Python} comenta cual es el estilo recomendado de indentación.
+
+\item \href{http://docs.python.org/3.1/reference/}{Manual de referencia de Python} explica lo que significa decir que \href{http://docs.python.org/3.1/reference/datamodel.html#objects-values-and-types}{todo en Python es un objeto}, porque algunas personas son algo pedantes y les gusta discutir largo y tendido sobre ese tipo de cosas.
+
+\end{itemize}

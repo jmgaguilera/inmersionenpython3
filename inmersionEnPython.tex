@@ -1,0 +1,113 @@
+% inmersionEnPython.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 New Zealand License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\documentclass[12pt,leqno,a4paper,spanish]{book}
+\usepackage{savesym}
+\usepackage[dvips]{graphicx}
+\usepackage[dvipsnames,usenames]{color}
+\usepackage{makeidx}
+\usepackage[absolute]{textpos}
+\usepackage{wrapfig}
+\usepackage{eso-pic}
+\usepackage[utf8]{inputenc}
+\usepackage{mathabx}
+\usepackage{babel}
+\usepackage{listings}
+\usepackage[colorlinks,unicode]{hyperref}
+\usepackage{soul}
+\savesymbol{Sun}
+\savesymbol{pi}
+\usepackage{CJKutf8}
+\usepackage{pinyin}
+\restoresymbol{TXF}{Sun}
+\restoresymbol{TXF}{pi}
+\hypersetup{
+    pdfauthor={Jos\'{e} Miguel Gonz\'{a}lez Aguilera},
+    pdftitle={Inmersi\'{o}n en Python 3},
+    pdfsubject={Programaci\'{o}n en Python 3},
+    pdfkeywords={python,python 3,programaci\'{o}n}
+}
+\parindent 1cm
+\parskip 0.2cm
+\topmargin 0.2cm
+\oddsidemargin 1cm
+\evensidemargin 0.5cm
+\textwidth 15cm
+\textheight 21cm
+
+\graphicspath{{./imagen/}}
+
+\hyphenation{Python}
+
+\newcommand{\cajaTexto}[1]
+{\begin{wrapfigure}{r}{.4\linewidth}\fbox{\colorbox{gray}{\parbox{.9\linewidth} {#1}}}\end{wrapfigure}}
+
+\newcommand{\cajaTextoAncho}[1]
+{\fbox{\colorbox{gray}{\parbox{0.9\linewidth} {#1}}}}
+
+\newenvironment{citaCap}
+{\begin{flushright}\begin{itshape}}
+{\end{itshape}\end{flushright}}
+
+\newenvironment{listing}
+{\begin{list}{}{\setlength{\leftmargin}{1em}}\item\footnotesize\samepage}
+{\end{list}}
+
+\newcommand{\ac}[1]{\textrm{\'{#1}}}
+\newcommand{\til}[1]{\textrm{\~{#1}}}
+
+\newcommand{\codigo}[1]{\textsf{#1}}
+
+\newcommand{\difl}{$\blackdiamond\diamond\diamond\diamond\diamond$}
+
+\newcommand{\difll}{$\blackdiamond\blackdiamond\diamond\diamond\diamond$}
+
+\newcommand{\diflll}{$\blackdiamond\blackdiamond\blackdiamond\diamond\diamond$}
+
+\newcommand{\difllll}{$\blackdiamond\blackdiamond\blackdiamond\blackdiamond\diamond$}
+
+\newcommand{\diflllll}{$\blackdiamond\blackdiamond\blackdiamond\blackdiamond\blackdiamond$}
+
+\setcounter {chapter}{-2}
+
+\newcommand{\code}{\textcolor{OliveGreen}\bfseries}
+
+\title{Inmersión en Python 3}
+\author{Mark Pilgrim}
+
+\makeindex
+
+\definecolor{gray}{rgb}{0.98,0.98,0.98}
+\definecolor{black}{rgb}{0,0,0}
+
+\begin{document}
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
+\lstset{language=Python,showstringspaces=false,numbers=left,
+        numberstyle=\footnotesize,backgroundcolor=\color{gray},
+        rulesep=1pt, rulesepcolor=\color{black},frame=leftline,
+        basicstyle=\footnotesize, mathescape=true}
+\pagestyle{headings}
+\pagenumbering{arabic}
+
+\include{portada}
+\include{cap-1}
+\include{cap0}
+\include{cap1}
+\include{cap2}
+\include{cap3}
+\include{cap4}
+\include{cap5}
+\include{cap6}
+\include{cap7}
+\include{cap8}
+\include{cap9}
+\include{cap10}
+\appendix
+
+\printindex
+
+\end{document}
