@@ -90,7 +90,19 @@
         numberstyle=\footnotesize,backgroundcolor=\color{gray},
         rulesep=1pt, rulesepcolor=\color{black},frame=leftline,
         basicstyle=\footnotesize, mathescape=true}
+\pagestyle{empty}
+\frontmatter
+\begin{titlepage}
+\begin{textblock*}{210mm}(-10mm,-2mm)
+\includegraphics{portada/portada.png}
+\end{textblock*}
+. 
+\end{titlepage}
+
+
+\newpage
 \pagestyle{headings}
+
 \pagenumbering{arabic}
 
 \include{portada}
@@ -106,6 +118,8 @@
 \include{cap8}
 \include{cap9}
 \include{cap10}
+\include{cap11}
+\include{cap12}
 \appendix
 
 \printindex

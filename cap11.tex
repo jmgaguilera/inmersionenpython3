@@ -1,0 +1,796 @@
+% ch11.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Ficheros}\label{ch:ficheros}
+
+\noindent
+Nivel de dificultad:\diflll
+
+\begin{citaCap}
+``Una caminata de nueve millas no es ninguna broma, \\
+especialmente si se hace bajo la lluvia.'' \\
+---\emph{Harry Kemelman, La caminata de nueve millas}
+\end{citaCap}
+
+\section{Inmersión}
+
+Mi portátil con Windows tenía 38.493 ficheros antes de instalar ninguna aplicación. Al instalar Python se añadieron unos 3.000 más. El fichero es el paradigma principal de almacenamiento de cualquie sistema operativo importante; este concepto está tan arraigado que la mayoría de la gente tendría problemas imaginando una alternativa. Metafóricamente hablando, tu ordenador se está ``ahogándose'' en ficheros.
+
+\section{Leer contenido de ficheros de texto}
+
+Antes de que puedas leer un fichero, necesitas abrirlo. En Python, esto no podría ser más sencillo:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+a_file = open('examples/chinese.txt', encoding='utf-8')
+\end{lstlisting}
+\end{minipage}
+
+Python dispone de la función interna \codigo{open()}, que toma el nombre de un fichero como parámetro. En este ejemplo, el nombre del fichero es ``examples/chinese.txt''. Hay cinco cosas interesantes que resaltar en este nombre de fichero:
+
+\begin{itemize}
+
+\item No es únicamente un nombre de fichero; es una combinación de un camino a través de un directorio y un nombre de fichero. Podríamos pensar en un función hipotética que podría tomar dos parámetros ---un camino a un directorio y un nombre de fichero--- pero la función \codigo{open()} únicamente toma uno. En Python, siempre que se necesita un ``nombre de fichero'' puedes utilizar parte o todo el camino al directorio en el que se encuentre.
+
+\item El camino al directorio utiliza la barra inclinada hacia adelante, independientemente del sistema operativo que se esté utilizando. Windows utiliza barras inclinadas invertidas para desplazarse entre subdirectorios, mientras que Mac OS X y Linux utilizan barras inclinadas hacia adelante. Pero en Python, las barras inclinadas hacia adelante siempre funcionan, incluso en Windows.
+
+\item El camino al directorio no comienza con barra inclinada o letra de unidad, por lo que se trata de un \emph{camino relativo}. ¿Relativo a qué? podrías preguntar... paciencia, mi pequeño saltamontes.
+
+\item Es una cadena. Todos los sistemas operativos modernos (¡incluso Windows!) utilizan Unicode para almacenar los nombres de los ficheros y directorios. Python 3 permite trabajar con caminos y ficheros \codigo{no ASCII}.
+
+\item No necesita encontrase en un disco local. Podría tratarse de una unidad de red montada en tu ordenador. Este fichero podría ser un elemento de un sistema de ficheros virtual. Si tu ordenador (sistema operativo) lo considera un fichero y puede acceder a él como tal, Python puede abrirlo.
+
+\end{itemize}
+
+Pero esta llamada a la función \codigo{open()} no se acaba con el nombre del fichero. Existe otro parámetro, denominado \codigo{encoding}. ¡Oh! esto está resultando \emph{terriblemente} familiar.
+
+\subsection{La codificación de caracteres enseña su fea cara}
+
+Los bytes son bytes; los caracteres son una abstracción. Una cadena es una secuencia de caracteres Unicode. Pero un fichero en disco no es una secuencia de caracteres Unicode; un fichero en disco es una secuencia de caracteres. Por eso si lees un fichero de ``texto'' del disco, ¿Cómo convierte Python la secuencia de bytes en una secuencia de caracteres? Decodifica los bytes de acuerdo a un algoritmo específica de codificación de caracteres y retorna una secuenca de caracteres Unicode (también conocida como una cadena de texto).
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# Este ejemplo se ha creado en Windows. Otras plataformas pueden 
+# comportarse de forma diferente, por las razones descritas m$\ac{a}$s abajo.
+>>> file = open('examples/chinese.txt')
+>>> a_string = file.read()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "C:\Python31\lib\encodings\cp1252.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x8f in 
+position 28: character maps to <undefined>
+>>> 
+\end{lstlisting}
+\end{minipage}
+
+¿Qué ha sucedido? No especificamos ninguna codificación de caracteres, por eso Python se ve forzado a utilizar la codificación de caracteres por defecto. ¿Y cuál es esta codificación? Si observas la traza del error observarás que está fallando en \codigo{cp1252.py}, lo que significa que Python está utilizando en este caso \codigo{CP-1252} como la codificación de caracteres por defecto. El conjunto de caracteres \codigo{CP-1252} no soporta los caracteres que se encuentran en este fichero, por eso la lectura falla con un feo \codigo{UnicodeDecodeError}.
+
+\cajaTexto{La codificación de caracteres por defecto es dependiente de la plataforma.}
+
+Pero espera, ¡es peor que eso! La codificación de caracteres por defecto es \codigo{dependiente de la plataforma}, por eso este código \codigo{podría} funcionar en tu ordenador (siempre que tu codificación de caracteres por defecto fuera \codigo{UTF-8}), pero entonces podría fallar cuando lo distribuyeras a alguna otra persona (si su codificación de caracteres por defecto fuera otra, como por ejemplo \codigo{CP-1252}).
+
+\begin{quote}
+Si necesitas conocer la codificación de caracteres por defecto, importa el módulo \codigo{locale} y llama a la función \codigo{locale.getpreferredencoding()}. En mi portátile Windows, devuelve \codigo{'cp1252'}, pero en mi máquina Linux retorna \codigo{'UTF8'}, lo mismo que en mi MacBookPro. No puedo mantener la consistencia ni ¡en mi propia casa! En cada caso pueden obtenerse diferentes resultados (incluso en Windows) dependiendo de la versión del sistema operativo instalado y la configuración del idioma y de los parámetros regionales. Por eso es muy importante especificar la codificación de caracteres siempre que se abre un fichero ``de texto''.
+\end{quote}
+
+\subsection{Objetos de flujo (streams)}
+
+Hasta el momento, todo lo que hemos aprendido es que Python dispone de una función interna denominada \codigo{open()}. Esta función devuelve un \codigo{objeto de flujo}, que tiene métodos y atributos para recuperar la información y manipular un flujo de caracteres.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> a_file = open('examples/chinese.txt', encoding='utf-8')
+>>> a_file.name
+'examples/chinese.txt'
+>>> a_file.encoding
+'utf-8'
+>>> a_file.mode
+'r'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El atributo \codigo{name} es el nombre que se pasó como parámetro a la función \codigo{open()} cuando se abrió el fichero. No está normalizado a un camino absoluto.
+
+\item \emph{Línea 4:} De igual forma, el atributo \codigo{encoding} refleja la codificación de caracteres que se pasó como parámetro a la función \codigo{open()}. Si no se especifica la codificación de caracteres cuando abriste el fichero (¡mal desarrollador!) entonces el atributo reflejará la función \codigo{locale.getpreferredencoding()}.
+
+\item \emph{Línea 6:} El atributo \codigo{mode} refleja el modo en el que se abrió el fichero. Se puede pasar un parámetro opcional \codigo{mode} a la función \codigo{open()}. Si no especificaste el modo al abrir el fichero Python utiliza por defecto \codigo{'r'}, lo que significa que se abra ``solamente para lectura, en modo texto''. Como se verá más tarde en este capítulo, el modo del fichero sirve para varios propósitos: escribir, añadir o abrir un fichero en el modo binario (en el que se trata el contenido como bytes en lugar de cadenas).
+
+\end{enumerate}
+ 
+\begin{quote}
+La \href{http://docs.python.org/3.1/library/io.html#module-interface}{documentación de la función \codigo{open}} muestra todos los modos válidos.
+\end{quote}
+
+\subsection{Leer datos de un fichero de texto}
+
+Después de abrir un fichero para lectura problemente querrás leer su contenido.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True,escapeinside=@@]
+>>> a_file = open('examples/chinese.txt', encoding='utf-8')
+>>> a_file.read()
+'Dive Into Python @\begin{CJK}{UTF8}{}是为有经验的程序员编写的一本\end{CJK}@ Python @\begin{CJK}{UTF8}{}书。\end{CJK}@\\n'
+>>> a_file.read()
+''
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Una vez has abierto el fichero (con la codificación de caracteres correcta) para leer de él hay que llamar al método \codigo{read()} del objeto de flujo. El resultado es una cadena de texto.
+
+\item \emph{Linea 4:} Aunque pueda ser sorprendente, leer de nuevo del fichero no eleva una excepción. Python non considera que leer más allá del final del fichero sea un error; simplemente retorna una cadena vacía.
+
+\end{enumerate}
+
+\cajaTextoAncho{Especifica siempre el parámetro \codigo{encoding} cuando abras un fichero.}
+
+¿Cómo habría que hacer si quieres releer el fichero?
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True,escapeinside=@@]
+# continuaci$\ac{o}$n del ejemplo anterior
+>>> a_file.read()
+''
+>>> a_file.seek(0)
+0
+>>> a_file.read(16)
+'Dive Into Python'
+>>> a_file.read(1)
+' '
+>>> a_file.read(1)
+'@\begin{CJK}{UTF8}{}是\end{CJK}@'
+>>> a_file.tell()
+20
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Puesto que estás aún al final del fichero, más llamadas al método \codigo{read()} simplemente retornarán la cadena vacía.
+
+\item \emph{Línea 4:} El método \codigo{seek()} mueve el objeto de flujo a la posición de un byte concreto del fichero.
+
+\item \emph{Línea 6:} El método \codigo{read()} puede tomar un parámetro opcional, el número de caracteres a leer.
+
+\item \emph{Línea 8:} Si quieres, puedes leer un carácter cada vez.
+
+\item \emph{Línea 12:} ¿\codigo{16 + 1 + 1 = ... 20}?
+
+\end{enumerate}
+
+Vamos a intentarlo de nuevo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True,escapeinside=@@]
+# sigue del ejemplo anterior
+>>> a_file.seek(17)
+17
+>>> a_file.read(1)
+'@\begin{CJK}{UTF8}{}是\end{CJK}@'
+>>> a_file.tell()
+20
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Se mueve al byte 17.
+
+\item \emph{Línea 4:} Lee un carácter.
+
+\item \emph{Línea 6:} Ahora estás en el byte 20.
+
+\end{enumerate}
+
+¿Lo ves ahora? Los métodos \codigo{seek()} y \codigo{tell()} siempre cuentan en \emph{bytes}, pero como el fichero está abierto como texto, el método \codigo{read()} cuenta \emph{caracteres}. Los caracteres chinos necesitan varios bytes para codificarse en UTF8. Los caracteres ingleses únicamente requieren un byte, por eso puedes llegar a pensar que los métodos \codigo{seek()} y \codigo{read()} cuentan la misma cosa. Pero esto únicamente es cierto para algunos caracteres.
+
+Pero espera, ¡que es peor!
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> a_file.seek(18)
+18
+>>> a_file.read(1)
+Traceback (most recent call last):
+  File "<pyshell#12>", line 1, in <module>
+    a_file.read(1)
+  File "C:\Python31\lib\codecs.py", line 300, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+UnicodeDecodeError: 'utf8' codec can't decode byte 0x98 in 
+position 0: unexpected code byte
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Muévete al byte 18 e intenta leer un carácter.
+
+\item \emph{Línea 3:} ¿Porqué falla? Porque no existe un carácter en el byte 18. El carácter más cercano comienza en el byte 17 (y ocupa tres bytes). Intentar leer un carácter en la mitad dará un error \codigo{UnicodeDecodeError}.
+
+\end{enumerate}
+
+\subsection{Cerrar ficheros}
+
+Los ficheros abiertos consumen recursos del sistema, y dependiendo del modo de apertura, puede que otros programas no puedan acceder a ellos. Es importante que se cierren los ficheros tan pronto como se haya terminado de trabajar con ellos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> a_file.close()
+\end{lstlisting}
+\end{minipage}
+
+Bueno \emph{eso} ha sido algo anticlimático.
+
+El objeto \codigo{a\_file}\footnote{que es un objeto de flujo o \emph{stream}} aún existe; el llamar a su método \codigo{close()} no destruye el objeto, pero éste deja de ser útil.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior 
+>>> a_file.read()
+Traceback (most recent call last):
+  File "<pyshell#24>", line 1, in <module>
+    a_file.read()
+ValueError: I/O operation on closed file.
+>>> a_file.seek(0)
+Traceback (most recent call last):
+  File "<pyshell#25>", line 1, in <module>
+    a_file.seek(0)
+ValueError: I/O operation on closed file.
+>>> a_file.tell()
+Traceback (most recent call last):
+  File "<pyshell#26>", line 1, in <module>
+    a_file.tell()
+ValueError: I/O operation on closed file.
+>>> a_file.close()
+>>> a_file.closed
+True
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} No puedes leer de un fichero cerrado; se eleva una excepción \codigo{IOError}.
+
+\item \emph{Línea 7:} Tampoco puedes moverte en un fichero cerrado.
+
+\item \emph{Línea 12:} No existe una posición activa si el fichero está cerrado, por eso también falla el método \codigo{tell()}.
+
+\item \emph{Línea 17:} Sorprendentemente, tal vez, llamar de nuevo al método \codigo{close()} sobre un objeto ya cerrado \emph{no} eleva una excepción. Simplemente no hace nada.
+
+\item \emph{Línea 18:} Los objetos de flujos cerrados tienen un atributo que sí es útil: el atributo \codigo{closed}, que sirve para confirmar que el fichero está cerrado.
+
+\end{enumerate}
+
+\subsection{Cerrar ficheros de forma automática}
+
+Los objetos de flujo (streams) tiene un método \codigo{close()} para cerrar explícitamente el flujo. Pero, ¿qué sucede si tu código tiene un error y falla antes de que llames al método \codigo{close()}? En teoría, este fichero quedaría abierto permanentemente. Mientras estás depurando un nuevo código en tu ordenador personal, no sería un gran problema. En un servidor de producción sí que puede serlo.
+
+Python 2 tenía una solución para ello: el bloque \codigo{try...finally}. Esta solución aún funciona en Python 3, y puede encontrarse en el código preexistente o en el otras personas. Pero Python 2.5 introdujo una solución más limpia, que es la preferida en Python 3: la sentencia  \codigo{with}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+with open('examples/chinese.txt', encoding='utf-8') as a_file:
+    a_file.seek(17)
+    a_character = a_file.read(1)
+    print(a_character)
+\end{lstlisting}
+\end{minipage}
+
+Este código llama a \codigo{open()} pero no a \codigo{a\_file.close()}. La sentencia \codigo{with} inicia un bloque de código, como el de una sentencia \codigo{if} o un bucle \codigo{for}. Dentro del bloque puedes utilizar la variable \codigo{a\_file} que contiene el objeto de flujo devuelto por la función \codigo{open()}. Lógicamente, están disponibles todos los métodos del objeto de flujo ---\codigo{seek()}, \codigo{read()} o lo que necesites. Cuando el bloque \codigo{with} finaliza, Python \emph{llama automáticamente} a \codigo{a\_file.close()}.
+
+Lo importante es: no importa cómo o cuándo finalices el bloque \codigo{with}, Python cerrará el fichero... incluso si la salida se produce a causa de una excepción sin manejar. Sí, lo oyes bien, incluso si el código eleva una excepción y el programa finaliza, el fichero se cerrará. Garantizado.
+
+\begin{quote}
+En términos técnicos, la sentencia \codigo{with} crea un contexto de ejecución. En estos ejemplo, el objeto de flujo actúa como gestor del contexto. Python crea el objeto de flujo \codigo{a\_file} y le dice que está entrando en un contexto de ejecución. Cuando el bloque \codigo{with} finaliza, Python le dice al objeto de flujo que está saliendo del contexto de ejecución y el objeto de flujo llama por sí mismo al método \codigo{close()}. Para conocer más detalles puedes ver el Apéndice B, ``Clases que se pueden utilizar en un bloque \codigo{with}''. 
+\end{quote}
+
+No hay nada específico relacionado con los ficheros en una sentencia \codigo{with}, es un marco general para crear contextos de ejecución y decirle a los objetos que están entrando y saliendo de él. Si el objeto en cuestión es un objeto de flujo (streams), entonces hace cosas útiles relacionadas con los ficheros (como cerrar el fichero automáticamente). Pero el comportamiento lo define el propio objeto de flujo, no la sentencia \codigo{with}. Existen otras muchas formas de utilizar gestores de contexto que no tienen nada que ver con los ficheros. Puedes crear los tuyos propios, como verás más tarde neeste mismo capítulo.
+
+\subsection{Leer los datos línea a línea}
+
+Una ``línea'' en un ficheo de texto es lo que te puedes imaginar --- tecleas unas cuantas palabras y pulsas \codigo{INTRO} y ya estás en una nueva línea. Una línea de texto es una secuencia de caracteres que está delimitada por... ¿qué cosa exactamente? Bueno, es complicado de decir, porque los ficheros de texto pueden utilizar diferentes caracteres para marcar el final de una línea. Cada sistema operativo tiene su propia convención. En algunos se utiliza el carácter de ``retorno de carro'', otros utilizan el caracter de ``salto de línea'' y algunos utilizan ambos al final de cada línea.
+
+Ahora respira con expresión de relajación, porque Python \emph{controla estos tipos diferentes de fin de línea  de forma automática} por defecto. Si le dices que ``quieres leer un fichero de texto de línea en línea'', Python descubrirá por su cuenta la clase de fin de línea que el fichero de texto utiliza y simplemente funcionará como esperas.
+
+\begin{quote}
+Si necesitas un control más fino sobre lo que debe considerar Python como fin de línea deberás pasar el parámetro opcional \codigo{newline} a la función \codigo{open()}. Mira la documentación de la función \href{http://docs.python.org/3.1/library/io.html#module-interface}{\codigo{open()}} para ver los detalles necesarios.
+\end{quote}
+
+Bueno, ¿cómo hay que hacer para leer una línea cada vez? Es simple, es bello.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+line_number = 0
+with open('examples/favorite-people.txt', encoding='utf-8') as a_file:
+    for a_line in a_file:
+        line_number += 1
+        print('{:>4} {}'.format(line_number, a_line.rstrip()))
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Utilizando el patrón \codigo{with} abres el fichero de forma segura y dejas a Python que lo cierre por ti.
+
+\item \emph{Línea 3:} Para leer un fichero línea a línea lo mejor es utilizar el bucle \codigo{for}. Además de tener métodos explícitos como el \codigo{read()}, un objeto de flujoo también es un \codigo{iterador} que retorna una línea del fichero cada vez que le pides un valor.
+
+\item \emph{Línea 5:} Si utilizas el método \codigo{format} puedes ir imprimendo el número de línea y la propia línea. El especificador de formaot \codigo{\{:>4\}} significa que imprima el parámetro justificado a la derecha dentro de cuatro espacios. La variable \codigo{a\_line} contiene una línea completa, incluyendo el retorno de carro. El método \codigo{rstrip()} de las cadenas de texto elimina los espacios en blanco del final de una cadena, incluyendo los caracteres de retorno de carro y salto de línea. 
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3$\$$ python3 examples/oneline.py
+   1 Dora
+   2 Ethan
+   3 Wesley
+   4 John
+   5 Anne
+   6 Mike
+   7 Chris
+   8 Sarah
+   9 Alex
+  10 Lizzie
+\end{lstlisting}
+\end{minipage}
+
+¿Falló con este error?
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+you@localhost:~/diveintopython3$\$$ python3 examples/oneline.py
+Traceback (most recent call last):
+  File "examples/oneline.py", line 4, in <module>
+    print('{:>4} {}'.format(line_number, a_line.rstrip()))
+ValueError: zero length field name in format
+\end{lstlisting}
+\end{minipage}
+
+Si fue así es que probablemente estés utilizando Python 3.0. Deberías actualizarte a Python 3.1.
+
+Python 3.0 soportaba el formateo de cadenas, pero únicamente con especificadores de formato numerados explícitamente. Python 3.1 te permite omitir el índice del parámetro en los especificadores de formato. Esta sería la versión compatible en Python 3.0, para que puedas compararla con la anterior.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+print('{0:>4} {1}'.format(line_number, a_line.rstrip()))
+\end{lstlisting}
+\end{minipage}
+
+
+\section{Escribir en ficheros de texto}
+
+Se puede escribir en ficheros de forma parecida a como se lee de ellos. Primero se abre el fichero y se obtiene el objeto de flujo, luego se utilizan los métodos del objeto de flujo que sirven para escribir datos en el fichero, para terminar se debe cerrar el fichero.
+
+\cajaTexto{Simplemente abre el fichero y comienza a escribir.}
+
+Para abrir un fichero para escribir se debe utilizar la función \codigo{open()} y especificar el modo de escritura. Existen dos modos de escritura:
+
+\begin{itemize}
+
+\item Modo de ``escritura'' que sobreescribe el fichero. Se debe pasar el parámetro \codigo{mode='w'} a la función \codigo{open()}.
+
+\item Modo de ''anexación'' que añade datos al final del fichero, conservando los datos que existieran anteriormente. Se debe pasar el parámetro \codigo{mode='a'} a la función \codigo{open()}.
+
+\end{itemize}
+
+Cualquiera de los dos modos creará el fichero automáticamente si no existiera ya, por lo que no hay necesidad de ningún tipo de código que compruebe si ``el fichero aún no existe, crea un nuevo fichero vacío para que lo pueda abrir después por primera vez''. Simplemente abre el fichero y comienza a escribir.
+
+Siempre deberías cerrar el fichero cuando hayas terminado de escribir con el fin de liberar al manejador del fichero y asegurar que los datos realmente se han escrito en el disco. Como cuando se leen datos de un fichero, se puede utilizar el método \codigo{close()} o puedes utilizar la sentencia \codigo{with} y dejar a Python que cierre el fichero por ti. Apuesto a que puedes adivinar la técnica que te recomiendo.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> with open('test.log', mode='w', encoding='utf-8') as a_file:
+...     a_file.write('test succeeded')
+>>> with open('test.log', encoding='utf-8') as a_file:
+...     print(a_file.read())                              
+test succeeded
+>>> with open('test.log', mode='a', encoding='utf-8') as a_file:
+...     a_file.write('and again')
+>>> with open('test.log', encoding='utf-8') as a_file:
+...     print(a_file.read())                              
+test succeededand again
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Comienzas creando un nuevo fichero \codigo{test.log} (o sobreescribiendo el fichero existente) y abriendo el fichero en modo escritura. El parámetro \codigo{mode='w'} significa que abres el fichero para escribir en él. Si, tan peligroso como suena. Espero que no te importase el contenido previo que el fichero pudiera tener (si tenía alguno), porque todos esos datos ya han desaparecido.
+
+\item \emph{Línea 2:} Puedes añadir datos al fichero recién abierto utilizando el método \codigo{write()} del objeto de flujo devuelto por la función \codigo{open()}. Después el bloque \codigo{with} termina y Python cierra automáticamente el fichero.
+
+\item \emph{Línea 6:}  Estuvo bien, vamos a hacerlo de nuevo. Pero esta vez con \codigo{mode='a'} para añadir al final del fichero en lugar de sobreescribirlo. Añadir \emph{nunca} dañará el contenido preexistente del fichero.
+
+\item \emph{Línea 10:} Ahora el fichero contiene tanto la línea original como la segunda línea que añadiste a \codigo{test.log}. Ten en cuenta que no se incluyen retornos de caro. Puesto que no los incluiste explícitamente al fichero ninguna de las veces, el fichero no los contiene. Puedes escribir un retorno de carro utilizando el carácter \codigo{'\\n'}. Al no haberlo incluido, todo lo que escribiste al fichero acaba en una única línea.
+
+\end{enumerate}
+
+\subsection{Codificación de caracteres, otra vez}
+
+¿Observaste el parámetro \codigo{encoding} que se pasaba a la función \codigo{open()} mientras abrías el fichero para escritura? Es importante, ¡nunca lo omitas! Como has visto al comienzo de este capítulo, los ficheros no contienen \emph{cadenas de texto}, contienen \emph{bytes}. La lectura de una ``cadena de texto'' de un fichero de texto funciona porque le dices a Python la codificación de caracteres que tiene que utilizar para leer el flujo de bytes y convertirla a una cadena de texto. Al escribir texto a un fichero ocurre el mismo problema pero en sentido inverso. No puedes escribir caracteres a un fichero; los caracteres son una abstracción. Para escribir a un fichero, Python necesita saber cómo convertir la cadena de texto en una secuencia de bytes. La única forma de estar seguro de ejecutar la conversión correcta es especificar el parámetro \codigo{encoding} cuando abres el fichero en modo escritura.
+
+\section{Ficheros binarios}
+
+No todos los ficheros contienen texto. Algunos contienen fotos de mi perro.
+
+\includegraphics{imagen/beauregard.jpg}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> an_image = open('examples/beauregard.jpg', mode='rb')
+>>> an_image.mode
+'rb'
+>>> an_image.name
+'examples/beauregard.jpg'
+>>> an_image.encoding
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: '_io.BufferedReader' object has no attribute 'encoding'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Abrir un fichero en modo binario es simple pero sutil. La única diferencia respecto de abrirlo en modo de texto es que el parámetro \codigo{mode} contiene un carácter \codigo{'b'} adicional.
+
+\item \emph{Línea 2:} El objeto de flujo que obtienes cuando se abre un fichero en modo binario tiene muchos de los atributos que ya se han visto, incluido \codigo{mode}, que refleja el parámetro \codigo{mode} que se pasó a la función \codigo{open()}.
+
+\item \emph{Línea 4:} Los objetos de flujo binarios también tienen el atributo \codigo{name}, como pasa con los objetos de flujo de texto.
+
+\item \emph{Línea 6:} Aquí hay una diferencia: un objeto de flujo binario no tiene el atributo \codigo{encoding}. Tiene sentido ¿verdad? Estás leyendo (o escribiendo) bytes, no cadenas de texto, por lo que no hay ninguna conversión que hacer. Lo que obtienes de un fichero binario es exactamente lo que pones en él, no hay necesidad de ninguna conversión.
+
+\end{enumerate}
+
+¿He mencionado que estabas leyendo bytes? ¡Oh! pues estás leyendo bytes.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> an_image.tell()
+0
+>>> data = an_image.read(3)
+>>> data
+b'\xff\xd8\xff'
+>>> type(data)
+<class 'bytes'>
+>>> an_image.tell()
+3
+>>> an_image.seek(0)
+0
+>>> data = an_image.read()
+>>> len(data)
+3150
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} Como con los ficheros de texto, los ficheros binarios se pueden leer poco a poco. Pero hay una diferencia crucial...
+
+\item \emph{Línea 7:} ...estás leyendo bytes, no cadenas de texto. Puesto que el fichero se ha abierto en modo binario, el método \codigo{read()} toma como parámetro el \emph{número de bytes que se desea leer}, no el número de caracteres.
+
+\item \emph{Línea 9:} Lo que signific que nunca hay diferencia entre el número que le pasas como parámetro al método \codigo{read(9} y el índice que devuelve el método \codigo{tell()}. El método \codigo{read()} lee bytes, y los métodos \codigo{seek()} y \codigo{tell()} cuentan el número de bytes leídos. Siempre coinciden en el caso de los ficheros binarios.
+
+\end{enumerate}
+
+\section{Objetos de flujo obtenidos de fuentes que no son ficheros}
+
+Imagina que estás escribiendo una librería, y una de las funciones de ésta lee algunos datos de un fichero. La función podría tomar como parámetro el nombre del fichero en formato cadena de texto, abriría el fichero para lectura, leería de él y lo cerraría antes de terminar. Por no deberías hacer esto. En vez de esto, tu \codigo{API} debería tomar como parámetro un objeto de flujo cualquiera.
+
+\cajaTexto{Para leer de un fichero ficticio, simplemente utiliza \codigo{read()}.}
+
+En el caso más simple, un objeto de flujo es cualquier objeto que tenga un método \codigo{read()} con un parámetro opcional \codigo{size} para pasarle el tamaño a leer y que devuelve una cadena de texto. Cuando se le llama sin el parámetro \codigo{size}, el métod \codigo{read()} debería leer todo lo que falta por leer para devolver todos los datos como una única cadena de texto. Cuando se llama con el parámetro \codigo{size}, lee esa cantidad desde la entrada devolviendo una cadena de texto con estos datos. Cuando se le llama de nuevo, continúa por donde quedó y devuelve el siguiente trozo de los datos de entrada.
+
+Este comportamiento es idéntico a los objetos de flujo que obtienes cuando abres un fichero real. La diferencia es que \emph{no te estás limitando a ficheros reales}. La fuente de etrada que se está leyendo puede ser cualquier cosa: una página web, una cadena en memoria o, incluso, la salida de otro programa. Siempre que tus funciones tomen como parámetro un objeto de flujo y llamen al método \codigo{read()} podrás manejar cualquier fuente de entrada que se comporte como un fichero, sin que tengas que escribir código que maneje cada tipo específico de entrada.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> a_string = 'PapayaWhip is the new black.'
+>>> import io 
+>>> a_file = io.StringIO(a_string)
+>>> a_file.read()               
+'PapayaWhip is the new black.'
+>>> a_file.read()              
+''
+>>> a_file.seek(0)            
+0
+>>> a_file.read(10)          
+'PapayaWhip'
+>>> a_file.tell()                       
+10
+>>> a_file.seek(18)
+18
+>>> a_file.read()
+'new black.'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El módulo \codigo{io} define la clase \codigo{StringIO} que puedes utilizar para tratar a las cadenas de texto en memoria como si fuesen un fichero.
+
+\item \emph{Línea 3:} Para crear un objeto de flujo a partir de una cadena de texto debes crear una instancia de la clase \codigo{io.StringIO()} y pasarle la cadena de texto que quieres recorrer como si fuesen datos de un fichero. Ahora tienes un objeto de flujo y puedes hacer todo lo que puedes hacer con los objetos de flujo.
+
+\item \emph{Línea 4:} Al llamar al método \codigo{read()} se lee el ``fichero'' completo, lo que en el caso de un objeto \codigo{StringIO} es tan simple como obtener la cadena de texto original.
+
+\item \emph{Línea 6:} Como pasa con un fichero real, el llamar de nuevo a \codigo{read()} devuelve una cadena vacía.
+
+\item \emph{Línea 8:} Puedes buscar explícitamente el comienzo de la cadena, como en un fichero real, mediante el uso del método \codigo{seek()} del objeto \codigo{StringIO}.
+
+\item \emph{Línea 10:} También puedes leer la cadena a trozos pasándole el parámetro \codigo{size} al método \codigo{read()}.
+
+\end{enumerate}
+
+\begin{quote}
+\codigo{io.StringIO} te permite manipular una cadena de texto como si fuese un fichero de texto. También existe una clase \codigo{io.BytesIO} que te permite tratar un array de bytes como un fichero binario.
+\end{quote}
+
+\subsection{Manipular ficheros comprimidos}
+
+La librería estándar de Python contiene módulos que permiten leer y escribir ficheros comprimidos. Existen diversos sistemas de compresión; los dos más populares en sistemas no windows son gzip y bzip2 (También te puedes encontrar archivos PKZIP y GNU Tar. Python también dispone de módulos para ellos).
+
+El módulo \codigo{gzip} te permite crear un objeto de flujo para leer y escribir ficheros comprimidos con el formato gzip. Este objeto dispone del método \codigo{read()} (si lo abriste para lectura) y del método \codigo{write()} (si lo abriste de escritura). Esto significa que puedes utilizar los métodos que ya has aprendido para \codigo{leer o escribir directamente ficheros comprimidos en formato gzip} sin tener que crear un fichero temporal con los datos sin comprimir.
+
+Como un bonus añadido, también permite el uso de la sentencia \codigo{with} por lo que puedes dejar a Python que cierre el fichero comprimido de forma automática cuando hayas terminado de trabajar con él.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~$ python3
+>>> import gzip
+>>> with gzip.open('out.log.gz', mode='wb') as z_file:
+...   z_file.write(
+...  'A nine mile walk is no joke, especially in the rain.'.encode(
+...  'utf-8'))
+... 
+>>> exit()
+
+you@localhost:~$ ls -l out.log.gz
+-rw-r--r--  1 mark mark    79 2009-07-19 14:29 out.log.gz
+you@localhost:~$ gunzip out.log.gz
+you@localhost:~$ cat out.log
+A nine mile walk is no joke, especially in the rain.
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} Los ficheros comprimidos se deben abrir siempre en modo binario (Observa el carácter \codigo{'b'} en el parámetro \codigo{mode}).
+
+\item \emph{Línea 8:} Este ejemplo lo construí en Linux. Si no estás familiarizado con la línea de comando, este comando te muestra un ``listado largo'' del fichero comprimido que acabas de crear con la consola de Python. 
+
+\item \emph{Línea 10:} El comando \codigo{gunzip} descomprime el fichero y almacena el contenido en un nuevo fichero con el mismo nombre que el original pero sin la extensión \codigo{.gz}.
+
+\item \emph{Línea 11:} El comando \codigo{cat} muestra el contenido de un fichero. Este fichero contiene la cadena de texto que escribiste directamente en el fichero comprimido \codigo{out.log.gz} desde la consola de Python.
+
+\end{enumerate}
+
+¿Te pasó este error?
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> with gzip.open('out.log.gz', mode='wb') as z_file:
+...         z_file.write(
+...         'A nine mile walk is no joke, especially in the rain.'.encode(
+...         'utf-8'))
+... 
+Traceback (most recent call last):
+ File "<stdin>", line 1, in <module>
+AttributeError: 'GzipFile' object has no attribute '__exit__'
+\end{lstlisting}
+\end{minipage}
+
+Si fue así, posiblemente estés utilizando Python 3.0. Deberías actualizarte a Python 3.1.
+Python 3.0 tenía un módulo \codigo{gzip} pero no soportaba el uso de los objetos de flujo de ficheros comprimidos como parte de un gestor de contexto. Python 3.1 añade esta funcionalidad que permite utilizar estos objetos como parte de la sentencia \codigo{with}.
+
+\section{Flujos de entrada, salida y error estándares}
+
+Los gurús de la línea de comando están familiarizados con el concepto de entrada estándar, salida estándar y error estándar. Esta sección es para el resto de vosotros.
+
+\cajaTexto{\codigo{sys.stdin}, \codigo{sys.stdout}, \codigo{sys.stderr}.}
+
+La salida estándar y la salida de error estándar (comunmente abreviadas como \codigo{stdout} y \codigo{stderr}) son ``tuberías'' (pipes) que vienen en cualquier sistema de tipo \codigo{UNIX}, incluyendo Mac OS X y Linux. Cuando llamas a la función \codigo{print()}, lo que se imprime se envía a la tubería de salida \codigo{stdout}. Cuando tu programa falla e imprime la traza de error, la salida va a la tubería \codigo{stderr}. Por defecto, ambas tuberías están conectadas directamenten a la ventana del terminal en el que estás trabajando; cuando tu programa imprime algo, ves la salida en la ventana del terminal; y cuando el programa falla, también ves la traza de error en la misma ventana del terminal. En la consola gráfica de Python, las tuberías \codigo{stdout} y \codigo{stderr} están conectadas por defecto a la ``ventana interactiva'' en la que te encuentras.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> for i in range(3):
+...     print('PapayaWhip')
+PapayaWhip
+PapayaWhip
+PapayaWhip
+>>> import sys
+>>> for i in range(3):
+... sys.stdout.write('is the')
+is theis theis the
+>>> for i in range(3):
+... sys.stderr.write('new black')
+new blacknew blacknew black
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La función \codigo{print()} en un bucle. Nada sorprendente en este trozo de código.
+
+\item \emph{Línea 8:} \codigo{stdout} está definida en el módulo \codigo{sys} y es un objeto de flujo. Si se llama a su función \codigo{write()} se imprimirá la cadena de texto que le pases como parámetro. De hecho, es lo que hace la función \codigo{print}: añade un retorno de carro a la cadena que quieres imprimir y llama a \codigo{sys.stdout.write}.
+
+\item \emph{Línea 11:} En el caso más simple, \codigo{sys.stdout} y \codigo{sys.stderr} envían su salida al mismo sitio: en entorno integrado de desarrollo de Python (si te encuentras en uno) o el terminal (si estás ejecutando Python desde la línea de comando). Como en el caso de la salida estándar, la salida de error tampoco añade retornos de carro por ti. Si quieres retornos de carro, tienes que añadirlos.
+
+\end{enumerate}
+
+\codigo{sys.stdout} y \codigo{sys.stderr} son objetos de flujo, abiertos como de escritura únicamente. Si se intenta llamar a sus métodos \codigo{read()} se elevará el error \codigo{IOError}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import sys
+>>> sys.stdout.read()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IOError: not readable
+\end{lstlisting}
+\end{minipage}
+
+\subsection{Redirección de la salida estándar}
+
+\codigo{sys.stdout} y \codigo{sys.stderr} son objetos de flujo, aunque únicamente soportan la escritura. Pero no son constantes, son variables. Esto significa que puedes asignarles un nuevo valor ---cualquier otro objeto de flujo--- para redirigir su salida.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+import sys
+
+class RedirectStdoutTo:
+    def __init__(self, out_new):
+        self.out_new = out_new
+
+    def __enter__(self):
+        self.out_old = sys.stdout
+        sys.stdout = self.out_new
+
+    def __exit__(self, *args):
+        sys.stdout = self.out_old
+
+print('A')
+with open('out.log', mode='w', encoding='utf-8') \
+    as a_file, RedirectStdoutTo(a_file):
+    print('B')
+print('C')
+\end{lstlisting}
+\end{minipage}
+
+Prueba esto:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~/diveintopython3/examples$ python3 stdout.py
+A
+C
+you@localhost:~/diveintopython3/examples$ cat out.log
+B
+\end{lstlisting}
+\end{minipage}
+
+¿Te pasó este error?
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~/diveintopython3/examples$ python3 stdout.py
+  File "stdout.py", line 15
+    with open('out.log', mode='w', encoding='utf-8') \
+         as a_file, RedirectStdoutTo(a_file):
+                  ^
+SyntaxError: invalid syntax
+\end{lstlisting}
+\end{minipage}
+
+Si es así, probablemente estés utilizando Python 3.0. Posiblemente deberías actualizarte a Python 3.1.
+
+Python 3.0 soporta la sentencia \codigo{with}, pero cada sentencia puede utilizar únicamente un gestor de contexto. Python 3.1 te permite encadenar varios gestores de contexto en una única sentencia \codigo{with}.
+
+Vamos a ver la última parte primero.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+print('A')
+with open('out.log', mode='w', encoding='utf-8') \
+    as a_file, RedirectStdoutTo(a_file):
+    print('B')
+print('C')
+\end{lstlisting}
+\end{minipage}
+
+Se trata de una sentencia \codigo{with} compleja. Déjame que la reescriba como algo más reconocible.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+with open('out.log', mode='w', encoding='utf-8') as a_file:
+    with RedirectStdoutTo(a_file):
+        print('B')
+\end{lstlisting}
+\end{minipage}
+
+Como muestra esta reescritura, en realidad se trata de dos sentencias \codigo{with}, una de ellas anidada en el ámbito de la otra. La sentencia \codigo{with} ``exterior'' debería ya serte familiar: abre un fichero de texto codificado en \codigo{UTF8} denominado \codigo{out.log}, para escritura; y lo asigna a la variable denominada \codigo{a\_file}. Pero no es lo único extraño aquí.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+with RedirectStdoutTo(a_file)
+\end{lstlisting}
+\end{minipage}
+
+¿Dónde está la claúsula \codigo{as} aquí? La sentencia \codigo{with} no la requiere. Al igual que puedes llamar a una función e ignorar su valor de retorno, puedes crear una sentencia \codigo{with} sin asignar el contexto resultante a una variable. En este caso solamente estás interesado en el efecto ``lateral'' del contexto \codigo{RedirectStdoutTo}.
+
+¿Cuál es el efecto lateral de este contexto? Echa un vistazo a la clase \codigo{RedirectStdoutTo}. Esta clase es un gestor de contexto a medida. Cualquier clase puede serlo si define dos métodos especiales: \codigo{\_\_enter\_\_()} y \codigo{\_\_exit\_\_()}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+class RedirectStdoutTo:
+    def __init__(self, out_new):
+        self.out_new = out_new
+
+    def __enter__(self):
+        self.out_old = sys.stdout
+        sys.stdout = self.out_new
+
+    def __exit__(self, *args):
+        sys.stdout = self.out_old
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El método \codigo{\_\_init\_\_()} se llama inmediatamente después de que la instancia se crea. Toma un parámetro, el objeto de flujo que quieres utilizar como salida estándar durante la vida del contexto. Este método simplemente almacena el objeto de flujo en una variable para que los otros métodos lo puedan usar más tarde.
+
+\item \emph{Línea 5:} El método \codigo{\_\_enter\_\_()} es un método especial de la clase; Python lo llama cuando se entra en un contexto (por ejemplo: al comienzo de una bloque \codigo{with}). Este método almacena el valor actual de \codigo{sys.stdout} en \codigo{self.out\_old}, luego redirige la salida estándar asignando \codigo{self.out\_new} a \codigo{sys.stdout}.
+
+\item \emph{Línea 9:} El método \codigo{\_\_exit\_\_()} es otro método especial de la clase; Python lo llama cuando sale del contexto (por ejemplo: al final del bloque \codigo{with}). Este método restablee la salida estandar a su valor original asignando el valor almacenado \codigo{self.old\_value} a \codigo{sys.stdout}.
+
+\end{enumerate}
+
+Al juntarlo todo:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+print('A')
+with open('out.log', mode='w', encoding='utf-8') as a_file, \
+     RedirectStdoutTo(a_file):
+    print('B')             
+print('C')
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Imprimirá en la ventana interativa (del entorno integrado de desarrollo o el terminal, dependiendo de cómo estés ejecutando este programa).
+
+\item \emph{Línea 2:} La sentencia \codigo{with} recibe una lista de contextos separada por comas. Esta lista actúa como una serie de bloques \codigo{with} anidados. El primer contexto es el bloque externo, el último es el interno. El primer contexto abre un fichero, el segundo redirige \codigo{sys.stdout} al objeto de flujo que se creó en el primer contexto.
+
+\item \emph{Línea 3:} Debido a que la función \codigo{print()} se ejecutó en el contexto creado por la sentencia \codigo{with}, no se imprimirá a la pantalla, se imprimirá en el fichero \codigo{out.log}.
+
+\item \emph{Línea 4:} El bloque \codigo{with} se ha acabado. Python le ha dicho a cada gestor de contexto que hagan lo que tengan que hacer para salir del contexto. Los gestores de contexto forman una pila LIFO (Last-in-first-out: Primero en entrar, último en salir). En la salida, el segundo contexto vuelve a poner el valor original de \codigo{sys.stdout}, luego el primer contexto cierra el fichero \codigo{out.log}. Puesto que la salida estándar ha vuelto a su valor inicial, la llamada a la función \codigo{print()} de nuevo imprimirá en la pantalla.
+
+\end{enumerate}
+
+La redirección de la salida de error estándar funciona de igual manera, simplemente cambiando \codigo{sys.stdout} por \codigo{sys.stderr}.
+
+\section{Lecturas recomendadas}
+
+\begin{itemize}
+
+\item Lectura y escritura de ficheros en el tutorial de Python: \newline
+\href{http://docs.python.org/tutorial/inputoutput.html\#reading-and-writing-files}{http://docs.python.org/tutorial/inputoutput.html\#reading-and-writing-files}
+
+\item El módulo \codigo{io}: \newline \href{http://docs.python.org/3.1/library/io.html}{http://docs.python.org/3.1/library/io.html}
+
+\item Objetos de flujo (streams): \newline \href{http://docs.python.org/3.1/library/stdtypes.html\#file-objects}{http://docs.python.org/3.1/library/stdtypes.html\#file-objects}
+
+\item Tipos de gestores de contexto: \newline \href{http://docs.python.org/3.1/library/stdtypes.html\#context-manager-types}{http://docs.python.org/3.1/library/stdtypes.html\#context-manager-types} 
+
+\item \codigo{sys.stdout} y \codigo{sys.stderr}: \newline \href{http://docs.python.org/3.1/library/sys.html\#sys.stdout}{http://docs.python.org/3.1/library/sys.html\#sys.stdout}
+
+\item \codigo{FUSE} en la Wikipedia: \newline \href{http://en.wikipedia.org/wiki/Filesystem\_in\_Userspace}{http://en.wikipedia.org/wiki/Filesystem\_in\_Userspace}
+
+\end{itemize}
