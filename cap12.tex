@@ -1,0 +1,898 @@
+% ch12.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{XML}\label{ch:xml}
+
+\noindent
+Nivel de dificultad:\difllll
+
+\begin{citaCap}
+``En el gobierno de Aristemo, \\
+Draco aplicó sus ordenanzas.'' \\
+---\emph{Aristóteles}
+\end{citaCap}
+
+\section{Inmersión}
+
+La mayoría de los capítulos de este libro se han desarrollado alrededor de un código de ejemplo. Pero \codigo{XML} no trata sobre código, trata sobre datos. Un uso muy común para \codigo{XML} es la ``provisión de contenidos sindicados'' que lista los últimos artículos de un blog, foro u otro sitio web con actualizaciones frecuentes. El software para blogs más popular puede generar fuentes de información y actualizarlas cada vez que hay nuevos artículos, hilos de discusión o nuevas entradas en un blog. Puedes seguir un blog ``sscribiéndote'' a su canal (feed), y puedes seguir diversos blogs mediante un agregador de canales como el lector de Google.
+
+Aquí están los datos de \codigo{XML} que utilizaremos en este capítulo. Es un canal ---específicamente, una fuente de información sindicada \textbf{Atom}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<?xml version='1.0' encoding='utf-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+  <title>dive into mark</title>
+  <subtitle>currently between addictions</subtitle>
+  <id>tag:diveintomark.org,2001-07-29:/</id>
+  <updated>2009-03-27T21:56:07Z</updated>
+  <link rel='alternate' type='text/html' 
+        href='http://diveintomark.org/'/>
+  <link rel='self' type='application/atom+xml' 
+        href='http://diveintomark.org/feed/'/>
+  <entry>
+    <author>
+      <name>Mark</name>
+      <uri>http://diveintomark.org/</uri>
+    </author>
+    <title>Dive into history, 2009 edition</title>
+    <link rel='alternate' type='text/html'
+      href='http://diveintomark.org/archives/2009/03/27/ (sigue abajo)
+      dive-into-history-2009-edition'/>
+    <id>tag:diveintomark.org,2009-03-27:/archives/20090327172042</id>
+    <updated>2009-03-27T21:56:07Z</updated>
+    <published>2009-03-27T17:20:42Z</published>
+    <category scheme='http://diveintomark.org' term='diveintopython'/>
+    <category scheme='http://diveintomark.org' term='docbook'/>
+    <category scheme='http://diveintomark.org' term='html'/>
+  <summary type='html'>Putting an entire chapter on one page sounds
+    bloated, but consider this &amp;mdash; my longest chapter so far
+    would be 75 printed pages, and it loads in under 5 
+    seconds&amp;hellip; On dialup.</summary>
+  </entry>
+\end{lstlisting}
+\end{minipage}
+\newpage
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+  <entry>
+    <author>
+      <name>Mark</name>
+      <uri>http://diveintomark.org/</uri>
+    </author>
+    <title>Accessibility is a harsh mistress</title>
+    <link rel='alternate' type='text/html'
+      href='http://diveintomark.org/archives/2009/03/21/ (sigue)
+      accessibility-is-a-harsh-mistress'/>
+    <id>tag:diveintomark.org,2009-03-21:/archives/20090321200928</id>
+    <updated>2009-03-22T01:05:37Z</updated>
+    <published>2009-03-21T20:09:28Z</published>
+    <category scheme='http://diveintomark.org' term='accessibility'/>
+    <summary type='html'>The accessibility orthodoxy does not permit
+      people to question the value of features that are rarely 
+      useful and rarely used.</summary>
+  </entry>
+  <entry>
+    <author>
+      <name>Mark</name>
+    </author>
+    <title>A gentle introduction to video encoding, part 1: 
+           container formats</title>
+    <link rel='alternate' type='text/html'
+      href='http://diveintomark.org/archives/2008/12/18/ (sigue)
+            give-part-1-container-formats'/>
+    <id>tag:diveintomark.org,2008-12-18:/archives/20081218155422</id>
+    <updated>2009-01-11T19:39:22Z</updated>
+    <published>2008-12-18T15:54:22Z</published>
+    <category scheme='http://diveintomark.org' term='asf'/>
+    <category scheme='http://diveintomark.org' term='avi'/>
+    <category scheme='http://diveintomark.org' term='encoding'/>
+    <category scheme='http://diveintomark.org' term='flv'/>
+    <category scheme='http://diveintomark.org' term='GIVE'/>
+    <category scheme='http://diveintomark.org' term='mp4'/>
+    <category scheme='http://diveintomark.org' term='ogg'/>
+    <category scheme='http://diveintomark.org' term='video'/>
+    <summary type='html'>These notes will eventually become part of a
+      tech talk on video encoding.</summary>
+  </entry>
+</feed>
+\end{lstlisting}
+\end{minipage}
+
+\section{Curso rápido de 5 minutos sobre XML}
+
+Si conoces ya \codigo{XML} puedes saltarte esta sección.
+
+\codigo{XML} es una forma generalizada de describir una estructura de datos jerárquica. Un \emph{documento} \codigo{XML} contiene uno o más \emph{elementos}, que están delimitados por \emph{etiquetas} de inicio y fin. Lo siguiente es un documento \codigo{XML} completo (aunque bastante aburrido).
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<foo>
+</foo>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Esta es la etiqueta de inicio del elemento \codigo{foo}.
+
+\item \emph{Línea 2:} Esta es la etiqueta de fin del elemento \codigo{foo}, que es pareja de la anterior. Como los paréntesis en la escritura, matemáticas o código, toda etiqueta de inicio debe \emph{cerrase} con una etiqueta de fin.
+
+\end{enumerate}
+
+Los elementos se pueden \emph{anidar} a cualquier profundidad. Si un elemento \codigo{bar} se encuentra dentro de un elemento \codigo{foo}, se dice que \codigo{bar} es un \emph{subelemento} o \emph{hijo} de \codigo{foo}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<foo>
+  <bar></bar>
+</foo>
+\end{lstlisting}
+\end{minipage}
+
+Al primer elemento de un documento \codigo{XML} se le llama el \emph{elemento raíz}. Un documento \codigo{XML} únicamente puede tener un elemento raíz. Lo siguiente \textbf{no es un documento \codigo{XML}} porque tiene dos elementos raíz:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<foo></foo>
+<bar></bar>
+\end{lstlisting}
+\end{minipage}
+
+Los elementos pueden tener \emph{atributos}, que son parejas de nombres con valores. Los atributos se deben incluir dentro de la etiqueta de inicio del elemento y deben estar separados por un espacio en blanco. Los \emph{nombres de atributo} no se pueden repetir dentro de un elemento. Los valores de los atributos deben ir entre comillas. Es posible utilizar tanto comillas simples como dobles.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<foo lang='en'>
+  <bar id='papayawhip' lang="fr"></bar>
+</foo>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El elemento \codigo{foo} tiene un atributo denominado \codigo{lang}. El valor del atributo \codigo{lang} es \codigo{en}.
+
+\item \emph{Línea 2:} El elemento \codigo{bar} tiene dos atributos. El valor del atributo \codigo{lang} es \codigo{fr}. Esto no entra en conflicto con el elemento \codigo{foo}, cada elemento tiene su propio conjunto de atributos.
+
+\end{enumerate}
+
+Si un elemento tiene más de un atributo, el orden de los mismos no es significativo. Los atributos de un elemento forman un conjunto desordenado de claves y valores, como en un diccionario de Python. No exite límite en el número de atributos que puedes definir para cada elemento.
+
+Los elementos pueden contener \codigo{texto}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<foo lang='en'>
+  <bar lang='fr'>PapayaWhip</bar>
+</foo>
+\end{lstlisting}
+\end{minipage}
+
+Existe una forma de escribir elementos vacíos de forma compacta. Colocando un carácter \codigo{/} al final de la etiqueta de inicio se puede evitar tener que escribir la etiqueta de fin. El documento \codigo{XML} del ejemplo anterior se puede escribir de esta otra forma:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<foo/>
+\end{lstlisting}
+\end{minipage}
+
+Como pasa con las funciones de Python que se pueden declarar en diferentes \emph{módulos}, los elementos \codigo{XML} se pueden declarar en diferentes espacios de nombre. Los espacios de nombre se suelen representar como \codigo{URLs}. Se puede utilizar una declaración \codigo{xmlns} para definir un \codigo{espacio de nombres por defecto}. Una declaración de un espacio de nombres es parecida a un atributo, pero tiene un significado y propósito diferente.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<feed xmlns='http://www.w3.org/2005/Atom'>
+  <title>dive into mark</title>
+</feed>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El elemento \codigo{feed} se encuentra en el espacio de nombres \codigo{http://www.w3.org/2005/Atom}.
+
+\item \emph{Línea 2:} El elemento \codigo{title} se encuentra también en el espacio de nombres \codigo{http://www.w3.org/2005/Atom}. La declaración del espacio de nombres afecta al elemento en el que está declarado y a todos los elementos hijo.
+
+\end{enumerate}
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<atom:feed xmlns:atom='http://www.w3.org/2005/Atom'>
+  <atom:title>dive into mark</atom:title>
+</atom:feed>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El elemento \codigo{feed} se encuentra en el espacio de nombres \codigo{http://www.w3.org/2005/Atom}.
+
+\item \emph{Línea 2:} El elemento \codigo{title} también se encuentra en el espacio de nombres \codigo{http://www.w3.org/2005/Atom}.
+
+\end{enumerate}
+
+En lo que concierne al analizador de \codigo{XML}, los dos documentos anteriores son \emph{idénticos}. Espacio de nombres + nombre de elemento = identidad en \codigo{XML}. Los prefijos existen únicamente para referirse a los espacios de nombres, por lo que el prefijo utilizado en la práctica (\codigo{atom:}) es irrelevante. Los espacios de nombre coinciden, los nombres de elemento coinciden, los atributos (o falta de ellos) coinciden y cada contenido de texto coincide, por lo que estos dos documentos \codigo{XML} son el idénticos a efectos prácticos.
+
+Finalmente, los documentos \codigo{XML} pueden contener en la primera línea información sobre la codificación de caracteres, antes del elemento raíz. Si tienes curiosidad sobre cómo un documento puede contener información que necesita conocerse antes de que el documento pueda analizarse consulta la Sección F de la especificación XML (\href{http://www.w3.org/TR/REC-xml/\#sec-guessing-no-ext-info}{http://www.w3.org/TR/REC-xml/\#sec-guessing-no-ext-info}) para ver los detalles sobre cómo resolver este problema.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<?xml version='1.0' encoding='utf-8'?>
+\end{lstlisting}
+\end{minipage}
+
+Y con esto ya conoces suficiente \codigo{XML} como para ¡ser peligroso!
+
+\section{La estructura de una fuente de información Atom}
+
+Piensa en un blog o en cualquier sitio web que tenga contenido frecuentemente actualizado como \codigo{CNN.com}. El propio sitio dispone de un título (CNN.com), un subtítulo (Breaking News, U.S., World, Weather, Entertaintment y Video News), una fecha de última actualización (actualizado a 12:43 p.m. EDT, Sat May 16, 2009) y una lista de artículos publicados en diferente momentos. Cada artículo, a su vez, tiene título, una fecha de primera publicación (y posiblemente una fecha de última actualización, si se publicó una corrección) y una \codigo{URL} única.
+
+El formato de sindicación de contenidos Atom está diseñado para capturar toda esta información en un formato estándar. Mi blog y CNN.com son muy diferentes en diseño, ámbito y audiencia; pero ambos tienen la misma estructura básica. CNN.com tiene un título, mi blog tiene un título. CNN.com publica artículos, yo publico artículos.
+
+En el nivel más alto existe el \emph{elemento raíz}, que toda fuente Atom comparte: el elemento \codigo{feed} del espacio de nombres \codigo{http://www.w3.org/2005/Atom}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<feed xmlns='http://www.w3.org/2005/Atom'
+      xml:lang='en'>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} El espacio de nombres de Atom es \codigo{http://www.w3.org/2005/Atom}.
+
+\item \emph{Línea 2:} Cualquier elemento puede contener un atributo \codigo{xml:lang} que sirve para declarar el idioma del elemento y de sus hijos. En este caso, el atributo \codigo{xml:lang} se declara una única vez en el elemento raíz, lo que significa que toda la fuente se encuentra en inglés.
+
+\end{enumerate}
+
+Una fuente Atom contiene diversas partes de información sobre la propia fuente. Se declaran como hijas del elemento raíz \codigo{feed}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+  <title>dive into mark</title>
+  <subtitle>currently between addictions</subtitle>
+  <id>tag:diveintomark.org,2001-07-29:/</id>
+  <updated>2009-03-27T21:56:07Z</updated>
+  <link rel='alternate' type='text/html' href='http://diveintomark.org/'/>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El título de esta fuente es \codigo{dive into mark}.
+
+\item \emph{Línea 3:} El subtítulo es \codigo{currently between addictions}.
+
+\item \emph{Línea 4:} Toda fuente necesita un identificador único global. Hay que mirar la RFC 4151\footnote{\href{http://www.ietf.org/rfc/rfc4151.txt}{http://www.ietf.org/rfc/rfc4151.txt}} para ver cómo crear uno.
+
+\item \emph{Línea 5:} Esta fuente fue actualizada por última vez el 27 de marzo de 2009 a las 21:56 GMT. Normalmente es equivalente a la fecha de última modificación del artículo más reciente.
+
+\item \emph{Línea 6:} Ahora las cosas comienzan a ponerse interesantes. Esteelemento \codigo{link} no tiene contenido de texto, pero tiene tres atributos: \codigo{rel}, \codigo{type} y \codigo{href}. El valor de \codigo{rel} indica la clase de enlace que es; \codigo{rel='alternate'} significa que es un enlace a una representación alternativa de esta fuente. El atributo \codigo{type='text/html'} significa que es un enlace a una página \codigo{HTML}. Por último, el destino del enlace se indica en el atributo \codigo{href}.
+
+\end{enumerate}
+
+Ahora ya conocemos que esta fuente lo es de un sitio denominado ``dive into mark'' que está disponible en \codigo{http://diveintomark.org} y que fue actualizada por última vez el 27 de marzo de 2009.
+
+\begin{quote}
+Aunque el orden de los elementos puede ser relevante en algunos documentos \codigo{XML}, no es relevante en una fuente Atom.
+\end{quote}
+
+Después de los metadatos de la fuente se encuentra una lista con los artículos más recientes. Un artículo se representa así:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<entry>
+  <author>
+    <name>Mark</name>
+    <uri>http://diveintomark.org/</uri>
+  </author>
+  <title>Dive into history, 2009 edition</title>
+  <link rel='alternate' type='text/html'     
+    href='http://diveintomark.org/archives/2009/03/27/
+dive-into-history-2009-edition'/>
+  <id>tag:diveintomark.org,2009-03-27:/archives/20090327172042</id>
+  <updated>2009-03-27T21:56:07Z</updated>     
+  <published>2009-03-27T17:20:42Z</published>        
+  <category scheme='http://diveintomark.org' term='diveintopython'/>
+  <category scheme='http://diveintomark.org' term='docbook'/>
+  <category scheme='http://diveintomark.org' term='html'/>
+  <summary type='html'>Putting an entire chapter on one page sounds
+    bloated, but consider this &amp;mdash; my longest chapter so far
+    would be 75 printed pages, and it loads in under 5 seconds&amp;hellip;
+    On dialup.</summary>
+</entry>             
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El elemento \codigo{author} indica quién escribió este artículo: un individuo llamado Mark, a quién puedes encontrar en \codigo{http://diveintomark.org/} (Es el mismo sitio que el enlace alternativo para la fuente, pero no tiene porqué serlo. Muchos blogs tienen varios autores, cada uno con su propio sitio web personal).
+
+\item \emph{Línea 6:} El elemento \codigo{title} indica el título del artículo. ``Dive into history, 2009 edition''.
+
+\item \emph{Línea 7:} Como con el enlace alternativo en el nivel de la fuente, este elemento \codigo{link} indica la dirección de la versión \codigo{HTML} de este artículo.
+
+\item \emph{Línea 10:} Las entradas, como la fuente, necesitan un identificador único.
+
+\item \emph{Línea 11:} Las entradas tienen dos fechas: la fecha de primera publicación (\codigo{published}) y la fecha de última modificación (\codigo{updated}).
+
+\item \emph{Línea 13:} Las entradas pueden tener un número arbitrario de categorías. Este artículo está archivado bajo las categorías \codigo{diveintopython}, \codigo{docbook} y \codigo{html}.
+
+\item \emph{Línea 16:} El elemento \codigo{summary} ofrece un breve resumen del artículo (Existe también un elemento \codigo{content}, que no se muestra aquí, por si quieres incluir el texto completo del artículo en tu fuente). Este resumen tiene el atributo específico de Atom \codigo{type='html'} que indica que este resumen está escrito en \codigo{HTML}, no es texto plano. Esto es importante puesto que existen entidades específicas de \codigo{HTML} e el texto (\codigo{\&mdash;} y \codigo{\&hellip;}) que se deben mostrar como ``---'' y ``...'' en lugar de que se muestre el texto directamente.
+
+\item \emph{Línea 20:} Por último, la etiqueta de cierre del elemento \codigo{entry}, que señala el final de los metadatos de este artículo. 
+
+\end{enumerate}
+
+\section{Análisis de XML}
+
+Python puede analizar documentos \codigo{XML} de diversas formas. Dispone de analizadores \codigo{DOM} y \codigo{SAX} como otros lenguajes, pero me centraré en una librería diferente denominada ElementTree.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import xml.etree.ElementTree as etree
+>>> tree = etree.parse('examples/feed.xml')
+>>> root = tree.getroot()
+>>> root
+<Element {http://www.w3.org/2005/Atom}feed at cd1eb0>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} La librería ElementTree forma parte de la librería estándar de Python, se encuentra en \codigo{xml.etree.ElementTree}.
+
+\item \emph{Línea 2:} El punto de entrada primario de la librería es la función \codigo{parse()} que puede tomar como parámetro el nombre de un fichero o un objeto de flujo. Esta función analiza el documento entero de una vez. Si la memoria es escasa, existen formas para analiar un documento XML de forma incremental\footnote{\href{http://effbot.org/zone/element-iterparse.htm}{http://effbot.org/zone/element-iterparse.htm}}.
+
+\item \emph{Línea 3:} La función \codigo{parse()} devuelve un objeto que representa al documento completo. \emph{No} es el elemento raíz. Para obtener una referencia al elemento raíz, debes llamar al método \codigo{getroot()}.
+
+\item \emph{Línea 4:} Como cabría esperar, el elemento raíz es el elemento \codigo{feed} del espacio de nombres \codigo{http://www.w3.org/2005/Atom}. La representación en cadena de texto de este elemento incide en un punto importante: un elemento \codigo{XML} es una combinación de su espacio de nombres y la etiqueta de su nombre (también de nominado el \emph{nombre local}). todo elemento de este documento se encuentra en el espacio de nombres Atom, por lo que el elemento raíz se representa como \codigo{\{http://www.w3.org/2005/Atom\}feed}.
+
+\end{enumerate}
+
+\begin{quote}
+ElementTree represena a los elementos \codigo{XML} como \codigo{\{espacio\_de\_nombres\}nombre\_local}. Verás y utilizarás este formato en muchos lugares de la \codigo{API} de ElementTree.
+\end{quote}
+
+\subsection{Los elementos son listas}
+
+En la \codigo{API} de ElementTree los eleemntos se comportan como listas. Los elementos de la lista son los hijos del elemento.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> root.tag
+'{http://www.w3.org/2005/Atom}feed'
+>>> len(root)
+8
+>>> for child in root:
+...   print(child)
+... 
+<Element {http://www.w3.org/2005/Atom}title at e2b5d0>
+<Element {http://www.w3.org/2005/Atom}subtitle at e2b4e0>
+<Element {http://www.w3.org/2005/Atom}id at e2b6c0>
+<Element {http://www.w3.org/2005/Atom}updated at e2b6f0>
+<Element {http://www.w3.org/2005/Atom}link at e2b4b0>
+<Element {http://www.w3.org/2005/Atom}entry at e2b720>
+<Element {http://www.w3.org/2005/Atom}entry at e2b510>
+<Element {http://www.w3.org/2005/Atom}entry at e2b750>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Continuando con el ejemplo anterior, el elemento raíz es \codigo{\{http://www.w3.org/2005/Atom\}feed}.
+
+\item \emph{Línea 4:} La ``longitud'' del elemento raíz es el número de elementos hijo.
+
+\item \emph{Línea 6:} Puedes utilizar el elemento como iterador para recorrer todos los elementos hijo.
+
+\item \emph{Línea 7:} Como ves por la salida, existen ocho elementos hijos: todos los metadatos de la fuente (\codigo{title}. \codigo{subtitle}, \codigo{id}, \codigo{updated} y \codigo{link}) seguidos por los tres elementos \codigo{entry}.
+
+\end{enumerate}
+
+Puede que ya te hayas dado cuenta, pero quiero dejarlo explícito: la lista de los elementos hijo, únicamente incluye los hijos \emph{directos}. cada uno de los elementos \codigo{entry} tiene sus propios hijos, pero no se muestran en esta lista. Estarán incluidos en la lista de hijos del elemento \codigo{entry}, pero no se encuentran en la lista de \codigo{feed}. Existen formas de encontrar elementos independientemente de los profundamente anidados que se encuentren; lo veremos más adelante en este mismo capítulo.
+
+\subsection{Los atributos son diccionarios}
+
+\codigo{XML} no solamente es una colección de elementos; cada elemento puede tener también su propio conjunto de atributos. Una vez tienes la referencia a un elemento específico puedes recuperar fácilmente sus atributos utilizando un diccionario de Python.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> root.attrib
+{'{http://www.w3.org/XML/1998/namespace}lang': 'en'}
+>>> root[4]
+<Element {http://www.w3.org/2005/Atom}link at e181b0>
+>>> root[4].attrib
+{'href': 'http://diveintomark.org/',
+ 'type': 'text/html',
+ 'rel': 'alternate'}
+>>> root[3]
+<Element {http://www.w3.org/2005/Atom}updated at e2b4e0>
+>>> root[3].attrib
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La propiedad \codigo{attrib} es un diccionario que contiene los atributos del elemento. El texto \codigo{XML} original era \codigo{<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>}. El prefijo \codigo{xml:} se refiere a un espacio de nombres interno que todo documento \codigo{XML} puede utilizar sin necesidad de declararlo.
+
+\item \emph{Línea 4:} El quinto hijo ---\codigo{[4]} en una lista cuyo primer elemento se cuenta como cero--- es el elemento \codigo{link}.
+
+\item \emph{Línea 6:} El elemento \codigo{link} tiene tres atributos: \codigo{href}, \codigo{type} y \codigo{rel}.
+
+\item \emph{Línea 10:} El cuarto hijo ---\codigo{[3]}--- es elemento \codigo{updated}.
+
+\item \emph{Línea 12:} El elemento \codigo{updated} no tiene atributos por lo que \codigo{.attrib} es un diccionario vacío.
+
+\end{enumerate}
+
+\section{Búsqueda de nodos en un documento XML}
+
+Hasta ahora hemos trabajado con este documento \codigo{XML} de ``arriba hacia abajo'', comenzando por el elemento raíz, recuperando sus hijos y luego los nietos, etc. Pero muchas aplicaciones de \codigo{XML} necesitan encontrar elementos específicos. \codigo{ElementTree} puede hacer esto también.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import xml.etree.ElementTree as etree
+>>> tree = etree.parse('examples/feed.xml')
+>>> root = tree.getroot()
+>>> root.findall('{http://www.w3.org/2005/Atom}entry')
+[<Element {http://www.w3.org/2005/Atom}entry at e2b4e0>,
+ <Element {http://www.w3.org/2005/Atom}entry at e2b510>,
+ <Element {http://www.w3.org/2005/Atom}entry at e2b540>]
+>>> root.tag
+'{http://www.w3.org/2005/Atom}feed'
+>>> root.findall('{http://www.w3.org/2005/Atom}feed')
+[]
+>>> root.findall('{http://www.w3.org/2005/Atom}author')
+[]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} El método \codigo{findall()} encuentra todos los elementos hijo que coinciden con una consulta específica (En breve veremos los formatos posibles de la consulta).
+
+\item \emph{Línea 10:} Cada elemento ---incluido el elemento raíz, pero también sus hijos--- tiene un método \codigo{findall()}. Permite encontrar todos los elementos que coinciden entre sus hijos. Pero ¿porqué no devuelve esta consulta ningún resultado? Aunque no sea obvio, esta consulta particular únicamente busca entre los hijos del elemento. Puesto que el elemento raíz \codigo{feed} no tiene ningún hijo denominado \codigo{feed}, esta consulta devuelve una lista vacía.
+
+\item \emph{Línea 12:} También te puede sorprender este resultado. Existe un elemento \codigo{author} en este documento; de hecho hay tres (uno en cada \codigo{entry)}. Pero estos elementos \codigo{author} no son \emph{hijos directos} el elemento raíz; son ``nietos'' (literalmente, un elemento hijo de otro elemento hijo). Si quieres buscar elementos \codigo{author} en cualquier nivel de profundidad puedes hacerlo, pero el formato de la consulta es algo distinto.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> tree.findall('{http://www.w3.org/2005/Atom}entry')
+[<Element {http://www.w3.org/2005/Atom}entry at e2b4e0>,
+ <Element {http://www.w3.org/2005/Atom}entry at e2b510>,
+ <Element {http://www.w3.org/2005/Atom}entry at e2b540>]
+>>> tree.findall('{http://www.w3.org/2005/Atom}author')
+[]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Por comodidad, el objeto \codigo{tree} (devuelto por la función \codigo{etree.parse()} tiene varios métodos que replican aquellos disponibles en el elemento raíz. Los resultados son idénticos a los que se obtienen si se llamase a \codigo{tree.getroot().findall()}.
+
+\item \emph{Linea 5:} Tal vez te pueda sorprender, pero esta consulta no encuentra a los elementos \codigo{author} del documento. ¿Porqué no? porque es simplemente una forma de llamar a \codigo{tree.getroot().findall('\{http://www.w3.org/2005/Atom\}author')}, lo que significa ``encuentra todos los elementos \codigo{author} que sean hijos directos del elemento raíz''. Los elementos \codigo{author} no son hijos del elemento raíz; son hijos de los elementos \codigo{entry}. Por eso la consulta no retorna ninguna coincidencia.
+
+\end{enumerate}
+
+También hay un método \codigo{find()} que retorna el primer elemento que coincide. Es útil para aquellas situaciones en las que únicamente esperas una coincidencia, o cuando haya varias pero solamente te importa la primera de ellas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> entries = tree.findall('{http://www.w3.org/2005/Atom}entry')
+>>> len(entries)
+3
+>>> title_element = entries[0].find('{http://www.w3.org/2005/Atom}title')
+>>> title_element.text
+'Dive into history, 2009 edition'
+>>> foo_element = entries[0].find('{http://www.w3.org/2005/Atom}foo')
+>>> foo_element
+>>> type(foo_element)
+<class 'NoneType'>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Viste esto en el ejemplo anterior. Encuentra todos los elementos \codigo{atom:entry}.
+
+\item \emph{Línea 4:} El método \codigo{find()} toma una consulta y retorna el primer elemento que coincide.
+
+\item \emph{Línea 7:} No existen elementos denominados \codigo{foo} por lo que retorna \codigo{None}.
+
+\end{enumerate}
+
+\begin{quote}
+Hay una complicación en el método \codigo{find()} que te pasará en algún momento. En un contexto booleano los objetos elemento de ElementTree se evalúan a \codigo{False} si no tienen hijos (si \codigo{len(element)} es cero). Esto significa que \codigo{if element.find('...')} no está comprobando si el método \codigo{find()} encontró un elemento coincidente; está comprobando si ¡el elemento coincidente tiene algún elemento hijo! Para comprobar si el método \codigo{find()} retornó algún elemento debes utilizar \codigo{if element.find('...') is not None}.
+\end{quote}
+
+Existe una forma de buscar entre los elementos \emph{descendientes}: hijos, nietos y niveles más profundos de anidamiento.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> all_links = tree.findall('//{http://www.w3.org/2005/Atom}link')
+>>> all_links
+[<Element {http://www.w3.org/2005/Atom}link at e181b0>,
+ <Element {http://www.w3.org/2005/Atom}link at e2b570>,
+ <Element {http://www.w3.org/2005/Atom}link at e2b480>,
+ <Element {http://www.w3.org/2005/Atom}link at e2b5a0>]
+>>> all_links[0].attrib
+{'href': 'http://diveintomark.org/',
+ 'type': 'text/html',
+ 'rel': 'alternate'}
+>>> all_links[1].attrib
+{'href': 'http://diveintomark.org/archives/2009/03/27/
+  dive-into-history-2009-edition',
+ 'type': 'text/html',
+ 'rel': 'alternate'}
+>>> all_links[2].attrib
+{'href': 'http://diveintomark.org/archives/2009/03/21/
+  accessibility-is-a-harsh-mistress',
+ 'type': 'text/html',
+ 'rel': 'alternate'}
+>>> all_links[3].attrib
+{'href': 'http://diveintomark.org/archives/2008/12/18/
+  give-part-1-container-formats',
+ 'type': 'text/html',
+ 'rel': 'alternate'}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Esta consulta ---\codigo{//{http://www.w3.org/2005/Atom}link}--- es muy similar a las anteriores, excepto por las dos barras inclinadas al comienzo de la consulta. Estas dos barras significan que ``no se busque únicamente entre los hijos directos; quiero cualquier elemento que coincida \emph{independientemente} del nivel de anidamiento''. Por eso el resultado es una lista de cuatro elementos \codigo{link}, no únicamente uno.
+
+\item \emph{Línea 7:} El primer resultado es hijo directo del elemento raíz. Como puedes observar por sus atributos, es el enlace alternativo que apunta a la versión \codigo{HTML} del sitio web que esta fuente describe.
+
+\item \emph{Línea 11:} Los otros tres resultados son cada uno de los enlaces alternativos de cada entrada. cada \codigo{entry} tiene un único elemento hijo \codigo{link}. Debido a la doble barra inclinada al comienzo de la consulta, se encuentran todos estos enlaces.
+
+\end{enumerate}
+
+En general, el método \codigo{findall()} de ElementTree es una característica muy potente, pero el lenguaje de consulta puede ser un poco sorprendente. Está descrito oficialmente en \href{http://effbot.org/zone/element-xpath.htm}{http://effbot.org/zone/element-xpath.htm}(Soporte limitado a expresiones XPath). XPath es un estándar del W3C para consultar documentos XML. El lenguaje de consulta de ElementTree es suficientemente parecido a XPath para poder hacer búsquedas básicas, pero también suficientemente diferente como para desconcertarte si ya conoces XPath. 
+
+Ahora vamos a ver una librería de terceros que extiende la \codigo{API} de ElementTree para proporcionar un soporte completo de XPath.
+
+\section{Ir más allá con LXML}
+
+\codigo{lxml}\footnote{\href{http://codespeak.net/lxml/}{http://codespeak.net/lxml/}} es una librería de terceros de código abierto que se desarrolla sobre el popular analizador \codigo{libxml2}\footnote{\href{http://www.xmlsoft.org/}{http://www.xmlsoft.org/}}. Proporciona una \codigo{API} que es 100\% compatible con ElementTree, y la extiende con soporte completo a Xpath 1.0 y otras cuantas bondades. Existe un instalador disponible para Windows\footnote{\href{http://pypi.python.org/pypi/lxml/}{http://pypi.python.org/pypi/lxml/}}; los usuarios de Linux siempre deberían intentar usar las herramientas específicas de la distribución como \codigo{yum} o \codigo{apt-get} para instalar los binarios precompilados desde sus repositorios. En otro caso, necesitarás instalar los binarios manualmente\footnote{\href{http://codespeak.net/lxml/installation.html}{http://codespeak.net/lxml/installation.html}}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> from lxml import etree
+>>> tree = etree.parse('examples/feed.xml')
+>>> root = tree.getroot()
+>>> root.findall('{http://www.w3.org/2005/Atom}entry')
+[<Element {http://www.w3.org/2005/Atom}entry at e2b4e0>,
+ <Element {http://www.w3.org/2005/Atom}entry at e2b510>,
+ <Element {http://www.w3.org/2005/Atom}entry at e2b540>]
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Una vez importado, \codigo{lxml} proporciona la misma \codigo{API} que la librería estándar \codigo{ElementTree}.
+
+\item \emph{Línea 2:} La función \codigo{parse()}, igual que en ElementTree.
+
+\item \emph{Línea 3:} El método \codigo{getroot()}, también igual.
+
+\item \emph{Línea 4:} El método \codigo{findall()}, exactamente igual.
+
+\end{enumerate}
+
+Para documentos \codigo{XML} grandes, \codigo{lxml} es significativamente más rápido que la librería \codigo{ElementTree}. Si solamente estás utilizando la \codigo{API} \codigo{ElementTree} y quieres usar la implementación más rápida existente, puedes intentar importar \codigo{lxml} y de no estar disponible, usar como segunda opción \codigo{ElementTree}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+try:
+    from lxml import etree
+except ImportError:
+    import xml.etree.ElementTree as etree
+\end{lstlisting}
+\end{minipage}
+
+Pero \codigo{lxml} proporciona algo más que el ser más rápido que \codigo{ElementTree}. Su método \codigo{findall()} incluye el soporte de expresiones más complicadas.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import lxml.etree
+>>> tree = lxml.etree.parse('examples/feed.xml')
+>>> tree.findall('//{http://www.w3.org/2005/Atom}*[@href]')
+[<Element {http://www.w3.org/2005/Atom}link at eeb8a0>,
+ <Element {http://www.w3.org/2005/Atom}link at eeb990>,
+ <Element {http://www.w3.org/2005/Atom}link at eeb960>,
+ <Element {http://www.w3.org/2005/Atom}link at eeb9c0>]
+>>> tree.findall("//{http://www.w3.org/2005/Atom}*" \
+                 "[@href='http://diveintomark.org/']")
+[<Element {http://www.w3.org/2005/Atom}link at eeb930>]
+>>> NS = '{http://www.w3.org/2005/Atom}'
+>>> tree.findall('//{NS}author[{NS}uri]'.format(NS=NS))
+[<Element {http://www.w3.org/2005/Atom}author at eeba80>,
+ <Element {http://www.w3.org/2005/Atom}author at eebba0>]
+\end{lstlisting}
+\end{minipage}
+
+ \begin{enumerate}
+
+\item \emph{Línea 1:} En este ejemplo voy a importar \codigo{lxml.tree} en lugar de utilizar \codigo{from lxml import etree}, para destacar que estas características son específicas de \codigo{lxml}.
+
+\item \emph{Línea 3:} Esta consulta encuentra todos los elementos del espacio de nombres Atom, en cualquier sitio del documento, que contengan el atributo \codigo{href}. Las \codigo{//} al comienzo de la consulta significa ``elementos en cualquier parte del documento (no únicamente los hijos del elemento raíz)''. \codigo{\{http://www.w3.org/2005/Atom\}} significa ``únicamente los elementos en el espacio de nombres de Atom''. \codigo{*} significa ``elementos con cualquier nombre local'' y \codigo{@href} significa ``tiene un atributo \codigo{href}''.
+
+\item \emph{Línea 8:} La consulta encuentra todos los elementos Atom con el atributo \codigo{href} cuyo valor sea \codigo{http://diveintomark.org/}.
+
+\item \emph{Línea 11:} Después de hacer un rápido formateo de las cadenas de texto (porque de otro modo estas consultas compuestas se vuelven ridículamente largas), esta consulta busca los elementos \codigo{author} que tienen un elemento \codigo{uri} como hijo. Solamente retorna dos elementos \codigo{author}, los de la primera y segunda \codigo{entry}. El \codigo{author} del último \codigo{entry} contiene únicamente el elemento \codigo{name}, no \codigo{uri}.
+
+\end{enumerate}
+
+¿No es suficiente para tí? \codigo{lxml} tampoco integra soporte de expresiones XPath 1.0. No voy a entrar en profundidad en la sintaxis de XPath; se podría escribir un libro entero sobre ello. Pero te mostraré cómo se integra en \codigo{lxml}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import lxml.etree
+>>> tree = lxml.etree.parse('examples/feed.xml')
+>>> NSMAP = {'atom': 'http://www.w3.org/2005/Atom'}
+>>> entries = tree.xpath("//atom:category[@term='accessibility']/..",
+...     namespaces=NSMAP)
+>>> entries 
+[<Element {http://www.w3.org/2005/Atom}entry at e2b630>]
+>>> entry = entries[0]
+>>> entry.xpath('./atom:title/text()', namespaces=NSMAP)
+['Accessibility is a harsh mistress']
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} Para realizar consultas XPath en elementos de un espacio de nombres, necesitas definir dichos espacios de nombre con el mapeo a sus alias. Esto se realiza con un diccionario de Python.
+
+\item \emph{Línea 4:} Esto es una consulta XPath. La expresión XPath busca elementos \codigo{category} (en el espacio de nombres de Atom) que contengan el atributo \codigo{term} con el valor \codigo{accesibility}. Pero ése no es el resultado real de la consulta. Observa el final de la cadena de texto de la consulta; ¿observaste el trozo \codigo{/..}? Significa que ``devuelve el elemento padre del elemento \codigo{category} que se acaba de encontrar''. Así esta consulta XPath encontrará todas las entradas que tengan un hijo \codigo{<category term='accessibility'>}.
+
+\item \emph{Línea 6:} La función \codigo{xpath()} devuelve una lista de objetos \codigo{ElementTree}. En este documento, únicamente hay una entrada con un elemento \codigo{category} cuyo \codigo{term} sea \codigo{accesibility}.
+
+\item \emph{Línea 9:} Las expresiones XPath no siempre devuelven una lista de elementos. Técnicamente, el modelo \codigo{DOM} de un documento \codigo{XML} no contiene elementos, contiene \emph{nodos}. Dependiendo de su tipo, los nodos pueden ser elementos, atributos o incluso contenido de texto. El resultado de una consulta XPath es una lista de nodos. Esta consulta retorna una lista de nodos de texto: el contenido de texto (\codigo{text()}) del elemento \codigo{title} (\codigo{atom:title}) que sea hijo del elemento actual (\codigo{./}).
+
+\end{enumerate}
+
+\section{Generación de XML}
+
+El soporte a \codigo{XML} de Python no está limitado al análisis de documentos existentes. Puedes crear también documentos \codigo{XML} desde cero.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import xml.etree.ElementTree as etree
+>>> new_feed = etree.Element('{http://www.w3.org/2005/Atom}feed',
+...     attrib={'{http://www.w3.org/XML/1998/namespace}lang': 'en'})
+>>> print(etree.tostring(new_feed))
+<ns0:feed xmlns:ns0='http://www.w3.org/2005/Atom' xml:lang='en'/>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Para crear un elemento nuevo, se debe instanciar un objeto de la clase \codigo{Element}. Se le pasa el nombre del elemento (espacio de nombres + nombre local) como primer parámetro. Esta sentencia crear un elemento \codigo{feed} en el espacio de nombres Atom. Esta será nuestro elemento raíz del nuevo documento.
+
+\item \emph{Línea 3:} Para añadir atributos al elemento, se puede pasar un diccionario de nombres y valores de atributos en el parámetro \codigo{attrib}. Observa que el nombre del atributo debe estar en el formato estándar de ElementTree, \codigo{\{espacio\_de\_nombres\}nombre\_local}.
+
+\item \emph{Línea 4:} En cualquier momento puedes serializar cualquier elemento (y sus hijos) con la función \codigo{tostring()} de ElementTree.
+
+\end{enumerate}
+
+¿Te ha sorprendido el resultado de la serialización? La forma en la que ElementTree serializa los elementos con espacios de nombre \codigo{XML} es técnicamente precisa pero no óptima. El documento \codigo{XML} de ejemplo al comienzo del capítulo definió un \codigo{espacio de nombres por defecto} (\codigo{xmlns='http://www.w3.org/2005/Atom'}). La definición de un espacio de nombres por defecto es útil para documentos ---como las fuentes Atom--- en los que todos, o la mayoría de, los elementos pertenecen al mismo espacio de nombres, porque puedes declarar el espacio de nombres una única vez y declarar cada elemento únicamente con su nombre local (\codigo{<feed>}, \codigo{<link>}, \codigo{<entry>}). No hay necesidad de utilizar prefijos a menos que quieras declarar elementos de otro espacio de nombres.
+
+Un analizador \codigo{XML} no verá ninguna diferencia entre un documento \codigo{XML} con un espacio de nombres por defecto y un documento \codigo{XML} con un espacio de nombres con prefijo. El \codigo{DOM} resultante de esta serialización:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<ns0:feed xmlns:ns0='http://www.w3.org/2005/Atom' xml:lang='en'/>
+\end{lstlisting}
+\end{minipage}
+
+es idéntico al \codigo{DOM} de esta otra:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'/>
+\end{lstlisting}
+\end{minipage}
+
+La única diferencia práctica es que la segunda serialización es varios caracteres más corta. Si tuvieramos que modificar nuestro ejemplo para añadirle el prefijo \codigo{ns0:} en cada etiqueta de inicio y fin, serían 4 caracteres por cada etiqueta de inicio x 79 etiquetas + 4 caracteres por la propia declaración del espacio de nombres, en total son 320 caracteres más. En el caso de que asumamos una codificación de caracteres UTF8 se trata de 320 bytes extras (después de comprimir la diferencia se reduce a 21 bytes). Puede que no te importe mucho, pero para una fuente Atom, que puede descargarse miles de veces cada vez que cambia, una diferencia de unos cuantos bytes por petición puede suponer una cierta diferencia.
+
+La librería \codigo{ElementTree} no ofrece un control fino sobre la serialización de los elementos con espacios de nombres, pero \codigo{lxml} sí:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import lxml.etree
+>>> NSMAP = {None: 'http://www.w3.org/2005/Atom'}
+>>> new_feed = lxml.etree.Element('feed', nsmap=NSMAP)
+>>> print(lxml.etree.tounicode(new_feed))
+<feed xmlns='http://www.w3.org/2005/Atom'/>
+>>> new_feed.set('{http://www.w3.org/XML/1998/namespace}lang', 'en')
+>>> print(lxml.etree.tounicode(new_feed))
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'/>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Para comenzar, se define el mapeo de los espacios de nombre como un diccionario. Los valores del diccionario son espacios de nombres; las claves son el prefijo deseao. Utilizar \codigo{None} como prefijo, sirve para declarar el espacio de nombres por defecto.
+
+\item \emph{Línea 3:} Ahora puedes pasar el parámetro \codigo{nsmap}, que es específico de \codigo{lxml}, cuando vayas a crear un elemento, y \codigo{lxml} respectará los prefijos que hayas definido.
+
+\item \emph{Línea 4:} Como se esperaba, esta serialización define el espacio de nombres Atom como el espacio de nombres por defecto y declara el elemento \codigo{feed} sin prefijo.
+
+\item \emph{Línea 6:} ¡Ups! Olvidamos añadir el atributo \codigo{xml:lang}. Siempre puedes añadir atributos a cualquier elemento con el método \codigo{set()}. Toma dos parámetros, el nombre del atributo en formato estándar de \codigo{ElementTree} y el valor del atributo. Este método no es específico de \codigo{lxml}, lo único específico de \codigo{lxml} en este ejemplo es la parte del parámetro \codigo{nsmap} para controlar los prefijos de la salida serializada.
+
+\end{enumerate}
+
+¿Están los documentos \codigo{XML} limitados a un elemento por documento? Por supuesto que no. Puedes crear hijos de forma fácil.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> title = lxml.etree.SubElement(new_feed, 'title',
+...     attrib={'type':'html'})
+>>> print(lxml.etree.tounicode(new_feed))
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+<title type='html'/></feed>
+>>> title.text = 'dive into &hellip;'
+>>> print(lxml.etree.tounicode(new_feed))
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+<title type='html'>dive into &amp;hellip;</title></feed>
+>>> print(lxml.etree.tounicode(new_feed, pretty_print=True))
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+<title type='html'>dive into&amp;hellip;</title>
+</feed>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Para crear elementos hijo de un elemento existente, instancia objetos de la clase \codigo{SubElement}. Los parámetros necesarios son el elemento padre (\codigo{new\_feed} en este caso) y el nombre del nuevo elemento. Puesto que los elementos hijo heredan el espacio de nombres de sus padres, no hay necesidad de redeclarar el espacio de nombres o sus prefijos.
+
+\item \emph{Línea 2:} Puedes pasarle un diccionario de atributos. Las claves son los nombres de los atributos y los valores son los valores de los atributos.
+
+\item \emph{Línea 3:} Como esperabas, el nuevo elemento \codigo{title} se ha creado en el espacio de nombres Atom y fue insertado como hijo del elemento \codigo{feed}. Puesto que el elemento \codigo{title} no tiene contenido de texto y no tiene hijos por sí mismo, \codigo{lxml} lo serializa como un elemento vacío (con \codigo{/>}).
+
+\item \emph{Línea 6:} Para establecer el contenido de texto de un elemento basta con asignarle valor a la propiedad \codigo{.text}.
+
+\item \emph{Línea 7:} Ahora el elemento \codigo{title} se serializa con su contenido de texto. Cualquier contenido de texto que contenga símbolos 'menor que' o ampersands necesitan 'escaparse' al serializarse. \codigo{lxml} hace estas conversiones de forma automática.
+
+\item \emph{Línea 10:} Puedes aplicar una impresión formateada a la serialización, lo que inserta los saltos de línea correspondientes al cambiar las etiquetas. En términos técnicos, \codigo{lxml} añade espacios en blanco no significativos para hacer más legible la salida resultante.
+
+\end{enumerate}
+\begin{quote}
+Podrías querer echarle un vistazo a \codigo{xmlwitch}\footnote{\href{http://github.com/galvez/xmlwitch/tree/master}{http://github.com/galvez/xmlwitch/tree/master}}, otra librería de terceros para generar \codigo{XML}. Hace uso extensivo de la sentencia \codigo{with} para hacer la generación de código \codigo{XML} más legible.
+\end{quote}
+
+\section{Análisis de XML ``estropeado''}
+
+La especificación \codigo{XML} obliga a que todos los analizadores \codigo{XML} empleen un manejo de errores ``draconiano''. Esto es, deben parar tan pronto como detecten cualquier clase de error de ``malformado'' del documento. Errores de mala formación del documento son: que las etiquetas de inicio y fin no se encuentren bien balanceadas, entidades sin definir, caracteres unicode ilegales y otro número de reglas esotéricas. Esto es un contraste importante con otros formatos habituales como \codigo{HTML} ---tu navegador no para de mostrar una página web si se te olvida cerrar una etiqueta \codigo{HTML} o aparece un escape o ampersand en el valor de un atributo (Es un concepto erróneo bastante extendido que \codigo{HTML} no tiene definida una forma de hacer manejo de errores. Sí que está bien definido, pero es significativamente más complejo que ``párate ante el primer error que encuentres''.
+
+Algunas personas (yo mismo incluido) creen que fue un error para los inventores del \codigo{XML} obligar a este manejo de errores ``draconianos''. No me malinterpretes; puedo comprender el encanto de la simplificación de las reglas de manejo de errores. Pero en la práctica, el concepto de ``bien formado'' es más complejo de lo que suena, especialmente para aquellos documentos \codigo{XML} (como los documentos Atom) se publican en la web mediante un servidor \codigo{HTTP}. A pesar de la madurez de \codigo{XML}, cuyo manejo estandarizado de errores es de 1997, las encuestas muestran continuamente que una significativa fracción de fuentes Atom de la web están plagadas con errores de ``buena formación''.
+
+Por eso, tengo razones teóricas y prácticas para analizar documentos \codigo{XML} a ``cualquier precio'', esto es, para \emph{no} parar ante el primer error de formación. Si te encuentras tú mismo en esta situación, \codigo{lxml} puede ayudar.
+
+Aquí hay un fragmento de un documento \codigo{XML} mal formado. El ampersand debería estar ``escapado''.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+<?xml version='1.0' encoding='utf-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+  <title>dive into &hellip;</title>
+...
+</feed>
+\end{lstlisting}
+\end{minipage}
+
+Eso es un error, porque la entidad \codigo{\&hellip;} no está definida en \codigo{XML} (está definida en \codigo{HTML}). Si intentas analizar este documento XML con los valores por defecto, \codigo{lxml} parará en la entidad sin definir.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import lxml.etree
+>>> tree = lxml.etree.parse('examples/feed-broken.xml')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "lxml.etree.pyx", line 2693, 
+       in lxml.etree.parse (src/lxml/lxml.etree.c:52591)
+  File "parser.pxi", line 1478, 
+       in lxml.etree._parseDocument (src/lxml/lxml.etree.c:75665)
+  File "parser.pxi", line 1507, 
+       in lxml.etree._parseDocumentFromURL (src/lxml/lxml.etree.c:75993)
+  File "parser.pxi", line 1407, 
+       in lxml.etree._parseDocFromFile (src/lxml/lxml.etree.c:75002)
+  File "parser.pxi", line 965, 
+       in lxml.etree._BaseParser._parseDocFromFile 
+       (src/lxml/lxml.etree.c:72023)
+  File "parser.pxi", line 539, 
+       in lxml.etree._ParserContext._handleParseResultDoc 
+       (src/lxml/lxml.etree.c:67830)
+  File "parser.pxi", line 625, 
+       in lxml.etree._handleParseResult (src/lxml/lxml.etree.c:68877)
+  File "parser.pxi", line 565, 
+       in lxml.etree._raiseParseError (src/lxml/lxml.etree.c:68125)
+lxml.etree.XMLSyntaxError: 
+       Entity 'hellip' not defined, line 3, column 28
+\end{lstlisting}
+\end{minipage}
+
+Para analizar este documento, a pesar de su error de buena formación, necesitas crear un analizador \codigo{XML} específico.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> parser = lxml.etree.XMLParser(recover=True)
+>>> tree = lxml.etree.parse('examples/feed-broken.xml', parser)
+>>> parser.error_log 
+examples/feed-broken.xml:3:28:FATAL:PARSER:ERR_UNDECLARED_ENTITY: 
+    Entity 'hellip' not defined
+>>> tree.findall('{http://www.w3.org/2005/Atom}title')
+[<Element {http://www.w3.org/2005/Atom}title at ead510>]
+>>> title = tree.findall('{http://www.w3.org/2005/Atom}title')[0]
+>>> title.text
+'dive into '
+>>> print(lxml.etree.tounicode(tree.getroot()))
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+  <title>dive into </title>
+.
+. [resto de la serializaci$\ac{o}$n suprimido por brevedad]
+.
+
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Para crear un analizador específico, se debe instanciar la clase \codigo{lxml.etree.XMLParser}. Puede recibir un número diferente de parámetros. Nos interesa ahora el parámetro \codigo{recover}. Cuando se establece a \codigo{True}, el analizador \codigo{XML} intentará ``recuperarse'' de este tipo de errores.
+
+\item \emph{Línea 2:} Para analizar un documento \codigo{XML} con este analizador, basta con pasar este objeto \codigo{parser} como segundo parámetro de la función \codigo{parse()}. Observa que \codigo{lxml} no eleva ninguna excepción sobre la entidad no definida \codigo{\&hellip;}.
+
+\item \emph{Línea 3:} Aún así, el analizador mantiene un registro de los errores de formación que ha encontrado (Esto siempre es cierto independientemente de que esté activado para recuperarse de esos errores o no).
+
+\item \emph{Línea 9:} Puesto que no supo que hacer con la entidad sin definir \codigo{\&hellip;}, el analizador simplemente la descarta silenciosamente. El contenido de texto del elemento \codigo{title} se convierte en \codigo{'dive into '}.
+
+\item \emph{Línea 11:} Como puedes ver en la serialización, la entidad \codigo{\&hellip;} ha sido suprimida.
+
+\end{enumerate}
+
+Es importante reiterar que \textbf{no existe garantía de interoperabilidad} entre analizadores \codigo{XML} que se recuperan de los errores. Una analizador diferente podría decidir que reconoce la entidad \codigo{\&hellip;} de \codigo{HTML} y reemplazarla por \codigo{\&amp;hellip;}? ¿Es esto mejor? Puede ser. ¿Es más correcto? No, ambas soluciones son igualmente erróneas. El comportamiento correcto (de acuerdo a la especificación \codigo{XML}) es pararse y elevar el error. Si has decidido que no es lo que quieres hacer, lo haces bajo tu propia responsabilidad.
+
+\section{Lecturas recomendadas}
+
+\begin{itemize}
+
+\item \codigo{XML} en la wikipedia.org: \newline
+\href{http://en.wikipedia.org/wiki/XML}{http://en.wikipedia.org/wiki/XML}
+
+\item La \codigo{API} de \codigo{ElementTree}: \newline
+\href{}{}
+
+\item Elementos y árboles de elementos \newline
+\href{http://effbot.org/zone/element.htm}{http://effbot.org/zone/element.htm}
+
+\item Soporte de XPath en \codigo{ElementTree} \newline
+\href{http://effbot.org/zone/element-xpath.htm}{http://effbot.org/zone/element-xpath.htm}
+
+\item La función \codigo{iterparse} de \codigo{ElementTree} \newline
+\href{http://effbot.org/zone/element-iterparse.htm}{http://effbot.org/zone/element-iterparse.htm}
+
+\item \codigo{lxml} \newline
+\href{http://codespeak.net/lxml/}{http://codespeak.net/lxml/}
+
+\item Análisis de \codigo{XML} y \codigo{HTML} con \codigo{lxml} \newline
+\href{http://codespeak.net/lxml/1.3/parsing.html}{http://codespeak.net/lxml/1.3/parsing.html}
+
+\item XPath y \codigo{XSLT} con \codigo{lxml} \newline
+\href{http://codespeak.net/lxml/1.3/xpathxslt.html}{http://codespeak.net/lxml/1.3/xpathxslt.html}
+
+\item \codigo{xmlwitch} \newline
+\href{http://github.com/galvez/xmlwitch/tree/master}{http://github.com/galvez/xmlwitch/tree/master}
+
+\end{itemize}
+
