@@ -475,35 +475,21 @@ you@localhost:~/diveintopython3/examples$ cat basic-pretty.json
 
 Puesto que \codigo{JSON} no es específico de Python, existen algunas diferencias en su cobertura de los tipos de dato de Python. Algunas de ellas son simplemente de denominación, pero existen dos tipos de dato importantes de Python que no existen en JSON. Observa esta tabla a ver si los echas de menos:
 
-
-Notas
-JSON
-Python 3
-
-object
-dictionary
-
-array
-list
-
-string
-string
-
-integer
-integer
-
-real number
-float
-*
-true
-True
-*
-false
-False
-*
-null
-None
-* Las mayúsculas y minúsculas en los valores \codigo{JSON} son significativas.
+\begin{center}
+\begin{tabular}{ | c | l | l |}
+\hline
+Notas & JSON & Python 3 \\ \hline
+  & object & dictionary \\ \hline
+  & array & list \\ \hline
+  & string & string \\ \hline
+  & integer & integer \\ \hline
+  & real number & float \\ \hline
+* & true & True \\ \hline
+* & false & False \\ \hline
+* & null & None \\ \hline 
+\multicolumn{3}{| l |}{* Las mayúsculas y minúsculas en los valores \codigo{JSON} son significativas.} \\ \hline
+\end{tabular}
+\end{center}
 
 ¿Te has dado cuenta de lo que falta? ¡Tuplas y bytes! \codigo{JSON} tiene un tipo de datos array, al que se mapean las listas de Python, pero no tiene un tipo de datos separado para los ``arrays congelados'' (tuplas). Y aunque \codigo{JSON} soporta cadenas de texto, no tiene soporte para los objetos \codigo{bytes} o arrays de bytes.
 
@@ -574,7 +560,7 @@ def to_json(python_object):
 
 \item \emph{Línea 2:} La función debe validar el tipo de datos que recibe. No es estrictamente necesario pero así queda totalmente claro que casos cubre esta función, y hace más sencillo ampliarla más tarde.
 
-\item \emph{Línea 4:} En este caso, he elegido convertir el objeto \codigo{bytes} en un diccionario. La clave \codigo{\_\_class\_\_} guardará el tipo de datos original (como una cadena, \codigo{``bytes''}), y la clave \codigo{\_\_value\_\_} guardará el valor real. Como hay que convertirlo a algo que pueda serializarse en JSON, no se puede guardar directamente el objeto \codigo{bytes}. Como un objeto bytes es una secuencia de números entereos; con cada entero entre el 0 y el 255, podemos utilizar la función \codigo{list()} para convertir el objeto \codigo{bytes} en una lista de enteros. De forma que el objeto \codigo{b'\\xDE\\xD5\\x84\\xF8'} se convierte en \codigo{[222, 213, 180, 248]}. Por ejemplo, el byte \codigo{\\xDE} en hexadecimal, se convierte en \codigo{222} en decimal, \codigo{\\xD5} es \codigo{213} y así cada uno de ellos.
+\item \emph{Línea 4:} En este caso, he elegido convertir el objeto \codigo{bytes} en un diccionario. La clave \codigo{\_\_class\_\_} guardará el tipo de datos original (como una cadena, \codigo{``bytes''}), y la clave \codigo{\_\_value\_\_} guardará el valor real. Como hay que convertirlo a algo que pueda serializarse en JSON, no se puede guardar directamente el objeto \codigo{bytes}. Como un objeto bytes es una secuencia de números entereos; con cada entero entre el 0 y el 255, podemos utilizar la función \codigo{list()} para convertir el objeto \codigo{bytes} en una lista de enteros. De forma que el objeto \codigo{b'$\backslash$xDE$\backslash$xD5$\backslash$x84$\backslash$xF8'} se convierte en \codigo{[222, 213, 180, 248]}. Por ejemplo, el byte \codigo{$\backslash$xDE} en hexadecimal, se convierte en \codigo{222} en decimal, \codigo{$\backslash$xD5} es \codigo{213} y así cada uno de ellos.
 
 \item \emph{Línea 5:} Esta línea es importante. La estructura de datos que estás serializando puede contener tipos de dato que ni el serializador interno del módulo de Python ni el tuyo puedan manejar. En este caso, tu serializador debe elevar una excepción \codigo{TypeError} para que la función \codigo{json.dump()} sepa que tu serializador no reconoció el tipo de dato del objeto.
 
