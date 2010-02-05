@@ -1,0 +1,1250 @@
+% ch14.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Servicios Web HTTP}\label{ch:servicios_web}
+
+\noindent
+Nivel de dificultad:\difllll
+
+\begin{citaCap}
+``Una mente revuelta hace la almohada incómoda.'' \\
+---\emph{Charlotte Brontë}
+\end{citaCap}
+
+\section{Inmersión}
+
+Los servicios web HTTP permiten el envío y recepción de información desde servidores remotos, sin utilizar nada más que operaciones \codigo{HTTP}. Si quieres recuperar información desde un servidor, utiliza \codigo{HTTP GET}; si quieres enviar información al servidor, utiliza \codigo{HTTP POST}. Los servicios web \codigo{HTTP} más avanzados disponen de \codigo{API}s avanzadas que permiten crear, modifiar y borrar información, utilizando \codigo{HTTP PUT} y \codigo{HTTP DELETE}. En otras palabras, los ``verbos'' construidos en el protocolo \codigo{HTTP} (\codigo{GET}, \codigo{POST}, \codigo{PUT} y \codigo{DELETE}) pueden mapearse directamente en operaciones de nivel de aplicación para recuperar, crear, modificar y borrar datos.
+
+La principal ventaja de esta aproximación es la simplicidad, y esta simplicidad se ha demostrado que es muy popular. La información ---normalmente en \codigo{XML} o \codigo{JSON}--- puede estar construida y almacenada estáticamente, o generada dinámicamente por un programa del servidor y todos los lenguajes de programación importantes (incluido Python ¡desde luego!) incluyen una librería \codigo{HTTP} para descargarla. La depuración también es más sencilla, porque cada recurso de un servicio web \codigo{HTTP} dispone de una dirección única (en forma de \codigo{URL}), puedes cargarla en tu navegador web e inmediatamente ver la información obtenida.
+
+Son ejemplos de servicios web \codigo{HTTP}:
+
+\begin{enumerate}
+
+\item Las \codigo{API}s de datos de Google\footnote{\href{http://code.google.com/apis/gdata/}{http://code.google.com/apis/gdata/}} te permiten interactuar con una amplia variedad de servicios de Google, incluidos Blogger\footnote{\href{http://www.blogger.com/}{http://www.blogger.com/}} y YouTube\footnote{\href{http://www.youtube.com/}{http://www.youtube.com/}}.
+
+\item Los servicios de Flickr\footnote{\href{http://www.flickr.com/services/api/}{http://www.flickr.com/services/api/}} te permiten cargar y descargar fotos de Flickr.
+
+\item La API de Twitter\footnote{\href{http://apiwiki.twitter.com/}{http://apiwiki.twitter.com/}} te permite publicar actualizaciones de estado en Twitter.
+
+\item ...y muchos más\footnote{\href{http://www.programmableweb.com/apis/directory/1?sort=mashups}{http://www.programmableweb.com/apis/directory/1?sort=mashups}}.
+
+\end{enumerate}
+
+Python 3 dispone de dos librerías diferentes para interactuar con los servicios web \codigo{HTTP}:
+
+\begin{enumerate}
+
+\item \codigo{http.client}\footnote{\href{http://docs.python.org/3.1/library/http.client.html}{http://docs.python.org/3.1/library/http.client.html}} es una librería de bajo nivel que implementa el protocolo \codigo{HTTP}\footnote{RFC 2616:\href{http://www.w3.org/Protocols/rfc2616/rfc2616.html}{http://www.w3.org/Protocols/rfc2616/rfc2616.html}}.
+
+\item \codigo{urllib.request}\footnote{\href{http://docs.python.org/3.1/library/urllib.request.html}{http://docs.python.org/3.1/library/urllib.request.html}} es una capa de abstracción construida sobre \codigo{http.client}. Proporciona una \codigo{API} estándar para acceder a servidores \codigo{HTTP} y \codigo{FTP}, sigue automáticamente redirecciones \codigo{HTTP} y maneja algunas formas comunes de autenticación \codigo{HTTP}.
+
+\end{enumerate}
+
+¿Cuál deberiamos usar? Ninguna de ellas. En su lugar deberías utilizar \codigo{httplib2}\footnote{\href{http://code.google.com/p/httplib2/}{http://code.google.com/p/httplib2/}}, una librería de código abierto de terceros que implementa \codigo{HTTP} de forma más completa que \codigo{http.client} y proporciona una mejor abstracción que \codigo{urllib.request}.
+
+Para comprender porqué \codigo{httplib2} es la elección correcta necesitas comprender primero \codigo{HTTP}.
+
+\section{Características de HTTP}
+
+Hay cinco características importantes que todos los clientes \codigo{HTTP} deberían soportar.
+
+\subsection{Caché}
+
+Lo más importante que se debe comprender para usar cualquier servicio web es que el acceso a través de la web es increiblemente costoso. No quiero decir que cueste en ``euros y céntimos'' (aunque el ancho de banda no sea gratis). Quiero decir que lleva mucho tiempo abrir una conexión, enviar una petición y recuperar una respuesta de un servidor remoto. Incluso en la conexión más rápida existente, la \emph{latencia} (el tiempo que tarda desde el envío de una petición hasta que se inicia la recogida de los datos en la respuesta) puede ser mayor de lo que puedas esperar. Un router puede tener un malfuncionamiento, un paquete se pierde, un proxy está bajo ataque ---nunca existe un momento de aburrimiento en la red de Internet y no puedes hacer nada contra esto.
+
+\cajaTexto{Cache-Control: max-age significa ``no me moleste hasta dentro de una semana''}
+
+\codigo{HTTP} está diseñado con la posibilidad de cacheo en mente. Existe toda una clase de dispositivos (llamados ``proxys caché'') cuyo único trabajo consiste en interponerse entre ti y el resto del mundo para minimizar el acceso a la red. Tu empresa o tu proveedor de servicios de Internet es muy probable que tengan proxys de este tipo, incluso aunque no seas consciente de ello. Funcionan gracias al sistema de caché construido en el protocolo \codigo{HTTP}.
+
+Veamos un ejemplo concreto sobre cómo funciona la caché. Visita \codigo{diveintomark.org} en tu navegador. Esta página incluye una imagen de fondo \codigo{wearehugh.com/m.jpg}. Cuando tu navegador descarga esa imagen, el servidor incluye las siguientes cabeceras \codigo{HTTP}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+HTTP/1.1 200 OK
+Date: Sun, 31 May 2009 17:14:04 GMT
+Server: Apache
+Last-Modified: Fri, 22 Aug 2008 04:28:16 GMT
+ETag: "3075-ddc8d800"
+Accept-Ranges: bytes
+Content-Length: 12405
+Cache-Control: max-age=31536000, public
+Expires: Mon, 31 May 2010 17:14:04 GMT
+Connection: close
+Content-Type: image/jpeg
+\end{lstlisting}
+\end{minipage}
+
+Las cabeceras \codigo{Cache-Control} y \codigo{Expires} le dicen a tu navegador (y a cualquier proxy con caché entre tú y el servidor) que esta imagen puede cachearse durante un año. \emph{¡un año!} y si, durante el próximo año, visitas alguna página que incluya un enlace a esta imagen, tu navegador cargará la imagen desde su caché \emph{sin generar ninguna actividad en la red}.
+
+Pero espera, que es aún mejor. Digamos que tu navegador borra la imagen de su caché local por alguna razón. Puede que se le acabe el espacio que tiene reservado en el disco, puede que tú borres manualmente la caché. Lo que sea. Pero las cabeceras \codigo{HTTP} dicen que esta información se puede almacenar en cualquier caché pública\footnote{Técnicamente lo importante es que la cabecera \codigo{Cache-Control} no tiene la clave \codigo{private}, por lo que esta información se puede almacenar en una caché por defecto.}. Los proxies con caché están diseñados para disponer de ``toneladas'' de espacio de almacenamiento, probablemete mucho más del que dispone tu navegador.
+
+Si tu compañía o proveedor de Interne disponen de un proxy con caché, el proxy puede que tenga todavía la información disponible en la caché. Cuando visites de nuevo \codigo{diveintomark.org} tu navegador buscará la imagen en la caché local, si no la encuentra hará una petición a la red para intentar descargarla del servidor remoto. Pero si el proxy aún dispone de una copia de la imagen, interceptará la petición y servirá la imagen desde la caché. Esto significa que tu petición nunca alcanzará el servidor remoto. De hecho, nunca saldrá de la red de tu compañía. Esto hace que la descarga sea más rápida (menos saltos en la red) y ahorra dinero a tu compañía (menos información descargándose del mundo exterior).
+
+El sistema de caché de \codigo{HTTP} únicamente funciona cuando todas las partes hacen su trabajo. Por una parte, los servidores deben enviar las cabeceras correctas en su respuesta. Por otra parte, los clientes deben comprender y respetar las cabeceras antes de solicitar la misma información dos veces. Los proxys que se encuentren en medio del camino no son la panacea; dependen de los servidores y de los clientes.
+
+Las librerías de Python de \codigo{HTTP} no soportan la caché, pero la librería \codigo{httplib2} sí.
+
+\subsection{Comprobación de la última vez que se modificó una página}
+
+ Alguna información nunca cambia, mientras que otra cambia constantemente. Entre ambos extremos existe un amplio campo de datos que \emph{podría} haber cambiado, pero no lo ha hecho. El flujo de información de la CNN se actualiza cada pocos minutos, pero mi blog puede que no cambie en días o semanas. En el último caso, no quiero decirle a los clientes que cacheen las páginas durante semanas, porque cuando realmente pongo una nueva entrada, la gente no la leería  hasta pasadas unas semanas (porque estarían respetando mis cabeceras de caché que dirían ``no te preocupes de validar durante semanas''). Por otra parte, no quiero que los clientes se estén descargando mi flujo completo una vez cada hora si no ha cambiado.
+
+\cajaTexto{304: Not Modified significa ``la misma mierda en distinto día''.}
+
+El protocolo \codigo{HTTP} tiene una solución para esto. Cuando solicitas datos por primera vez, el servidor puede enviar una cabecera denominada \codigo{Last-Modified}. Esta cabecera indica lo que dice: la fecha en la que la información fue modificada. La imagen de fondo de \codigo{diveintomark.org} incluía una cabecera \codigo{Last-Modified}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+HTTP/1.1 200 OK
+Date: Sun, 31 May 2009 17:14:04 GMT
+Server: Apache
+Last-Modified: Fri, 22 Aug 2008 04:28:16 GMT
+ETag: "3075-ddc8d800"
+Accept-Ranges: bytes
+Content-Length: 12405
+Cache-Control: max-age=31536000, public
+Expires: Mon, 31 May 2010 17:14:04 GMT
+Connection: close
+Content-Type: image/jpeg
+\end{lstlisting}
+\end{minipage}
+
+Cuando solicitas la misma información una segunda vez (o tercera o cuarta), puedes enviar una cabecera \codigo{If-Modified-Since} con la petición, con la fecha que recuperaste desde el servidor la última vez. Si la información ha cambiado desde entonces, el servidor ignora la cabecera \codigo{If-Modified-Since} y devuelve la nueva información con un código de estado \codigo{200}. Pero si los datos no han cambiado desde entonces, el servidor envía un código de estado especial \codigo{HTTP 304} que significa ``estos datos no han cambiado desde la última vez que los pediste''. Puedes probar esto en la línea de comando utilizando la sentencia \codigo{curl}\footnote{\href{http://curl.haxx.se/}{http://curl.haxx.se/}}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~$ curl -I -H "If-Modified-Since: 
+Fri, 22 Aug 2008 04:28:16 GMT" http://wearehugh.com/m.jpg
+HTTP/1.1 304 Not Modified
+Date: Sun, 31 May 2009 18:04:39 GMT
+Server: Apache
+Connection: close
+ETag: "3075-ddc8d800"
+Expires: Mon, 31 May 2010 18:04:39 GMT
+Cache-Control: max-age=31536000, public
+\end{lstlisting}
+\end{minipage}
+
+¿Porqué se trata de una mejora? Porque cuando el servidor envía un código \codigo{304}, \emph{no reenvía la información}. Lo único que se obtiene es el código de estado. Incluso después de que tu copia de caché haya expirado, la comprobación de la última fecha de modificación te asegura que no descargas la misma información dos veces si no ha cambiado (Como bono extra, esta respuesta \codigo{304} también incluye las cabeceras de caché. Los proxys mantendrán una copia de los datos incluso después de que hayan expirado ``oficialmente'', con la esperanza de que los datos no hayan cambiado \emph{realmente} y que la siguiente petición responda con un código de estado \codigo{304} y la información de caché actualizada).
+
+Las librerías \codigo{HTTP} de Python no soportan la comprobación de la última fecha de modificación, pero la librería \codigo{httplib2} sí lo hace.
+
+\subsection{Caché de ETag}
+
+Las \codigo{ETags} son una forma alternativa de conseguir lo mismo que con la validación de la última fecha de modificación. En este caso, el servidor envía un código hash en una cabecera \codigo{ETag} junto con los datos que hayas solicitado (La forma exacta por la que el servidor calcula este hash la determina el propio servidor. El único requisito es que cambie cuando cambie la información). La imagen de fondo referenciada desde \codigo{diveintomark.org} tenía un código \codigo{ETag}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+HTTP/1.1 200 OK
+Date: Sun, 31 May 2009 17:14:04 GMT
+Server: Apache
+Last-Modified: Fri, 22 Aug 2008 04:28:16 GMT
+ETag: "3075-ddc8d800"
+Accept-Ranges: bytes
+Content-Length: 12405
+Cache-Control: max-age=31536000, public
+Expires: Mon, 31 May 2010 17:14:04 GMT
+Connection: close
+Content-Type: image/jpeg
+\end{lstlisting}
+\end{minipage}
+
+La segunda vez que solicites la misma información, incluirás el código \codigo{ETag} en una cabecera \codigo{If-None-Match}. Si la información no ha cambiado, el servidor enviará un código de estado \codigo{304}. Como en el caso de la comprobación de la fecha de última modificación, el servidor únicamente envía el código de estado \codigo{304}; no envía la misma información una segunda vez. Al incluir un código Etag en tu segunda petición, le estás diciendo al servidor que no existe necesidad de volver a enviar la misma información si aún coincide con este hash, puesto que aún tienes la información desde la última vez.
+
+\cajaTexto{Etag \emph{significa} ``no hay nada nuevo bajo el sol''}
+
+De nuevo con \codigo{curl}:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~$ curl -I -H "If-None-Match: \"3075-ddc8d800\"" 
+http://wearehugh.com/m.jpg
+HTTP/1.1 304 Not Modified
+Date: Sun, 31 May 2009 18:04:39 GMT
+Server: Apache
+Connection: close
+ETag: "3075-ddc8d800"
+Expires: Mon, 31 May 2010 18:04:39 GMT
+Cache-Control: max-age=31536000, public
+\end{lstlisting}
+\end{minipage}
+
+Las \codigo{ETag} se suelen encerrar entre comillas, pero las comillas forman parte del valor. Esto significa que necesitas enviar al servidor esas comillas en la cabecera \codigo{If-None-Match}.
+
+Las librerías de Python \codigo{HTTP} no soportan ETags, pero \codigo{httplib2} sí.
+
+\subsection{Compresión}
+
+Cuando hablamos de los servicios web \codigo{HTTP}, siempre se suele hablar de información de texto que va y viene a través de la red. Puede que sea \codigo{XML}, puede que sea \codigo{JSON} o únicamente texto plano. Independientemente del formato, el texto se comprime bastante bien. En el flujo de ejemplo del capítulo sobre XML la longitud del texto sin comprimir es de 3070 bytes, pero serían 941 bytes después de aplicar una compresión \codigo{gzip}. ¡El 30\% del tamaño original!
+
+\codigo{HTTP} soporta varios algoritmos de compresión\footnote{\href{http://www.iana.org/assignments/http-parameters}{http://www.iana.org/assignments/http-parameters}}. Los dos más comunes son \codigo{gzip} y \codigo{deflate}. Cuando solicitas un recurso sobre \codigo{HTTP} puedes pedirle al servidor que lo envíe en formato comprimido. Puedes incluir una cabecera \codigo{Accept-encoding} en tu petición que liste qué algoritmos de compresión soportas. Si el servidor soporta alguno de los algoritmos te enviará la información comprimida (con una cabecera \codigo{Content-encoding} que indica el algoritmo que se ha utilizado). Ya solamente te quedará descomprimir los datos.
+
+\begin{quote}
+Una pista importante para los desarrolladores del lado del servidor: debe asegurarse que la versión comprimida de un recurso tiene diferente \codigo{ETag} que la versión descomprimida. De otro modo, los proxys de caché se confundirán y pueden servir la versión comprimida a clientes que no pueden manejarla. Lee la discusión de un error de Apache (número 39727\footnote{\href{https://issues.apache.org/bugzilla/show\_bug.cgi?id=39727}{https://issues.apache.org/bugzilla/show\_bug.cgi?id=39727}}) para más detalles sobre este sutil asunto.
+\end{quote}
+
+Las librerías \codigo{HTTP} de Python no soportan compresión, \codigo{httplib2} sí.
+
+\subsection{Redireccionamiento}
+
+
+Las \codigo{URI}s buenas no cambian, pero muchas no lo son. Los sitios web se reorganizan, las páginas se mueven a nuevas direcciones, incluso los servicios web se pueden reorganizar. Un flujo de información sindicada en \codigo{http://example.com/index.xml} podría moverse a \codigo{http://example.com/xml/atom.xml}. O el dominio completo podría moverse, según una organización pueda expandirse y reorganizarse \codigo{http://example.com/index.xml} se podría convertir en \codigo{http://server-farm-1.example.com/index.xm}.
+
+Cada vez que solicitas alguna clase de recurso de un servidor \codigo{HTTP}, el servidor incluye un código de estado en su respuesta. El código de estado \codigo{200} significa ``todo es normal, aquí está la página solicitada''. El código de estado \codigo{404} significa ``página no encontrada'' (probabblemente te ha pasado alguna vez mientras navegabas en Internet). Los códigos de estado de la gama de los \codigo{300} indican algún tipo de redireccionamiento.
+
+\cajaTexto{Location significa ``mira aquí''.}
+
+\codigo{HTTP} dispone de varias formas de indicar que un recurso se ha movido. Las dos técnicas más habituales son los códigos de estado \codigo{302} y \codigo{301}. El código de estado \codigo{302} es una \emph{redirección temporal}; lo que significa ``¡uh! se ha movido temporalmente a otra dirección'' (y luego se indica la dirección temporal en la cabecera \codigo{Location}). El código de estado \codigo{301} es una \emph{redirección permanente}; significa ``¡uh! se ha movido permanentemente'' (y luego indica la nueva dirección en una cabecera \codigo{Location}). Si el código de estado es \codigo{302} y una nueva dirección, la especificación \codigo{HTTP} indica que deberías utilizar la nueva dirección para obtener lo que has solicitdo, pero la siguiente vez que quieras acceder al mismo recurso, deberías reintentarlo con la vieja dirección. Pero si lo que obtienes es un codigo de estado \codigo{301} y una nueva dirección, se supone que debes usar la nueva dirección a partir de ese momento.
+
+El módulo \codigo{urllib.request} sigue automáticamente los redireccionamientos cuando recibe los códigos de estado indicados desde el servidor \codigo{HTTP}, pero no te indica que lo haya hecho. Obtendrás los datos que solicitaste, pero no sabrás nunca que la librería te ayudó siguiendo el redireccionamiento necesario. Siempre seguirás usando la vieja dirección, y cada vez que suceda, serás redirigido a la nueva dirección mediante la ayuda que te presta el módulo \codigo{urllib.request}. En otras palabras, trata las redirecciones permanentes de la misma forma que las temporales. Esto significa que hacen falta dos ``vueltas'' en lugar de una para cada acceso, lo que es malo para el servidor y para ti.
+
+\codigo{httplib2} maneja las redirecciones permanentes por ti. No solamente te dirá que ha sucedido una redirección permanente, mantendrá un registro local de estas redirecciones y reescribirá las \codigo{URL} afectadas antes de solicitarlas.
+
+\section{Cómo no se debe recuperar información a través de HTTP}
+
+Digamos que quieres descargar un recurso a través de \codigo{HTTP}, por ejemplo, un flujo de datos \codigo{Atom}. Como se trata de un flujo, no lo vas a descargar una única vez; vas a descargarlo una y otra vez (La mayoría de los lectores de noticias comprueban si ha habido cambios una vez cada hora). Vamos a hacerlo de la forma más manual posible, en primer lugar, y luego veremos cómo hacerlo mejor.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> import urllib.request
+>>> a_url = 'http://diveintopython3.org/examples/feed.xml'
+>>> data = urllib.request.urlopen(a_url).read()
+>>> type(data)
+<class 'bytes'>
+>>> print(data)
+<?xml version='1.0' encoding='utf-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+  <title>dive into mark</title>
+  <subtitle>currently between addictions</subtitle>
+  <id>tag:diveintomark.org,2001-07-29:/</id>
+  <updated>2009-03-27T21:56:07Z</updated>
+  <link rel='alternate' type='text/html' href='http://diveintomark.org/'/>
+ ... 
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} La descarga de cualquier información a través de \codigo{HTTP} es increíblemente sencilla en Python; de hecho se trata de una única línea. El módulo \codigo{urllib.request} dispone de una útil función \codigo{urlopen()} que toma la dirección de la página que quieres y retorna un objeto de flujo (como un fichero) que puedes leer con la función \codigo{read()} para recuperar el contenido completo de la página. No puede ser más sencillo.
+
+\item \emph{Línea 4:} El método \codigo{urlopen().read()} siempre devuelve un objeto \codigo{bytes}, no una cadena de texto. Recuerda que los bytes son bytes y los caracteres no son más que una abstracción. Los servidores \codigo{HTTP} no se preocupan de la abstracción. Si solicitas un recurso, obtienes bytes. Si quieres una cadena de texto, necesitarás determinar la codificación de caracteres utilizada para poder convertir los bytes en una cadena de texto.
+
+\end{enumerate}
+
+¿Qué tiene de mala esta forma de recuperar el recurso? Para una prueba rápida durante el desarrollo no hay nada de malo. Yo mismo lo hago todo el rato. Quería el contenido de un flujo de noticias, y tengo el contenido de dicho flujo. La misma técnica funciona con cualquier página web. Pero una vez comienzas a pensar en términos de un servicio web al que quieres acceder frecuentemente (por ejemplo: solicitar esta información una vez cada hora), entonces estás siendo ineficiente y basto.
+
+\section{¿Qué sucede por debajo?}
+
+Para ver porqué esta manera de hacer la descarga es ineficiente y basta, vamos a activar las características de depuración de la librería de \codigo{HTTP} de Python para ver qué se está enviando a través de la red.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> from http.client import HTTPConnection
+>>> HTTPConnection.debuglevel = 1
+>>> from urllib.request import urlopen
+>>> response = urlopen('http://diveintopython3.org/examples/feed.xml')
+send: b'GET /examples/feed.xml HTTP/1.1
+Host: diveintopython3.org            
+Accept-Encoding: identity           
+User-Agent: Python-urllib/3.1'     
+Connection: close
+reply: 'HTTP/1.1 200 OK'
+...se omite el resto de la depuraci$\ac{o}$n...
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Como he comentado al comienzo del capítulo, la librería \codigo{urllib.request} se basa en otra librería estándar de Python, \codigo{http.client}. Normalmente no necesitas tocar directamente \codigo{http.client} (el módulo \codigo{urllib.request} la importa automáticamente). Pero la importamos aquí para modificar el control de depuración de la clase \codigo{HTTPConnection} que es la que utiliza \codigo{urllib.request} para conectarse al servidor \codigo{HTTP}.
+
+\item \emph{Línea 4:} Ahora que se ha activado la depuración, la información de la petición de de la respuesta \codigo{HTTP} se imprime en tiempo real. Como puedes ver, cuando solicitas el flujo \codigo{Atom}, el módulo \codigo{urllib.request} envía cinco líneas al servidor.
+
+\item \emph{Línea 5:} La primera línea especifica el verbo \codigo{HTTP} que estás utilizando y el camino al recurso (menos el nombre de dominio).
+
+\item \emph{Línea 6:} La segunda línea indica el nombre de dominio del que estamos solicitando este flujo.
+
+\item \emph{Línea 7:} La tercera línea especifica los algoritmos de compresión que el cliente admite. Como he comentado antes, \codigo{urllib.request} no permite ningún tipo de compresión por defecto.
+
+\item \emph{Línea 8:} La cuarta línea especifica el nombre de la librería que está realizando la petición. Por defecto, se muestra \codigo{Pythonurllib} más el número de versión. Ambos módulos \codigo{urllib.request} y \codigo{httplib2} permiten la modificación del agente de usuario, simplemente añadiendo la cabecera \codigo{User-Agent} a la petición (lo que sustituirá el valor por defecto).
+
+\end{enumerate}
+
+Ahora vamos a ver lo que el servidor envía de vuelta como respuesta.
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+# sigue del ejemplo anterior
+>>> print(response.headers.as_string())
+Date: Sun, 31 May 2009 19:23:06 GMT 
+Server: Apache
+Last-Modified: Sun, 31 May 2009 06:39:55 GMT
+ETag: "bfe-93d9c4c0"                       
+Accept-Ranges: bytes
+Content-Length: 3070                      
+Cache-Control: max-age=86400             
+Expires: Mon, 01 Jun 2009 19:23:06 GMT
+Vary: Accept-Encoding
+Connection: close
+Content-Type: application/xml
+>>> data = response.read()              
+>>> len(data)
+3070
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El objeto \codigo{response} devuelto por la función \codigo{urllib.request.urlopen()} contiene las cabeceras \codigo{HTTP} que el servidor ha devuelto. También contiene métodos para descargar la información real devuelta; volveremos a ello en un minuto.
+
+\item \emph{Línea 3:} El servidor te informa del momento en que procesó tu petición.
+
+\item \emph{Línea 5:} La respuesta incluye una cabecera \codigo{Last-Modified}.
+
+\item \emph{Línea 6:} Esta respuesta también incluye una cabecera \codigo{ETag}.
+
+\item \emph{Línea 8:} La información ocupa 3070 bytes. Observa lo que \emph{no aparece}: una cabecera \codigo{Content-encoding}. Tu petición indicó que solamente aceptas información sin comprimir (\codigo{Accept-encoding: identity}), y estamos seguros de que esta respuesta solamente contiene información sin comprimir.
+
+\item \emph{Línea 9:} La respuesta incluye cabecerás de caché que indican que este flujo se puede mantener en caché durante 24 horas (86400 segundos).
+
+\item \emph{Línea 14:} Y finalmente, se descarga la información real mediante una llamada a \codigo{response.read()}. Como puedes ver mediante el uso de la función \codigo{len()}, la descarga es completa: los 3070 bytes de una vez.
+
+\end{enumerate}
+
+Como puedes ver, este código es ineficiente: solicita (y recibe) datos sin comprimir. Sé con seguridad que este servidor soporta compresión \codigo{gzip}, pero la compresión en \codigo{HTTP} es opcional. No lo pedimos en este caso, por lo que no la obtuvimos. Esto significa que estamos descargando 3070 bytes cuando podríamos haber descargado solamente 941. Te has portado mal, no hay premio.
+
+Pero espera, ¡que es peor! Para ver lo ineficiente que es este código vamos a pedir de nuevo el mismo recurso.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> response2 = urlopen('http://diveintopython3.org/examples/feed.xml')
+send: b'GET /examples/feed.xml HTTP/1.1
+Host: diveintopython3.org
+Accept-Encoding: identity
+User-Agent: Python-urllib/3.1'
+Connection: close
+reply: 'HTTP/1.1 200 OK'
+...further debugging information omitted...
+\end{lstlisting}
+\end{minipage}
+
+¿No observas nada raro en esta petición? ¡no ha cambiado! Es exactamente la misma que la primera petición. No existe señal de las cabeceras \codigo{If-Modified-Since}. No hay señal de cabeceras \codigo{If-None-Match}. No se respetan las cabeceras de caché y no hay compresión.
+
+Y ¿qué pasa cuando pides lo mismo dos veces? Pues que obtienes la misma respuesta ¡dos veces!
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> print(response2.headers.as_string())
+Date: Mon, 01 Jun 2009 03:58:00 GMT
+Server: Apache
+Last-Modified: Sun, 31 May 2009 22:51:11 GMT
+ETag: "bfe-255ef5c0"
+Accept-Ranges: bytes
+Content-Length: 3070
+Cache-Control: max-age=86400
+Expires: Tue, 02 Jun 2009 03:58:00 GMT
+Vary: Accept-Encoding
+Connection: close
+Content-Type: application/xml
+>>> data2 = response2.read()
+>>> len(data2)
+3070
+>>> data2 == data
+True
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El servidor envía de nuevo la misma lista de cabeceras ``inteligentes'': \codigo{Cache-Control} y \codigo{Expires} para permitir el uso de una caché, \codigo{Last-Modified} y \codigo{ETag} para facilitar el seguimiento de una modificación de la página. Incluso la cabecera \codigo{Vary: Accept-Encoding} que informa de que el servidor podría soportar compresión si se lo hubieras pedido. Pero no lo hiciste.
+
+\item \emph{Línea 15:} De nuevo, la recuperación de esta información descarga los 3070 bytes...
+
+\item \emph{Línea 17:} ...exactamente los mismos 3070 bytes que descargaste la última vez.
+
+\end{enumerate}
+
+\codigo{HTTP} está diseñado para funcionar mejor que esto, \codigo{urllib} habla \codigo{HTTP} como yo hablo español ---lo suficiente para integrarme en una fiesta, pero no lo suficente como para mantener una conversación. \codigo{HTTP} es una conversación. Es hora de actualizarnos a una librería que hable \codigo{HTTP} de forma fluida.
+
+\section{Introducción a \codigo{httplib2}}
+
+Antes de que puedas utilizar \codigo{httplib2} necesitarás instalarla. Visita \href{http://code.google.com/p/httplib2/}{http://code.google.com/p/httplib2/} y descarga la última versión. \codigo{httplib2} está disponible para Python 2.x y para Python 3.x; asegúrate de que descargas la versión de Python 3, denominada algo así como \codigo{httplib2-python3-0.5.0.zip}.
+
+Descomprime el archivo, abre el terminal en una ventana y vete al directorio recién creado \codigo{httplib2}. En Windows abre el menú \codigo{Inicio}, selecciona \codigo{Ejecutar...}, teclea \codigo{cmd.exe} y pulsa \codigo{INTRO}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+c:\Users\pilgrim\Downloads> dir
+ Volume in drive C has no label.
+ Volume Serial Number is DED5-B4F8
+
+ Directory of c:\Users\pilgrim\Downloads
+
+07/28/2009  12:36 PM    <DIR>          .
+07/28/2009  12:36 PM    <DIR>          ..
+07/28/2009  12:36 PM    <DIR>          httplib2-python3-0.5.0
+07/28/2009  12:33 PM            18,997 httplib2-python3-0.5.0.zip
+               1 File(s)         18,997 bytes
+               3 Dir(s)  61,496,684,544 bytes free
+
+c:\Users\pilgrim\Downloads> cd httplib2-python3-0.5.0
+c:\Users\pilgrim\Downloads\httplib2-python3-0.5.0> c:\python31\python.exe 
+setup.py install
+running install
+running build
+running build_py
+running install_lib
+creating c:\python31\Lib\site-packages\httplib2
+copying build\lib\httplib2\iri2uri.py -> 
+ c:\python31\Lib\site-packages\httplib2
+copying build\lib\httplib2\__init__.py -> 
+ c:\python31\Lib\site-packages\httplib2
+byte-compiling c:\python31\Lib\site-packages\httplib2\iri2uri.py to
+ iri2uri.pyc
+byte-compiling c:\python31\Lib\site-packages\httplib2\__init__.py to
+ __init__.pyc
+running install_egg_info
+Writing c:\python31\Lib\site-packages\
+httplib2-python3_0.5.0-py3.1.egg-info
+\end{lstlisting}
+\end{minipage}
+
+En Mac OS X ejecuta la aplicación \codigo{Terminal.app} de la carpeta \codigo{/Aplicaciones/Utilidades}. En Linux, ejecuta la aplicación de \codigo{Terminal}, que normalmente se encuentra en el menu de \codigo{Aplicaciones} bajo \codigo{Accesorios} o \codigo{Sistema}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~/Desktop$ unzip httplib2-python3-0.5.0.zip
+Archive:  httplib2-python3-0.5.0.zip
+  inflating: httplib2-python3-0.5.0/README
+  inflating: httplib2-python3-0.5.0/setup.py
+  inflating: httplib2-python3-0.5.0/PKG-INFO
+  inflating: httplib2-python3-0.5.0/httplib2/__init__.py
+  inflating: httplib2-python3-0.5.0/httplib2/iri2uri.py
+you@localhost:~/Desktop$ cd httplib2-python3-0.5.0/
+you@localhost:~/Desktop/httplib2-python3-0.5.0$ sudo python3
+ setup.py install
+running install
+running build
+running build_py
+creating build
+creating build/lib.linux-x86_64-3.1
+creating build/lib.linux-x86_64-3.1/httplib2
+copying httplib2/iri2uri.py -> build/lib.linux-x86_64-3.1/httplib2
+copying httplib2/__init__.py -> build/lib.linux-x86_64-3.1/httplib2
+running install_lib
+creating /usr/local/lib/python3.1/dist-packages/httplib2
+copying build/lib.linux-x86_64-3.1/httplib2/iri2uri.py ->
+ /usr/local/lib/python3.1/dist-packages/httplib2
+copying build/lib.linux-x86_64-3.1/httplib2/__init__.py ->
+ /usr/local/lib/python3.1/dist-packages/httplib2
+byte-compiling /usr/local/lib/python3.1/dist-packages/httplib2/iri2uri.py
+ to iri2uri.pyc
+byte-compiling /usr/local/lib/python3.1/dist-packages/httplib2/__init__.py
+ to __init__.pyc
+running install_egg_info
+Writing /usr/local/lib/python3.1/dist-packages/
+httplib2-python3_0.5.0.egg-info
+\end{lstlisting}
+\end{minipage}
+
+Para utilizar \codigo{httplib2} crea una instancia de la clase \codigo{httplib2.Http}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> import httplib2
+>>> h = httplib2.Http('.cache')
+>>> response, content = h.request(
+        'http://diveintopython3.org/examples/feed.xml')
+>>> response.status            
+200
+>>> content[:52]              
+b"<?xml version='1.0' encoding='utf-8'?>\r\n<feed xmlns="
+>>> len(content)
+3070
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El interfaz principal de \codigo{httplib2} es el objeto \codigo{Http}. Por razones que verás en la siguiente sección, siempre deberías pasar el nombre de un directorio al crear el objeto \codigo{Http}. No es necesario que el directorio exista, \codigo{httplib2} lo creará si es necesario.
+
+\item \emph{Línea 3:} Una vez has creado el objeto \codigo{Http}, la recuperación de los datos es tan simple como llamar al método \codigo{request()} con la dirección de los datos que necesitas. Esto emitirá una petición \codigo{HTTP GET} para la \codigo{URL} deseada (Más adelante, en este capítulo, te mostraré cómo solicitar otro tipo de peticiones \codigo{HTTP}, como \codigo{POST}).
+
+\item \emph{Línea 4:} El método \codigo{request()} retorna dos valores. El primero es un objeto \codigo{httplib2.Response}, que contiene todas las cabeceras que retorna el servidor. Por ejemplo, un código de \codigo{status} \codigo{200} indica que la petición se completó satisfactoriamente.
+
+\item \emph{Línea 6:} La variable \codigo{content} contiene la información real que se retornó desde el servidor \codigo{HTTP}. La información se devuelve como un objeto \codigo{bytes}, no una cadena. Si quieres que sea una cadena, necesitas determinar la codificación de caracteres y convertirla tú mismo.
+
+\end{enumerate}
+
+\begin{quote}
+Probablemente necesites un único objeto \codigo{httplib2.Http}. No obstante, existen razones válidas por las que puedas necesitar más de uno, pero deberías crearlos únicamente si conoces porqué los necesitas. ``Necesito datos desde dos \codigo{URL} diferentes'' no es una razón válida; en su lugar, reutilizar el objeto \codigo{Http} y llama dos veces al método \codigo{request()}.
+\end{quote}
+
+\subsection{Una breve disgresión para explicar porqué \codigo{httplib2} devuelve Bytes en lugar de cadenas de texto}
+
+Bytes, cadenas de texto, ¡qué cansancio! ¿Porqué \codigo{httplib2} no hace simplemente la conversión por ti? Bueno, es complejo, porque las reglas para determinar la codificación de caracteres son específicas del tipo de recurso que estés solicitano. ¿Cómo podría \codigo{httplib2} conocer la clase de recurso que estás solicitando? Normalmente se encuentra en la cabecera \codigo{Content-Type HTTP}, pero se trata de una característica opcional de \codigo{HTTP} y no todos los servidores \codigo{HTTP} la incluyen. Si esa cabecera no está incluida en la respuesta \codigo{HTTP}, es el cliente el que tiene que adivinarlo (A esto se le suele llamar ``inspección del contenido'', y no es una solución perfecta).
+
+Si supieras que clase de recursos estás esperando (un documento \codigo{XML} en este caso), tal vez podrías `simplemente'' pasar el objeto \codigo{bytes} a la función \codigo{xml.etree.ElementTree.parse()}. Eso funcionaría siempre que el documento \codigo{XML} incluyera la información de su propia codificación de caracteres (como hace en este caso), pero eso es una característica opcional y no todos los documentos \codigo{XML} lo indican. Si un documento \codigo{XML} no incluye la información de codificación de caracteres, se supone que el cliente tiene que mirar en el protocolo de transporte ---en este caso la cabecera \codigo{Content-Type HTTP}, que puede incluir el parámetro \codigo{charset}.
+
+Pero es aún peor. Ahora la información sobre la codificación de caracteres puede encontrarse en dos lugares: dentro del propio documento \codigo{XML} y dentro de la cabecera \codigo{Content-Type HTTP}. Si la información está en \emph{ambos} lugares... ¿cuál gana? De acuerdo a la especifiación \codigo{RFC3023}\href{http://www.ietf.org/rfc/rfc3023.txt}{http://www.ietf.org/rfc/rfc3023.txt} (te lo juro, no me lo estoy inventando), si el tipo de medio indicado en la cabecera \codigo{Content-Type HTTP} es \codigo{application/xml}, \codigo{application/xml-dtd}, \codigo{application/xml-external-parsed-entity} o cualquier otro subtipo de \codigo{application/xml} como \codigo{application/atom+xml} o incluso \codigo{application/rdf+xml}, entonces la codificación de caracteres es:
+
+\begin{enumerate}
+
+\item la codificación dada en el parámetro \codigo{charset} de la cabecera \codigo{Content-Type HTTP} o
+
+\item la codificación dada en el atributo \codigo{encoding} de la declaración \codigo{XML} dentro del documento o
+
+\item \codigo{UTF-8}
+
+\end{enumerate}
+
+Por otra parte, si el tipo de medio dado en la cabecera \codigo{Content-Type HTTP} es \codigo{text/xml}, \codigo{text/xml-external-parsed-entity} o un subtipo como \codigo{text/CualquierCosa+xml}, entonces el atributo \codigo{encoding} de la declaración dentro del documento \codigo{XML} se ignora totalmente y la codificación es:
+
+\begin{enumerate}
+
+\item la indicada en el parámetro \codigo{charset} de la cabecera \codigo{Content-Type HTTP} o
+
+\item \codigo{us-ascii}
+
+\end{enumerate}
+
+Y eso únicamente para los documentos \codigo{XML}. Para los documentos \codigo{HTML} los navegadores han construido unas reglas tan bizantinas para identificación del contenido\href{http://www.adambarth.com/papers/2009/barth-caballero-song.pdf}{http://www.adambarth.com/papers/2009/barth-caballero-song.pdf} que aún estamos intentando aclarar las que son\href{http://www.google.com/search?q=barth+content-type+processing+model}{http://www.google.com/search?q=barth+content-type+processing+model}.
+
+\subsection{Cómo \codigo{httplib2} gestiona la caché}
+
+¿Recuerdas cuando en la sección anterior te dije que deberías crear siempre el objeto \codigo{httplib2.Http} con un nombre de directorio? La razón es la caché.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> response2, content2 = h.request(
+        'http://diveintopython3.org/examples/feed.xml') 
+>>> response2.status                    
+200
+>>> content2[:52]                      
+b"<?xml version='1.0' encoding='utf-8'?>\r\n<feed xmlns="
+>>> len(content2)
+3070
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} No deberías sorprenderte, es lo mismo que ya hemos hecho antes, excepto que el resultado lo estamos guardando en dos variables nuevas.
+
+\item \emph{Línea 3:} El \codigo{HTTP status} vuelve a ser \codigo{200}, como antes.
+
+\item \emph{Línea 5:} El contenido descargado también es el mismo que la última vez.
+
+\end{enumerate}
+
+Pero ¿A qué viene esto? Sal de la consola de Python y vuelve a relanzarla en una nueva sesión y te lo mostraré:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+# NO sigue del ejemplo anterior
+# Por favor, sal a de la consola de Python
+# y vuelve a entrar en una nueva
+>>> import httplib2
+>>> httplib2.debuglevel = 1
+>>> h = httplib2.Http('.cache')
+>>> response, content = h.request(
+        'http://diveintopython3.org/examples/feed.xml')
+>>> len(content)                        
+3070
+>>> response.status                    
+200
+>>> response.fromcache               
+True
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} Activamos la depuración pa ver lo que está sucediendo en la comunicación. Esta es la forma en la que \codigo{httlib2} activa la depuración (como hacíamos antes con \codigo{http.client}). En este cao \codigo{httplib2} imprimirá todos los datos que se envían al servidor e información clave que se retorna desde el mismo.
+
+\item \emph{Línea 6:} Se crea un objeto \codigo{httplib2.Http} con el mismo nombre de directorio que antes.
+
+\item \emph{Línea 7:} Se solicita la misma \codigo{URL} que antes. \emph{Parece que no pasa nada}. De forma más precisa, nada se envía al servidor, y nada se devuelve del servidor. No hay ninguna actividad de red.
+
+\item \emph{Línea 8:} Pero sí que recibimos datos ---de hecho, hemos recibido toda la información.
+
+\item \emph{Línea 10:} También hemos ``recibido'' el código de estado \codigo{HTTP} \codigo{200} indicando que la petición fue satisfactoria.
+
+\item \emph{Línea 12:} Este es el secreto: Esta respuesta se ha generado desde la caché local de \codigo{httplib2}. El directorio que le has pasado al rear el objeto \codigo{httplib2.Http} contiene la caché de \codigo{httplib2} de todas las operaciones que se han ejecutado.
+
+\end{enumerate}
+
+\begin{quote}
+Si quieres activar la depuración \codigo{httlib2}, necesitas activar una constante al nivel del módulo (\codigo{httplib2.debuglevel}) y luego crear un objeto nuevo \codigo{httplib2.Http}. Si quieres desactivar la depuración, necesitas modificar la misma constante y luego crear otro nuevo objeto \codigo{httplib2.Http}.
+\end{quote}
+
+Anteriormente solicitaste información de esta \codigo{URL}. Las peticiones fueron satisfactorias (\codigo{status: 200}). Esta respuesta incluye no solamente los datos reales, sino también las cabeceras de caché que indican a quien recuperó los datos que los puede mantener en caché durante 24 horas (\codigo{Cache-Control: max-age=86400}, que son 24 horas medidas en segundos). \codigo{httlib2} comprende y respeta las cabeceras de caché y almacena la respuesta anterior en el directorio \codigo{.cache} (que hemos pasado como parámetro al crear el objeto \codigo{Http}). Esta caché aún no ha expirado, por lo que la segunda vez que se solicita la información de esta \codigo{URL} \codigo{httplib2} devuelve el resultado que tiene en la caché sin salir a la red a buscarlo.
+
+Obviamente, esta simplicidad esconde la complejidad que supone esto: \codigo{httplib2} maneja el cacheo de \codigo{HTTP} de forma \emph{automática y por defecto}. Si por alguna razón necesitases conocer si la respuesta vino de la caché, puedes comprobar el valor de \codigo{response.fromcache}. 
+
+Ahora supón que tienes datos en la caché, pero quieres saltarte la caché y solicitar de nuevo los datos del servidor remoto. Los navegadores hacen esto si el usuario lo solicita específicamente. Por ejemplo, al pulsar \codigo{F5} se refresca la página actual, pero al pulsar \codigo{Ctrl-F5} se salta la caché y vuelve a consultar la página al servidor remoto. Podrías pensar ``bastaría con borrar la caché local o volver a consultar la página actual al servidor remoto''. Podrías hacer esto, pero recuerda que hay terceros involucrados en la consulta, no solamente tú y el servidor. ¿Qué pasa con los servidores proxy intermedios? Están completamente fuera de tu control y pueden tener aún datos en sus cachés. Datos que te devolverán porque para ellos la caché aún es válida.
+
+En lugar de manipular la caché local y esperar que haya suerte, deberías utilizar las características que define el protocolo \codigo{HTTP} para asegurarte de que tu consulta realmente alcanza al servidor remoto.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> response2, content2 = h.request(
+        'http://diveintopython3.org/examples/feed.xml',
+...     headers={'cache-control':'no-cache'})
+connect: (diveintopython3.org, 80)        
+send: b'GET /examples/feed.xml HTTP/1.1
+Host: diveintopython3.org
+user-agent: Python-httplib2/$Rev: 259 $
+accept-encoding: deflate, gzip
+cache-control: no-cache'
+reply: 'HTTP/1.1 200 OK'
+...further debugging information omitted...
+>>> response2.status
+200
+>>> response2.fromcache                  
+False
+>>> print(dict(response2.items()))      
+{'status': '200',
+ 'content-length': '3070',
+ 'content-location': 'http://diveintopython3.org/examples/feed.xml',
+ 'accept-ranges': 'bytes',
+ 'expires': 'Wed, 03 Jun 2009 00:40:26 GMT',
+ 'vary': 'Accept-Encoding',
+ 'server': 'Apache',
+ 'last-modified': 'Sun, 31 May 2009 22:51:11 GMT',
+ 'connection': 'close',
+ '-content-encoding': 'gzip',
+ 'etag': '"bfe-255ef5c0"',
+ 'cache-control': 'max-age=86400',
+ 'date': 'Tue, 02 Jun 2009 00:40:26 GMT',
+ 'content-type': 'application/xml'}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} \codigo{httplib2} te permite añadir cabeceras \codigo{HTTP} a cualquier petición saliente. Para poder saltarnos \emph{todas} las cachés (no únicamente tu caché local, sino todas las cachés de los proxys entre el servidor remoto y tú), añade la cabecera \codigo{no-cache} en el diccionario \codigo{headers}.
+
+
+\item \emph{Línea 5:} Ahora se observa que \codigo{httplib2} inicia una conexión a la red. \codigo{httplib2} comprende y respeta las cabeceras de caché \emph{en ambas direcciones} ---como parte de la respuesta \emph{y como parte de la petición de salida}. Detecta que has añadido una cabecera \codigo{no-cache} por lo que se salta la caché local y no tiene otra elección que salir a la red a solicitar la información.
+
+\item \emph{Línea 15:} Esta respuesta no se generó de la caché local. Ya lo sabías, viste la información de depuración de la petición de salida. Pero es bueno disponer de un modo de verificarlo desde el programa.
+
+\item \emph{Línea 17:} La petición terminó satisfactoriamente; descargaste la información completa de nuevo desde el servidor remoto. Desde luego, el servidor volvió a enviar toda la información de cabeceras junto con los datos. Incluye las cabeceras de caché, que \codigo{httplib2} utilizará para actualizar su caché local, con la esperanza de evitar el acceso a la red la \emph{siguiente vez} que solicites esta información. El cacheo \codigo{HTTP} está diseñado para maximizar el uso de la caché y minimizar el acceso a la red. Incluso aunque te hayas saltado la caché esta vez, el servidor remoto apreciaría que te guardases el resultado en la caché para la próxima vez.
+
+\end{enumerate}
+
+
+\subsection{Cómo \codigo{httplib2} gestiona las cabeceras \codigo{Last-Modified} y \codigo{ETag}}
+
+Las cabeceras de caché \codigo{Cache-Control} y \codigo{Expires} se suelen denominar \emph{indicadores de frescura}. Indican al sistema de caché de modo totalmente seguro que se puede evitar totalmente el acceso a la red hasta que expira el plazo. Y ése ha sido el comportamiento que has visto funcionando en la sección anterior: dado un indicador de frescura, \codigo{httplib2} \emph{no genera ningún byte de actividad en la red} para mostrar información que se encuentre en la caché (a menos que tú lo indiques expresamente, desde luego).
+
+Pero qué sucede cuado los datos podrían haber cambiado. \codigo{HTTP} defne unas cabeceras \codigo{Last-Modified} y \codigo{Etag} para este fin. Estas cabeceras se denominan \codigo{validadores}. Si la caché local ya está desactualizada, el cliente puede enviar los validadores con la siguiente consulta, para ver si los datos han cambiado realmente. Si los datos no han cambiado, el servidor devuelve un código de estado \codigo{304} \emph{y ningún dato más}. Por lo que aunque hay una consulta a la red, se descargan menos bytes.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+>>> import httplib2
+>>> httplib2.debuglevel = 1
+>>> h = httplib2.Http('.cache')
+>>> response, content = h.request('http://diveintopython3.org/')
+connect: (diveintopython3.org, 80)
+send: b'GET / HTTP/1.1
+Host: diveintopython3.org
+accept-encoding: deflate, gzip
+user-agent: Python-httplib2/$Rev: 259 $'
+reply: 'HTTP/1.1 200 OK'
+>>> print(dict(response.items())) 
+{'-content-encoding': 'gzip',
+ 'accept-ranges': 'bytes',
+ 'connection': 'close',
+ 'content-length': '6657',
+ 'content-location': 'http://diveintopython3.org/',
+ 'content-type': 'text/html',
+ 'date': 'Tue, 02 Jun 2009 03:26:54 GMT',
+ 'etag': '"7f806d-1a01-9fb97900"',
+ 'last-modified': 'Tue, 02 Jun 2009 02:51:48 GMT',
+ 'server': 'Apache',
+ 'status': '200',
+ 'vary': 'Accept-Encoding,User-Agent'}
+>>> len(content)                
+6657
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 4:} En lugar del fluo, esta vez vamos a descargar la página de inicio de la sede web, que es \codigo{HTML}.
+
+\item \emph{Línea 11:} La respuesta incluye muchas cabeceras \codigo{HTTP}... pero no incluye información de caché. Sin embargo, sí incluye cabeceras \codigo{ETag} y \codigo{Last-Modified}.
+
+\item \emph{Línea 24:} En el momento en que se incluyó este ejemplo, esta página era de 6657 bytes. Probablemente haya cambiado desde entonces, pero eso no es relevante. 
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior 
+>>> response, content = h.request('http://diveintopython3.org/')
+connect: (diveintopython3.org, 80)
+send: b'GET / HTTP/1.1
+Host: diveintopython3.org
+if-none-match: "7f806d-1a01-9fb97900"                   
+if-modified-since: Tue, 02 Jun 2009 02:51:48 GMT       
+accept-encoding: deflate, gzip
+user-agent: Python-httplib2/$Rev: 259 $'
+reply: 'HTTP/1.1 304 Not Modified'                    
+>>> response.fromcache                               
+True
+>>> response.status                                 
+200
+>>> response.dict['status']                        
+'304'
+>>> len(content)                                  
+6657
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Solicitas la misma página otra vez, con el mismo objeto \codigo{Http} (y la misma caché local).
+
+\item \emph{Línea 6:} \codigo{httplib2} envía el valor de la etiqueta \codigo{Etag} al servidor en la cabecera \codigo{If-None-Match}.
+
+\item \emph{Línea 7:} \codigo{httplib2} también envía el valor de la etiqueta \codigo{Last-Modified} al servidor en la etiqueta \codigo{If-Modified-Since}.
+
+\item \emph{Línea 10:} El servidor recupera estos valores (validadores), observa la página que has solicitado y determina que la página no ha cambiado desde la última vez que la solicitaste, por lo que devuelve un código \codigo{304} y \emph{ningún dato real}.
+
+\item \emph{Línea 11:} De vuelta al cliente, \codigo{httplib2} comprueba el código de estado \codigo{304} y carga el contenido de la página desde la caché.
+
+\item \emph{Línea 13:} Esto puede que sea algo extraño. En realidad existen \emph{dos} códigos de estado ---\codigo{304}  devuelto del servidor esta vez, que ha provocado que \codigo{httplib2} recupere de la caché, y \codigo{200}, devuelto del servidor la \emph{última vez que se recuperaron los datos}, y que está almacenado en la caché de \codigo{httplib2} junto con los datos. El atributo \codigo{response.status} obtiene el estado residente en la caché.
+
+\item \emph{Línea 15:} Si lo que se desea es ver el código de estado actual del servidor es necesario utilizar el  diccionario \codigo{response.dict}, que mantiene las cabeceras recibidas en la consulta actual al servidor.
+
+\item \emph{Línea 17:} Sin embargo, aún tienes el tamaño de los datos en la variable \codigo{content}. Generalmente, no necestias conocer porqué una respuesta ha sido obtenida de la caché. Puede que ni te interese conocer si fue servida o no desde la caché. Cuando el método \codigo{request()} finaliza, \codigo{httplib2} ya ha actualizado la caché, devolviéndote los datos que están en ella.
+
+\end{enumerate}
+
+\subsection{Cómo maneja la compresión \codigo{httplib2}}
+
+\codigo{HTTP} permite varios tipos de compresión; los dos más comunes son gzip y deflate. \codigo{httplib2} permite ambos tipos.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> response, content = h.request('http://diveintopython3.org/')
+connect: (diveintopython3.org, 80)
+send: b'GET / HTTP/1.1
+Host: diveintopython3.org
+accept-encoding: deflate, gzip 
+user-agent: Python-httplib2/$Rev: 259 $'
+reply: 'HTTP/1.1 200 OK'
+>>> print(dict(response.items()))
+{'-content-encoding': 'gzip', 
+ 'accept-ranges': 'bytes',
+ 'connection': 'close',
+ 'content-length': '6657',
+ 'content-location': 'http://diveintopython3.org/',
+ 'content-type': 'text/html',
+ 'date': 'Tue, 02 Jun 2009 03:26:54 GMT',
+ 'etag': '"7f806d-1a01-9fb97900"',
+ 'last-modified': 'Tue, 02 Jun 2009 02:51:48 GMT',
+ 'server': 'Apache',
+ 'status': '304',
+ 'vary': 'Accept-Encoding,User-Agent'}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} Cada vez que \codigo{httplib2} envía una petición, incluye una cabecera \codigo{Accept-Encoding} para indicarle al servidor que puede manipular compresiones \codigo{gzip} o \codigo{deflate}.
+
+\item \emph{Línea 9:} En este caso, el servidor ha respondido descargando la información comprimida con formato \codigo{gzip}. En el momento en que \codigo{request()} finaliza, \codigo{httplib2} ya ha descomprimido el cuerpo de la respuesta y lo ha colocado en la variable \codigo{content}. Si tienes curiosidad de conocer si la respuesta original estaba o no codificada puedes consultar \codigo{response['-content-encoding']}. 
+
+\end{enumerate}
+
+\subsection{Cómo maneja las redirecciones \codigo{httplib2}}
+
+\codigo{HTTP} define dos tipos de redirecciones: temporales y permanentes. No hay nada especial a hacer en las redirecciones temporales, excepto seguirlas, lo que \codigo{httplib2} hace automáticamente.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> import httplib2
+>>> httplib2.debuglevel = 1
+>>> h = httplib2.Http('.cache')
+>>> response, content = h.request(
+            'http://diveintopython3.org/examples/feed-302.xml')
+connect: (diveintopython3.org, 80)
+send: b'GET /examples/feed-302.xml HTTP/1.1       
+Host: diveintopython3.org
+accept-encoding: deflate, gzip
+user-agent: Python-httplib2/$Rev: 259 $'
+reply: 'HTTP/1.1 302 Found'                      
+send: b'GET /examples/feed.xml HTTP/1.1         
+Host: diveintopython3.org
+accept-encoding: deflate, gzip
+user-agent: Python-httplib2/$Rev: 259 $'
+reply: 'HTTP/1.1 200 OK'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 5:} No existe ningún flujo de datos en esta \codigo{URL}. He configurado mi servidor para enviar una redirección temporal a la dirección correcta.
+
+\item \emph{Línea 7:} Esta es la petición.
+
+\item \emph{Línea 11:} Y esta es la respuesta \codigo{302 Found}. No se muestra aquí, esta respuesta también incluye una cabecera \codigo{Location} que apunta a la dirección \codigo{URL} real. 
+
+\item \emph{Línea 12:} \codigo{httplib2} se dirige a la nueva dirección mediante una nueva petición a la \codigo{URL} indicada en la cabecera \codigo{Location}: \codigo{http://diveintopython3.org/examples/feed.xml}
+
+\end{enumerate}
+
+La redirección no es más que lo se ha enseñado en este ejemplo. \codigo{httlib2} envía una petición a la \codigo{URL} que le indicaste. El servidor devuelve una respuesta que dice ``No, no, en vez de aquí, mira en este otro sitio''. \codigo{httlib2} envía una nueva petición automáticamente a la nueva \codigo{URL}.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> response               
+{'status': '200',
+ 'content-length': '3070',
+ 'content-location': 'http://diveintopython3.org/examples/feed.xml',
+ 'accept-ranges': 'bytes',
+ 'expires': 'Thu, 04 Jun 2009 02:21:41 GMT',
+ 'vary': 'Accept-Encoding',
+ 'server': 'Apache',
+ 'last-modified': 'Wed, 03 Jun 2009 02:20:15 GMT',
+ 'connection': 'close',
+ '-content-encoding': 'gzip',                             
+ 'etag': '"bfe-4cbbf5c0"',
+ 'cache-control': 'max-age=86400',                       
+ 'date': 'Wed, 03 Jun 2009 02:21:41 GMT',
+ 'content-type': 'application/xml'}
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} La respuesta que se obtiene en esta llamada, \codigo{response} del método \codigo{request()} es la respuesta de la \codigo{URL} final.
+
+\item \emph{Línea 5:} \codigo{httplib2} añade la \codigo{URL} final al diccionario \codigo{response} como una cabecera \codigo{content-location}. No es una cabecera que viniera del servidor, es específica de \codigo{httplib2}.
+
+\item \emph{Línea 12:} Por cierto, este flujo está comprimido.
+
+\item \emph{Línea 14:} Y se puede guardar en la caché (Esto es importante, como verás en un minuto).
+
+\end{enumerate}
+
+La respuesta que obtienes (\codigo{response}) te informa sobre la \codigo{URL} \emph{final}. ¿Qué hay que hacer si quieres más información sobre las \codigo{URL}s intermedias, las que te llevaron a la última? \codigo{httplib2} te lo permite.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> response.previous      
+{'status': '302',
+ 'content-length': '228',
+ 'content-location': 'http://diveintopython3.org/examples/feed-302.xml',
+ 'expires': 'Thu, 04 Jun 2009 02:21:41 GMT',
+ 'server': 'Apache',
+ 'connection': 'close',
+ 'location': 'http://diveintopython3.org/examples/feed.xml',
+ 'cache-control': 'max-age=86400',
+ 'date': 'Wed, 03 Jun 2009 02:21:41 GMT',
+ 'content-type': 'text/html; charset=iso-8859-1'}
+>>> type(response)        
+<class 'httplib2.Response'>
+>>> type(response.previous)
+<class 'httplib2.Response'>
+>>> response.previous.previous 
+>>>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} El atributo \codigo{response.previous} almacena una referencia al objeto \codigo{response} seguido anteriormente a que \codigo{httplib2} obtuviera la respuesta actual.
+
+\item \emph{Línea 13:} Ambos objetos, \codigo{response} y \codigo{response.previous}, son del tipo \codigo{httplib2.Response}.
+
+\item \emph{Línea 17:} Esto significa que puedes hacer \codigo{response.previous.previous} para seguir la cadena de redireccionamiento más atrás en el tiempo. El escenario podría ser: una \codigo{URL} redirige a una segunda \codigo{URL} que a su vez redirige a una tercera ¡podría ser! En este ejemplo ya hemos alcanzado el comienzo de la cadena de redireccionamiento por lo que el atributo vale \codigo{None}.
+
+\end{enumerate}
+
+¿Qué sucede si vuelves a pedir la misma \codigo{URL}?
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> response2, content2 = h.request(
+        'http://diveintopython3.org/examples/feed-302.xml')
+connect: (diveintopython3.org, 80)
+send: b'GET /examples/feed-302.xml HTTP/1.1               
+Host: diveintopython3.org
+accept-encoding: deflate, gzip
+user-agent: Python-httplib2/$Rev: 259 $'
+reply: 'HTTP/1.1 302 Found'                              
+>>> content2 == content                                 
+True
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} Misma \codigo{URL}, mismo \codigo{httplib.Http} (y, por lo tanto, misma caché).
+
+\item \emph{Línea 5:} La respuesta \codigo{302} no se guardó en la caché, por eso \codigo{httplib2} vuelve a enviar una petición por la misma \codigo{URL}.
+
+\item \emph{Línea 9:} De nuevo, el servidor responde con un código de estado \codigo{302}. Pero observa lo que \emph{no} ocurrió: No hay una segunda petición a la \codigo{URL} final, \codigo{http://diveintopython.org/examples/feed.xml}. Esta \codigo{URL} está en la caché (recuerda la cabecera \codigo{Cache-Contro} que viste en el ejemplo anterior. Una vez \codigo{httplib2} recibe el código \codigo{302 Found}, \emph{comprueba la caché antes de pedir otra vez la página}. La caché contiene una copia vigente de \codigo{http://diveintopython3.org/examples/feed.xml}, por lo que no hay ninguna necesidad de volver a pedirla.
+
+\item \emph{Línea 10:} Al finalizar el método \codigo{request()} ha leído los datos de la caché y los ha devuelto. Por supuesto, son los mismos datos que recibiste la vez anterior.
+
+\end{enumerate}
+
+En otras palabras, no tienes que hacer nada especial para el redireccionamiento temporal. \codigo{httplib2} los sigue de forma automática, y el hecho de que una \codigo{URL} redirija a otra no afecta ni al soporte de compresión, caché, \codigo{ETags} o cualquier otra característica de \codigo{HTTP}.
+
+El redireccionamiento permanente es igual de simple.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> response, content = h.request(
+        'http://diveintopython3.org/examples/feed-301.xml')
+connect: (diveintopython3.org, 80)
+send: b'GET /examples/feed-301.xml HTTP/1.1
+Host: diveintopython3.org
+accept-encoding: deflate, gzip
+user-agent: Python-httplib2/$Rev: 259 $'
+reply: 'HTTP/1.1 301 Moved Permanently'     
+>>> response.fromcache          
+True
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} De nuevo, esta \codigo{URL} no existe en realidad. He configurado mi servidor para que retorne una redirección permanente a \codigo{http://diveintopython3.org/examples/feed.xml}.
+
+\item \emph{Línea 9:} Aquí está: el código de estado \codigo{301}. Pero de nuevo, observa lo que \emph{no} ha sucedido: no hay una nueva petición a la \codigo{URL} nueva. ¿Por qué? porque ya está en la caché.
+
+\item \emph{Línea 10:} \codigo{httplib2} ``siguió'' la redirección desde la caché.
+
+\end{enumerate}
+
+Pero ¡espera, que hay más!
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> response2, content2 = h.request(
+        'http://diveintopython3.org/examples/feed-301.xml')
+>>> response2.fromcache                        
+True
+>>> content2 == content                       
+True
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} Existe una diferencia entre las redirecciones temporales y permanentes: una vez que \codigo{httplib2} sigue una redirección permanente, todas las peticiones siguientes a la misma \codigo{URl} serán solitadas de forma transparente a la nueva \codigo{URL} \emph{sin pasar por la \codigo{URL} original}. Recuerda, la depuración está aún activada y sin embargo en este caso no se observa actividad en la red de ningún tipo.
+
+\item \emph{Línea 4:} Sí, la respuesta se obtuvo de la caché local.
+
+\item \emph{Línea 6:} Sí, el resultado es el flujo completo (de la caché).
+
+\end{enumerate}
+
+
+\codigo{HTTP} funciona.
+
+
+\section{Un paso más allá de \codigo{HTTP GET}}
+
+Los servicios \codigo{HTTP} no se limitan a peticiones \codigo{GET}. ¿Qué sucede si quieres crear algo nuevo? Siempre que envías un comentario a un foro, actualizas tu blog, publicas tu estado en un servicio de microblog (como Twitter o Identi.ca, posiblemente estás usando \codigo{HTTP POST}.
+
+Tanto Twitter como Identi.ca ofrecen una \codigo{API} simple basada en \codigo{HTTP} para publicar y actualizar tu estado en \codigo{140} caracteres o menos. Vamos a ver la documentación de la \codigo{API} de Identi.ca para actualizar tu estado\footnote{\href{http://laconi.ca/trac/wiki/TwitterCompatibleAPI}{http://laconi.ca/trac/wiki/TwitterCompatibleAPI}}:
+
+\begin{quote}
+\textbf{Método Identi.ca \codigo{REST API}: estados/actualizaciones}
+Actualiza el estado del usuario autenticado. Requiere el parámetro \codigo{status} especificado más abajo. La petición debe ser un \codigo{POST}.
+
+\codigo{URL - http://identi.ca/api/statuses/update.format}
+
+Formatos - \codigo{xml, json, rss, atom}
+
+Métodos \codigo{HTTP} - \codigo{POST}
+
+Necesita autenticación - \codigo{true}
+
+Parámetros: \codigo{status}. Requerido. El texto de la actualización de tu estado. Codificación \codigo{URL}.
+
+\end{quote}
+
+¿Cómo funciona esto? Para publicar un nuevo mensaje en Identi.ca, necesitas enviar una petición \codigo{HTTP POST} a \codigo{https://identi.ca/api/statuses/update.\emph{format}} (La parte del \codigo{format} no es parte de la \codigo{URL}; lo sustituyes por el formato de datos que quieres que el servidor retorne en respuesta a tu petición. Por lo que si quieres la respuesta en \codigo{XML} deberías enviar la petición a \codigo{https://identi.ca/api/statuses/update.xml}). La petición debe incluir un parámetro denominado \codigo{status} que contiene el texto de la actualización de tu estado que desees. Y la petición necesita autentificación.
+
+¿Autentificación? Para poder actualizar tu estado en Identi.ca, necesitas probar que eres quien dices que eres. Identi.ca no es una wiki; solamente puedes actualizar tu propio estado. Identica.ca utiliza autenticación básica \codigo{HTTP}\footnote{\href{http://en.wikipedia.org/wiki/Basic\_access\_authentication}{http://en.wikipedia.org/wiki/Basic\_access\_authentication}} (RFC 2627\footnote{\href{http://www.ietf.org/rfc/rfc2617.txt}{http://www.ietf.org/rfc/rfc2617.txt}}) sobre \codigo{SSL} para proporcionar una autentificación segura pero sencilla de usar. \codigo{httplib2} soporta tanto \codigo{SSL} como autentificación básica \codigo{HTTP}, por lo que esta parte es sencilla.
+
+Una petición \codigo{POST} es diferente a una \codigo{GET}, porque incluye información que hay que enviar al servidor. En el caso de este método de la \codigo{API} de Identi.ca, se \emph{requiere} la información del parámetro \codigo{status} y debería estar en codificación \codigo{URL}. Este es un formato muy simple de serialización que toma un conjunto de parejas clave-valor (como un diccionario) y lo transforma en una cadena.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> from urllib.parse import urlencode 
+>>> data = {'status': 'Test update from Python 3'}
+>>> urlencode(data)                              
+'status=Test+update+from+Python+3'
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} Python dispone de una función de utiliza para codificar en este formato cualquier diccionario: \codigo{urllib.parse.urlencode()}.
+
+\item \emph{Línea 2:} Este es el tipo de diccionario que la \codigo{API} de Identi.ca está esperando. Contiene una clave, \codigo{status}, cuyo valor es el texto de una actualización de estado.
+
+\item \emph{Línea 3:} Así queda el diccionario una vez está en el formato codificado \codigo{URL}. Esta es la información que deberá enviarse por la red al servidor de Identi.ca en la petición \codigo{HTTP POST}.
+
+\end{enumerate}
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+>>> from urllib.parse import urlencode
+>>> import httplib2
+>>> httplib2.debuglevel = 1
+>>> h = httplib2.Http('.cache')
+>>> data = {'status': 'Test update from Python 3'}
+>>> h.add_credentials('diveintomark', 
+        'MY_SECRET_PASSWORD', 'identi.ca')
+>>> resp, content = h.request(
+        'https://identi.ca/api/statuses/update.xml',
+...     'POST',    
+...     urlencode(data),
+...     headers={'Content-Type': 'application/x-www-form-urlencoded'})
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 7:} Así es como \codigo{httplib2} controla la autentificación. Almacena tu código de usuario y clave de acceso con el método \codigo{add\_credentials()}. Cuando \codigo{httplib2} intenta realizar la petición, el servidor responderá con un código de estado \codigo{401 Unauthorized}, y una lista de métodos de autentificación disponibles (en la cabecera \codigo{WWW-Authenticate}). \codigo{httlib2} construirá automáticamente una cabecera de \codigo{Authorization} y solicitará la \codigo{URL}.
+
+\item \emph{Línea 10:} El segundo parámetro del método \codigo{request} es el tipo de petición \codigo{HTTP}, en este caso \codigo{POST}.
+
+\item \emph{Línea 11:} El tercer parámetro es la información que se envía al servidor. Estamos enviando el diccionario codificado en \codigo{URL} con el mensaje de estado.
+
+\item \emph{Línea 12:} Finalmente, necesitamos decirle al servidor que la información enviada se encuentra en el formato \codigo{URL-encoded}.
+
+\end{enumerate}
+
+\begin{quote}
+El tercer parámetro del método \codigo{add\_credentials()} es el domínio en el que las credenciales son válidas. ¡Deberías especificar esto siempre! Si dejas el dominio sin especificar y luego reutilizas el objeto \codigo{httplib2.Http} en un sitio diferente que requiera autentificación, \codigo{httplib2} podría acabar enviando el usuario y clave de una sede web a otra diferente.
+\end{quote}
+
+Esto es lo que pasa por debajo:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+# sigue del ejemplo anterior
+send: b'POST /api/statuses/update.xml HTTP/1.1
+Host: identi.ca
+Accept-Encoding: identity
+Content-Length: 32
+content-type: application/x-www-form-urlencoded
+user-agent: Python-httplib2/$Rev: 259 $
+
+status=Test+update+from+Python+3'
+reply: 'HTTP/1.1 401 Unauthorized'
+send: b'POST /api/statuses/update.xml HTTP/1.1
+Host: identi.ca
+Accept-Encoding: identity
+Content-Length: 32
+content-type: application/x-www-form-urlencoded
+authorization: Basic SECRET_HASH_CONSTRUCTED_BY_HTTPLIB2
+user-agent: Python-httplib2/$Rev: 259 $
+
+status=Test+update+from+Python+3'
+reply: 'HTTP/1.1 200 OK'       
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 10:} Después de la primera petición, el servidor responde con un código de estado \codigo{401 Unauthorized}. \codigo{httplib2} nunca enviará una cabecera de autentificación a no ser que el servidor la solicite expresamente. Esta es la forma en la que el servidor lo hace.
+
+\item \emph{Línea 11:} \codigo{httplib2} inmediatamente vuelve a pedir la \codigo{URL} por segunda vez.
+
+\item \emph{Línea 16:} Esta vez, incluye el código de usuario y clave de acceso que añadiste en el método \codigo{add\_credentials()}.
+
+\item \emph{Línea 20:} ¡Funcionó!
+
+\end{enumerate}
+
+¿Qué envía el servidor después de una petición que se completó satisfactoriamente? Depende totalmente de la \codigo{API} del servicio web. En algunos protocolos (como el protocolo de publicación Atom) el servidor devuelve un código de estado \codigo{201 Created} y la localización del recurso recién creado en la cabecera \codigo{Location}. Identi.ca responde con un \codigo{200 OK} y un documento \codigo{XML} que contiene información sobre el recurso recién creado.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+# sigue del ejemplo anterior
+>>> print(content.decode('utf-8'))
+<?xml version="1.0" encoding="UTF-8"?>
+<status>
+ <text>Test update from Python 3</text> 
+ <truncated>false</truncated>
+ <created_at>Wed Jun 10 03:53:46 +0000 2009</created_at>
+ <in_reply_to_status_id></in_reply_to_status_id>
+ <source>api</source>
+ <id>5131472</id>                      
+ <in_reply_to_user_id></in_reply_to_user_id>
+ <in_reply_to_screen_name></in_reply_to_screen_name>
+ <favorited>false</favorited>
+ <user>
+  <id>3212</id>
+  <name>Mark Pilgrim</name>
+  <screen_name>diveintomark</screen_name>
+  <location>27502, US</location>
+  <description>tech writer, husband, father</description>
+  <profile_image_url>http://avatar.identi.ca/
+3212-48-20081216000626.png</profile_image_url>
+  <url>http://diveintomark.org/</url>
+  <protected>false</protected>
+  <followers_count>329</followers_count>
+  <profile_background_color></profile_background_color>
+  <profile_text_color></profile_text_color>
+  <profile_link_color></profile_link_color>
+  <profile_sidebar_fill_color></profile_sidebar_fill_color>
+  <profile_sidebar_border_color></profile_sidebar_border_color>
+  <friends_count>2</friends_count>
+  <created_at>Wed Jul 02 22:03:58 +0000 2008</created_at>
+  <favourites_count>30768</favourites_count>
+  <utc_offset>0</utc_offset>
+  <time_zone>UTC</time_zone>
+  <profile_background_image_url></profile_background_image_url>
+  <profile_background_tile>false</profile_background_tile>
+  <statuses_count>122</statuses_count>
+  <following>false</following>
+  <notifications>false</notifications>
+</user>
+</status>
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 2:} Recuerda, los datos devueltos por \codigo{httplib2} son siempre bytes, no cadenas de texto. Para convertirlos a una cadena de texto, necesitas decodificarlos utilizando la codificación de caracteres apropiada. La \codigo{API} de Identi.ca siempre devuelve los resultados en \codigo{UTF-8}, así que esto es fácil.
+
+\item \emph{Línea 5:} Este es el texto del mensaje de estado recién publicado.
+
+\item \emph{Línea 10:} Este es el identificador único del nuevo mensaje. Idnti.ca lo utiliza para construir una \codigo{URL} para poder ver el mensaje en la web: \codigo{http://identi.ca/notice/5131472}
+
+\end{enumerate}
+
+\section{Más allá de \codigo{HTTP POST}}
+
+\codigo{HTTP} no está limitado a \codigo{GET} y \codigo{POST}. Son los dos tipos más comunes de peticiones, especialmente en los navegadores web. Pero las \codigo{API}s de servicios web pueden ir más allá de ellos, y \codigo{httplib2} está preparado.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+# sigue del ejemplo anterior
+>>> from xml.etree import ElementTree as etree
+>>> tree = etree.fromstring(content)
+>>> status_id = tree.findtext('id')
+>>> status_id
+'5131472'
+>>> url = 'https://identi.ca/api/statuses/destroy/{0}.xml'.format(
+            status_id)
+>>> resp, deleted_content = h.request(url, 'DELETE')          
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 3:} El servidor retornó \codigo{XML} ¿correcto? Ya sabes cómo analizar un documento XML.
+
+\item \emph{Línea 4:} El método \codigo{findtext()} encuentra la primera ocurrencia de una expresión dada y devuelve el texto del contenido. En este caso, únicamente estamos buscando el elemento \codigo{id}.
+
+\item \emph{Línea 8:} Basándonos en el contenido del elemento \codigo{id} podemos construir una \codigo{URL} para borrar el mensaje de estado que acabamos de publicar.
+
+\item \emph{Línea 9:} Para borrar un mensaje, simplemente envía una petición \codigo{HTTP DELETE} a esa \codigo{URL}.
+
+\end{enumerate}
+
+Esto es lo que sucede por debajo:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=True]
+send: b'DELETE /api/statuses/destroy/5131472.xml HTTP/1.1
+Host: identi.ca
+Accept-Encoding: identity
+user-agent: Python-httplib2/$Rev: 259 $
+
+'
+reply: 'HTTP/1.1 401 Unauthorized'        
+send: b'DELETE /api/statuses/destroy/5131472.xml HTTP/1.1
+Host: identi.ca
+Accept-Encoding: identity
+authorization: Basic SECRET_HASH_CONSTRUCTED_BY_HTTPLIB2
+user-agent: Python-httplib2/$Rev: 259 $
+
+'
+reply: 'HTTP/1.1 200 OK'                               
+>>> resp.status
+200
+\end{lstlisting}
+\end{minipage}
+
+\begin{enumerate}
+
+\item \emph{Línea 1:} ``Borra este mensaje de estado''.
+
+\item \emph{Línea 7:} ``Lo siento, no puedo hacer eso sin saber quién lo pide''
+
+\item \emph{Línea 8:} ``¿No tengo permiso? Soy yo, borra el mensaje, por favor...''
+
+\item \emph{Línea 11:} ``...y estos son mi código de usuario y clave de acceso.''
+
+\item \emph{Línea 15:} ``Considéralo hecho''.
+
+\end{enumerate}
+
+
+Así que ahora al intentar el enlace \codigo{http://identi.ca/notice/5131472} en un navegador, se obtiene ``Not Found''.
+
+\section{Lecturas recomendadas}
+
+
+\noindent \codigo{httplib2:}
+
+\begin{itemize}
+
+\item Página del proyecto \codigo{httplib2}: \newline \href{http://code.google.com/p/httplib2/}{http://code.google.com/p/httplib2/}
+
+\item Más ejemplos de código \codigo{httplib2}: \newline \href{http://code.google.com/p/httplib2/wiki/ExamplesPython3}{http://code.google.com/p/httplib2/wiki/ExamplesPython3}
+
+\item Cómo hacer correctamente la caché de \codigo{HTTP}: Introducción a \codigo{httplib2}: \newline \href{http://www.xml.com/pub/a/2006/02/01/doing-http-caching-right-introducing-httplib2.html}{http://www.xml.com/pub/a/2006/02/01/doing-http-caching-right-introducing-httplib2.html}
+
+\item \codigo{httplib2:} Persistencia y autentificación \codigo{HTTP}: \newline \href{http://www.xml.com/pub/a/2006/03/29/httplib2-http-persistence-and-authentication.html}{http://www.xml.com/pub/a/2006/03/29/httplib2-http-persistence-and-authentication.html}
+
+\end{itemize} 
+
+\noindent Caché \codigo{HTTP}:
+
+\begin{itemize}
+
+\item Tutorial sobre la caché en \codigo{HTTP} de Mark Nottingham: \newline \href{http://www.mnot.net/cache\_docs/}{http://www.mnot.net/cache\_docs/}
+
+\item Cómo controlar la caché con cabeceras de \codigo{HTTP} en Google Doctype \newline \href{http://code.google.com/p/doctype/wiki/ArticleHttpCaching}{http://code.google.com/p/doctype/wiki/ArticleHttpCaching}
+
+\end{itemize} 
+
+\codigo{RFC}s:
+
+\begin{itemize}
+
+\item RFC 2616: \codigo{HTTP} \newline \href{http://www.ietf.org/rfc/rfc2616.txt}{http://www.ietf.org/rfc/rfc2616.txt}
+\item RFC 2617: \codigo{HTTP}, autenticación básica \newline \href{http://www.ietf.org/rfc/rfc2617.txt}{http://www.ietf.org/rfc/rfc2617.txt}
+\item RFC 1951: formato de compresión \codigo{deflate} \newline \href{http://www.ietf.org/rfc/rfc1951.txt}{http://www.ietf.org/rfc/rfc1951.txt}
+\item RFC 1952: formato de compresión \codigo{gzip} \newline \href{http://www.ietf.org/rfc/rfc1952.txt}{http://www.ietf.org/rfc/rfc1952.txt}
+
+\end{itemize} 
+
