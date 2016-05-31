@@ -4,25 +4,20 @@
 % or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 
 \documentclass[12pt,leqno,a4paper,spanish]{book}
-\usepackage{savesym}
 \usepackage[dvips]{graphicx}
 \usepackage[dvipsnames,usenames]{color}
 \usepackage{makeidx}
 \usepackage[absolute]{textpos}
 \usepackage{wrapfig}
 \usepackage{eso-pic}
-\usepackage[utf8]{inputenc}
+\usepackage[no-math]{fontspec}
 \usepackage{mathabx}
-\usepackage{babel}
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
 \usepackage{listings}
 \usepackage[colorlinks,unicode]{hyperref}
 \usepackage{soul}
-\savesymbol{Sun}
-\savesymbol{pi}
-\usepackage{CJKutf8}
-\usepackage{pinyin}
-\restoresymbol{TXF}{Sun}
-\restoresymbol{TXF}{pi}
+\usepackage{xeCJK}
 \hypersetup{
     pdfauthor={Jos\'{e} Miguel Gonz\'{a}lez Aguilera},
     pdftitle={Inmersi\'{o}n en Python 3},
@@ -83,6 +78,7 @@
 \definecolor{black}{rgb}{0,0,0}
 
 \begin{document}
+
 \widowpenalty=10000
 \clubpenalty=10000
 \raggedbottom

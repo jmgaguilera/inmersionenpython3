@@ -80,13 +80,13 @@ En Python 3 todas las cadenas de texto son secuencias de caracteres Unicode. En 
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True,escapeinside=@@]
->>> s = '@\begin{CJK}{UTF8}{}快乐\end{CJK}@ Python'
+>>> s = '快乐 Python'
 >>> len(s)
 9
 >>> s[0]
-'@\begin{CJK}{UTF8}{}快\end{CJK}@'
+'快'
 >>> s + ' 3'
-'@\begin{CJK}{UTF8}{}快乐\end{CJK}@ Python 3'
+'快乐 Python 3'
 \end{lstlisting}
 \end{minipage}
 
@@ -484,7 +484,7 @@ Y de este modo has llegado a la relación que existe entre las cadenas de texto 
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True,escapeinside=@@]
->>> s = '@\begin{CJK}{UTF8}{}快乐\end{CJK}@ Python'
+>>> s = '快乐 Python'
 >>> len(s)
 9
 >>> by = s.encode('utf-8')
@@ -503,7 +503,7 @@ b'\xff\xfe\xeb_PN \x00P\x00y\x00t\x00h\x00o\x00n\x00'
 >>> len(by)
 20
 >>> vuelta = by.decode('utf-16')
-'@\begin{CJK}{UTF8}{}快乐\end{CJK}@ Python'
+'快乐 Python'
 >>> vuelta == s
 True
 \end{lstlisting}

@@ -114,7 +114,7 @@ Después de abrir un fichero para lectura problemente querrás leer su contenido
 \begin{lstlisting}[mathescape=True,escapeinside=@@]
 >>> a_file = open('examples/chinese.txt', encoding='utf-8')
 >>> a_file.read()
-'Dive Into Python @\begin{CJK}{UTF8}{}是为有经验的程序员编写的一本\end{CJK}@ Python @\begin{CJK}{UTF8}{}书。\end{CJK}@\\n'
+'Dive Into Python 是为有经验的程序员编写的一本 Python 书。\\n'
 >>> a_file.read()
 ''
 \end{lstlisting}
@@ -144,7 +144,7 @@ Después de abrir un fichero para lectura problemente querrás leer su contenido
 >>> a_file.read(1)
 ' '
 >>> a_file.read(1)
-'@\begin{CJK}{UTF8}{}是\end{CJK}@'
+'是'
 >>> a_file.tell()
 20
 \end{lstlisting}
@@ -172,7 +172,7 @@ Vamos a intentarlo de nuevo.
 >>> a_file.seek(17)
 17
 >>> a_file.read(1)
-'@\begin{CJK}{UTF8}{}是\end{CJK}@'
+'是'
 >>> a_file.tell()
 20
 \end{lstlisting}
@@ -295,7 +295,7 @@ No hay nada específico relacionado con los ficheros en una sentencia \codigo{wi
 
 \subsection{Leer los datos línea a línea}
 
-Una ``línea'' en un ficheo de texto es lo que te puedes imaginar --- tecleas unas cuantas palabras y pulsas \codigo{INTRO} y ya estás en una nueva línea. Una línea de texto es una secuencia de caracteres que está delimitada por... ¿qué cosa exactamente? Bueno, es complicado de decir, porque los ficheros de texto pueden utilizar diferentes caracteres para marcar el final de una línea. Cada sistema operativo tiene su propia convención. En algunos se utiliza el carácter de ``retorno de carro'', otros utilizan el caracter de ``salto de línea'' y algunos utilizan ambos al final de cada línea.
+Una ``línea'' en un fichero de texto es lo que te puedes imaginar --- tecleas unas cuantas palabras y pulsas \codigo{INTRO} y ya estás en una nueva línea. Una línea de texto es una secuencia de caracteres que está delimitada por... ¿qué cosa exactamente? Bueno, es complicado de decir, porque los ficheros de texto pueden utilizar diferentes caracteres para marcar el final de una línea. Cada sistema operativo tiene su propia convención. En algunos se utiliza el carácter de ``retorno de carro'', otros utilizan el caracter de ``salto de línea'' y algunos utilizan ambos al final de cada línea.
 
 Ahora respira con expresión de relajación, porque Python \emph{controla estos tipos diferentes de fin de línea  de forma automática} por defecto. Si le dices que ``quieres leer un fichero de texto de línea en línea'', Python descubrirá por su cuenta la clase de fin de línea que el fichero de texto utiliza y simplemente funcionará como esperas.
 
