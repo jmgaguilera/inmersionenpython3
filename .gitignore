@@ -1,0 +1,10 @@
+syntax: glob
+
+*.swap
+*.swp
+*.log
+*.pyc
+
+output/**
+output_html/**
+output_html_full/**
