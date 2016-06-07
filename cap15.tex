@@ -1,0 +1,53 @@
+% ch15.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Caso de estudio: portar chardet a Python 3}\label{ch:chardet}
+
+\noindent Nivel de dificultad:\diflllll
+
+\begin{citaCap}
+    ``Palabras, palabras. Son todo lo que tenemos para continuar.'' \\
+        ---\emph{Rosencrantz y Guildenstern han muerto\footnote{\href{http://www.imdb.com/title/tt0100519/quotes}{http://www.imdb.com/title/tt0100519/quotes}}}
+\end{citaCap}
+
+\section{Inmersión}
+
+Pregunta: ¿Cuál es la primera causa de texto ininteligible en la web, en tu buzón de entrada, y en cualquier ordenador? Es la codificación de caracteres. En el capítulo \ref{ch:cadenas}, sobre las cadenas de caracteres, hablé sobre la historia de la codificación de caracteres y la creación de Unicode, la “codificación de caracteres para gobernarlas a todas”. Me gustaría no volver a ver ningún carácter ininteligible en una página web nunca más, porque todos los sistemas de creación de contenidos almacenaran información precisa sobre la codificación de caracteres; todos los protocolos de transferencia de información fueran conscientes de la existencia de Unicode, y todos los sistemas manejaran el texto con fidelidad al convertirlo entre diferentes codificaciones.
+
+También me gustaría un pony.
+
+Un pony de Unicode.
+
+Un Unipony, podría decir.
+
+Creo que me decantaré por la detección automática de la codificación de caracteres.
+
+\section{¿En qué consiste la detección automática?}
+
+Consiste en tomar una secuencia de bytes con una codificación de caracteres desconocida, e intentar determinar cuál es con el fin de poder leer el texto representado. Es como craquear un código cuando no dispones de la clave de decodificación.
+
+\subsection{¿Eso no es imposible?}
+
+En general: sí. Sin embargo, algunas codificaciones están optimizadas para idiomas específicos, y los idiomas no son aleatorios. Algunas secuencias de caracteres se repiten constantemente, mientras que otras no tienen sentido. Una persona con un inglés fluido que abre un períodico y lee “txzqJv 2!dasd0a QqdKjvz” reconoce instantáneamente que eso no es inglés (incluso aunque esté compuesto de letras ingles). Mediante el estudio de grandes cantidades de texto “típico”, un algoritmo puede simular esta clase de “lectura” fluida y proponer la codificación de caracteres en la que puede encontrar un texto.
+
+En otras palabras, la detección de la codificación de caracteres es en realidad la detección del idioma, combinada con el conocimiento de las codificaciones de caracteres que tienden a utilizar.
+
+\subsection{¿Existe tal algoritmo?}
+
+Resulta que sí. Todos los navegadores tienen autodetección de la codificación de caracteres ya que la web está llena de páginas que no tienen ninguna información al respecto. Mozilla Firefox contiene una librería de autodetección de la codificación de caracteres\footnote{\href{http://lxr.mozilla.org/seamonkey/source/extensions/universalchardet/src/base/}{http://lxr.mozilla.org/seamonkey/source/extensions/universalchardet/src/base/}} que es de código abierto. Yo porté dicha librería a Python 2 bajo el módulo denominado \codigo{chardet}. Este capítulo describe los pasos a través del proceso de conversión del módulo \codigo{charffdet} de Python 2 a Python 3.
+
+\section{Introducción al módulo \codigo{chardet}}
+
+Antes de convertir el código, ayudaría que entendieras cómo funciona. Esta es una guía breve a través del propio código. La librería \codigo{chardet} es demasiado larga para incluirla completa aquí, pero puedes descargarla de \codigo{chardet.feedparser.org}\footnote{\href{http://chardet.feedparser.org/download/}{http://chardet.feedparser.org/download/}}.
+
+\cajaTexto{La detección de la codificación de caracteres es en realidad la detección del lenguaje con dificultades.}
+
+El punto de entrada principal para el algoritmo de detección es \codigo{universaldetector.py}, que contiene una clase, \codigo{UniversalDetector} \footnote{Podrías pensar que el punto de entrada principal es la función \codigo{detect} en \codigo{chardet/\_\_init\_\_.py}, pero en realidad esto es una función de conveniencia para crear un objeto \codigo{UniversalDetector} , llamarlo, y devolver su resultado}.
+
+\codigo{UniversalDetector} puede manejar cinco categorías de codificaciones de caracteres:
+
+\begin{enumerate}
+    \item 
+\end{enumerate}
