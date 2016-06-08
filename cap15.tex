@@ -40,14 +40,29 @@ Resulta que sí. Todos los navegadores tienen autodetección de la codificación
 
 \section{Introducción al módulo \codigo{chardet}}
 
+\cajaTexto{La detección de la codificación de caracteres es en realidad la detección del lenguaje con dificultades.}
+
 Antes de convertir el código, ayudaría que entendieras cómo funciona. Esta es una guía breve a través del propio código. La librería \codigo{chardet} es demasiado larga para incluirla completa aquí, pero puedes descargarla de \codigo{chardet.feedparser.org}\footnote{\href{http://chardet.feedparser.org/download/}{http://chardet.feedparser.org/download/}}.
 
-\cajaTexto{La detección de la codificación de caracteres es en realidad la detección del lenguaje con dificultades.}
 
 El punto de entrada principal para el algoritmo de detección es \codigo{universaldetector.py}, que contiene una clase, \codigo{UniversalDetector} \footnote{Podrías pensar que el punto de entrada principal es la función \codigo{detect} en \codigo{chardet/\_\_init\_\_.py}, pero en realidad esto es una función de conveniencia para crear un objeto \codigo{UniversalDetector} , llamarlo, y devolver su resultado}.
 
 \codigo{UniversalDetector} puede manejar cinco categorías de codificaciones de caracteres:
 
 \begin{enumerate}
-    \item 
+  \item \codigo{UTF-N} con \codigo{BOM}\footnote{Ver capítulo \ref{ch:cadenas} sobre Cadenas de Caracteres}, con las variantes ``Big-Endian'' y ``Little-Endian'' de \codigo{UTF-16}, y todas las variantes de 4-bytes de \codigo{UTF-16}.
+
+  \item Codificaciones de escape, compatibles con \codigo{ASCII} de 7-bits, 
+    en las que los caracteres \codigo{no-ASCII} comienzan con una secuencia de escape. Por ejemplo: \codigo{ISO-2022-JP} (japonés) y \codigo{HZ-GB-2312}(chino).
+
+  \item Codificaciones multibyte, en las que cada carácter se representa por un número variable de bytes. Por ejemplo: \codigo{BIG5} (chino), \codigo{SHIFT\_JIS} (japonés), \codigo{EUC-KR} (coreano), y \codigo{UTF-8} sin \codigo{BOM}.
+
+  \item Codificaciones de un solo byte, en las que cada carácter se representa por un único byte. Por ejemplo: \codigo{KOI8-R} (ruso), \codigo{WINDOWS-1255} (hebreo), y \codigo{TIS-620} (thai).
+
+  \item \codigo{WINDOWS-1252}, que se utiliza fundamentalmente en Microsoft Windows por los mandos intermedios que no distinguen una codificación de caracteres de un agujero en el suelo.
+
 \end{enumerate}
+
+\subsection{\codigo{UTF-N} con \codigo{BOM}}
+
+Si el texto comienza con una marca \codigo{BOM}, se puede asumir de forma razonable que está codificado en \codigo{UTF-8}, \codigo{UTF-16} o \codigo{UTF-32}.
