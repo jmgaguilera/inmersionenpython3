@@ -65,4 +65,23 @@ El punto de entrada principal para el algoritmo de detección es \codigo{univers
 
 \subsection{\codigo{UTF-N} con \codigo{BOM}}
 
-Si el texto comienza con una marca \codigo{BOM}, se puede asumir de forma razonable que está codificado en \codigo{UTF-8}, \codigo{UTF-16} o \codigo{UTF-32}.
+Si el texto comienza con una marca \codigo{BOM}, se puede asumir de forma razonable que está codificado en \codigo{UTF-8}, \codigo{UTF-16} o \codigo{UTF-32} (Precisamente el \codigo{BOM} sirve para indicar cuál de ellos es). Esto es manejado por la propia clase \codigo{UniversalDetector}, que retorna el resultado inmediatamente sin proceso adicional.
+
+\subsection{Codificaciones con código de escape}
+
+Si el texto contiene una cadena de caracteres de escape reconocible podría indicar que se encuentra en una de las codificaciones que se basan en ello. \codigo{UniversalDetector} crea un objeto \codigo{EscCharSetProber} (definido en el \codigo{escprober.py}) y le pasa el texto.
+
+\codigo{ExcCharSetProber} crea una serie de máquinas de estado, basadas en los modelos definidos en \codigo{escsm.py}): \codigo{HZ-GB-2312}, \codigo{ISO-2022-CN}, \codigo{ISO-2022-JP}, y \codigo{ISO-2022-KR}. \codigo{EscCharSetProber} alimenta el texto a cada una de las máquinas de estado, byte a byte. Si alguna de ellas finaliza identificando la codificación, \codigo{EscCharSetProber} finaliza devolviendo el resultado a \codigo{UniversalDetector}, que lo retorna al llamante. Si cualquiera de las máquinas de estado alcanza una secuencia ilegal, finaliza su ejecución y se sigue la ejecución con la siguiente máquina de estados.
+
+\subsection{Codificaciones multibyte}
+
+Asumiendo que no existe \codigo{BOM}, \codigo{UniversalDetector} chequea si el texto contiene algún carácter con bits altos activados. Si es así, crea una serie de ``sondas'' para detectar codificaciones multibyte, de un byte y, como último recurso, \codigo{windos-1252}.
+
+La sonda de codificaciones multibyte, \codigo{MBCSGroupProber} (definida en \codigo{mbcsgroupprober.py}), es en realidad un envoltorio que gestiona un grupo de sondas, una para cada tipo de codificación multibyte: \codigo{BIG5}, \codigo{GB2313}, \codigo{EUC-TW}, \codigo{EUC-KR}, \codigo{EUC-JP}, \codigo{SHIFT\_JIS}, y \codigo{UTF-8}. \codigo{MBCSGroupProber} alimenta el texto a cada una de las sondas específicas y chequea el resultado. Si una sonda reporta una secuencia de bytes ilegal, se elimina de la búsqueda (cualquier llamada posterior a \codigo{UniversalDetector.feed()} para este texto se saltará a esta sonda). Si una sonda informa que está segura razonablemente de que ha detectado la codificación, \codigo{MBCSGroupProber} informa del resultado positivo a \codigo{UniversalDetector}, que devuelve el resultado al llamante.
+
+La mayoría de las sondas de la codificación multibyte heredan de \codigo{MultiByteCharSetProber} (definida en \codigo{mbcharsetprober.py}, y simplemente activan la máquina de estados y analizador de distribución apropiado y dejan a la clase \codigo{MultiByteCharSetProber} hacer el resto del trabajo. \codigo{MultiByteCharSetProber} recorre el texto a traves de la máquina de estados específica byte a byte, para buscar secuencias de caracteres que pudieran indicar de forma concluyente un resultado positivo o negativo. Al mismo tiempo, \codigo{MultiByteCharSetProber} alimenta el texto a un analizador de distribución específico de cada codificación de caracteres.
+
+Los analizadores de distribución (definidos en \codigo{chardistribution.py}) utilizan modelos específicos para cada idioma que tienen en cuenta los caracteres más frecuentes en cada uno de ellos. Cuando \codigo{MultiByteCharSetProber} ha alimentado suficiente texto a los analizadores, calcula el grado de confianza basándose en el número de caracteres más frecuentes, el número total de caracteres, y el ratio de distribución específico de cada lenguaje. Si el grado de confianza es suficientemente algo, \codigo{MultiByteCharSetProber} devuelve el resultado a \codigo{MBCSGroupProber}, que lo devuelve a \codigo{UniversalDetector}, quien, a su vez, lo devuelve al llamante.
+
+El caso del idioma Japonés es más difícil. Un análisis de distribución monocarácter no es siempre suficiente para distinguir entre \codigo{EUC-JP} y \codigo{SHIFT\_JIS}, por ello la sonda \codigo{SJISProber} (definida en \codigo{sjisprober.py} también utiliza un análisis de distribución de dos caracteres. \codigo{SJISContextAnalysis} y \codigo{EUCJPContextAnalysis} (ambos definidos en \codigo{jpcntx.py}) comprueban la frecuencia en el texto de los caracteres del silabario Hiragana. Cuando se ha procesado texto suficiente, devuelven el grado de confianza a \codigo{SJISProber}, que chequea ambos analizadores y devuelve aquél de mayor grado de confianza a \codigo{MBCSGroupProber}.
+
