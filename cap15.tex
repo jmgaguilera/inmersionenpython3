@@ -85,3 +85,162 @@ Los analizadores de distribución (definidos en \codigo{chardistribution.py}) ut
 
 El caso del idioma Japonés es más difícil. Un análisis de distribución monocarácter no es siempre suficiente para distinguir entre \codigo{EUC-JP} y \codigo{SHIFT\_JIS}, por ello la sonda \codigo{SJISProber} (definida en \codigo{sjisprober.py} también utiliza un análisis de distribución de dos caracteres. \codigo{SJISContextAnalysis} y \codigo{EUCJPContextAnalysis} (ambos definidos en \codigo{jpcntx.py}) comprueban la frecuencia en el texto de los caracteres del silabario Hiragana. Cuando se ha procesado texto suficiente, devuelven el grado de confianza a \codigo{SJISProber}, que chequea ambos analizadores y devuelve aquél de mayor grado de confianza a \codigo{MBCSGroupProber}.
 
+\subsection{Codificaciones de un solo byte}
+
+\cajaTexto{En serio, dónde está mi pony unicode}
+
+La sonda de codificaciones de un solo byte, \codigo{SBCSGroupProber} (definida en \codigo{sbcsgroupprober.py}), también es un envoltorio que gestiona el grupo de sondas que existen para cada combinación de idioma y codificación de un solo byte: \codigo{windows-1251}, \codigo{KOI8-R}, \codigo{ISO-8859-5}, \codigo{MacCyrillic}, \codigo{IBM855}, y \codigo{IBM866} (ruso); \codigo{ISO-8859-7} y \codigo{windows-1253} (griego); \codigo{ISO-8859-5} y \codigo{windows-1251} (búlgaro); \codigo{ISO-8859-2} y \codigo{windows-1250} (húngaro); \codigo{TIS-620} (Thai); \codigo{windows-1255} e \codigo{ISO-8859-8} (Hebreo).
+
+\codigo{SBCSGroupProber} alimenta el texto a cada uno de estas sondas específicas y comprueba sus resultados. Las sondas están implementadas con un única clase \codigo{SingleByteCharSetProber} (definida en \codigo{sbcharsetprober.py}, que utiliza como parámetro del constructor el modelo del idioma. Este define la frecuencia de aparición de las diferentes secuencias de dos caracteres en un texto típico. \codigo{SingleByteByteCharSetProber} procesa el texto contando las secuencias de dos caracteres más frecuentes. Cuando se ha procesado suficiente texto, calcula el nivel de confianza basado en el número de dichas secuencias, el número total de caracteres, y la distribución específica del idioma.
+
+El hebreo se maneja como un caso especial. Si el texto parece hebreo, basado en el análisis de distribución de dos caracteres, \codigo{HebrewProber} (definido en \codigo{hebrewprober.py} intenta distinguir entre hebreo visual (en el que el texto está realmente almacenado ``hacia atrás'' línea a línea, y luego se muestra directamente para que pueda leerse de derecha a izquierda) y hebreo lógico (en el que el texto se almacena en el orden de lectura y luego se visualiza de derecha a izquierda por el sistema). Debido a que ciertos caracteres se codifican de forma diferente en función de que aparezcan en medio de una palabra o al final, podemos intentar adivinar de forma razonable la dirección del texto fuente, y devolver la codificación correcta (\codigo{windows-1255} en el caso de hebreo lógico, o \codigo{ISO-8859-8} para el hebreo visual).
+
+\subsection{windows-1252}
+
+Si \codigo{UniversalDetector} encuentra en el texto un carácter con el bit alto activado, pero ninguno de las sondas anteriores devuelve un resultado fiable, crea un objeto \codigo{Latin1Prober} (definido en \codigo{latin1prober.py}) para intentar detectar texto en inglés en una codificación \codigo{windows-1252}. Esta no es fiable (inherentemente), porque las letras en inglés se codifican de la misma forma en diferentes codificaciones. La única forma de distinguir \codigo{windows-1252} es a través de algunos símbolos comúnmente utilizados como las comillas inteligentes, los apostrofos, símbolos de copyright, y otros similares. \codigo{Latin1Prober} reduce su estimación del nivel de confianza para permitir que le ``ganen'' otras sondas más precisas, si es posible.
+
+\section{Ejecutando \codigo{2to3}}
+
+Vamos a migrar el módulo \codigo{chardet} de Python 2 a Python 3. Este último trae una utilidad denominada \codigo{2to3}, que toma el código fuente de Python 2 como entrada y lo convierte de forma automática a Python 3. En algunos casos es fácil ---Cambiar una función de librería que fue renombrada o movida a otro módulo---, pero en otros casos puede ser muy complejo. Para entender lo que puede llegar a hacer, lee el apéndice \ref{ap:porting}, Migrando código a Python 3 con \codigo{2to3}. En este capítulo comenzaremos ejecutando \codigo{2to3} en el paquete \codigo{chardet}, verás que aún quedará bastante trabajo que hacer después de que las herramientas automatizadas hayan aplicado su magia.
+
+El paquete \codigo{chardet} está dividido en varios ficheros, todos en el mismo directorio. El script \codigo{2to3} facilita la conversión de varios ficheros a la vez: basta con pasarle el nombre del directorio como parámetro y \codigo{2to3} convertirá cada uno de los ficheros que contenga.
+
+
+\begin{lstlisting}[escapeinside={(*}{*)}]
+C:\home\chardet> python c:\Python30\Tools\Scripts\2to3.py -w chardet\
+RefactoringTool: Skipping implicit fixer: buffer
+RefactoringTool: Skipping implicit fixer: idioms
+RefactoringTool: Skipping implicit fixer: set_literal
+RefactoringTool: Skipping implicit fixer: ws_comma
+--- chardet\__init__.py (original)
++++ chardet\__init__.py (refactored)
+@@ -18,7 +18,7 @@
+ __version__ = "1.0.1"
+
+ def detect(aBuf):
+(* \color{red}-    import universaldetector *)
+(* \color{green!50!black}+    from . import universaldetector *)
+     u = universaldetector.UniversalDetector()
+     u.reset()
+     u.feed(aBuf)
+--- chardet\big5prober.py (original)
++++ chardet\textbackslash big5prober.py (refactored)
+@@ -25,10 +25,10 @@
+ # 02110-1301  USA
+ ######################### END LICENSE BLOCK #########################
+
+(* \color{red}-from mbcharsetprober import MultiByteCharSetProber *)
+(* \color{red}-from codingstatemachine import CodingStateMachine *)
+(* \color{red}-from chardistribution import Big5DistributionAnalysis *)
+(* \color{red}-from mbcssm import Big5SMModel *)
+(* \color{green!50!black}+from .mbcharsetprober import MultiByteCharSetProber *)
+(* \color{green!50!black}+from .codingstatemachine import CodingStateMachine *)
+(* \color{green!50!black}+from .chardistribution import Big5DistributionAnalysis *)
+(* \color{green!50!black}+from .mbcssm import Big5SMModel *)
+
+ class Big5Prober(MultiByteCharSetProber):
+     def __init__(self):
+--- chardet\chardistribution.py (original)
++++ chardet\chardistribution.py (refactored)
+@@ -25,12 +25,12 @@
+ # 02110-1301  USA
+ ######################### END LICENSE BLOCK #########################
+
+(* \color{red}-import constants *)
+(* \color{red}-from euctwfreq import EUCTWCharToFreqOrder,  *)
+(* \color{red}      EUCTW\_TABLE\_SIZE, EUCTW\_TYPICAL\_DISTRIBUTION\_RATIO *)
+(* \color{red}-from euckrfreq import EUCKRCharToFreqOrder, *)
+(* \color{red}      EUCKR\_TABLE\_SIZE, EUCKR\_TYPICAL\_DISTRIBUTION\_RATIO *)
+(* \color{red}-from gb2312freq import GB2312CharToFreqOrder, *)
+(* \color{red}      GB2312\_TABLE\_SIZE, GB2312\_TYPICAL\_DISTRIBUTION\_RATIO *)
+(* \color{red}-from big5freq import Big5CharToFreqOrder, *)
+(* \color{red}      BIG5\_TABLE\_SIZE, BIG5\_TYPICAL\_DISTRIBUTION\_RATIO *)
+(* \color{red}-from jisfreq import JISCharToFreqOrder, *)
+(* \color{red}      JIS\_TABLE\_SIZE, JIS\_TYPICAL\_DISTRIBUTION\_RATIO *)
+(* \color{green!50!black}+from . import constants *)
+(* \color{green!50!black}+from .euctwfreq import EUCTWCharToFreqOrder, *)
+(* \color{green!50!black}      EUCTW\_TABLE\_SIZE, EUCTW\_TYPICAL\_DISTRIBUTION\_RATIO *)
+(* \color{green!50!black}+from .euckrfreq import EUCKRCharToFreqOrder, *)
+(* \color{green!50!black}      EUCKR\_TABLE\_SIZE, EUCKR\_TYPICAL\_DISTRIBUTION\_RATIO *)
+(* \color{green!50!black}+from .gb2312freq import GB2312CharToFreqOrder, *)
+(* \color{green!50!black}      GB2312\_TABLE\_SIZE, GB2312\_TYPICAL\_DISTRIBUTION\_RATIO *)
+(* \color{green!50!black}+from .big5freq import Big5CharToFreqOrder,  *)
+(* \color{green!50!black}      BIG5\_TABLE\_SIZE, BIG5\_TYPICAL\_DISTRIBUTION\_RATIO *)
+(* \color{green!50!black}+from .jisfreq import JISCharToFreqOrder,  *)
+(* \color{green!50!black}      JIS\_TABLE\_SIZE, JIS\_TYPICAL\_DISTRIBUTION\_RATIO *)
+
+ ENOUGH_DATA_THRESHOLD = 1024
+ SURE_YES = 0.99
+.
+.
+(* \color{yellow!75!black}. (Durante un rato va sacando mensajes de este tipo) *)
+.
+.
+RefactoringTool: Files that were modified:
+RefactoringTool: chardet\__init__.py
+RefactoringTool: chardet\big5prober.py
+RefactoringTool: chardet\chardistribution.py
+RefactoringTool: chardet\charsetgroupprober.py
+RefactoringTool: chardet\codingstatemachine.py
+RefactoringTool: chardet\constants.py
+RefactoringTool: chardet\escprober.py
+RefactoringTool: chardet\escsm.py
+RefactoringTool: chardet\eucjpprober.py
+RefactoringTool: chardet\euckrprober.py
+RefactoringTool: chardet\euctwprober.py
+RefactoringTool: chardet\gb2312prober.py
+RefactoringTool: chardet\hebrewprober.py
+RefactoringTool: chardet\jpcntx.py
+RefactoringTool: chardet\langbulgarianmodel.py
+RefactoringTool: chardet\langcyrillicmodel.py
+RefactoringTool: chardet\langgreekmodel.py
+RefactoringTool: chardet\langhebrewmodel.py
+RefactoringTool: chardet\langhungarianmodel.py
+RefactoringTool: chardet\langthaimodel.py
+RefactoringTool: chardet\latin1prober.py
+RefactoringTool: chardet\mbcharsetprober.py
+RefactoringTool: chardet\mbcsgroupprober.py
+RefactoringTool: chardet\mbcssm.py
+RefactoringTool: chardet\sbcharsetprober.py
+RefactoringTool: chardet\sbcsgroupprober.py
+RefactoringTool: chardet\sjisprober.py
+RefactoringTool: chardet\universaldetector.py
+RefactoringTool: chardet\utf8prober.py
+
+Now run the 2to3 script on the testing harness, test.py.
+
+C:\home\chardet> python c:\Python30\Tools\Scripts\2to3.py -w test.py
+RefactoringTool: Skipping implicit fixer: buffer
+RefactoringTool: Skipping implicit fixer: idioms
+RefactoringTool: Skipping implicit fixer: set_literal
+RefactoringTool: Skipping implicit fixer: ws_comma
+--- test.py (original)
++++ test.py (refactored)
+@@ -4,7 +4,7 @@
+ count = 0
+ u = UniversalDetector()
+ for f in glob.glob(sys.argv[1]):
+(* \color{red}-    print f.ljust(60), *)
+(* \color{green!50!black}+    print(f.ljust(60), end=' ') *)
+     u.reset()
+     for line in file(f, 'rb'):
+         u.feed(line)
+@@ -12,8 +12,8 @@
+     u.close()
+     result = u.result
+     if result['encoding']:
+(* \color{red}-        print result['encoding'], 'with confidence', result['confidence'] *)
+(* \color{green!50!black}+        print(result['encoding'], 'with confidence', result['confidence']) *)
+     else:
+(* \color{red}-        print '******** no result' *)
+(* \color{green!50!black}+        print('******** no result') *)
+     count += 1
+(* \color{red}-print count, 'tests' *)
+(* \color{green!50!black}+print(count, 'tests') *)
+RefactoringTool: Files that were modified:
+RefactoringTool: test.py
+\end{lstlisting}
+
+Bueno, no fue para tanto. Solo se han convertido unos pocos imports y sentencias print. Por cierto, cuál era el problema con todas las sentencias import. Para contestar a esto, tienes que entender que el módulo \codigo{chardet} estaba dividido en múltiples ficheros.
+
+
