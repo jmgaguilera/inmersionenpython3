@@ -202,7 +202,7 @@ En este ejemplo, todo lo que se encuentra entre las comillas triples es el \codi
 Muchos entornos integrados de programación (\codigo{IDEs}) utilizan los \codigo{docstring} para proporcionar ayuda y documentación sensible al contexto, de forma que cuando teclees el nombre de una función, aparece su \codigo{docstring} como pista sobre el significado de la función y de sus parámetros. Esto puede ser muy útil, tan útil como explicativos sean los \codigo{docstring} que escribas.
 \end{quote}
 
-\section{El camino de búsqueda para \codigo{import}}
+\section{El camino de búsqueda para \codigo{import}}\label{sc:search_path}
 
 Antes de continuar, quiero mencionar brevemente el camino\footnote{En español se usa también \codigo{ruta de búsqueda}. En inglés se usa la palabra \codigo{path} para referirse a este concepto} de búsqueda de las librerías. Cuando importas un módulo, Python busca en varios lugares hasta encontrarlo. En concreto, busca en todos los directorios que se encuentren definidos en la variable \codigo{sys.path}. Como se trata de una \codigo{lista}, puedes verla fácilmente o modificarla con los métodos estándares de manipulación de listas. (Aprenderás a trabajar con listas en el capítulo ~\ref{tiposdedatonativos} sobre Tipos de Dato Nativos).
 

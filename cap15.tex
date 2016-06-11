@@ -243,4 +243,111 @@ RefactoringTool: test.py
 
 Bueno, no fue para tanto. Solo se han convertido unos pocos imports y sentencias print. Por cierto, cuál era el problema con todas las sentencias import. Para contestar a esto, tienes que entender que el módulo \codigo{chardet} estaba dividido en múltiples ficheros.
 
+\section{Una breve disgresión sobre los módulos \emph{multifichero}}
+
+\codigo{chardet} es un módulo multifichero. Podría haber elegido poner todo el código en uno solo (denominado \codigo{chardet.py}, pero no lo hice. En vez de eso, creé un directorio (denominado \codigo{chardet}), luego creé un fichero \codigo{\_\_init\_\_.py} en él, \emph{con ello se asume que todos los ficheros de este directorio son parte del mismo módulo}. El nombre del módulo es el nombre del directorio. Los ficheros que están dentro del directorio pueden referenciar a otros ficheros dentro del mismo, o incluso en subdirectorios (más sobre esto en un minuto). Pero la colección completa de ficheros se presenta para otro código de Python como un único módulo ---como si las funciones y las clases se encontrasen un único fichero de extensión \codigo{.py}.
+
+¿Qué contiene el fichero \codigo{\_\_init\_\_.py}? Nada. Todo. Algo intermedio. El fichero \codigo{\_\_init\_\_.py} no necesita definir nada. Puede ser un fichero vacío. Pero también se puede utilizar para definir en él las funciones que sean punto de entrada a tu módulo. O puedes poner todas las funciones en él. O todas, salvo una\ldots
+
+\cajaTextoAncho{Un directorio con un fichero \codigo{\_\_init\_\_.py} siempre se trata como un módulo multifichero. Sin un fichero \codigo{\_\_init\_\_.py}, un directorio no contiene más que un conjunto de ficheros \codigo{.py} sin relación alguna}
+
+Veamos como funciona esto en la práctica.
+
+\begin{lstlisting}[breaklines=true]
+>>> import chardet
+>>> dir(chardet)
+['__builtins__', '__doc__', '__file__', '__name__',
+ '__package__', '__path__', '__version__', 'detect']
+>>> chardet
+<module 'chardet' from 'C:\Python31\lib\site-packages\chardet\__init__.py'>
+\end{lstlisting}
+
+\begin{enumerate}
+  \item \emph{Línea 2:} aparte de los atributos de clase habituales, lo único que hay en el módulo \codigo{chardet} es la función \codigo{detect()}.
+  \item \emph{Línea 5:} aquí aparece la primera pista de que el módulo \codigo{chardet} está formado por más de un fichero; el ``módulo'' se muestra como procedente del fichero \codigo{\_\_init\_\_.py} del directorio \codigo{chardet/}.
+\end{enumerate}
+
+Veamos el contenido del fichero \codigo{\_\_init\_\_.py}.
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+def detect(aBuf):                              
+    from . import universaldetector            
+    u = universaldetector.UniversalDetector()
+    u.reset()
+    u.feed(aBuf)
+    u.close()
+    return u.result
+\end{lstlisting}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} El fichero define la función \codigo{detect()}, que es el punto de entrada principal del módulo \codigo{chardet}.
+  \item \emph{Línea 2:} Esta función tiene poquísimo código. En realidad, todo lo que hace es importar el módulo \codigo{universaldetector} y comenzar a usarlo. ¿Pero dónde está definido \codigo{universaldetector}?
+\end{enumerate}
+
+La respuesta se encuentra en esa extraña sentencia \codigo{import}.
+
+\begin{lstlisting}[language=Python,breaklines=true]
+from . import universaldetector
+\end{lstlisting}
+
+Traducido, significa que ``se importe el módulo \codigo{universaldetector}; que está en el mismo directorio en el que estoy yo (el fichero \codigo{chardet/\_\_init\_\_.py})''. A esto se le denomina \emph{importación relativa}. Es la forma en que se localizan entre sí los ficheros que se encuentran en un módulo multifichero, sin preocuparse de conflictos de denominación con otros módulos que puedas haber instalado en tu \emph{camino de búsqueda de módulos}\footnote{Ver la sección \ref{sc:search_path}, sobre este tema.}. Esta sentencia \codigo{import} solamente buscará a \codigo{universaldetector} dentro del propio directorio \codigo{chardet}.
+
+Estos dos conceptos ---\codigo{\_\_init\_\_.py} e importación relativa--- permiten que puedas dividir un módulo en las piezas que quieras. El módulo \codigo{chardet} consta de 36 ficheros \codigo{.py}, ¡36!. Aún así, para utilizarlo únicamente necesitas usar \codigo{import chardet}, y luego llamar a la función \codigo{chardet.detect()}. Para tu código es transparente dónde está definida la función, si utiliza una importación relativa de \codigo{universaldetector} y que este, a su vez, utiliza cinco importaciones relativas de otros tantos ficheros, todos contenidos en el directorio \codigo{chardet/}.
+
+\cajaTextoAncho{Si alguna vez te encuentras en la necesidad de escribir una librería grande en Python (o más problemente, cuando te des cuenta de que tu pequeña librería ha crecido hasta convertirse en grande), tómate tu tiempo en refactorizarla en un módulo multifichero. Es una de las muchas cosas en las que Python es muy bueno, así que aprovéchate de ello.}
+
+\section{Arreglando lo que \codigo{2to3} no puede}
+
+\subsection{\codigo{False} es sintaxis inválida}
+
+\cajaTexto{¿Tienes pruebas? ¿No?}
+
+Ahora vamos a las pruebas reales: ejecutar la suite de pruebas. Puesto que la suite de pruebas esta diseñada para cubrir todos los caminos posibles del código, es una buena manera de probar el código migrado para estar seguro de que no hay errores acechando en algún rincón.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+Traceback (most recent call last):
+  File "test.py", line 1, in <module>
+    from chardet.universaldetector import UniversalDetector
+  File "C:\home\chardet\chardet\universaldetector.py", line 51
+    self.done = constants.False
+                              ^
+SyntaxError: invalid syntax
+\end{lstlisting}
+\end{minipage}
+
+Vaya, un pequeño fallo. En Python 3, \codigo{False} es una palabra reservada, así que no la puedes utilizar como nombre de una variable. Vamos a mirar \codigo{constants.py} para ver dónde está definida. Aquí está la versión original del fichero antes de que \codigo{2to3} lo cambiara:
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+import __builtin__
+if not hasattr(__builtin__, 'False'):
+    False = 0
+    True = 1
+else:
+    False = __builtin__.False
+    True = __builtin__.True
+\end{lstlisting}
+
+Este código está diseñado para que funcione con versiones antiguas de \mbox{Python 2}. Antes de Python 2.3 no existía el tipo \codigo{bool}. El código detecta la ausencia de las constantes \codigo{True} y \codigo{False} y las define si es necesario.
+
+Sin embargo, en Python 3 siempre existe el tipo \codigo{bool}, por lo que este código es innecesario. La solución más simple pasa por sustituir todas las instancias de \codigo{constants.True} y \codigo{constants.False} por \codigo{True} y \codigo{False}, respectivamente. Y borrar este fichero.
+
+Así, esta línea del fichero \codigo{universaldetector.py}:
+
+\begin{lstlisting}[language=Python,breaklines=true]
+self.done = constants.False
+\end{lstlisting}
+
+Se convierte en:
+
+\begin{lstlisting}[language=Python,breaklines=true]
+self.done = False
+\end{lstlisting}
+
+¡Ah! ¿No es satisfactorio? El código queda más corto y más legible así.
+
+
 
