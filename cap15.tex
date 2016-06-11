@@ -349,5 +349,47 @@ self.done = False
 
 ¡Ah! ¿No es satisfactorio? El código queda más corto y más legible así.
 
+\subsection{No hay ningún módulo denominado \codigo{constants}}
+
+Hora de volver a ejecutar \codigo{test.py} y ver hasta donde llega.
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+Traceback (most recent call last):
+  File "test.py", line 1, in <module>
+    from chardet.universaldetector import UniversalDetector
+  File "C:\home\chardet\chardet\universaldetector.py", line 29, in <module>
+    import constants, sys
+ImportError: No module named constants
+\end{lstlisting}
+\end{minipage}
+
+¿Qué dices? ¿Que no hay un módulo denominado \codigo{constants}? Desde luego que sí. Está ahí mismo, en \codigo{chardet/constants.py}.
+
+¿Recuerdas que el comando \codigo{2to3} arregló muchas sentencias \codigo{import}? Esta librería tiene muchas importaciones relativas ---esto es, módulos que importan a otros módulos dentro de la misma librería--- pero la lógica que gobierna las mismas ha cambiado en Python 3. En Python 2, podías escribir \codigo{import constants} y el primer lugar en el que se busca es en el directorio \codigo{chardet/}. En Python 3, todas las sentencias \codigo{import} son absolutas por defecto. Si quieres una relativa hay que ser explícito:
+
+\begin{lstlisting}[language=Python,breaklines=true]
+from . import constants
+\end{lstlisting}
+
+Pero espera, ¿No se supone que \codigo{2to3} tenía que haber resuelto esto por ti? Bueno, lo hizo, pero esta sentencia en particular (\codigo{import constants, sys}) combina dos tipos diferentes de importación en una única línea: una relativa, el módulo \codigo{constants}; y una absoluta, el módulo \codigo{sys} que está preinstalado en la librería estándar de Python. En Python 2, podías combinar ambas en una única sentencia. En Python 3 no puedes. Además, el comando \codigo{2to3} no es lo suficientemente inteligente como para dividir esta sentencia en dos.
+
+La solución consiste en dividir la sentencia manualmente:
+
+\begin{lstlisting}[language=Python,breaklines=true]
+import constants, sys
+\end{lstlisting}
+
+Se debe transformar en:
+
+\begin{lstlisting}[language=Python,breaklines=true]
+from . import constants
+import sys
+\end{lstlisting}
+
+Hay diversas variaciones de este problema repartidas a lo largo de la librería \codigo{chardet}. En algunos lugares es ``\codigo{import constants, sys}''; en otros, es ``\codigo{import constants, re}''. El arreglo siempre es igual: dividir manualmente esta sentencia en dos: una para la importación relativa, la otra para la importación absoluta.
+
+¡Sigamos!
 
 
