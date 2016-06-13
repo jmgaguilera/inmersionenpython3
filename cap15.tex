@@ -392,4 +392,121 @@ Hay diversas variaciones de este problema repartidas a lo largo de la librería 
 
 ¡Sigamos!
 
+\subsection{El nombre ``file'' no etá definido}
 
+Y aquí vamos de nuevo, ejecutamos \codigo{test.py} para ver qué sucede con los casos de prueba\ldots
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+tests\ascii\howto.diveintomark.org.xml
+Traceback (most recent call last):
+  File "test.py", line 9, in <module>
+    for line in file(f, 'rb'):
+NameError: name 'file' is not defined
+\end{lstlisting}
+\end{minipage}
+
+\cajaTexto{\codigo{open()} es el nuevo \codigo{file()}. PapayaWhip es el nuevo negro}
+
+Esta me sorprendió, porque he estado utilizando \codigo{file()} desde que tengo memoria. En Python 2, la función global \codigo{file()} es un alias de la función \codigo{open()}, que es el modo estándar de abrir ficheros de lectura\footnote{Ver apartado \ref{sec:leer_ficheros}, Leer contenido de ficheros de texto.}. En Python 3, no existe la función global \codigo{file()}.
+
+La solución más simple de este problema es sustituir la llamada a la función \codigo{file} por \codigo{open}:
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+for line in open(f, 'rb'):
+\end{lstlisting}
+
+Y eso es todo lo que tengo que decir sobre este tema.
+
+\subsection{No puedes usar un patrón de cadena de texto en un objeto que representa bytes}
+
+Las cosas comienzan a ponerse interesante. Y por ``interesante'' quiero decir ``confusas como el infierno''.
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+tests\ascii\howto.diveintomark.org.xml
+Traceback (most recent call last):
+  File "test.py", line 10, in <module>
+    u.feed(line)
+  File "C:\home\chardet\chardet\universaldetector.py", line 98, in feed
+    if self._highBitDetector.search(aBuf):
+TypeError: can't use a string pattern on a bytes-like object
+\end{lstlisting}
+\end{minipage}
+
+Para depurar esto veamos lo que es \codigo{self.\_highBitDetector}. Está definido en el método \codigo{\_\_init\_\_} de la clase \codigo{UniversalDetector}.
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+class UniversalDetector:
+    def __init__(self):
+        self._highBitDetector = re.compile(r'[\x80-\xFF]')
+\end{lstlisting}
+
+Esto precompila una expresión regular diseñada para encontrar caracteres no ASCII que se encuentren en el rango 128-255 (0x80-0xFF). Espera, esto no es del todo cierto, necesito ser más preciso con mi terminología. Este patrón está diseñado para encontrar \emph{bytes} no ASCII en el rango 128-255.
+
+Y ese es el problema.
+
+En Python 2, una cadena de texto era un array de bytes cuya codificación de caracteres se mantenía separadamente. Si querías conservar la codificación de caracteres, en su lugar tenías que utilizar una cadena de caracteres Unicode (u''). Pero en Python 3 una cadena de caracteres siempre es lo que Python 2 llamaba una cadena de caracteres Unicode ---esto es, un array de caracteres Unicode (de un número de bytes posiblemente variable). Como esta expresión regular está definida por un patrón de cadena de caracteres, solo puede utilizarse para buscar en cadenas de caracteres--- es decir, un array de caracteres. Pero lo que estamos buscando no es un cadena de caracteres, es un array de bytes. Si observamos la traza del error, este sucede en \codigo{universaldetector.py}:
+
+\begin{lstlisting}[language=Python,breaklines=true]
+def feed(self, aBuf):
+    .
+    .
+    .
+    if self._mInputState == ePureAscii:
+        if self._highBitDetector.search(aBuf):
+\end{lstlisting}
+
+¿Y qué es un \codigo{aBuf}? Vamos un poco más atrás a un lugar que llame a \codigo{UniversalDetector.feed()}. La prueba \codigo{test.py} lo hace:
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+u = UniversalDetector()
+.
+.
+.
+for line in open(f, 'rb'):
+    u.feed(line)
+\end{lstlisting}
+
+Y aquí encontramos nuestra respuesta: la variable \codigo{aBuf} del método \codigo{UniversalDetector.feed()} contiene una línea leída de un fichero del disco. Observa que los parámetros utilizados para su apertura son 'rb'. 'r' es para que sea de lectura; y 'b' es para indicar 'binario'. Sin este último parámetro, este bucle \codigo{for} podría leer el fichero, línea por línea, y convertir cada una de ellas en una cadena de caracteres ---un array de caracteres Unicode--- de acuerdo a la codificación de caracteres por defecto del sistema. Pero con el parámetro 'b', este bucle \codigo{for} lee el fichero, línea a línea y almacena cada una de ellas exactamente como aparecen en el fichero, como un array de bytes. Ese array de bytes se pasa a \codigo{UniversalDetector.feed()} y, llegado el momento, se le pasa a la expresión regular precompilada, \codigo{self.\_highBitDetector}, con el fin de buscar caracteres con el bit alto activado\ldots Pero no tenemos caracteres, tenemos bytes. ¡Ups!
+
+Necesitamos que esta expresión regular busque en un array de bytes, no de caracteres.
+
+Una vez nos damos cuenta de ello, la solución no es difícil. Las expresiones regulares definidas con cadenas de caracteres buscan en cadenas de caracteres. Las expresiones regulares definidas con un array de bytes buscan en arrays de bytes. Para definir un patrón como un array de bytes, simplemente modificamos el tipo del argumento que usamos para definir la expresión regular:
+
+\begin{lstlisting}[escapeinside={(*}{*)}]
+  class UniversalDetector:
+      def __init__(self):
+(* \color{red}-         self.\_highBitDetector = re.compile(r'[\textbackslash x80-\textbackslash xFF]') *)
+(* \color{red}-         self.\_escDetector = re.compile(r'(\textbackslash 033|~{)') *)
+(* \color{green!50!black}+         self.\_highBitDetector = re.compile(b'[\textbackslash x80-\textbackslash xFF]') *)
+(* \color{green!50!black}+         self.\_escDetector = re.compile(b'(\textbackslash 033|~{)') *)
+          self._mEscCharSetProber = None
+          self._mCharSetProbers = []
+          self.reset()
+\end{lstlisting}
+
+La búsqueda de todo el código para localizar otros usos del módulo \codigo{re} encuentra dos sitios más, ambos en \codigo{charsetprober.py}. De nuevo, el código define las expresiones regulares como cadenas de caracteres pero las está ejecutando sobre \codigo{aBuf}, que es un array de bytes. La solución es la misma: definir los patrones de la expresión regular como un array de bytes.
+
+
+\begin{lstlisting}[escapeinside={(*}{*)}]
+  class CharSetProber:
+      .
+      .
+      .
+      def filter_high_bit_only(self, aBuf):
+(* \color{red}-         aBuf = re.sub(r'([\textbackslash x00-\textbackslash x7F])+', ' ', aBuf) *)
+(* \color{green!50!black}+         aBuf = re.sub(b'([\textbackslash x00-\textbackslash x7F])+', b' ', aBuf) *)
+          return aBuf
+    
+      def filter_without_english_letters(self, aBuf):
+(* \color{red}-         aBuf = re.sub(r'([A-Za-z])+', ' ', aBuf) *)
+(* \color{green!50!black}+         aBuf = re.sub(b'([A-Za-z])+', b' ', aBuf) *)
+          return aBuf
+\end{lstlisting}
