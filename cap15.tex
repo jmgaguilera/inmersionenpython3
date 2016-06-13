@@ -510,3 +510,197 @@ La búsqueda de todo el código para localizar otros usos del módulo \codigo{re
 (* \color{green!50!black}+         aBuf = re.sub(b'([A-Za-z])+', b' ', aBuf) *)
           return aBuf
 \end{lstlisting}
+
+\subsection{No puedo convertir un objeto 'bytes' en \codigo{str} implícitamente}
+
+¡Curioso y requetecurioso!
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+tests\ascii\howto.diveintomark.org.xml
+Traceback (most recent call last):
+  File "test.py", line 10, in <module>
+    u.feed(line)
+  File "C:\home\chardet\chardet\universaldetector.py", line 100, in feed
+    elif (self._mInputState == ePureAscii) and self._escDetector.search(self._mLastChar + aBuf):
+TypeError: Can't convert 'bytes' object to str implicitly
+\end{lstlisting}
+\end{minipage}
+
+En este caso existe un desafortunado choque entre el estilo de codificación y el intérprete de Python. El \codigo{TypeError} podría estar en cualquier lugar de la línea, pero la traza no dice exactamente dónde está. Podría ser en la primera condición o en la segunda. Para acotarlo, deberías dividir la línea en dos, así:
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+elif (self._mInputState == ePureAscii) and \
+    self._escDetector.search(self._mLastChar + aBuf):
+\end{lstlisting}
+
+Ejecutar de nuevo el test:
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+tests\ascii\howto.diveintomark.org.xml
+Traceback (most recent call last):
+  File "test.py", line 10, in <module>
+    u.feed(line)
+  File "C:\home\chardet\chardet\universaldetector.py", line 101, in feed
+    self._escDetector.search(self._mLastChar + aBuf):
+TypeError: Can't convert 'bytes' object to str implicitly
+\end{lstlisting}
+\end{minipage}
+
+¡Ajá! El problema no estaba  en la primera parte de la condición (\codigo{self.\_mInputState == ePureAscii}) sino en la segunda. ¿Qué ha podido causar el error? Quizás pienses que el método \codigo{search()} está esperando un valor de un tipo diferente, pero eso no generaría esta traza. Las funciones de Python pueden tomar cualquier valor; si pasas el número correcto de parámetros, la función se ejecutará. Puede \emph{cascar} si le pasas un valor de un tipo diferente el que esté esperando, pero si eso sucediera, la traza apuntaría a algún lugar interno de la función. Esta traza, sin embargo, dice que ni siquiera a podido llamar al método \codigo{search()}. Así que el problema debe estar en la operación \codigo{+}, cuando intenta construir el valor que posteriormente deberá pasarse a \codigo{search()}.
+
+Sabemos por la depuración anterior que \codigo{aBuf} es un array de bytes. Pero ¿qué contiene \codigo{self.\_mLastChar}? Es una variable de instancia, definida en el método \codigo{reset()}, que se llama desde el método \codigo{\_\_init\_\_()}.
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+class UniversalDetector:
+    def __init__(self):
+        self._highBitDetector = re.compile(b'[\x80-\xFF]')
+        self._escDetector = re.compile(b'(\033|~{)')
+        self._mEscCharSetProber = None
+        self._mCharSetProbers = []
+        (* \color{yellow!40!black} self.reset() *)
+
+    def reset(self):
+        self.result = {'encoding': None, 'confidence': 0.0}
+        self.done = False
+        self._mStart = True
+        self._mGotData = False
+        self._mInputState = ePureAscii
+        (* \color{yellow!40!black} self.\_mLastChar = '' *)
+\end{lstlisting}
+
+Y ya tenemos nuestra respuesta. ¿La ves? \codigo{self.\_mLastChar} es una cadena de caracteres, pero \codigo{aBuf} es un array de bytes. Y no puedes concatenar una cadena de caracteres con un array de bytes ---ni siquiera con una cadena de caracteres vacía.
+
+En cualquier caso ¿Qué es \codigo{self.\_mLastChar}? En el método \codigo{feed()}, mira unas líneas más abajo en el que la traza ha sucedido.
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+if self._mInputState == ePureAscii:
+    if self._highBitDetector.search(aBuf):
+        self._mInputState = eHighbyte
+    elif (self._mInputState == ePureAscii) and \
+            self._escDetector.search(self._mLastChar + aBuf):
+        self._mInputState = eEscAscii
+
+        (* \color{yellow!40!black}self.\_mLastChar = aBuf[-1] *)
+\end{lstlisting}
+
+Se llama al método \codigo{feed()} una y otra vez con unos pocos bytes cada vez. El método procesa los bytes (pasados en \codigo{aBuf}), luego almacena el último byte en \codigo{self.\_mLastChar} por si se necesita en la siguiente llamada. (En una codificación multibyte el método \codigo{feed()} podría ser llamado a la mitad de un carácter para volver a ser llamado después con la otra mitad). Pero ya que \codigo{aBuf} ahora es un array de bytes en lugar de una cadena de caracteres, \codigo{self.\_mLastChar} también necesita ser un array de bytes. Así:
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+  def reset(self):
+      .
+      .
+      .
+      (* \color{red}-     self.\_mLastChar = '' *)
+      (* \color{green!50!black}+     self.\_mLastChar = b'' *)
+\end{lstlisting}
+
+Si buscamos a lo largo de todo el código por ``\codigo{mLastChar}'' encontramos un problema similar en \codigo{mbcharsetprober.py}, pero en lugar de mantener el último carácter, mantiene el recuerdo de los \emph{dos} últimos. La clase \codigo{MultiByteCharSetProber} utiliza una lista de cadenas de caracteres de un solo carácter para mantener los últimos dos caracteres. En Python 3 necesita utilizar una lista de enteros ya que en realidad no está manteniendo caracteres, sino bytes (Los bytes son enteros entre \codigo{0-255}).
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+  class MultiByteCharSetProber(CharSetProber):
+      def __init__(self):
+          CharSetProber.__init__(self)
+          self._mDistributionAnalyzer = None
+          self._mCodingSM = None
+          (* \color{red}-         self.\_mLastChar = ['\textbackslash x00', '\textbackslash x00'] *)
+          (* \color{green!50!black}+         self.\_mLastChar = [0, 0] *)
+
+      def reset(self):
+          CharSetProber.reset(self)
+          if self._mCodingSM:
+              self._mCodingSM.reset()
+          if self._mDistributionAnalyzer:
+              self._mDistributionAnalyzer.reset()
+          (* \color{red}-         self.\_mLastChar = ['\textbackslash x00', '\textbackslash x00'] *)
+          (* \color{green!50!black}+         self.\_mLastChar = [0, 0] *)
+\end{lstlisting}
+
+\subsection{Tipo del operando no soportado para +: 'int' y 'bytes'}
+
+Tengo buenas y malas noticias. Las buenas noticias es que estamos haciendo progresos\ldots
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+tests\ascii\howto.diveintomark.org.xml
+Traceback (most recent call last):
+  File "test.py", line 10, in <module>
+    u.feed(line)
+  File "C:\home\chardet\chardet\universaldetector.py", line 101, in feed
+    self._escDetector.search(self._mLastChar + aBuf):
+TypeError: unsupported operand type(s) for +: 'int' and 'bytes'
+\end{lstlisting}
+\end{minipage}
+
+\ldots las malas noticias es que no siempre da esa sensación.
+
+¡Pero es progreso! ¡En serio! Incluso aunque la traza da el error en la misma línea de código: es un error diferente al que era. ¡Progreso! ¿Cuál es el problema ahora? La última vez miramos, esta línea de código no intentaba concatenar un \codigo{int} con un array de bytes(\codigo{bytes}). De hecho, hemos pasado un buen rato tratando de asegurar que \codigo{self.\_mLastChar} fuera un array de bytes. Cómo se convirtió en un \codigo{int}.
+
+La respuesta descansa en las líneas siguientes de código:
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+if self._mInputState == ePureAscii:
+    if self._highBitDetector.search(aBuf):
+        self._mInputState = eHighbyte
+    elif (self._mInputState == ePureAscii) and \
+            self._escDetector.search(self._mLastChar + aBuf):
+        self._mInputState = eEscAscii
+
+        (* \color{yellow!40!black}self.\_mLastChar = aBuf[-1] *)
+\end{lstlisting}
+
+\cajaTexto{Cada elemento en una cadena de caracteres es una cadena de caracteres. Cada elemento en una array de bytes es un entero}
+
+Este error no sucede la primera vez que se ejecuta el método \codigo{feed()}. Ocurre la \emph{segunda vez}, después de que \codigo{self.\_mLastChar} se haya activado con el último byte de \codigo{aBuf}. Bien ¿Cuál es el problema? Al obtener un elemento de un array de bytes se genera un valor entero (\codigo{int}), no un array de bytes. Para ver la diferencia, sígueme en esta consola interactiva:
+
+\begin{lstlisting}[breaklines=true]
+>>> aBuf = b'\xEF\xBB\xBF'
+>>> len(aBuf)
+3
+>>> mLastChar = aBuf[-1]
+>>> mLastChar            
+191
+>>> type(mLastChar)      
+<class 'int'>
+>>> mLastChar + aBuf    
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unsupported operand type(s) for +: 'int' and 'bytes'
+>>> mLastChar = aBuf[-1:]
+>>> mLastChar
+b'\xbf'
+>>> mLastChar + aBuf    
+b'\xbf\xef\xbb\xbf'
+\end{lstlisting}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} Define un array de bytes de longitud 3.
+  \item \emph{Línea 5:} El último elemento del array de bytes es 191.
+  \item \emph{Línea 7:} Es un entero.
+  \item \emph{Línea 9:} No se puede concatenar un entero con un array de bytes. Con esto está replicado el error que se ha encontrado en \codigo{universaldetector.py}.
+  \item \emph{Línea 13:} Esta es la forma de arreglarlo. En lugar de tomar el último elemento del array de bytes, utiliza la selección de listas para crear un nuevo array de bytes de un único elemento. Este array de bytes comienza con el último elemento y continua la selección hasta el final del array. Ahora \codigo{mLastChar} contiene un array de longitud 1.
+  \item \emph{Línea 16:} Al concatenar un array de longitud 1 con otro de longitud 3 da como resultado un nuevo array de bytes de longitud 4.
+\end{enumerate}
+
+Así, para asegurar que el método \codigo{feed()} de \codigo{universaldetector.py} continúa funcionando todas las veces que sea llamado, necesitas inicializar \codigo{self.\_mLastChar} como un array de bytes de longitud cero, y luego asegurar que sigue conteniendo un array de bytes permanentemente.
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+              self._escDetector.search(self._mLastChar + aBuf):
+          self._mInputState = eEscAscii
+
+(* \color{red}- self.\_mLastChar = aBuf[-1] *)
+(* \color{green!50!black}+ self.\_mLastChar = aBuf[-1:] *)
+\end{lstlisting}
+
