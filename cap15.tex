@@ -704,3 +704,340 @@ Así, para asegurar que el método \codigo{feed()} de \codigo{universaldetector.
 (* \color{green!50!black}+ self.\_mLastChar = aBuf[-1:] *)
 \end{lstlisting}
 
+\subsection{\codigo{ord()} esperaba una cadena de caracteres de longitud 1, pero encontró un \codigo{int}}
+
+¿Cansado ya? Casi hemos terminado\ldots
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+tests\ascii\howto.diveintomark.org.xml   ascii with confidence 1.0
+tests\Big5\0804.blogspot.com.xml
+Traceback (most recent call last):
+  File "test.py", line 10, in <module>
+    u.feed(line)
+  File "C:\home\chardet\chardet\universaldetector.py", line 116, in feed
+    if prober.feed(aBuf) == constants.eFoundIt:
+  File "C:\home\chardet\chardet\charsetgroupprober.py", line 60, in feed
+    st = prober.feed(aBuf)
+  File "C:\home\chardet\chardet\utf8prober.py", line 53, in feed
+    codingState = self._mCodingSM.next_state(c)
+  File "C:\home\chardet\chardet\codingstatemachine.py", line 43, in next_state
+    byteCls = self._mModel['classTable'][ord(c)]
+TypeError: ord() expected string of length 1, but int found
+\end{lstlisting}
+\end{minipage}
+
+Ok, así que \codigo{c} contiene un número entero, pero la función \codigo{ord()} estaba esperando una cadena de caracteres de un solo carácter. Es justo. ¿Dónde está definido \codigo{c}?
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+# codingstatemachine.py
+def next_state(self, c):
+    # for each byte we get its class
+    # if it is first byte, we also get byte length
+    byteCls = self._mModel['classTable'][ord(c)]
+\end{lstlisting}
+
+Este no es de ayuda; simplemente sabemos que es un parámetro de la función. Vamos a tirar de la traza.
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+# utf8prober.py
+def feed(self, aBuf):
+    for c in aBuf:
+        codingState = self._mCodingSM.next_state(c)
+\end{lstlisting}
+
+¿Lo ves? En Python 2 \codigo{aBuf} era una cadena de caracteres, así que \codigo{c} era una cadena de un solo carácter (Eso es lo que recuperas cuando iteras a través de una cadena de caracteres ---todos los caracteres, de uno en uno). Pero ahora \codigo{aBuf} es un array de bytes, así que \codigo{c} es un \codigo{int}, no una cadena de un carácter. En otras palabras, no hay necesidad de llamar a la función \codigo{ord()} ya que \codigo{c} ya es de tipo entero.
+
+Así que:
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+  def next_state(self, c):
+      # for each byte we get its class
+      # if it is first byte, we also get byte length
+      (* \color{red}-     byteCls = self.\_mModel['classTable'][ord(c)] *)
+      (* \color{green!50!black}+     byteCls = self.\_mModel['classTable'][c] *)
+\end{lstlisting}
+
+Si se busca en el código por llamadas a \codigo{ord(c)} se descubren problemas similares en \codigo{sbcharsetprober.py}\ldots
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+# sbcharsetprober.py
+def feed(self, aBuf):
+    if not self._mModel['keepEnglishLetter']:
+        aBuf = self.filter_without_english_letters(aBuf)
+    aLen = len(aBuf)
+    if not aLen:
+        return self.get_state()
+    for c in aBuf:
+    (* \color{yellow!40!black} order = self.\_mModel['charToOrderMap'][ord(c)] *)
+\end{lstlisting}
+
+Y en \codigo{latin1prober.py}\ldots
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+# latin1prober.py
+def feed(self, aBuf):
+    aBuf = self.filter_with_english_letters(aBuf)
+    for c in aBuf:
+    (* \color{yellow!40!black}charClass = Latin1\_CharToClass[ord(c)] *)
+\end{lstlisting}
+
+\codigo{c} itera sobre \codigo{aBuf}, lo que significa que es un entero, no una cadena de caracteres de longitud 1. La solución es la misma: cambiar \codigo{ord(c)} por \codigo{c}.
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+  # sbcharsetprober.py
+  def feed(self, aBuf):
+      if not self._mModel['keepEnglishLetter']:
+          aBuf = self.filter_without_english_letters(aBuf)
+      aLen = len(aBuf)
+      if not aLen:
+          return self.get_state()
+      for c in aBuf:
+          (* \color{red}-         order = self.\_mModel['charToOrderMap'][ord(c)] *)
+          (* \color{green!50!black}+         order = self.\_mModel['charToOrderMap'][c] *)
+
+  # latin1prober.py
+  def feed(self, aBuf):
+      aBuf = self.filter_with_english_letters(aBuf)
+      for c in aBuf:
+          (*\color{red}-         charClass = Latin1\_CharToClass[ord(c)] *)
+          (*\color{green!50!black}+         charClass = Latin1\_CharToClass[c] *)
+\end{lstlisting}
+
+\subsection{Tipos no ordenables: \codigo{int() >= str()}}
+
+Sigamos:
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+tests\ascii\howto.diveintomark.org.xml                       ascii with confidence 1.0
+tests\Big5\0804.blogspot.com.xml
+Traceback (most recent call last):
+  File "test.py", line 10, in <module>
+    u.feed(line)
+  File "C:\home\chardet\chardet\universaldetector.py", line 116, in feed
+    if prober.feed(aBuf) == constants.eFoundIt:
+  File "C:\home\chardet\chardet\charsetgroupprober.py", line 60, in feed
+    st = prober.feed(aBuf)
+  File "C:\home\chardet\chardet\sjisprober.py", line 68, in feed
+    self._mContextAnalyzer.feed(self._mLastChar[2 - charLen :], charLen)
+  File "C:\home\chardet\chardet\jpcntx.py", line 145, in feed
+    order, charLen = self.get_order(aBuf[i:i+2])
+  File "C:\home\chardet\chardet\jpcntx.py", line 176, in get_order
+    if ((aStr[0] >= '\x81') and (aStr[0] <= '\x9F')) or \
+TypeError: unorderable types: int() >= str()
+\end{lstlisting}
+\end{minipage}
+
+¿Qué significa esto? ¿Tipos no ordenables? De nuevo, la diferencia entre los arrays de bytes y las cadenas de caracteres nos ataca. Echa un vistazo al código:
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+class SJISContextAnalysis(JapaneseContextAnalysis):
+    def get_order(self, aStr):
+        if not aStr: return -1, 1
+        # find out current char's byte length
+        (* \color{yellow!40!black}if ((aStr[0] >= '\textbackslash x81') and (aStr[0] <= '\textbackslash x9F')) or \textbackslash *)
+           ((aStr[0] >= '\xE0') and (aStr[0] <= '\xFC')):
+            charLen = 2
+        else:
+            charLen = 1
+\end{lstlisting}
+
+¿Y de dónde viene \codigo{aStr}? Miremos la traza:
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+def feed(self, aBuf, aLen):
+    .
+    .
+    .
+    i = self._mNeedToSkipCharNum
+    while i < aLen:
+        (* \color{yellow!40!black}order, charLen = self.get\_order(aBuf[i:i+2]) *)
+\end{lstlisting}
+
+Otra vez nuestro viejo amigo \codigo{aBuf}. Como ya has adivinado de todos los problemas anteriores \codigo{aBuf} es un array de bytes. Aquí, el método \codigo{feed()} no lo pasa completo; pasa una sección. Pero como viste anteriormente en el capítulo, una partición de un array de bytes devuelve un array de bytes, así que el parámetro \codigo{aStr} que se pasa, a su vez, al método \codigo{get\_order()} es un array de bytes.
+
+¿Y qué intenta hacer el código con \codigo{aStr}? Toma el primer elemento del array de bytes y lo compara con una cadena de longitud 1. En Python 2 esto funcionaba porque \codigo{aStr} y \codigo{aBuf} eran cadenas, y \codigo{aStr[0]} seguía siendo una cadena de caracteres, y se pueden comparar cadenas de carateres para ver si son distintas. Pero en Python 3 \codigo{aStr} y \codigo{aBuf} son arrays de bytes, \codigo{aStr[0]} es un número entero y no se pueden comparar enteros y cadenas de caracteres sin realizar la conversión de uno de ellos.
+
+En este caso no hay necesidad de hacer el código más complicado añadiendo una conversión explícita. \codigo{aStr[0]} devuelve un entero; las cosas que estás comparanto son constantes. Así que vamos a cambiarlas de ser cadenas de caracteres de longitud 1 a números enteros. Y mientras estamos en ello, vamos a cambiar \codigo{aStr} a \codigo{aBuf}, ya que realmente no es una cadena de caracteres.
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+  class SJISContextAnalysis(JapaneseContextAnalysis):
+(* \color{red}-     def get\_order(self, aStr): *)
+(* \color{red}-      if not aStr: return -1, 1 *)
+(* \color{green!50!black}+     def get\_order(self, aBuf): *)
+(* \color{green!50!black}+      if not aBuf: return -1, 1 *)
+          # find out current char's byte length
+(* \color{red}-         if ((aStr[0] >= '\textbackslash x81') and (aStr[0] <= '\textbackslash x9F')) or \ *)
+(* \color{red}-            ((aBuf[0] >= '\textbackslash xE0') and (aBuf[0] <= '\textbackslash xFC')): *)
+(* \color{green!50!black}+         if ((aBuf[0] >= 0x81) and (aBuf[0] <= 0x9F)) or \textbackslash  *)
+(* \color{green!50!black}+            ((aBuf[0] >= 0xE0) and (aBuf[0] <= 0xFC)): *)
+              charLen = 2
+          else:
+              charLen = 1
+
+          # return its order if it is hiragana
+(* \color{red}-      if len(aStr) > 1: *)
+(* \color{red}-             if (aStr[0] == '\textbackslash 202') and \ *)
+(* \color{red}-                (aStr[1] >= '\textbackslash x9F') and \ *)
+(* \color{red}-                (aStr[1] <= '\textbackslash xF1'): *)
+(* \color{red}-                return ord(aStr[1]) - 0x9F, charLen *)
+(* \color{green!50!black}+      if len(aBuf) > 1: *)
+(* \color{green!50!black}+             if (aBuf[0] == 202) and \ *)
+(* \color{green!50!black}+                (aBuf[1] >= 0x9F) and \ *)
+(* \color{green!50!black}+                (aBuf[1] <= 0xF1): *)
+(* \color{green!50!black}+                return aBuf[1] - 0x9F, charLen *)
+
+          return -1, charLen
+
+  class EUCJPContextAnalysis(JapaneseContextAnalysis):
+(* \color{red}-     def get\_order(self, aStr): *)
+(* \color{red}-      if not aStr: return -1, 1 *)
+(* \color{green!50!black}+     def get\_order(self, aBuf): *)
+(* \color{green!50!black}+      if not aBuf: return -1, 1 *)
+          # find out current char's byte length
+(* \color{red}-         if (aStr[0] == '\textbackslash x8E') or \ *)
+(* \color{red}-           ((aStr[0] >= '\textbackslash xA1') and (aStr[0] <= '\textbackslash xFE')): *)
+(* \color{green!50!black}+         if (aBuf[0] == 0x8E) or \ *)
+(* \color{green!50!black}+           ((aBuf[0] >= 0xA1) and (aBuf[0] <= 0xFE)): *)
+              charLen = 2
+(* \color{red}-         elif aStr[0] == '\textbackslash x8F': *)
+(* \color{green!50!black}+         elif aBuf[0] == 0x8F: *)
+              charLen = 3
+          else:
+              charLen = 1
+
+        # return its order if it is hiragana
+(* \color{red}-    if len(aStr) > 1: *)
+(* \color{red}-           if (aStr[0] == '\textbackslash xA4') and \ *)
+(* \color{red}-              (aStr[1] >= '\textbackslash xA1') and \ *)
+(* \color{red}-              (aStr[1] <= '\textbackslash xF3'): *)
+(* \color{red}-                 return ord(aStr[1]) - 0xA1, charLen *)
+(* \color{green!50!black}+    if len(aBuf) > 1: *)
+(* \color{green!50!black}+           if (aBuf[0] == 0xA4) and \ *)
+(* \color{green!50!black}+              (aBuf[1] >= 0xA1) and \ *)
+(* \color{green!50!black}+              (aBuf[1] <= 0xF3): *)
+(* \color{green!50!black}+               return aBuf[1] - 0xA1, charLen *)
+
+        return -1, charLen
+\end{lstlisting}
+
+La búsqueda de más ocurrencias de la función \codigo{ord()} en el código descubre el mismo problema en \codigo{chardistribution.py} (específicamente en \codigo{EUCTWDistributionAnalysis}, \codigo{EUCKRDistributionAnalysis}, \codigo{GB2312DistributionAnalysis}, \codigo{Big5DistributionAnlysis}, \codigo{SJIDistributionAnalysis}, y \codigo{EUCJPDistributionAnalysis}. En cada caso, la subsanación es similar a la realizada en las clases \codigo{EUCJPContextAnalysis} y \codigo{SJISContextAnalysis} de \codigo{jpcntx.py}.
+
+\subsection{El nombre global ``\codigo{reduce}'' no está definido}
+
+De nuevo en la brecha\ldots
+
+
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+tests\ascii\howto.diveintomark.org.xml                       ascii with confidence 1.0
+tests\Big5\0804.blogspot.com.xml
+Traceback (most recent call last):
+  File "test.py", line 12, in <module>
+    u.close()
+  File "C:\home\chardet\chardet\universaldetector.py", line 141, in close
+    proberConfidence = prober.get_confidence()
+  File "C:\home\chardet\chardet\latin1prober.py", line 126, in get_confidence
+    total = reduce(operator.add, self._mFreqCounter)
+NameError: global name 'reduce' is not defined
+\end{lstlisting}
+\end{minipage}
+
+De acuerdo a la guía oficial ``Qué es lo nuevo de Python 3.0''\footnote{\href{http://docs.python.org/3.0/whatsnew/3.0.html\#builtins}{http://docs.python.org/3.0/whatsnew/3.0.html\#builtins}}, la función \codigo{reduce()} se ha movido del espacio global de nombres al módulo \codigo{functools}. Parafraseando a la guía: utiliza \codigo{functools.reduce()} si realmente lo necesitas; sin embargo, el 99\% de las ocasiones, un buble \codigo{for loop} resulta más legible. Puedes leer más sobre esta decisión de Guido van Rossum en su blog: La fortuna de reduce() en Python 3.00\footnote{\href{http://www.artima.com/weblogs/viewpost.jsp?thread=98196}{http://www.artima.com/weblogs/viewpost.jsp?thread=98196}}.
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+def get_confidence(self):
+    if self.get_state() == constants.eNotMe:
+        return 0.01
+  
+        (* \color{yellow!40!black}total = reduce(operator.add, self.\_mFreqCounter) *)
+\end{lstlisting}
+
+La función \codigo{reduce()} toma dos parámetros ---una función y una lista (estrictamente, un objeto iterable)--- y aplica la función acumulativamente a cada elemento de la lista. En otras palabras, es una forma de sumar todos los elementos de una lista y devolver el resultado.
+
+Esta monstruosidad era tan común que Python añadió una función \codigo{sum()} global.
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+def get_confidence(self):
+      if self.get_state() == constants.eNotMe:
+          return 0.01
+
+          (* \color{red}-     total = reduce(operator.add, self.\_mFreqCounter) *)
+          (* \color{green!50!black}+     total = sum(self.\_mFreqCounter) *)
+\end{lstlisting}
+
+Ya que dejamos de usar el módulo \codigo{operator}, podemos suprimir el \codigo{import} correspondiente del fichero:
+
+
+\begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
+from .charsetprober import CharSetProber
+  from . import constants
+  (* \color{red}- import operator *)
+\end{lstlisting}
+
+¿Otra prueba?
+
+\begin{lstlisting}[breaklines=true]
+C:\home\chardet> python test.py tests\*\*
+tests\ascii\howto.diveintomark.org.xml                       ascii with confidence 1.0
+tests\Big5\0804.blogspot.com.xml                             Big5 with confidence 0.99
+tests\Big5\blog.worren.net.xml                               Big5 with confidence 0.99
+tests\Big5\carbonxiv.blogspot.com.xml                        Big5 with confidence 0.99
+tests\Big5\catshadow.blogspot.com.xml                        Big5 with confidence 0.99
+tests\Big5\coolloud.org.tw.xml                               Big5 with confidence 0.99
+tests\Big5\digitalwall.com.xml                               Big5 with confidence 0.99
+tests\Big5\ebao.us.xml                                       Big5 with confidence 0.99
+tests\Big5\fudesign.blogspot.com.xml                         Big5 with confidence 0.99
+tests\Big5\kafkatseng.blogspot.com.xml                       Big5 with confidence 0.99
+tests\Big5\ke207.blogspot.com.xml                            Big5 with confidence 0.99
+tests\Big5\leavesth.blogspot.com.xml                         Big5 with confidence 0.99
+tests\Big5\letterlego.blogspot.com.xml                       Big5 with confidence 0.99
+tests\Big5\linyijen.blogspot.com.xml                         Big5 with confidence 0.99
+tests\Big5\marilynwu.blogspot.com.xml                        Big5 with confidence 0.99
+tests\Big5\myblog.pchome.com.tw.xml                          Big5 with confidence 0.99
+tests\Big5\oui-design.com.xml                                Big5 with confidence 0.99
+tests\Big5\sanwenji.blogspot.com.xml                         Big5 with confidence 0.99
+tests\Big5\sinica.edu.tw.xml                                 Big5 with confidence 0.99
+tests\Big5\sylvia1976.blogspot.com.xml                       Big5 with confidence 0.99
+tests\Big5\tlkkuo.blogspot.com.xml                           Big5 with confidence 0.99
+tests\Big5\tw.blog.xubg.com.xml                              Big5 with confidence 0.99
+tests\Big5\unoriginalblog.com.xml                            Big5 with confidence 0.99
+tests\Big5\upsaid.com.xml                                    Big5 with confidence 0.99
+tests\Big5\willythecop.blogspot.com.xml                      Big5 with confidence 0.99
+tests\Big5\ytc.blogspot.com.xml                              Big5 with confidence 0.99
+tests\EUC-JP\aivy.co.jp.xml                                  EUC-JP with confidence 0.99
+tests\EUC-JP\akaname.main.jp.xml                             EUC-JP with confidence 0.99
+tests\EUC-JP\arclamp.jp.xml                                  EUC-JP with confidence 0.99
+.
+.
+.
+316 tests
+\end{lstlisting}
+
+¡Funciona! ¡Quiero bailar un ratito!\footnote{\href{http://www.hampsterdance.com/}{http://www.hampsterdance.com/}}
+
+\section{Resumen}
+
+¿Qué hemos aprendido?
+
+\begin{enumerate}
+  \item Migrar una cantidad no trivial de código de Python 2 a Python 3 es un ``dolor''. No hay forma de evitarlo. Es duro.
+  \item La herramienta \codigo{2to3} es útil pero solamente cubre lo más fácil: cambios de nombre de funciones, cambios de nombre de módulos, cambios de sintaxis. Es una pieza de ingeniería impresionante, pero al final es solo un robot de búsqueda y sustitución avanzada.
+   \item El primer problema en esta librería fue la diferencia existente entre cadenas de caracteres y bytes. En este caso parece obvio ya que el objetivo de esta librería es convertir bytes en cadenas de caracteres. Pero esto sucede más a menudo de lo que parece. Cualquier lectura de un fichero en modo binario devuelve un array de bytes. Cuando se recupera una página web, cuando se llama a una API en la web. Todo ello devuelve un array de bytes.
+
+    \item Necesitas conocer tu programa. Profundamente. Muchas veces lo has escrito tú, pero otras no. Hay que conocer el porqué de su código. Los errores aparecen en cualquier sitio y hay que corregirlos.
+    \item Los casos de prueba son fundamentales. No migres nada sin ellos. La única razón por la que tengo confianza en que \codigo{chardet} funcione en Python 3 es que comencé con una suite de pruebas que recorre la mayor parte del código de esta librería. Si no dispones de pruebas, escribe algunas antes de iniciar la migración a Python 3. Si tienes algunas pruebas: escribe más. Si tienes muchas pruebas, puedes empezar la diversión.
+
+\end{enumerate}
