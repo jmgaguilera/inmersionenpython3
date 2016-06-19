@@ -202,3 +202,309 @@ setup(
 \end{lstlisting}
 
 El parámetro \codigo{packages} destaca un solapamiento desafortunado en el vocabulario del proceso de distribución. Hemos estado hablando del ``paquete'' como la cosa que estamos construyendo (y potencialmente, listándola en el Índice de Paquetes de Python). Pero eso no es lo que el parámetro \codigo{packages} quiere expresar. Se refiere al hecho de que el módulo \codigo{chardet} es un módulo multifichero, algunas veces conocido como\ldots un ``paquete''. El parámetro \codigo{packages} le indica a \codigo{Distutils} que incluya el directorio \codigo{chardet}, su fichero \codigo{\_\_init\_\_.py} y todos los ficheros \codigo{.py} que constituyen el módulo \codigo{chardet}. Esto es muy importante; toda esta parrafada sobre la documentación y los metadatos es irrelevante si te olvidas de incluir el código propiamente dicho.
+
+\section{Clasificando tu paquete}
+
+El Índice de Paquetes Python (``PyPI'') contiene miles de librerías Python. Una correcta clasificación utilizando metadatos permite encontrarlas con más facilidad. PyPI te permite mostrar los paquetes filtrando por clasificador\footnote{\href{http://pypi.python.org/pypi?:action=browse}{http://pypi.python.org/pypi?:action=browse}}. Puedes seleccionar varios para acotar la búsqueda. ¡Estos clasificadores no son metadatos invisitbles que puedas ignorar!
+
+Para clasificar tu software debes pasar un parámetro \codigo{classifiers} a la función \codigo{setup} de \codigo{Distutils}. Este parámetro es una lista de cadenas de caracteres que \emph{no} son texto libre. Todas las cadenas de clasificación deben salir una lista que existe en PyPI que está accesible en el siguiente enlace \href{http://pypi.python.org/pypi?:action=list\_classifiers}{http://pypi.python.org/pypi?:action=list\_classifiers}.
+
+Aquí puedes ver una parte de ella:
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+...
+Topic :: Terminals
+Topic :: Terminals :: Serial
+Topic :: Terminals :: Telnet
+Topic :: Terminals :: Terminal Emulators/X Terminals
+Topic :: Text Editors
+Topic :: Text Editors :: Documentation
+Topic :: Text Editors :: Emacs
+Topic :: Text Editors :: Integrated Development Environments (IDE)
+Topic :: Text Editors :: Text Processing
+Topic :: Text Editors :: Word Processors
+...
+\end{lstlisting}
+
+Los clasificadores son opcionales. Puedes escribir un script de configuración de Distutils sin ellos. \textbf{No lo hagas}. Siempre deberías incluir, al menos, los siguientes clasificadores:
+
+\begin{itemize}
+  \item \emph{Programming language}. En particular, deberías incluir ambos ``\codigo{Programming Language :: Python}'' u ``\codigo{Programming Language :: Python :: 3}''. Si no los incluyes, tu paquete no se mostrará en la lista de librerías compatibles con Python 3\footnote{\href{http://pypi.python.org/pypi?:action=browse\&c=533\&show=all}{http://pypi.python.org/pypi?:action=browse\&c=533\&show=all}}, que se enlace desde el menú lateral de todas las páginas de \codigo{pypi.python.org}.
+  \item \emph{License}. \emph{Esto es lo primero que miro} cuando estoy evaluando librerías de terceros que quiero utilizar. No me hagas buscar esta información vital. No incluyas más que un clasificador de licencia a menos que tu software se encuentre disponible explícitamente bajo varias licencias. Y no liberes software bajo varias licencias a menos que te veas obligado a ello. Y no obligues a otras personas a hacerlo. El licenciamiento es ya de por sí un dolor de cabeza, no lo hagas peor.
+  \item \emph{Operating System}. Si tu software solamente funciona bajo Windows,  o Mac OS X, o Linux, quiero saberlo lo más pronto posible. Si tu software funciona en cualquier parte sin código específico de plataforma, utiliza el clasificador ``\codigo{Operating System :: OS Independent}''. Solo son necesarios múltiples clasificadores de este tipo si tu software necesita soporte específico en los diferentes sistemas operativos, lo que no es muy común.
+
+\end{itemize}
+
+También te recomiendo que incluyas los siguientes:
+
+\begin{itemize}
+  \item \emph{Development Status}. ¿Tu software tiene la calidad de una beta? ¿Calidad de una versión alpha? ¿Pre-alpha? Elige una. Sé honesto.
+  \item \emph{Intended Audience}. ¿Quién podría necesitar tu software? Las elecciones habituales son: desarrolladores, usuarios finales/puesto de trabajo, ciencia/investigación, y administradores de sistemas\footnote{Los clasificadores on, respectivamente: \codigo{Developers}, \codigo{End Users/Desktop}, \codigo{Science/Research}, y \codigo{System Administrators}}.
+\end{itemize}
+
+\subsection{Ejemplos de unos buenos clasificadores de paquete}
+
+Como ejemplo, aquí están los clasificadores de \codigo{Django}\footnote{\href{http://pypi.python.org/pypi/Django/}{http://pypi.python.org/pypi/Django/}}, un framework para el desarrollo de aplicaciones web bajo licencia BSD, multiplataforma y listo para producción\footnote{En el momento de escribir este libro, \codigo{Django} no es compatible con Python 3, de ahí que no se utilice el clasificador \codigo{Programming Language :: Python :: 3}}.
+
+\begin{lstlisting}[language=Python,breaklines=true]
+Programming Language :: Python
+License :: OSI Approved :: BSD License
+Operating System :: OS Independent
+Development Status :: 5 - Production/Stable
+Environment :: Web Environment
+Framework :: Django
+Intended Audience :: Developers
+Topic :: Internet :: WWW/HTTP
+Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Topic :: Internet :: WWW/HTTP :: WSGI
+Topic :: Software Development :: Libraries :: Python Modules
+\end{lstlisting}
+
+A continuación se muestran los clasificadores de \codigo{chardet}, la librería de detección de la codificación de caracteres que se muestra en el capítulo \ref{ch:chardet}. \codigo{chardet} es una beta, multiplataforma, compatible con Python 3, con licencia LGPL, y sus usuarios potenciales son los desarrolladores para uso en sus propios productos.
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+Programming Language :: Python
+Programming Language :: Python :: 3
+License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+Operating System :: OS Independent
+Development Status :: 4 - Beta
+Environment :: Other Environment
+Intended Audience :: Developers
+Topic :: Text Processing :: Linguistic
+Topic :: Software Development :: Libraries :: Python Modules
+\end{lstlisting}
+
+Y estos son los clasificadores de \codigo{httplib2}, la librería que se mostraba en el capítulo \ref{ch:servicios_web}. \codigo{httplib2} es calidad beta, multiplataforma, con licencia MIT, y su audiencia es la de los desarrolladores Python.
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+Programming Language :: Python
+Programming Language :: Python :: 3
+License :: OSI Approved :: MIT License
+Operating System :: OS Independent
+Development Status :: 4 - Beta
+Environment :: Web Environment
+Intended Audience :: Developers
+Topic :: Internet :: WWW/HTTP
+Topic :: Software Development :: Libraries :: Python Modules
+\end{lstlisting}
+
+\section{Especificando ficheros adicionales con un ``Manifiesto''}
+
+Por defecto, Distutils incluirá los siguientes ficheros en tu paquete de distribución:
+
+\begin{itemize}
+  \item \codigo{README.txt}
+  \item \codigo{setup.py}
+  \item Los ficheros \codigo{.py} necesarios incluidos de los módulos multificheros, que se encuentren listados en el parámetro \codigo{packages}.
+  \item Los ficheros \codigo{.py} individuales que se listen en el parámetro \codigo{py\_modules}.
+\end{itemize}
+
+Eso es suficiente para los ficheros del proyecto \codigo{httplib2}. Pero para el proyecto \codigo{chardet} necesitamos incluir también el fichero de licencia \codigo{COPYING.txt} y el directorio \codigo{docs/} completo, que contiene las imágenes y los ficheros \codigo{HTML}. Para decirle a Distutils que incluya estos ficheros y directorios adicionales cuando construya el paquete de distribución, necesitas un fichero \codigo{manifest}.
+
+Un fichero de manifiesto es un fichero de texto denominado \codigo{MANIFEST.in}. Debe encontrarse en el directorio raíz del proyecto, junto al fichero \codigo{README.txt} y \codigo{setup.py}. Los ficheros de manifiesto no son scripts de Python: son ficheros de texto que contienen una lista de ``comandos'' en un formato definido por Distutils. Estos comandos del manifiesto te permiten incluir o excluir determinados ficheros y directorios.
+
+Este es el fichero de manifiesto definido para el proyecto \codigo{chardet}:
+
+\begin{lstlisting}[language=Python,breaklines=true]
+include COPYING.txt
+recursive-include docs *.html *.css *.png *.gif
+\end{lstlisting}
+
+{\begin{enumerate}
+  \item \emph{Línea 1:} La primera línea es autoexplicativa: incluir el fichero \codigo{COPYING.txt} del directorio raíz del proyecto.
+  \item \emph{Línea 2:} La segunda línea es un poco más complicada. El comando \codigo{recursive-include} toma el nombre de un directorio y de un o más ficheros. Los ficheros pueden incluir caracteres comodín. Esta línea significa ``¿Ves el directorio \codigo{docs/} en el directorio raíz del proyecto? Mira dentro, recursivamente, y busca ficheros \codigo{.html}, \codigo{.css}, \codigo{.png}, y \codigo{.gif}. Inclúyelos a todos en la distribución de mi paquete''.
+\end{enumerate}
+
+Todos los comandos de manifiesto conservan la estructura de directorios que tengas en el directorio de tu proyecto. Este comando \codigo{recursive-include} no va a poner un puñado de ficheros \codigo{.html} y \codigo{.png} en el directorio raíz del paquete. Va a mantener la estructura de directorios de \codigo{docs/}, pero solamente incluirá los ficheros que coincidan con los comodines especificados\footnote{No lo he mencionado antes, pero la documentación de \codigo{chardet} está escrita en \codigo{XML} y se convierte a \codigo{HTML} posteriomente mediante un script. No quiero incluir los ficheros \codigo{XML} en el paquete de distribución, solo el código \codigo{HTML} y las imágenes}.
+
+\cajaTextoAncho{Los ficheros de manifiesto tienen su propio formato. Puedes consultar ``Especificando los ficheros a distribuir'' \\ (\href{http://docs.python.org/3.1/distutils/sourcedist.html\#manifest}{http://docs.python.org/3.1/distutils/sourcedist.html\#manifest}) \\ y ``los comandos de la plantilla de manifiesto'' \\ (\href{http://docs.python.org/3.1/distutils/commandref.html\#sdist-cmd}{http://docs.python.org/3.1/distutils/commandref.html\#sdist-cmd}), \\ para conocer los detalles del mismo.}
+
+Por insistir: solo necesitas incluir un fichero de manifiesto si quieres incluir ficheros que Distutils no incluye por defecto. Si necesitas el fichero, solamente deberías incluir los ficheros y directorios que Distutils no encontraría por sí mismo.
+
+\section{Revisando errores en tu script de configuración}
+
+Hay mucho que tener en cuenta. Distutils viene con un comando de validación que permite revisar si todos los metadatos obligatorios están presentes en tu script de configuración. Por ejemplo, si te olvidas de incluir el parámetro \codigo{version}, Distutils te lo recordará:
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+c:\Users\pilgrim\chardet> c:\python31\python.exe setup.py check
+running check
+warning: check: missing required meta-data: version
+\end{lstlisting}
+
+Una vez incluyas el parámetro \codigo{version} (y los restantes metadatos obligatorios), el comando \codigo{check} se ejecutará así:
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+c:\Users\pilgrim\chardet> c:\python31\python.exe setup.py check
+running check
+\end{lstlisting}
+
+\section{Creando un distribución de código fuente}
+
+Distutils permite la construcción de diversos tipos de paquetes de distribución. Como mínimo, deberías construir una ``distribución de código fuente'' que incluiría tu código fuente, el fichero de configuración de Distutils, el fichero README, y los ficheros adicionales que quieras incluir. Para construirla, pasa el comando \codigo{sdist} a tu script de configuración de Distutils.
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+c:\Users\pilgrim\chardet> c:\python31\python.exe setup.py sdist
+running sdist
+running check
+reading manifest template 'MANIFEST.in'
+writing manifest file 'MANIFEST'
+creating chardet-1.0.2
+creating chardet-1.0.2\chardet
+creating chardet-1.0.2\docs
+creating chardet-1.0.2\docs\images
+copying files to chardet-1.0.2...
+copying COPYING -> chardet-1.0.2
+copying README.txt -> chardet-1.0.2
+copying setup.py -> chardet-1.0.2
+copying chardet\__init__.py -> chardet-1.0.2\chardet
+copying chardet\big5freq.py -> chardet-1.0.2\chardet
+...
+copying chardet\universaldetector.py -> chardet-1.0.2\chardet
+copying chardet\utf8prober.py -> chardet-1.0.2\chardet
+copying docs\faq.html -> chardet-1.0.2\docs
+copying docs\history.html -> chardet-1.0.2\docs
+copying docs\how-it-works.html -> chardet-1.0.2\docs
+copying docs\index.html -> chardet-1.0.2\docs
+copying docs\license.html -> chardet-1.0.2\docs
+copying docs\supported-encodings.html -> chardet-1.0.2\docs
+copying docs\usage.html -> chardet-1.0.2\docs
+copying docs\images\caution.png -> chardet-1.0.2\docs\images
+copying docs\images\important.png -> chardet-1.0.2\docs\images
+copying docs\images\note.png -> chardet-1.0.2\docs\images
+copying docs\images\permalink.gif -> chardet-1.0.2\docs\images
+copying docs\images\tip.png -> chardet-1.0.2\docs\images
+copying docs\images\warning.png -> chardet-1.0.2\docs\images
+creating dist
+creating 'dist\chardet-1.0.2.zip' and adding 'chardet-1.0.2' to it
+adding 'chardet-1.0.2\COPYING'
+adding 'chardet-1.0.2\PKG-INFO'
+adding 'chardet-1.0.2\README.txt'
+adding 'chardet-1.0.2\setup.py'
+adding 'chardet-1.0.2\chardet\big5freq.py'
+adding 'chardet-1.0.2\chardet\big5prober.py'
+...
+adding 'chardet-1.0.2\chardet\universaldetector.py'
+adding 'chardet-1.0.2\chardet\utf8prober.py'
+adding 'chardet-1.0.2\chardet\__init__.py'
+adding 'chardet-1.0.2\docs\faq.html'
+adding 'chardet-1.0.2\docs\history.html'
+adding 'chardet-1.0.2\docs\how-it-works.html'
+adding 'chardet-1.0.2\docs\index.html'
+adding 'chardet-1.0.2\docs\license.html'
+adding 'chardet-1.0.2\docs\supported-encodings.html'
+adding 'chardet-1.0.2\docs\usage.html'
+adding 'chardet-1.0.2\docs\images\caution.png'
+adding 'chardet-1.0.2\docs\images\important.png'
+adding 'chardet-1.0.2\docs\images\note.png'
+adding 'chardet-1.0.2\docs\images\permalink.gif'
+adding 'chardet-1.0.2\docs\images\tip.png'
+adding 'chardet-1.0.2\docs\images\warning.png'
+removing 'chardet-1.0.2' (and everything under it)
+\end{lstlisting}
+
+Hay varias cosas a destacar aquí:
+
+\begin{itemize}
+  \item Distutils tiene en cuenta el fichero de manifiesto (\codigo{MANIFES.in}).
+  \item Distutils procesa satisfactoriamente el fichero de manifiesto y añade los ficheros adicionales que queríamos.
+  \item Si miras en el directorio de tu proyecto, verás que Distutils ha creado un directorio \codigo{dist/}. Dentro de él, existe un fichero \codigo{.zip} que puedes distribuir.
+\end{itemize}
+
+\begin{lstlisting}[language=Python,breaklines=true]
+c:\Users\pilgrim\chardet> dir dist
+ Volume in drive C has no label.
+ Volume Serial Number is DED5-B4F8
+
+ Directory of c:\Users\pilgrim\chardet\dist
+
+07/30/2009  06:29 PM    <DIR>          .
+07/30/2009  06:29 PM    <DIR>          ..
+07/30/2009  06:29 PM           206,440 chardet-1.0.2.zip
+               1 File(s)        206,440 bytes
+               2 Dir(s)  61,424,635,904 bytes free
+\end{lstlisting}
+
+\section{Creando un instalador gráfico}
+
+En mi opinión, toda librería Python merece un instalador gráfico para usuarios de Windows. Es fácil de hacer (incluso aunque tú no trabajes en Windows), y los usuarios de Windows lo apreciarán.
+
+Distutils puede crear el instalador gráfico por ti\footnote{\href{http://docs.python.org/3.1/distutils/builtdist.html\#creating-windows-installers}{http://docs.python.org/3.1/distutils/builtdist.html\#creating-windows-installers}}, si le pasas el comando \codigo{bdist\_wininst} a tu script de configuración de Distutils.
+
+
+\begin{lstlisting}[language=Python,breaklines=true]
+c:\Users\pilgrim\chardet> c:\python31\python.exe setup.py bdist_wininst
+running bdist_wininst
+running build
+running build_py
+creating build
+creating build\lib
+creating build\lib\chardet
+copying chardet\big5freq.py -> build\lib\chardet
+copying chardet\big5prober.py -> build\lib\chardet
+...
+copying chardet\universaldetector.py -> build\lib\chardet
+copying chardet\utf8prober.py -> build\lib\chardet
+copying chardet\__init__.py -> build\lib\chardet
+installing to build\bdist.win32\wininst
+running install_lib
+creating build\bdist.win32
+creating build\bdist.win32\wininst
+creating build\bdist.win32\wininst\PURELIB
+creating build\bdist.win32\wininst\PURELIB\chardet
+copying build\lib\chardet\big5freq.py -> build\bdist.win32\wininst\PURELIB\chardet
+copying build\lib\chardet\big5prober.py -> build\bdist.win32\wininst\PURELIB\chardet
+...
+copying build\lib\chardet\universaldetector.py -> build\bdist.win32\wininst\PURELIB\chardet
+copying build\lib\chardet\utf8prober.py -> build\bdist.win32\wininst\PURELIB\chardet
+copying build\lib\chardet\__init__.py -> build\bdist.win32\wininst\PURELIB\chardet
+running install_egg_info
+Writing build\bdist.win32\wininst\PURELIB\chardet-1.0.2-py3.1.egg-info
+creating 'c:\users\pilgrim\appdata\local\temp\tmp2f4h7e.zip' and adding '.' to it
+adding 'PURELIB\chardet-1.0.2-py3.1.egg-info'
+adding 'PURELIB\chardet\big5freq.py'
+adding 'PURELIB\chardet\big5prober.py'
+...
+adding 'PURELIB\chardet\universaldetector.py'
+adding 'PURELIB\chardet\utf8prober.py'
+adding 'PURELIB\chardet\__init__.py'
+removing 'build\bdist.win32\wininst' (and everything under it)
+c:\Users\pilgrim\chardet> dir dist
+c:\Users\pilgrim\chardet>dir dist
+ Volume in drive C has no label.
+ Volume Serial Number is AADE-E29F
+
+ Directory of c:\Users\pilgrim\chardet\dist
+
+07/30/2009  10:14 PM    <DIR>          .
+07/30/2009  10:14 PM    <DIR>          ..
+07/30/2009  10:14 PM           371,236 chardet-1.0.2.win32.exe
+07/30/2009  06:29 PM           206,440 chardet-1.0.2.zip
+               2 File(s)        577,676 bytes
+               2 Dir(s)  61,424,070,656 bytes free
+\end{lstlisting}
+
+\subsection{Construyendo paquetes de instalación para otros sistemas operativos}
+
+Distutils de puede ayudar a construir paquetes de instalación para usuarios linux\footnote{\href{http://docs.python.org/3.1/distutils/builtdist.html\#creating-rpm-packages}{http://docs.python.org/3.1/distutils/builtdist.html\#creating-rpm-packages}}. En mi opinión, probablemente no te merezca la pena. Si quieres distribuir software para Linux, puedes dedicar el tiempo con miembros de la comunidad que se han especializado en software de empaquetado para las distribuciones Linux mayoritarias.
+
+Por ejemplo, mi librería \codigo{chardet} está en los repositorios de Debian GNU/linux\footnote{\href{http://packages.debian.org/python-chardet}{http://packages.debian.org/python-chardet}} (Y, por lo tanto, en los de Ubuntu). No tuve nada que ver con ello; los paquetes aparecieron allí un día. La comunidad de Debian tiene sus propias políticas de empaquetado de librerías Python\footnote{\href{http://www.debian.org/doc/packaging-manuals/python-policy/}{http://www.debian.org/doc/packaging-manuals/python-policy/}}, y el paquete \codigo{python-chardet} está diseñado para cumplirlas. Y puesto que el paquete está en los repositorios de Debian, sus usuarios recibirán las actualizaciones de seguridad y las versiones nuevas, dependiendo de la configuración que hayan elegido en sus ordenadores.
+
+Los paquetes de Linux que Distutils construye no ofrecen ninguna de estas ventajas. Puedes dedicar tu tiempo de mejor manera.
+
+\section{Añadiendo tu software al Índice de Paquetes de Python}
+
+Subir software al Índice de Paquetes de Python es un proceso de tres fases:
+
+\begin{enumerate}
+  \item Primero, te debes registrar.
+  \item Luego, debes registrar tu software.
+  \item Por último, debes subir los paquetes que creaste con \codigo{setup.py sdist} y \codigo{setup.py bdist\_*}.
+\end{enumerate}
+
+
