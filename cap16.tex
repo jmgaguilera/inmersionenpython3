@@ -507,4 +507,98 @@ Subir software al Índice de Paquetes de Python es un proceso de tres fases:
   \item Por último, debes subir los paquetes que creaste con \codigo{setup.py sdist} y \codigo{setup.py bdist\_*}.
 \end{enumerate}
 
+Para registrarte tienes que ir a la página de registro de usuarios de PyPI\footnote{\href{http://pypi.python.org/pypi?:action=register\_form}{http://pypi.python.org/pypi?:action=register\_form}}. Debes introducir el nombre de usuario y clave deseados, proporcionar una dirección de correo electrónico válida, y pulsar el botón \codigo{Register} (Si dispones de una clave \codigo{PGP} o \codigo{GPG}, también puedes incluirla. Si no tienes una, o no sabes lo que es, no te preocupes). Revisa tu correo; en unos minutos deberías recibir un mensaje de PyPI con un enlace de validación. Pulsa sobre él para completar el proceso de registro.
 
+Ahora necesitas registrar tu software en PyPI y subirlo. Puedes hacerlo en un único paso:
+
+\begin{lstlisting}[language=Python,breaklines=true]
+c:\Users\pilgrim\chardet> c:\python31\python.exe setup.py register sdist bdist_wininst upload
+running register
+We need to know who you are, so please choose either:
+ 1. use your existing login,
+ 2. register as a new user,
+ 3. have the server generate a new password for you (and email it to you), or
+ 4. quit
+Your selection [default 1]:  1
+Username: MarkPilgrim
+Password:
+Registering chardet to http://pypi.python.org/pypi  
+Server response (200): OK
+running sdist
+... output trimmed for brevity ...
+running bdist_wininst
+... output trimmed for brevity ...
+running upload
+Submitting dist\chardet-1.0.2.zip to http://pypi.python.org/pypi
+Server response (200): OK
+Submitting dist\chardet-1.0.2.win32.exe to http://pypi.python.org/pypi
+Server response (200): OK
+I can store your PyPI login so future submissions will be faster.
+(the login will be stored in c:\home\.pypirc)
+Save your login (y/N)?n
+\end{lstlisting}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} Cuando distribuyes tu proyecto por vez primera, Distutils lo añade al Índice de Paquetes de Python y le da su propia \codigo{URL}. A partir de ese momento, solo actualizará los metadatos del proyecto con los cambios que hayas introducido en tus parámetros de \codigo{setup.py}. Después, construye una distribución de código fuente (\codigo{sdist}) y un instalador para Windows (\codigo{bdist\_wininst}). Luego los sube a PyPI (\codigo{upload}).
+  \item \emph{Línea 8:} Teclea 1 o pulsa \codigo{ENTER} para seleccionar que quieres usar un usuario existente.
+  \item \emph{Línea 9:} Teclea el usuario y la clave que seleccionaste en la página de registro. La clave no se mostrará en pantalla; ni siquiera con asteriscos en lugar de los caracteres. Solamente teclea la clave y pulsa \codigo{ENTER}.
+  \item \emph{Línea 11:} Distutils registra tu paquete en PyPI\ldots
+  \item \emph{Línea 13:} \ldots construye tu distribución de código fuente\ldots
+  \item \emph{Línea 15:} \ldots construye el instalador para Windows\ldots
+  \item \emph{Línea 17:} \ldots y los sube al Índice de Paquetes de Python.
+  \item \emph{Línea 24:} Si quieres automatizar el proceso de distribución de nuevas versiones, necesitas salvar tus credenciales en un fichero local. Esto es inseguro y totalmente opcional.
+\end{enumerate}
+
+¡Enhorabuena! Ya tienes su própia página en el Índice de Paquetes de Python. La dirección es \codigo{http://pypi.python.org/pypi/NAME}, en donde \codigo{NAME} es la cadena de caracteres que utilizaste en el parámetro \codigo{name} del fichero \codigo{setup.py}.
+
+
+Si quieres distribuir una nueva versión, solo tienes que actualizar el fichero \codigo{setup.py} con el nuevo número de versión y volver a ejecutar el comando anterior:
+
+\begin{lstlisting}[language=Python,breaklines=true]
+c:\Users\pilgrim\chardet> c:\python31\python.exe setup.py register sdist bdist_wininst upload
+\end{lstlisting}
+
+\section{Los muchos futuro posibles del empaquetado de Python}
+
+Distutils no es el único sistema de empaquetado de software Python, pero en el momento de escritura de este libro (Agosto de 2009), es el único que funciona con Python 3. Hay otros sistemas que funcionan en Python 2; algunos se enfocan en la instalación, otros en las pruebas y distribución. Algunos de ellos, o todos, puede que acaben migrando a Python 3.
+
+Los siguientes frameworks se enfocan en la instalación:
+
+\begin{itemize}
+  \item Setuptools - \href{http://pypi.python.org/pypi/setuptools}{http://pypi.python.org/pypi/setuptools}
+  \item Pip - \href{http://pypi.python.org/pypi/pip}{http://pypi.python.org/pypi/pip}
+  \item Distribute - \href{http://bitbucket.org/tarek/distribute/}{http://bitbucket.org/tarek/distribute/}
+\end{itemize}
+
+Los siguientes se enfocan en las pruebas y distribución:
+
+\begin{itemize}
+  \item virtualenv - \href{http://pypi.python.org/pypi/virtualenv}{http://pypi.python.org/pypi/virtualenv}
+  \item zc.buildout - \href{http://pypi.python.org/pypi/zc.buildout}{http://pypi.python.org/pypi/zc.buildout}
+  \item Paver - \href{http://www.blueskyonmars.com/projects/paver/}{http://www.blueskyonmars.com/projects/paver/}
+  \item Fabric - \href{http://fabfile.org/}{http://fabfile.org/}
+  \item py2exe - \href{http://www.py2exe.org/}{http://www.py2exe.org/}
+\end{itemize}
+
+\section{Lecturas complementarias}
+
+Sobre Distutils:
+
+\begin{itemize}
+  \item \href{http://docs.python.org/3.1/distutils/}{Ditribuyendo módulos de Python con Distutils}
+  \item \href{http://docs.python.org/3.1/distutils/apiref.html#module-distutils.core}{Funcionalidad básica de Distutils}, con todos los parámetros posibles a la función \codigo{setup()}.
+  \item \href{http://wiki.python.org/moin/Distutils/Cookbook}{Libro de ``cocina'' de Distutils}
+  \item \href{http://www.python.org/dev/peps/pep-0370/}{PEP 370: Directorios \codigo{site-packages} por usuario}.
+  \item \href{http://jessenoller.com/2009/07/19/pep-370-per-user-site-packages-and-environment-stew/}{PEP 370 y el ``estofado'' de entornos}
+\end{itemize}
+
+Sobre otros sistemas de empaquetado:
+
+\begin{itemize}
+  \item \href{http://groups.google.com/group/django-developers/msg/5407cdb400157259}{El ecosistema de empaquetado de Python}.
+  \item \href{http://www.b-list.org/weblog/2008/dec/14/packaging/}{Sobre el empaquetado}.
+  \item \href{http://blog.ianbicking.org/2008/12/14/a-few-corrections-to-on-packaging/}{Unas cuantas correcciones a ``sobre el empaquetado''}.
+  \item \href{http://www.b-list.org/weblog/2008/dec/15/pip/}{Porqué me gusta Pip}.
+  \item \href{http://cournape.wordpress.com/2009/04/01/python-packaging-a-few-observations-cabal-for-a-solution/}{Empaquetado en Python: unas cuantas observaciones}.
+  \item \href{http://jacobian.org/writing/nobody-expects-python-packaging/}{¡Nadie espera el empaquetado de Python!}
+\end{itemize}
