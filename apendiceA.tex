@@ -25,7 +25,7 @@ En Python 2, \codigo{print} era una sentencia. Lo que quisieras imprimir iba det
   \centering
   \begin{tabular}{ c l l }
   \hline
-  Notas & Python 2 & Python 3 \\
+  Línea & Python 2 & Python 3 \\
   \hline
   1 & \codigo{print}                & \codigo{print()} \\
   2 & \codigo{print 1}              & \codigo{print(1)} \\
@@ -56,7 +56,7 @@ Python 2 tiene dos tipos de cadenas de caracteres: Unicode y no Unicode. Python 
   \centering
   \begin{tabular}{ c l l }
   \hline
-  Notas & Python 2 & Python 3 \\
+  Línea & Python 2 & Python 3 \\
   \hline
   1 & \codigo{u'PapayaWhip'}              & \codigo{'PapayaWhip'} \\
   2 & \codigo{ur'PapayaWhip\textbackslash foo'}             & \codigo{r'PapayaWhip\textbackslash foo'} \\
@@ -69,3 +69,138 @@ Python 2 tiene dos tipos de cadenas de caracteres: Unicode y no Unicode. Python 
   \item \emph{Línea 1:} las cadenas de caracteres Unicode se escriben directamente como cadenas de caracteres, que en Python 3 siempre son Unicode.
   \item \emph{Línea 2:} las cadenas de caracteres Unicode Raw (que en Python permiten evitar los caracteres de escape de la barra inclinada invertida) se convierten en cadenas de caracteres Raw, que en Python 3, siempre son Unicode.
 \end{enumerate}
+
+\section{La función global \codigo{unicode()}}
+
+Python 2 dispone de dos funciones globales para convertir objetos a cadenas de caracteres: \codigo{unicode()} para convertirlas en cadenas Unicode, y \codigo{str()} para convertirlas en cadenas no Unicode. Python 3 solamente tiene un tipo de cadenas de caracteres, Unicode, por lo que solamente existe la función \codigo{str()}. La función \codigo{unicode()} no existe.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    & \codigo{unicode(cualquier\_objeto)} & \codigo{str(cualquier\_objeto)} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\section{El tipo de datos \codigo{long}}
+
+Python 2 tiene dos tipos de datos para números enteros: \codigo{int} y \codigo{long}. Un \codigo{int} no puede ser mayor que \codigo{sys.maxint}, que es diferente según la plataforma. El tipo \codigo{long} se define añadiendo una 'L' al final del número, y puede ser, bueno, más grande que un \codigo{int}.
+
+En Python 3, solamente existe un tipo de números enteros, denominado \codigo{int}, que se comporta como el tipo \codigo{long} de Python 2. Puesto que no existen dos tipos, no hay necesidad de una sintaxis especial para distinguirlos.
+
+Para profundizar, se puede leer el documento \href{http://www.python.org/dev/peps/pep-0237/}{PEP 237: unificando los enteros long e int.}
+
+\begin{table}
+  \centering
+  \begin{tabular}{c l l }
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{x = 1000000000000L} & \codigo{x = 1000000000000} \\
+    2 & \codigo{x = 0xFFFFFFFFFFFFL} & \codigo{x = 0xFFFFFFFFFFFF} \\
+    3 & \codigo{long(x)} & \codigo{int(x)} \\
+    4 & \codigo{type(x) is long} & \codigo{type(x) is int} \\
+    5 & \codigo{isinstance(x, long)} & \codigo{isinstance(x, int)} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{enumerate}
+  \item \emph{Línea 1:} los enteros largos en base 10 se transforman en enteros en base 10.
+  \item \emph{Línea 2:} los enteros largos en base 16 se transforman en enteros en base 16.
+  \item \emph{Línea 3:} en Python 3, la función \codigo{long()} desaparece. Para forzar una variable al tipo entero, se utiliza la función \codigo{int()}.
+  \item \emph{Línea 4:} la función \codigo{isinstance()} sirve para comprobar el tipo de datos de una variable; de nueveo, se debe utilizar \codigo{int} en lugar de \codigo{long}.
+\end{enumerate}
+
+\section{Comparación <{}>}
+
+Python 2 soporta \codigo{<{}>} como sinónimo de \codigo{!=}, el operador de comparación de desigualdad. Python 3 tiene este operador, pero \codigo{<{}>} deja de existir.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{if x <{}> y:} & \codigo{if x != y:} \\
+    2 & \codigo{if x <{}> y <{}> z:} & \codigo{if x != y != z:} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item  \emph{Línea 1:} una comparación simple.
+  \item  \emph{Línea 2:} una comparación más compleja entre tres valores.
+\end{enumerate}
+
+\section{\codigo{Método de diccionarios: has\_key()}}
+
+En Python 2, los diccionarios tienen un método \codigo{has\_key()} para comprobar si el diccionario contiene una determinada clave. En Python 3, este método no existe. En su lugar, debes utilizar el operador \codigo{in}.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{un\_diccionario.has\_key('PapayaWhip')}
+      & \codigo{'PapayaWhip' in un\_diccionario} \\
+      \\
+    2 & \pbox{10cm}{\codigo{un\_diccionario.has\_key(x) or} \\ 
+                    \codigo{un\_diccionario.has\_key(y)}}
+      & \pbox{10cm}{\codigo{x in un\_diccionario or} \\
+                    \codigo{y in un\_diccionario}} \\
+      \\
+    3 & \codigo{un\_diccionario.has\_key(x or y)}
+      & \codigo{(x or y) in un\_diccionario} \\
+    4 & \codigo{un\_diccionario.has\_key(x + y)}
+      & \codigo{(x + y) in un\_diccionario} \\
+    5 & \codigo{x + un\_diccionario.has\_key(y)}
+      & \codigo{x + (y in un\_diccionario)} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{enumerate}
+  \item \emph{Línea 1:} la forma más simple.
+  \item \emph{Línea 2:} el operador \codigo{in} tiene precedencia sobre el operador \codigo{or}, por lo que no hacen falta paréntesis.
+  \item \emph{Línea 3:} por otra parte, sí necesitas paréntesis alrededor de \codigo{x or y}\footnote{Este código es diferente de la línea anterior. Python interpreta primero el código \codigo{x or y}, el resultado es un \codigo{Boolean}, verdadero o falso, que se usa como clave para buscar si existe en el diccionario.}.
+  \item \emph{Línea 4:} El operador \codigo{+} tiene precedencia sobre el operador \codigo{in}, por lo que esta línea, técnicamente, no necesita paréntesis alrededor de \codigo{x + y}, pero \codigo{2to3} los incluye para mayor legibilidad del código.
+  \item \emph{Línea 5:} Esta forma sí que necesita paréntesis alrededor de \codigo{i in un\_diccionario} ya que el operador \codigo{+} tiene precedencia sobre \codigo{in}.
+\end{enumerate}
+
+\section{Métodos de diccionario que devuelven listas}
+
+En Python 2, muchos métodos de diccionario devuelven listas. Los métodos más usados, como: \codigo{keys()}, \codigo{items()}, y \codigo{values()}. En Python 3, todos estos métodos devuelven vistas dinámicas. En algunos contextos, esto no es problema. Por ejemplo, si el valor de retorno de uno de estos métodos se pasa inmediatamente a otra función que itera a través de la secuencia completa, no hay diferencia visible si el tipo real es una lista o una vista. En otros contextos, sí tiene mucha importancia. Si estabas esperando una lista completa con elementos direccionables individualmente, el código fallará, ya que las vistas no soportan el indexado.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{mi\_diccionario.keys()} & \codigo{list(mi\_diccionario.keys())} \\
+    2 & \codigo{mi\_diccionario.items()} & \codigo{list(mi\_diccionario.items())} \\
+    3 & \codigo{mi\_diccionario.iterkeys()} & \codigo{iter(mi\_diccionario.keys())} \\
+    4 & \codigo{[i for i in mi\_diccionario.iterkeys()]} & \codigo{[i for i in mi\_diccionario.keys()]} \\
+    5 & \codigo{min(mi\_diccionario.keys())} & \emph{no cambia} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{enumerate}
+  \item \emph{Línea 1:} \codigo{2to3} tiene a ir a lo más seguro, convirtiendo el valor de retorno de \codigo{keys()} a una lista estática con la función \codigo{list()}. Esto siempre funciona, pero será menos eficiente que utilizar una vista. Deberías examinar el código convertido para ver si es absolutamente necesaria la conversión, o si sería suficiente con una vista.
+  \item \emph{Línea 2:} se produce otra conversión a lista con la función \codigo{items()}. Y también con la función \codigo{values()}.
+  \item \emph{Línea 3:}Phyton 3 elimina el método \codigo{iterkeys()}. Utiliza \codigo{keys()} y, si es necesario, convierte la vista a un iterador con la función \codigo{iter()}.
+  \item \emph{Línea 4:} \codigo{2to3} reconoce cuando el método \codigo{iterkeys()} se utiliza dentro de una comprensión de lista, y  lo convierte al método \codigo{keys()} (sin la llamada extra a la función \codigo{iter()}. Esto funciona porque las vistas son iterables.
+  \item \emph{Línea 5:} \codigo{2to3} reconoce que el método \codigo{keys()} se va a pasar inmediatamente como parámetro de una función que itera a través de la secuencia completa, por eso no hay necesidad de convertir el valor de retorno en una lista. La función \codigo{min()} iterará sin problemas a través de la vista. Esto se aplica a los funciones: \codigo{min()}, \codigo{max()}, \codigo{sum()}, \codigo{list()}, \codigo{tuple()}, \codigo{set()}, \codigo{sorted()}, \codigo{any()} y \codigo{all()}.
+\end{enumerate}
+
+
