@@ -203,4 +203,254 @@ En Python 2, muchos métodos de diccionario devuelven listas. Los métodos más 
   \item \emph{Línea 5:} \codigo{2to3} reconoce que el método \codigo{keys()} se va a pasar inmediatamente como parámetro de una función que itera a través de la secuencia completa, por eso no hay necesidad de convertir el valor de retorno en una lista. La función \codigo{min()} iterará sin problemas a través de la vista. Esto se aplica a los funciones: \codigo{min()}, \codigo{max()}, \codigo{sum()}, \codigo{list()}, \codigo{tuple()}, \codigo{set()}, \codigo{sorted()}, \codigo{any()} y \codigo{all()}.
 \end{enumerate}
 
+\section{Módulos que se han renombrado o reorganizado}
+
+Se han renombrado varios módulos de la Librería Estándar de Python. Otros relacionados se han combinado o reorganizado para darles una asociación más lógica.
+
+\subsection{\codigo{http}}
+
+En Python 3, se han combinado en un único paquete, \codigo{http}, varios módulos relacionados con \codigo{HTTP}.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{import httplib} & \codigo{import http.client} \\
+    2 & \codigo{import Cookie}  & \codigo{import http.cookies} \\
+    3 & \codigo{import cookielib} & \codigo{import http.cookiejar} \\
+    4 & \pbox{10cm}{\codigo{import BaseHTTPServer} \\
+                    \codigo{import SimpleHTTPServer} \\
+                    \codigo{import CGIHttpServer}} &
+        \codigo{import http.server} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} el módulo \codigo{http.client} implelmenta una librería de bajo nivel que puede solicitar recursos \codigo{HTTP} e interpretar respuestas \codigo{HTTP}.
+  \item \emph{Línea 2:} el módulo \codigo{http.cookies} proporciona un interfaz \emph{pythonico} a las cookies del navegador que se envían en una cabecera \codigo{Set-Cookie: HTTP}.
+  \item \emph{Línea 3:} el módulo \codigo{http.cookiejar} manipula los ficheros en los que se almacenan las cookies de los navegadores más populares.
+  \item \emph{Línea 4:} el módulo \codigo{http.server} proporciona un servidor \codigo{HTTP} básico.
+\end{enumerate}
+
+\subsection{urllib}
+
+Python 2 tiene un \emph{nido de ratas} de módulos solapados para procesar, codificar y recuperar \codigo{URL}s. En Python 3, se han refactorizado y combinado en un único paquete, \codigo{urllib}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{import urllib} & \pbox{10cm}{
+                                   \codigo{import urllib.request, urllib.parse,} \\
+                                   \codigo{urllib.error}
+                                 } \\
+    2 & \codigo{import urllib2}  & \codigo{import urllib.request, urllib.error} \\
+    3 & \codigo{import urlparse} & \codigo{import urllib.parse} \\
+    4 & \codigo{import robotparse} & \codigo{import urllib.robotparse} \\
+    5 & \pbox{10cm}{\codigo{from urllib import FancyURLopener} \\
+                    \codigo{from urllib import urlencode}} &
+        \pbox{10cm}{\codigo{from urllib.request import FancyURLopener} \\
+                    \codigo{from urllib.parse urlencode}} \\
+    6 & \pbox{10cm}{\codigo{from urllib2 import Request} \\
+                    \codigo{from urllib2 import HTTPError}} &
+        \pbox{10cm}{\codigo{from urllib.request import Request} \\
+                    \codigo{from urllib.error HTTPError}} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} el viejo módulo \codigo{urllib} de Python 2 tenía una gran variedad de funciones, incluida \codigo{urlopen()} para recuperar los datos, y \codigo{splittype()}, \codigo{splithost()}, y \codigo{splituser()} para dividir una \codigo{URL} en sus partes constituyentes. Estas funciones se han reorganizado de forma más lógica en el nuevo paquete \codigo{urllib}. \codigo{2to3} también modificará todas las llamadas a estas funciones para que utilicen este nuevo esquema de denominación
+  \item \emph{Línea 2:} el viejo módulo \codigo{urllib2} de Python 2 se ha incorporado al paquete \codigo{urllib}. Todos los elementos conocidos de este paquete  ---El metodo \codigo{build\_opener()}, los objetos \codigo{Request}, \codigo{HTTPBasicAuthHandler} y otros--- están aún disponibles.
+  \item \emph{Línea 3:} el módulo \codigo{urllib.parse} de Python 3 contiene todas las funciones del antiguo módulo \codigo{urlparse} de Python 2.
+  \item \emph{Línea 4:} el módulo \codigo{urllib.robotparser} procesa ficheros \href{http://www.robotstxt.org/}{robots.txt}.
+  \item \emph{Línea 5:} la clase \codigo{FancyURLopener}, que manera las redirecciones \codigo{HTTP} y otros códigos de estado, está aún disponible en el nuevo módulo \codigo{http.request}. La función \codigo{urlencode()} se ha movido a \codigo{urllib.parse}.
+  \item \emph{Línea 6:} el objeto \codigo{Request} está aún disponible en \codigo{urllib.request}, pero las constantes como \codigo{HTTPError} se han movido a \codigo{urllib.error}.
+\end{enumerate}
+
+¿He mencionado que \codigo{2to3} reescribirá todas las llamadas a estas funciones? Por ejemplo, si tu código Python 2 importa el módulo \codigo{urllib} y llama a \codigo{urllib.urlopen()} para obtener datos, \codigo{2to3} arreglará arreglará ambas: la sentencia de importación y la llamada a la función.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+     & \codigo{import urllib} & \pbox{10cm}{
+                                   \codigo{import urllib.request, urllib.parse,} \\
+                                   \codigo{urllib.error}
+                                 } \\
+                              &   \\
+     & \pbox{10cm}{\codigo{print urllib.urlopen(} \\
+     \codigo{    'http://diveintopython3.org').read()}}
+     & \pbox{10cm}{\codigo{print urllib.request.urlopen(} \\
+     \codigo{    'http://diveintopython3.org').read()}} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{\codigo{dbm}}
+
+Los diversos clones de \codigo{DBM} se encuentran ahora en un único paquete, \codigo{dbm}. Si necesitas una variante específica, como \codigo{GNU DBM}, puedes importar el módulo apropiado de este paquete.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    & \codigo{import dbm} & \codigo{import dbm.ndbm} \\
+    & \codigo{import gdbm} & \codigo{import dbm.gnu} \\
+    & \codigo{import dbhash} & \codigo{import dbm.bsd} \\
+    & \codigo{import dumbdbm} & \codigo{import dbm.dumb} \\
+    & \\
+    & \pbox{10cm}{\codigo{import anydbm} \\ \codigo{import whichdb}}
+      & \codigo{import dbm} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\subsection{xmlrpc}
+
+\codigo{XML-RPC} es un método ligero de hacer llamadas \codigo{RPC} sobre \codigo{HTTP}. La librería cliente \codigo{XML-RPC} y varias implementaciones de servidores \codigo{XML-RPC} se han combinado en un único paquete, \codigo{xmlrpc}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    & \codigo{import xmlrpclib} & \codigo{import xmlrpc.client} \\
+    & \\
+    & \pbox{10cm}{\codigo{import DocXMLRPCServer} \\ \codigo{import SimpleXMLRPCServer}}
+      & \codigo{import xmlrpc.server} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\subsection{Otros módulos}
+
+\begin{table}
+\centering
+\begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+
+    1 &	\codigo{try:} & \codigo{import io} \\
+    & \codigo{\quad import cStringIO as StringIO} \\
+    & \codigo{except ImportError:} \\
+    & \codigo{\quad import StringIO} \\
+    & \\
+    2 &	\codigo{try:} & \codigo{import pickle} \\
+    & \codigo{\quad import cPickle as pickle} \\
+    & \codigo{except ImportError:} \\
+    & \codigo{\quad import pickle} \\
+
+    & \\
+    3 & \codigo{import \_\_builtin\_\_} & \codigo{import builtins} \\
+    4 & \codigo{import copy\_reg} & \codigo{import copyreg} \\
+    5 & \codigo{import Queue} & \codigo{import queue} \\
+    6 & \codigo{import SocketServer} & \codigo{import socketserver} \\
+    7 & \codigo{import ConfigParser} & \codigo{import configparser} \\
+    8 & \codigo{import repr} & \codigo{import reprlib} \\
+    9 & \codigo{import commands} & \codigo{import subprocess} \\
+    \hline
+\end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{enumerate}
+  \item \emph{Línea 1:} una construcción idiomática común en Python 2 era intentar importar \codigo{cStringIO} como \codigo{StringIO}, y si fallaba, importar la implementación \codigo{StringIO}. En Python 3 desaparece, el módulo \codigo{io} lo hace por ti. Encontrará la implementación más rápida disponible y la utilizará automáticamente.
+  \item \emph{Línea 2:} una construcción similar se utilizaba para encontrar la implementación más rápida de \codigo{pickle}. En Python 3, el módulo \codigo{pickle} lo hace por ti.
+  \item \emph{Línea 3:} el módulo \codigo{builtins} contiene las funciones globales, clases y constantes que se utilizan en todas partes. La redefinición de una función de este módulo la redefinirá en todas partes. Esto es tan potente y peligroso como parece.
+  \item \emph{Línea 4:} el módulo \codigo{copyreg} añade soporte de pickle a los tipos de datos a medida definidos en C.
+  \item \emph{Línea 5:} el módulo \codigo{queue} proporciona colas multiproductor-multiconsumidor.
+  \item \emph{Línea 6:} el módulo \codigo{socketserver} proporciona una clase base genérica para implementar diferentes clases de servidores de sockets.
+  \item \emph{Línea 7:} el módulo \codigo{configparser} procesa ficheros de configuración de estilo \codigo{INI}.
+  \item \emph{Línea 8:} el módulo \codigo{reprlib} reimplementa la función interna \codigo{repr()}, añadiendo controles adicionales sobre lo larga que pueden ser las representaciones antes de ser truncadas.
+  \item \emph{Línea 9:} el módulo \codigo{subprocess} te permite lanzar procesos, conectar sus flujos de entrada y de salida, y obtener sus códigos de retorno.
+\end{enumerate}
+
+\section{Importación relativa dentro de un paquete}
+
+Un paquete es un grupo de módulos relacionados que funcionan como una única entidad. En Python 2, cuando los módulos de un paquete necesitaban referenciarse entre sí, podías utilizar \codigo{import foo} o \codigo{from foo import Bar}. El interprete de Python 2 primero buscaba en el paquete actual el fichero \codigo{foo.py}, y luego se movía a los demás directorios del camino de búsqueda (\codigo{sys.path}). Python 3 funciona diferente. En lugar de buscar en el paquete actua, va directamente al camino de búsqueda. Si quieres que un módulo de un pauqete importe a otro módulo en el mismo paquete, necesitas proporcionar explícitamente el camino relativo entre estos dos módulos.
+
+Supón que tenías el siguiente paquete con múltiples ficheros en el mismo directorio:
+
+% Figura de árbol con tikz
+
+\tikzstyle{carpeta}=[draw=black,thick,anchor=west]
+\tikzstyle{fichero}=[anchor=west]
+
+\begin{tikzpicture}[%
+  grow via three points={one child at (0.5,-0.7) and
+  two children at (0.5,-0.7) and (0.5,-1.4)},
+  edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+  \node [carpeta] {chardet/}
+  child { node [fichero] {\_\_init\_\_.py}}
+    child { node [fichero] {constants.py}}
+    child { node [fichero] {mbcharsetprober.py}}
+    child { node [fichero] {universaldetector.py}};
+\end{tikzpicture}
+
+Ahora supón que el fichero \codigo{universaldetector.py} necesita importar el contenido completo del fichero \codigo{constants.py} y una clase del fichero \codigo{mbcharsetprober.py}. ¿Cómo lo harías?
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{c l l}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{import constants} & \codigo{from . import constants} \\
+    & \\
+    2 & \pbox{10cm}{\codigo{from mbcharsetprober import} \\
+    \codigo{MultiByteCharSetProber}} &
+    \pbox{10cm}{\codigo{from .mbcharsetprober import} \\
+    \codigo{MultiByteCharsetProber}} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} cuando necesitas importar un módulo completo de cualquier otra parte de tu paquete, utiliza la nueva sintaxis \codigo{from . import}. EL punto es el path relativo desde este fichero (\codigo{universaldetector.py}) al fichero que quieres importar (\codigo{constants.py}). En este caso, están en el mismo directorio, por lo que se coloca un único punto. También puedes importar desde el directorio padre (\codigo{from .. import otro\_módulo}) o desde un subdirectorio.
+  \item \emph{Línea 2:} Para importar un clase específicao función desde otro módulo directamente en el espacio de nombres de tu módulo, introduce el prefijo del módulo objetivo con un camino relativo, sin usar la barra inclinada del final. En este caso, \codigo{mbcharsetprober.py} está en el mismo directorio que \codigo{universaldetector.py}, por lo que el camino es un único punto. También puedes importar desde el directorio padre (\codigo{from ..otro\_modulo import otra\_clase} o desde un subdirectorio.
+\end{enumerate}
+
+\section{El método iterador \codigo{next()}}
+
+En Python 2, los iteradores tienen el método \codigo{next()} que devuelve el siguiente elemento de la secuencia. Esto sigue siendo cierto en Python 3, pero ahora hay también una función global \href{http://www.diveintopython3.net/generators.html#generators}{\codigo{next()}} que toma un iterador como parámetro.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{unIterador.next()} & \codigo{next(unIterador)} \\
+    2 & \codigo{función\_q\_retorna\_iterador().next()} &
+        \codigo{next(función\_q\_retorna\_iterador())} \\
+    & \\
+    3 & \codigo{class A:} & \codigo{class A:} \\
+      & \quad \codigo{def next(self):} & \quad \codigo{def \_\_next\_\_(self):}\\
+      & \quad\quad \codigo{pass} & \quad\quad \codigo{pass} \\
+
+    & \\
+    4 & \codigo{class A:} & \\
+    & \quad\codigo{def next(self, x, y):} & \emph{no cambia} \\
+    &  \quad\quad\codigo{pass} \\
+    \hline
+  \end{tabular}
+\end{table}
+
 
