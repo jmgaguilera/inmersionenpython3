@@ -453,4 +453,169 @@ En Python 2, los iteradores tienen el método \codigo{next()} que devuelve el si
   \end{tabular}
 \end{table}
 
+\begin{enumerate}
+  \item \emph{Línea 1:} en el caso más simple, en lugar de llamar al método \codigo{next()} del iterador, ahora puedes pasar el propio iterador a la función global \codigo{next()}.
+  \item \emph{Línea 2:} si tienes una función que devuelve un iterador, puedes llamar a la función y pasarle el resultado a la función \codigo{next()}.
+  \item \emph{Línea 3:} si defines tu propia clase y quieres usarla como un iterador, debes definir el método especial \codigo{\_\_next\_\_()}.
+  \item \emph{Línea 4:} si defines tu clase y resulta que ya tiene un método \codigo{next()} con uno o más parámetros (sin contar \codigo{self}), \codigo{2to3} no la modificará. Esta clase no podrá utilizarse como iterador puesto que su método \codigo{next()} tiene parámetros.
+  \item \emph{Línea 5:} esta última es un poco compleja. Si tienes una variable local que se llame \codigo{next}, tiene precedencia sobre la nueva función global \codigo{next()}. En este caso, necestias llamar al método especial \codigo{\_\_next\_\_()} directamente para poder obtener el siguiente elemento de la secuencia (Alternativamente, podrías refactorizar el código para que la variable local no se llamara \codigo{next}, pero \codigo{2to3} no lo hará por ti.
+\end{enumerate}
+
+\section{La función global \codigo{filter()}}
+
+En Python 2, la función \codigo{filter()} devolvía una lista, el resultado de filtrar una secuencia a través de una función que devolviera \codigo{True} o \codigo{False} para cada elemento de la secuencia. En Python 3, la función \codigo{filter()} devuelve un iterador, no una lista.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{filter(función, secuencia)} & \codigo{list(filter(función, secuencia))} \\
+    2 & \codigo{list(filter(función, secuencia))} & \codigo{\emph{no cambia}} \\
+    3 & \codigo{filter(None, secuencia)} & \codigo{[i for i in secuencia if i]} \\
+    4 & \codigo{for i in filter(None, secuencia):} & \codigo{\emph{no cambia}} \\
+    5 & \codigo{[i for i in filter(función, secuencia)]} & \codigo{\emph{no cambia}} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} en el caso básico, \codigo{2to3} envolverá la llamada a \codigo{filter()} con una llamada a \codigo{list()}, lo que simplemente itera y devuelve una lista verdadera.
+  \item \emph{Línea 2:} sin embargo, si la llamada a \codigo{filter()} ya está envuelta en una llamada a \codigo{list()}, \codigo{2to3} no hará nada, ya que no es necesario.
+  \item \emph{Línea 3:} para sintaxis especial \codigo{filter(None, \ldots)}, \codigo{2to3} transformará la llamada en una comprensión de lista semánticamente equivalente.
+  \item \emph{Línea 4:} en contextos como el bucle \codigo{for}, que iteran a través de la secuencia completa siempre, no se requieren cambios.
+  \item \emph{Línea 5:} tampoco se requieren cambios, cuando ya se itere de forma completa por encontrarse \codigo{filter()} en una sentencia de comprensión de listas.
+\end{enumerate}
+
+\section{La función global \codigo{map()}}
+
+De forma parecida a como se comporta \codigo{filter()}, la función \codigo{map()} ahora devuelve un iterador (En Python 2, devolvía una lista).
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{map(función, 'PapayaWhip')} & \codigo{list(map(función, 'PapayaWhip'))} \\
+    2 & \codigo{map(None, 'PapayaWhip')} & \codigo{list('PapayaWhip')} \\
+    2 & \codigo{map(lambda x: x+1, range(42))} & \codigo{[x+1 for x in range(42)]} \\
+    4 & \codigo{for i in map(None, secuencia):} & \codigo{\emph{no cambia}} \\
+    5 & \codigo{[i for i in map(función, secuencia)]} & \codigo{\emph{no cambia}} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{enumerate}
+  \item \emph{Línea 1:} como sucede con \codigo{filter()}, en el caso más básico, \codigo{2to3} envolverá la llamada a \codigo{map()}con una llamada a \codigo{list()}.
+  \item \emph{Línea 2:} para la sintaxis especial \codigo{map(None, \ldots)}, la función identidad, \codigo{2to3} la convertirá en una llamada equivalente a \codigo{list()}.
+  \item \emph{Línea 3:} si el primer argumento de \codigo{map()} es una función lambda, \codigo{2to3} la convertirá en una comprensión de listas equivalente.
+  \item \emph{Línea 4:} en contextos como los bucles \codigo{for}, en los que se itera a través de la secuencia completa, no se requieren cambios.
+  \item \emph{Línea 4:} de nuevo, no hacen falta cambios, ya que la comprensión de listas iterará a través de la secuencia completa, y esto es posible tanto si el valor de retorno de \codigo{map()} es un iterador, como si es una lista.
+\end{enumerate}
+
+\section{La función global \codigo{reduce()}}
+
+En Python 3, se ha suprimido la función \codigo{reduce()} del espacio de nombres global, y se ha colocado en el módulo \codigo{functools}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    & \codigo{reduce(a, b, c)} & from functools import reduce \\
+    & & \codigo{reduce(a, b, c)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\section{La función global \codigo{apply()}}
+
+Python 2 tiene una función global denominada \codigo{apply()}, que toma una función \codigo{f} y una lista \codigo{[a, b, c]} y devuelve \codigo{f(a, b, c)}. Puedes conseguir el mismo resultado mediante la llamada directa a la función pasándole la lista de parámetros precedida de un asterisco. En Python 3, la función \codigo{apply()} ha dejado de existir; debes usar obligatoriamente la notación asterisco.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{apply(funcion, listaParametros)} & \codigo{funcion(*listaParametros)} \\
+    2  & \codigo{apply(funcion, listaParametros,} & \codigo{funcion(*listaParametros,} \\
+    & \quad \codigo{dicParamNombre)} & \quad \codigo{**dicParamNombre)} \\
+    3  & \codigo{apply(funcion, listaParametros + z)} & \codigo{funcion(listaParametros + z)} \\
+    4  & \codigo{apply(modulo.funcion, listaParam)} & \codigo{modulo.funcion(listaParam)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} en su forma más simple, puedes llamar a una función con una lista de parámetros añadiendo un asterisco delante de la lista. Esto es equivalente a la anterior función \codigo{apply()} de Python 2.
+  \item \emph{Línea 2:} en Python 2, la función \codigo{apply()} podría tomar hasta tres parámetros: una función, la lista de parámetros, y un diccionario con los parámetros que se pasan por nombre. En Python 3, puedes conseguir el mismo efecto añadiendo un asterisco a la lista de parámetros y dos asteriscos al diccionario con los parámetros que se pasan por nombre.
+  \item \emph{Línea 3:} El operador \codigo{+}, utilizado aquí para la concatenación de listas, tiene prioridad sobre el operador \codigo{*} (asterisco), por eso no hay necesidad unos paréntesis extras alrededor de \codigo{listaParametros + z}.
+  \item \emph{Línea 4:} \codigo{2to3} es lo suficientemente inteligente como para convertir llamadas \codigo{apply()} complejas, incluidas las llamadas a función de módulos importados.
+\end{enumerate}
+
+\section{La función global \codigo{intern()}}
+
+En Python 2, se puede llamar a la función \codigo{intern()} sobre una cadena de caracteres para internalizarla con el fin de optimizar su rendimiento. En Python 3, la función \codigo{intern()} se ha movido al módulo \codigo{sys}.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    & \codigo{intern(a, b, c)} & \codigo{sys.intern(a, b, c)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{La sentencia \codigo{exec}}
+
+Igual que se ha convertido la sentencia \codigo{print} en función en Python 3, se ha hecho lo mismo con la sentencia \codigo{exec}. La función \codigo{exec()} toma una cadena de caracteres que contiene cualquier código Python y lo ejecuta como si fuese una sentencia o expresión. \codigo{exec()} es como \codigo{eval()}, pero aún más poderoso y maligno. La función \codigo{eval()} solo puede evaluar una única expresión, pero \codigo{exec()} puede ejecutar múltiples sentencias, importar paquetes, declarar funciones ---esencialmente, ejecutar un programa Python entero, escrito en una cadena de caracteres.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1 & \codigo{exec cadenaEjecutable} & \codigo{exec(cadenaEjecutable)} \\
+    2 & \codigo{exec cadenaEjec in espNombresGlobal} & \codigo{exec(cadenaEjec, espNombresGlobal)} \\
+    3 & \codigo{exec cadenaEjec in espNombresGlobal,} & \codigo{exec(cadenaEjec, espNombresGlobal,} \\
+    & \quad \codigo{espacioNombresLocal} & \quad \codigo{espacioNombresLocal)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{enumerate}
+  \item \emph{Línea 1:} en su forma más simple, \codigo{2to3} simplemente envuelve entre paréntesis a la cadena de caracteres que contiene el código fuente.
+  \item \emph{Línea 2:} la antigua sentencia \codigo{exec} pordía tomar un espacio de nombres, un espacio privado de elementos globales en el que el código fuente se ejecutaría. En Python 3, esto se hace pasando el espacio de nombres como segundo parámetro de la función \codigo{exec()}.
+  \item \emph{Línea 3:} la anterior sentencia \codigo{exec} podía tomar como parámetro un espacio de nombres local (como las variables definidas dentro de una función). En Python 3, aún se puede hacer con la función \codigo{exec()}.
+\end{enumerate}
+
+\section{La sentencia \codigo{execfile}}
+
+Como la anterior sentencia \codigo{exec}, la sentencia \codigo{execfile} sirve ejecuta el código escrito, esta vez, en un fichero. En Python 3 esta sentencia se ha eliminado. Si realmente necesitas leer un fichero Python y ejecutarlo (pero no deseas, simplemente, importarlo), puedes conseguirlo abriendo el fichero, leyendo su contenido, llamando a la función global \codigo{compile()} para forzar al interprete de Python a compilar el código, y luego llamar a la nueva función \codigo{exec()}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{execfile('nombre\_fichero'}) & \codigo{exec(compile(open('nombre\_fichero').read(),} \\
+    & & \quad \codigo{'nombre\_fichero2', 'exec'))} \\
+    \hline
+  \end{tabular}
+\end{table}
 
