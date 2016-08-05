@@ -619,3 +619,668 @@ Como la anterior sentencia \codigo{exec}, la sentencia \codigo{execfile} sirve e
   \end{tabular}
 \end{table}
 
+\section{Literales \codigo{repr} (comilla invertida)}
+
+En Python 2, existe una sintaxis especial para envolver cualquier objeto en comillas invertidas (como \`{}x\`{}) para obtener una representación del objeto. En Python 3, no puedes utilizarlas; en su lugar, debes usar la función global \codigo{repr()}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{\`{}x\`{}} & \codigo{repr(x)} \\
+    2  & \codigo{\`{}'PapayaWhip' + \`{}2\`{}\`{}} & \codigo{repr('PapayaWhip' + repr(2))} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} recuerda, \codigo{x} puede ser cualquier cosa: una clase, una función, un módulo, un tipo de datos primitivo, etc. La función \codigo{repr()} funciona sobre cualquier cosa.
+  \item \emph{Línea 2:} En Python 2, las comillas invertidas se pueden anidar, \codigo{2to3} es lo suficientemente inteligente para detectarlas y convertirlas en llamadas anidadas a \codigo{repr()}.
+\end{enumerate}
+
+\section{La sentencia \codigo{try \ldots except}}
+
+La sintaxis para capturar excepciones ha cambiado ligeramente entre Python 2 y Python 3.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{try:} & \codigo{try:} \\
+       & \quad \codigo{import mymodule} & \quad \codigo{import mymodule} \\
+       & \codigo{except ImportError, e} & \codigo{except ImportError as e:} \\
+       & \quad \codigo{pass} & \quad \codigo{pass} \\
+    & \\
+    2  & \codigo{try:} & \codigo{try:} \\
+       & \quad \codigo{import mymodule} & \quad \codigo{import mymodule} \\
+       & \codigo{except (RuntimeError, ImportError), e} & \codigo{except (RuntimeError, ImportError) as e:} \\
+       & \quad \codigo{pass} & \quad \codigo{pass} \\
+
+    & \\
+    3  & \codigo{try:} & \codigo{} \\
+    & \quad \codigo{import mymodule} & \emph{no cambia} \\
+       & \codigo{except ImportError:} & \codigo{} \\
+       & \quad \codigo{pass} & \quad \codigo{} \\
+
+    & \\
+       4  & \codigo{try:} & \codigo{} \\
+       & \quad \codigo{import mymodule} & \emph{no cambia} \\
+       & \codigo{except:} & \codigo{} \\
+       & \quad \codigo{pass} & \quad \codigo{} \\
+
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{enumerate}
+  \item \emph{Línea 1:} en lugar de una coma después del tipo de la excepción, Python 3 utiliza una palabra reservada nueva \codigo{as}.
+  \item \emph{Línea 2:} la palabra reservada \codigo{as} también se usa en la captura de múltiples tipos de excepción de una vez.
+  \item \emph{Línea 3:} si capturas una excepción pero te da igual acceder al objeto de la excepción, la sintaxis es idéntica en Python 2 y 3.
+  \item \emph{Línea 4:} igualmente, si utilizas la sintaxis para capturar \emph{todos} los tipos de excepción posibles, la sintaxis es idéntica en Python 2 y 3.
+\end{enumerate}
+
+\cajaTextoAncho{Nunca deberías utilizar la captura por defecto de \emph{todos} los tipos de excepción cuando importes módulos (o en la mayoría de otras ocasiones). Al hacer esto, capturarás cosas como \codigo{KeyboardInterrupt} (que se dispara si el usuario pulsa \codigo{Ctrl-C} para interrumpir el programa) y que puede hacer más difícil depurar los errores.}
+
+\section{La sentencia \codigo{raise}}
+
+La sintaxis para elevar tus propias excepciones ha cambiado también ligeramente.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{raise miExcepcion} & \emph{no cambia} \\
+    2  & \codigo{raise miExcepcion, 'mensaje de error'} & \codigo{raise miExcepcion('mensaje de error')} \\
+    3  & \codigo{raise miExcepcion, 'mensaje de error',} & \codigo{raise miExcepcion('mensaje de error').} \\
+       & \codigo{traza)} & \codigo{with\_traceback(traza)} \\
+    4  & \codigo{raise 'mensaje de error'} & \emph{no soportado} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{enumerate}
+  \item \emph{Línea 1:} en su forma más simple ---cuando se eleva una excepción sin incluir mensaje de error--- la sintaxis no ha cambiado.
+  \item \emph{Línea 2:} la modificación de sintaxis se deja notar cuando quieres elevar una excepción con un mensaje de error personalizado. Python 2 separaba el tipo de excepción y el mensaje con una coma; Python 3 lo pasa como parámetro de la excepción.
+  \item \emph{Línea 3:} Python 2 soportaba una sintaxis más compleja para elevar una excepción con una pila de trazabilidad a medida. En Python 3, para hacer esto, la sintaxis es diferente.
+  \item \emph{Línea 4:} en Python 2, podías elevar una excepción sin introducir el tipo de la misma, solo el mensaje de error. En Python 3, esto no es posible. \codigo{2to3} te avisará de que no ha sido capaz de arreglarlo automáticamente.
+\end{enumerate}
+
+\section{El método \codigo{throw} en generadores}
+
+En Python 2, los generadores disponen de un método \codigo{throw()}: al llamar a este método se eleva una excepción en el punto en el que el generador estuviera pausado, luego se devuelve el siguiente valor disponible (en \codigo{yield}). En Python 3, esta funcionalidad sigue existiendo con pequeños cambios.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{unGenerador.throw(miExcepcion)} & \emph{no cambia} \\
+    2  & \codigo{unGenerador.throw(miExcepcion, } & \codigo{unGenerador.throw(} \\
+      & \quad \codigo{'mensaje de error')} & \quad \codigo{miExcepcion('mensaje de error'))} \\
+    3  & \codigo{unGenerador.throw('mensaje de error')} & \emph{no soportado} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{enumerate}
+  \item \emph{Línea 1:} en su forma más simple, un generador lanza una excepción sin un mensaje de error. En este caso, la sintaxis no cambia.
+  \item \emph{Línea 2:} si el generador lanza una excepción con un mensaje de error, necesitas pasar la cadena de caracteres del mensaje como parámetro de la excepción que estás creando.
+  \item \emph{Línea 3:} Python 2 también soportaba el lanzar una excepción solamente con el mensaje de error, sin indicar su tipo. En Python 3 esto no está permitido, \codigo{2to3} mostrará un aviso indicando que necesitas arreglar esto manualmente.
+\end{enumerate}
+
+\section{La función global \codigo{xrange()}}
+
+En Python 2, había dos formas de obtener un rango de números: \codigo{range()}, que retornaba una lista; y \codigo{xrange()}, que retornaba un iterador. En Python 3, \codigo{range()} retorna un iterador, y \codigo{xrange()} no existe.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{xrange(10)} & \codigo{range(10)} \\
+    2  & \codigo{lista = range(10)} & \codigo{lista = list(range(10))} \\
+    3  & \codigo{[i for i in xrange(10)]} & \codigo{[i for i in range(10)]} \\
+    4  & \codigo{for i in range(10):} & \emph{no cambia} \\
+    5  & \codigo{sum(range(10))} & \emph{no cambia} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} en su forma más simple, \codigo{2to3} convierte \codigo{xrange()} en \codigo{range()}.
+  \item \emph{Línea 2:} Si tu código Python 2 usa \codigo{range()}, \codigo{2to3} no sabe si necesitas una lista o un iterador; por ello, opta por lo seguro, que es envolver la función en una lista llamando a la función \codigo{list()}.
+  \item \emph{Línea 3:} si la función \codigo{xrange()} se encontraba en una comprensión de lista, \codigo{2to3} es suficientemente inteligente como para no envolverla en una lista.
+  \item \emph{Línea 4:} De forma similar, un bucle \codigo{for} funcionará igual de bien con un iterador. Por lo que no hay necesidad de cambiar nada en e este caso.
+  \item \emph{Línea 5:} la función \codigo{sum()} también funciona con un iterador, por eso \codigo{2to3} no hace ningún cambio. Esto se aplica a \codigo{min()}, \codigo{max()}, \codigo{sum()}, \codigo{list()}, \codigo{tuple()}, \codigo{set()}, \codigo{sorted()}, \codigo{any()}, y \codigo{all()}.
+\end{enumerate}
+
+
+\section{Las funciones globales \codigo{raw\_input()} e \codigo{input()}}
+
+Python 2 tiene dos funciones globales para pedir al usuario que introduzca datos en la línea de comandos. La primera se denomina \codigo{input()}, y espera que el usuario introduzca una expresión Python (y devuelve el resultado). La segunda, denominada \codigo{raw\_input()}, simplemente retorna lo que el usuario ha tecleado. Esto es confuso para principiantes. Python 3 redenomina \codigo{raw\_input()} a \codigo{input()}, para que funcione como todo el mundo imagina que debería.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{raw\_input()} & \codigo{input()} \\
+    2  & \codigo{raw\_input('prompt:')} & \codigo{input('prompt:')} \\
+    3  & \codigo{input()} & \codigo{eval(input())} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{enumerate}
+  \item \emph{Línea 1:} en su forma más simple, \codigo{raw\_input()} pasa a ser \codigo{input()}.
+  \item \emph{Línea 2:} en Python 2, la función \codigo{raw\_input()} podía pedir al usuario (con una cadena de caracteres) la entrada de datos mediante un ``prompt'' que se pasaba como parámetro. Esto se mantiene en Python 3 en la nueva función \codigo{input()}.
+  \item \emph{Línea 3:} si realmente necesitas pedirle al usuario una expresión que luego debes evaluar, utiliza \codigo{input()} y pasa el resultado a la funicón \codigo{eval()}.
+\end{enumerate}
+
+\section{Los atributos de función \codigo{func\_*}}
+
+En Python 2, el código dentro de las funcionas puede acceder a atributos de la propia función. En Python 3, estos atributos especiales se han redenominado por consistencia con otros atributos.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{unaFuncion.func\_name} & \codigo{unaFuncion.\_\_name\_\_} \\
+    2  & \codigo{unaFuncion.func\_doc} & \codigo{unaFuncion.\_\_doc\_\_} \\
+    3  & \codigo{unaFuncion.func\_defaults} & \codigo{unaFuncion.\_\_defaults\_\_} \\
+    4  & \codigo{unaFuncion.func\_dict} & \codigo{unaFuncion.\_\_dict\_\_} \\
+    5  & \codigo{unaFuncion.func\_closure} & \codigo{unaFuncion.\_\_closure\_\_} \\
+    6  & \codigo{unaFuncion.func\_globals} & \codigo{unaFuncion.\_\_globals\_\_} \\
+    7  & \codigo{unaFuncion.func\_code} & \codigo{unaFuncion.\_\_code\_\_} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{enumerate}
+  \item \emph{Línea 1:} el nombre de la función.
+  \item \emph{Línea 2:} contiene el \codigo{docstring} definido para la función en el código fuente.
+  \item \emph{Línea 3:} una tupla que contiene los valores por defecto de los parámetros, para aquellos que lo tengan.
+  \item \emph{Línea 4:} es el espacio de nombres que soporta los atributos de la función.
+  \item \emph{Línea 5:} es una tupla de celdas que contienen los enlaces (bindings) de las variables libres de la función.
+  \item \emph{Línea 6:} es una referencia al espacio de nombres global del módulo en el que la función fue definida.
+  \item \emph{Línea 7:} es un objeto de código que representa al cuerpo compilado de la función.
+\end{enumerate}
+
+
+\section{El método de E/S \codigo{xreadlines()}}
+
+En Python 2, los objetos fichero tenían un método \codigo{xreadlines()} que devolvía un iterador que leía una línea cada vez. Era útil en bucles \codigo{for}, entre otros lugares. En realidad, era tan útil, que posteriores versiones añadieron esta capacidad de forma nativa a los propios objetos fichero.
+
+En Python 3, la función \codigo{xreadlines()} ya no existe. \codigo{2to3} puede arreglar los casos más simples, pero otros requieren de intervención manual.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{for linea in fich.xreadlines():} & \codigo{for linea in fich:} \\
+    2  & \codigo{for linea in fich.xreadlines(5):} & \emph{no cambia (roto)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} si llamabas a \codigo{xreadlines()} sin parámetros, \codigo{2to3} lo convertirá al objeto fichero (sin necesidad de llamada extra).
+  \item \emph{Línea 2:} si llamabas a \codigo{xreadlines()} pasándole el número de línea a leer cada vez, \codigo{2to3} no lo arreglará, y el código fallará con una excepción \codigo{AttributeError: '\_io.TextIOWrapper' object has no attribute 'xreadlines'}. Puedes cambiar manualmente \codigo{xreadlines()} a \codigo{readlines()} para que funcione en Python 3 (El método \codigo{readlines()} ahora devuelve un iterador, por lo que es tan eficiente como era \codigo{xreadlines()} en Python 2).
+\end{enumerate}
+
+\section{Funciones \codigo{lambda} con parámetros tupla}
+
+En Python 2, podías definir una función \codigo{lambda} anónima que tomara varios parámetros definiendo la función para que recibiera una tupla con un número específico de elementos. Python 2 ``desempaqueta'' la tupla en los parámetros con nombre, que luego puedes referenciar (por nombre) en la propia función \codigo{lambda}. En Python 3, aún puedes pasar una tupla a una función \codigo{lambda}, pero el interprete de Python no desempaquetará los parámetros. En su lugar, necesitas referenciar cada uno de ellos mediante su posición en la tupla.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{lambda (x,): x + f(x)} & \codigo{lambda x1: x1[0] + f(x1[0])} \\
+    2  & \codigo{lambda (x, y): x + f(y)} & \codigo{lambda x\_y: x\_y[0] + f(x\_y[1])} \\
+    3  & \codigo{lambda (x, (y,z)): x + y + z} & \codigo{lambda x\_y\_z: x\_y\_z[0] +} \\ 
+       &  & \quad \codigo{x\_y\_z[1][0] + x\_y\_z[1][1]} \\
+    4  & \codigo{lambda x, y, z: x + y + z} & \emph{no cambia} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{enumerate}
+  \item \emph{Línea 1:} si habías definido una función \codigo{lambda} que toma como parámetro una tupla con un único elemento, en Python 3, \codigo{2to3} lo convertirá en referencias al rimer elemento \codigo{x1[0]}. El nombre \codigo{x1} es autogenerado, y se basa en el nombre del parámetro de la tupla original.
+  \item \emph{Línea 2:} una función \codigo{lambda} con una tupla de dos elementos \codigo{(x, y)} se convierte en \codigo{x\_y} con los parámetros en las posiciones \codigo{x\_y[0]} \codigo{x\_y[1]}
+  \item \emph{Línea 3:} \codigo{2to3} puede manejar funciones \codigo{lambda} con tuplas anidadas como parámetros. El código resultate en Python 3 es poco legible.
+  \item \emph{Línea 4:} puedes definir funciones \codigo{lambda} con varios parámetros que no sean tuplas; en este caso la sintaxis de Python 3 no cambia.
+\end{enumerate}
+
+\section{Atributos especiales de métodos}
+
+En Python 2, los métodos de las clases pueden referenciar al objeto clase en el que están definidos, así como el objeto método en sí mismo. \codigo{im\_self} es el objeto instancia de la clase; \codigo{im\_func} es el objeto función (el propio método); \codigo{im\_class} es la clase de \codigo{im\_self}. En Python 3, estos atributos especiales de método se han redenominado para seguir las convenciones de otros atributos.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    & \codigo{instDeClase.MétDeClase.im\_func} & \codigo{instDeClase.MétDeClase.\_\_func\_\_} \\
+         & \codigo{instDeClase.MétDeClase.im\_self} & \codigo{instDeClase.MétDeClase.\_\_self\_\_} \\
+         & \codigo{instDeClase.MétDeClase.im\_class} & \codigo{instDeClase.MétDeClase.\_\_self\_\_.\_\_class\_\_} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{El método especial \codigo{\_\_nonzero\_\_}}
+
+En Python 2, podrías construir tus propias clases que podían utilizarse en contextos booleanos. Por ejemplo, podrías instanciar un objeto de la clase y luego usar esta instancia como condición en una sentencia \codigo{if}. Para hacer esto debías definir un método especial \codigo{\_\_nonzero\_\_()} que debía devolver \codigo{True} o \codigo{False}, y que Python llamaba siempre que un objeto se utilizara en un contexto booleano. En Python 3, se ha cambiado el nombre del método a \codigo{\_\_bool\_\_()}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{class A:} & \codigo{class A:} \\
+       &  \quad \codigo{def \_\_nonzero\_\_(self):} &   \quad\codigo{def \_\_bool\_\_(self):} \\
+       & \quad\quad\codigo{pass} & \quad\quad\codigo{pass} \\
+       & \\
+    2  & \codigo{class A:} & \codigo{} \\
+       & \quad \codigo{def \_\_nonzero\_\_(self, x, y):} & \emph{no cambia} \\
+       & \quad\quad \codigo{pass} & \codigo{} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{enumerate}
+  \item \emph{Línea 1:} en lugar de \codigo{\_\_nonzero\_\_()}, Python 3 llama al método \codigo{\_\_bool\_\_()} cuando evalúa una objeto en un contexto booleano.
+  \item \emph{Línea 2:} sin embargo, si tu código tiene un objeto \codigo{\_\_nonzero\_\_()} con argumentos adicionales a \codigo{self}, \codigo{2to3} asumirá que lo estabas usando para otro propósito y no hará ningún cambio en este método.
+\end{enumerate}
+
+\section{Literales octales}
+
+Ha cambiado ligeramente:
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{x = 0755} & \codigo{x = 0o755} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{\codigo{sys.maxint}}
+
+Debido a que los tipos long e int se integran en uno solo, la constante \codigo{sys.maxint} deja de ser precisa. Por ello se ha redenominado a \codigo{sys.maxsize}.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{from sys import maxint} & \codigo{from sys import maxsize} \\
+    2  & \codigo{unaFunción(sys.maxint)} & \codigo{unaFunción(sys.maxsize)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{enumerate}
+  \item \emph{Línea 1:} \codigo{maxint} se convierte en \codigo{maxsize}.
+  \item \emph{Línea 2:} Cualquier uso de \codigo{sys.maxint} se convierte en \codigo{sys.maxsize}.
+\end{enumerate}
+
+\section{La función global \codigo{callable()}}
+
+En Python 2, podías comprobar con la función \codigo{callable()} si un objeto se podía ``llamar'' (como una función). En Python 3, esta función global se ha eliminado. Para comprobar si un objeto se puede llamar hay que comprobar la existencia del método especial \codigo{\_\_call\_\_()}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{callable(cualquierObjeto)} & \codigo{hasattr(cualquierObjeto, '\_\_call\_\_')} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{La función global \codigo{zip()}}
+
+En Python 2, la función global \codigo{zip()} tomaba cualquier número de secuencias y devolvía una lista de tuplas. La primera tupla contenía el primer elemento de cada una de las secuencias que había recibido como parámetros; la segunda tupla, los segundos elementos de cada secuencia, y así sucesivamente. En Python 3, \codigo{zip()} devuelve un iterador en lugar de una lista.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{zip(a, b, c)} & \codigo{list(zip(a, b, c))} \\
+    2  & \codigo{d.join(zip(a, b, c))} & \emph{no cambia} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{enumerate}
+  \item \emph{Línea 1:} En su forma más simple, se conserva el anterior comportamiento con una llamada a \codigo{list()} que envuelva a \codigo{zip()}.
+  \item \emph{Línea 2:} En contextos en los que ya se itera a través de los elementos de una secuencia (como la llamada a \codigo{join()}), \codigo{2to3} es lo suficientemente inteligente para detectar estos casos y no hacer cambios en el código.
+\end{enumerate}
+
+\section{La excepción \codigo{StandardError}}
+
+En Python 2, \codigo{StandardError} era la clase base de todas las excepciones internas salvo \codigo{StopIteration}, \codigo{GeneratorExit}, \codigo{KeyboardInterrupt}, y \codigo{SystemExit}. En Python 3, \codigo{StandardError} ha sido eliminada; en su lugar se debe usar \codigo{Exception}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{x = StandardError()} & \codigo{x = Exception()} \\
+      & \codigo{x = StandardError(a, b, c)} & \codigo{x = Exception(a, b, c)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Constantes del módulo \codigo{types}}
+
+El módulo \codigo{types} contiene una variedad de constantes destinadas a ayudar a encontrar el tipo de un objeto. En Python 2, contenía constantes para todos los tipos primitivos como \codigo{dict} e \codigo{int}. En Python 3, se han eliminado estas constantes; basta con usar el propio nombre de los tipos.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{types.UnicodeType} & \codigo{str} \\
+      & \codigo{types.StringType} & \codigo{bytes} \\
+      & \codigo{types.DictType} & \codigo{dict} \\
+      & \codigo{types.IntType} & \codigo{int} \\
+      & \codigo{types.LongType} & \codigo{int} \\
+      & \codigo{types.ListType} & \codigo{list} \\
+      & \codigo{types.NoneType} & \codigo{type(None)} \\
+      & \codigo{types.BooleanType} & \codigo{bool} \\
+      & \codigo{types.BufferType} & \codigo{memoryview} \\
+      & \codigo{types.ClassType} & \codigo{type} \\
+      & \codigo{types.ComplexType} & \codigo{complex} \\
+      & \codigo{types.EllipsisType} & \codigo{type(Ellipsis)} \\
+      & \codigo{types.FloatType} & \codigo{float} \\
+      & \codigo{types.ObjectType} & \codigo{object} \\
+      & \codigo{types.NotImplementedType} & \codigo{type(NotImplemented)} \\
+      & \codigo{types.SliceType} & \codigo{slice} \\
+      & \codigo{types.TupleType} & \codigo{tuple} \\
+      & \codigo{types.TypeType} & \codigo{type} \\
+      & \codigo{types.XRangeType} & \codigo{range} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\cajaTextoAncho{\codigo{types.StringType} se mapea a \codigo{bytes} en lugar de a \codigo{str} porque en Python 2 ``string'' (no Unicode) realmente es una secuencia de bytes en una codificación de caracteres determinada.}
+
+\section{La función global \codigo{isinstance()}}
+
+La función \codigo{insinstance()} comprueba si un objeto es una instancia de una clase o tipo particular. En Python 2, puedes pasar una tupla de tipos: \codigo{isinstance()} devolverá \codigo{True} si el objeto es de alguno de los tipos de la tupla. En Python 3, aún puedes hacerlo, pero pasar el mismo tipo dos veces está deprecado.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{isinstance(x (int, float, int))} & \codigo{isinstance(x, (int, float))} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{El tipo de datos \codigo{basestring}}
+
+Python 2 tenía dos tipos de cadenas de caracteres: Unicode y no Unicode. Pero había también otro tipo: \codigo{basestring}. Era un tipo de datos abstracto, una superclase para ambos tipos: \codigo{str} y \codigo{unicode}. No se podía instanciar directamente, pero sí se podía pasar a la función global \codigo{isinstance()}. En Python 3, solamente existe un tipo de datos de cadenas de caracteres, por lo que \codigo{basestring} no tiene razón de existir.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{isinstance(x, basestring)} & \codigo{isinstance(x, str)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{El módulo \codigo{itertools}}
+
+Python 2.3 introdujo el módulo \codigo{itertools}, que definía variantes de las funciones \codigo{zip()}, \codigo{map()}, y \codigo{filter()} que devolvían iteradores en lugar de listas. En Python 3, las funciones originales ya devuelven iteradores, por lo que estas funciones se han eliminado del módulo.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{itertools.izip(a, b)} & \codigo{zip(a, b)} \\
+    2  & \codigo{itertools.imap(a, b)} & \codigo{map(a, b)} \\
+    3  & \codigo{itertools.ifilter(a, b)} & \codigo{filter(a, b)} \\
+    4  & \codigo{from itertools import imap, izip, foo} & \codigo{from itertools import foo} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{enumerate}
+  \item \emph{Línea 1:} En lugar de \codigo{itertools.izip()}, utiliza \codigo{zip()}.
+  \item \emph{Línea 2:} En lugar de \codigo{itertools.imap()}, utiliza \codigo{map()}.
+  \item \emph{Línea 3:} En lugar de \codigo{itertools.ifilter()}, utiliza \codigo{filter()}.
+  \item \emph{Línea 4:} El módulo \codigo{itertools} aún existe en Python 3, solamente le faltan las funciones que han migrado al espacio global de nombres. \codigo{2to3} es suficientemente inteligente para eliminar los \codigo{import} específicos que han dejado de existir, conservando los demás.
+\end{enumerate}
+
+\section{\codigo{sys.exc\_type}, \codigo{sys.exc\_value}, \codigo{sys.exc\_traceback}}
+
+Python 2 tiene tres variables en el módulo \codigo{sys} que puedes acceder mientras se está manejando una excepción: \codigo{sys.exc\_type}, \codigo{sys.exc\_value}, \codigo{sys.exc\_traceback} (En realidad, se remontan a Python 1). Estas variables están deprecadas desde Python 1.5, en favor del uso de \codigo{sys.exc\_info()}, que es una función que retorna una tupla que contiene los tres valores. En Python 3, estas variables individuales por fin desaparecen; debes usar obligatoriamente la función.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{sys.exc\_type} & \codigo{sys.exc\_info()[0]} \\
+      & \codigo{sys.exc\_value} & \codigo{sys.exc\_info()[1]} \\
+      & \codigo{sys.exc\_traceback} & \codigo{sys.exc\_info()[2]} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Listas por comprensión a partir de tuplas}
+
+En Python 2, si quieres codificar una lista por comprensión que a partir de una tupla, no necesitas poner paréntesis sobre los valores de la tupla. En Python 3, es necesario explicitarlos.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+       & \codigo{[i for i in 1, 2]} & \codigo{[i for i in (1, 2)]} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{La función \codigo{os.getcwdu()}}
+
+Python 2 tiene una función denominada \codigo{os.getcwd()}, que devuelve el directorio de trabajo actual como una cadena de caracteres (no Unicode). Puesto que los sistemas de ficheros modernos pueden manejar nombres en cualquier codificación de caracteres, Python 2.3 introdujo la función \codigo{os.getcwdu()} que devuelve el directorio de trabajo actual codificado en una cadena de caracteres Unicode. En Python 3, solamente existe un tipo de cadena de caracteres (es Unicode), por eso solamente existe \codigo{os.getcwd()}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+       & \codigo{os.getcwdu()} & \codigo{os.getcwd()} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Metaclases}
+
+En Python 2, podías crear metaclases, bien definiendo el parámetros \codigo{metaclass} en la declaración de la clase, o bien, definiendo un atributo especial de clase \codigo{\_\_metaclass\_\_}. En Python 3, el atributo de clase ha sido eliminado.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    1  & \codigo{class C(metaclass=PapayaMeta):} & \emph{no cambia} \\
+      & \quad \codigo{pass} & \codigo{} \\
+      & \\
+    2  & \codigo{class Whip:} & \codigo{class Whip(metaclass=PapayaMeta):} \\
+      & \quad \codigo{\_\_metaclass\_\_} & \quad \codigo{pass} \\
+      & \\
+      3 & \codigo{class C(Whipper, Beater):} & \codigo{class C(Whipper, Beater, metaclass=PapayaMeta):} \\
+      4 & \quad \codigo{\_\_metaclass\_\_ = PapayaMeta} & \quad \codigo{pass} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{enumerate}
+  \item \emph{Línea 1:} Declarar la metaclase en la declaración de clase funcinoa tanto en Python 2, como en Python 3.
+  \item \emph{Línea 2:} Declarar la metaclase en un atributo de clase funcionaba en Python 2, pero no en Python 3.
+  \item \emph{Línea 3:} \codigo{2to3} es lo suficientemente inteligente como para construir una declaración de clase válida, incluso si la clase hereda de otras clases.
+\end{enumerate}
+
+\section{Temas de estilo}
+
+El resto de los ``arreglos'' listados aquí, realmente no lo son. Son cosas que \codigo{2to3} cambia como mejora de estilo. Funcionan igual ambas soluciones tanto en Python 2 como en Python 3, pero los desarrolladores tienen interés en que el código fuente de Python sea lo más homogéneo posible en cuanto a estilo. Por ello, existe una \\href{http://www.python.org/dev/peps/pep-0008/}{Guía oficial de estilo de Python} que describe ---con todo lujo de detalles--- toda clase de reglas de escritura que, seguramente, no te interesan.
+
+\subsection{Literales \codigo{set()}}
+
+En Python 2, la única forma de definir un conjunto con literales en el código es llamar a \codigo{set(unaSecuencia)}. Esto sigue funcionando en Python 3, pero una forma más clara de hacerlo es utilizar la nueva notación de literal de conjuntos: las llaves. Esto sirve para todos los conjuntos, excepto para los vacíos, ya que los diccionarios también utilizan las llaves, y \codigo{\{\}} es el conjunto vacío.
+
+\cajaTextoAncho{\codigo{2to3}, por defecto, no arregla literales \codigo{set()}. Para activar esta modificación, debes especificar \codigo{-f set\_literal} en la línea de comando de \codigo{2to3}.}
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+    & \codigo{set([1, 2, 3])} & \codigo{\{1, 2, 3\}} \\
+    & \codigo{set((1, 2, 3))} & \codigo{\{1, 2, 3\}} \\
+    & \codigo{[i for i in unaSecuencia]} & \codigo{\{i for in in unaSecuencia\}} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{La función global \codigo{buffer()}}
+
+Los objetos Python implementados en C pueden exportar un ``interfaz de buffer'', que permite al código Python leer y escribir directamente en los bloques de memoria del objeto. En Python 3, \codigo{buffer()} se ha redenominado a \codigo{memoryview()} (Es más complicado que esto, pero puedes ignorar las diferencias).
+
+\cajaTextoAncho{Para que \codigo{2to3} aplique este cambio hay que especificar el parámetro \codigo{-f buffer} en la línea de comando.}
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{x = buffer(y)} & \codigo{x = memoryview(y)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Espacios en blanco alrededor de comas}
+
+A pesar de ser draconiano sobre el uso del espacio en blanco para la indentación, Python es bastante liberal sobre su uso en otras areas. En listas, tuplas, conjuntos y diccionaros, el espacio en blanco puede aparecer antes y después de las comas sin que ello provoque error. Sin embargo, la recomendación de la guía de estilo es que las comas no deben tener espacios en blanco delante de ellas y deben ir seguidas por uno. Aunque se trata de un tema puramente estético, \codigo{2to2} puede arreglarlo por ti.
+
+\cajaTextoAncho{Para habilitar esta opción debes especificar el parámetro \codigo{-f wscomma} en la línea de comando de \codigo{2to3}}
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{a ,b} & \codigo{a, b} \\
+      & \codigo{\{a :b\}} & \codigo{\{a: b\}} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Idiomatismos habituales}
+
+Hay un cierto número de idiomatismos que toda la comunidad Python usa. Algunos, como el bucle \codigo{while 1:}, provienen de Python 1 (Python no tuvo tipo booleano hasta la versión 2.3, así que los desarrolladores usaban 1 y 0 en su lugar). Los programadores actuales de Python deberían entrenar sus cerebros para usar las versiones modernas de estos idiomatismos.
+
+\cajaTextoAncho{Para habilitar esta opción se debe especificar \codigo{-f idioms} en la línea de comando de \codigo{2to3}.}
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{cll}
+    \hline
+    Línea & Python 2 & Python 3 \\
+    \hline
+      & \codigo{while 1:} & \codigo{while True:} \\
+      & \quad\codigo{hacerCosas()} & \quad\codigo{hacerCosas()} \\
+      &  \\
+      & \codigo{type(x) == T } & \codigo{isinstance(x, T)} \\
+      & \codigo{type(x) is T} & \codigo{isinstance(x, T)} \\
+      & \\
+      & \codigo{unaLista = list(unaSecuencia)} & \codigo{unaLista = sorted(unaSecuencia)} \\
+      & \codigo{unaLista.sort()} & \codigo{hacerCosas(unaLista)} \\
+      & \codigo{hacerCosas(unaLista)} & \codigo{} \\
+    \hline
+  \end{tabular}
+\end{table}
+
