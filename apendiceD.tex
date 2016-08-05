@@ -1,0 +1,71 @@
+% apendiceD.tex
+% This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 License.
+% To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/nz
+% or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\chapter{Resolviendo problemas}
+
+\begin{citaCap}
+    ``¿Dónde está la tecla ANY?'' \\
+        ---\emph{varias atribuciones}
+\end{citaCap}
+
+\section{Inmersión}
+
+Arréglame
+
+\section{Yendo a la línea de comando}
+
+A lo largo del libro, los ejemplos de programas Python se ejecutan en la línea de comando. ¿Dónde está la línea de comando?
+
+En Linux, busca en el menú de aplicaciones (GNOME) o con el lanzador del sistema (Unity), por un programa denominado \codigo{Terminal} (Puede estar en algún submenú como accesorios o sistema (varía según la distribución de Linux que tengas instalada).
+
+En Mac OS X, hay una aplicación denominada \codigo{Terminal} en la carpeta de utilidades, dentro de la de aplicaciones. Puedes utilizar el lanzador de spotlight y escribir \codigo{Terminal} para localizarlo.
+
+En Windows, se debe pulsar el menú de Inicio, seleccionar la opción de Ejecutar, escribir \codigo{cmd}, y pulsar \codigo{ENTER}.
+
+\section{Ejecutar Python en la línea de comando}
+
+Una vez estás en la línea de comando del sistema operativo correspondiente, deberías ser capaz de ejecutar la consola interactiva de Python. En Línux o Mac OS X, teclea \codigo{python3} y pulsa \codigo{ENTER}. Si todo va bien, deberías ver algo como esto:
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+you@localhost:~$ python3
+Python 3.1 (r31:73572, Jul 28 2009, 06:52:23)
+[GCC 4.2.4 (Ubuntu 4.2.4-1ubuntu4)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+\end{lstlisting}
+
+\cajaTextoAncho{Teclea \codigo{exit()} y pulsa \codigo{ENTER} para salir de la consola interactiva de Python y volver a la línea de comando. Esto funciona en todas las plataformas.}
+
+Si recibes un mensaje ``command not found'', es probable que no tengas instalado Python 3\footnote{Nota del traductor: en 2016, algunas distribuciones de Linux ya utilizan Python 3 como el intérprete de Python básico, por lo que puede que el comando no sea \codigo{python3}, sino que haya que teclear solamente \codigo{python}. Comprueba qué versión de Python muestra este último comando en tu sistema. Puede que veas 2.7 o puede que veas 3.x. En este último caso, es que tienes instalado Python 3, pero el comando para ejecutar el intérprete es, simplemente, \codigo{python}.}.
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+you@localhost:~$ python3
+bash: python3: command not found
+\end{lstlisting}
+
+Por otra parte, si entras en la consola interactiva de Python, pero la versión que ves no es la que esperabas, puede ser que tengas más de una versión de Python instalada. Esto sucede a menudo en Linux y Mac OS X, en los que suele haber una versión de Python antigua preinstalada. Puedes instalar la última versión sin borrar la antigua (y usarlas según tu voluntad), pero necesitarás ser más específico al seleccionarlas en la línea de comando.
+
+Por ejemplo, en mi equipo Linux, tengo varias versiones de Python instaladas para poder probar el software que escrito. Para ejecutar una versión específica, tengo que teclear \codigo{python3.0}, \codigo{python3.1}, o \codigo{python2.6}.
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+mark@atlantis:~$ python3.0
+Python 3.0.1+ (r301:69556, Apr 15 2009, 17:25:52)
+[GCC 4.3.3] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> exit()
+mark@atlantis:~$ python3.1
+Python 3.1 (r31:73572, Jul 28 2009, 06:52:23) 
+[GCC 4.2.4 (Ubuntu 4.2.4-1ubuntu4)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> exit()
+mark@atlantis:~$ python2.6
+Python 2.6.5 (r265:79063, Apr 16 2010, 13:57:41) 
+[GCC 4.4.3] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> exit()
+\end{lstlisting}
+
