@@ -9,9 +9,662 @@
 
 \begin{citaCap}
     ``Mi especialidad es acertar cuando otras personas están equivocadas.'' \\
-        ---\emph{\href{https://en.wikiquote.org/wiki/George_Bernard_Shaw}{George Bernard Shaw}}
+        ---\emph{\href{https://en.wikiquote.org/wiki/George\_Bernard\_Shaw}{George Bernard Shaw}}
 \end{citaCap}
 
 \section{Inmersión}
 
-...
+A lo largo del libro, has visto ejemplos de ``métodos especiales'' ---ciertos métodos ``mágicos'' a los que Python invoca cuando utilizas cierta sintaxis. Mediante el uso de métodos especiales, tus clases pueden actuar como conjuntos, como diccionarios, como funciones, como iteradores, o incluso como números. Este apéndice sirve tanto como referencia de los métodos especiales que hemos visto ya, como una breve introducción a algunos de los más esotéricos.
+
+\section{Lo básico}
+
+Si has leído la introducción a las clases, en el capítulo \ref{ch:clases}, ya has visto el método especial más común: el método \codigo{\_\_init\_\_()}. La mayoría de las clases que escribo necesitan alguna inicialización. Hay algunos otros métodos especiales que son especialmente útiles para depurar tus clases.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{clll}
+    \hline
+    Línea & Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    1  & inicializar una instancia & \codigo{x = MiClase()} & \codigo{x.\_\_init\_\_()} \\
+    2  & la representación oficial de & \codigo{repr(x)} & \codigo{x.\_\_repr\_\_()} \\
+       & una cadena de caracteres & \codigo{} & \codigo{} \\
+    3  & el valor informal como & \codigo{str(x)} & \codigo{x.\_\_str\_\_()} \\
+      & cadena de caracteres & \codigo{} & \codigo{} \\
+    4  & el valor informal como & \codigo{bytes(x)} & \codigo{x.\_\_bytes\_\_()} \\
+      & array de bytes & \codigo{} & \codigo{} \\
+    5  & el valor formateado & \codigo{format(x, format\_spec)} & \codigo{x.\_\_format\_\_(format\_spec)} \\
+     & como una cadena de caracteres \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} el método \codigo{\_\_init\_\_()} se llama \emph{después} de que haya creado la instancia. Si quieres controlar el proceso de creación del objeto, usa el método \href{http://www.diveintopython3.net/special-method-names.html#esoterica}{\codigo{\_\_new\_\_()}}.
+  \item \emph{Línea 2:} por convención, el método \_\_repr\_\_() debería retornar una cadena de caractres cuyo contenido sea una expresión válida en Python.
+  \item \emph{Línea 3:} el método \_\_str\_\_() se llama también cuando \codigo{print(x)}.
+  \item \emph{Línea 4:} \emph{nuevo en Python 3}, desde que se ha introducido el tipo \codigo{bytes}.
+  \item \emph{Línea 5:} Por convención, \codigo{format\_spec} debería ser conforme a la especificación del \href{http://www.python.org/doc/3.1/library/string.html#formatspec}{mini-lenguaje de formarto}. \codigo{decimal.py} en la librería estándar de Python proporciona su propio método \codigo{\_\_format\_\_()}.
+\end{enumerate}
+
+\section{Clases que actúan como iteradores}
+
+En el capítulo, \ref{ch:clases}, sobre iteradores viste cómo construir un iterador desde cero utilizando los métodos \codigo{\_\_iter\_\_()} y \codigo{\_\_next\_\_()}.
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{clll}
+    \hline
+    Línea & Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    1  & para iterar a través de una secuencia & \codigo{iter(seq)} & \codigo{seq.\_\_iter\_\_()} \\
+    2  & para obtener el siguiente valor de un iterador & \codigo{next(seq)} & \codigo{seq.\_\_next\_\_()} \\
+    3  & para crear un iterador con orden inverso & \codigo{reversed(seq)} & \codigo{seq.\_\_reversed\_\_()} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item \emph{Línea 1:} el método \_\_iter\_\_ se llama cada vez que creas un nuevo iterador. Es un buen lugar para inicializarlo.
+  \item \emph{Línea 2:} el método \_\_next\_\_() se llama cada vez que obtienes el siguiente valor del iterador.
+  \item \emph{Línea 3:} el método \_\_reversed\_\_() es menos común. Toma una secuencia existente y devuelve un iterador que genera (\codigo{yield}) sus elementos en orden inverso, del último al primero.
+\end{enumerate}
+
+Como viste en el capítulo de los iteradores un bucle \codigo{for} puede actuar sobre un iterador:
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+for x in seq:
+    print(x)
+\end{lstlisting}
+
+Python 3 llamará a \codigo{seg.\_\_iter\_\_()} para crear un iterador, luego llamará al método \codigo{\_\_next\_\_()} sobre este iterador para obtener cada uno de los valores de \codigo{x}. Cuando el método \codigo{\_\_next\_\_()} eleve la excepción \codigo{StopIteration}, el bucle \codigo{for} finaliza correctamente.
+
+
+\section{Atributos calculados}
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{clll}
+    \hline
+    Línea & Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    1  & para obtener un atributo & \codigo{x.mi\_propiedad} & \codigo{x.\_\_getattribute\_\_(} \\
+       & calculado (incondicional) & \codigo{} &\quad \codigo{'mi\_propiedad')} \\
+    2  & para obtener un atributo  & \codigo{x.mi\_propiedad} & \codigo{x.\_\_getattr\_\_(} \\
+       & calculado (por defecto) & \codigo{} &\quad \codigo{'mi\_propiedad')} \\
+    3  & para dar valor a un & \codigo{x.mi\_propiedad = valor} & \codigo{x.\_\_setattr\_\_(} \\
+       & atributo & \codigo{} & \quad \codigo{'mi\_propiedad', valor)} \\
+    4  & para borrar un atributo & \codigo{del x.mi\_propiedad} & \codigo{x.\_\_delattr\_\_(} \\
+    5  & para listar todos los & \codigo{dir(x)} & \codigo{x.\_\_dir\_\_()} \\
+       & atributos y métodos & \codigo{} & \quad\codigo{'mi\_propiedad')} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{enumerate}
+  \item \emph{Línea 1:} si tu clase define un método \codigo{\_\_getattribute\_\_()}, Python la llamará en cada referencia a un nombre de método o atributo (excepto en los métodos con nombres especiales, lo que produciría un bucle infinito).
+  \item \emph{Línea 2:} si tu clase define un método \codigo{\_\_getattr\_\_()}, Python la llamará solamente después de buscar al atributo en todos los lugares \emph{normales}. Si una instancia \codigo{x} define una atributo \codigo{color}, \codigo{x.color} no llamará a \codigo{x.getattr('color')}; solamente devolverá el valor definido ya por \codigo{x.color}.
+  \item \emph{Línea 3:} el método \codigo{\_\_setattr\_\_()} se llama siempre que asignes un valor a un atributo.
+  \item \emph{Línea 4:} el método \codigo{\_\_delattr\_\_()} se llama siempre que eliminas un atributo.
+  \item \emph{Línea 5:} el método \codigo{\_\_dir\_\_()} es útil si defines \codigo{\_\_getattr\_\_()} o \codigo{\_\_getattribute\_\_()}. Normalmente llamar a \codigo{dir()} solamente devolvería una lista con los atributos y métodos normales. Si tu método \codigo{\_\_getattr\_\_()} maneja un atributo \codigo{color} de forma dinámica, \codigo{dir()} no devolvería \codigo{color} como uno de los atributos disponibles. La sustitución del método \codigo{\_\_dir\_\_()} te permite listar \codigo{color} como uno de los atributos disponibles, lo que es útil para que otros puedan utilizar tu clase sin que tengan que investigar su código interno.
+\end{enumerate}
+
+La distinción entre \codigo{\_\_getattr\_\_()} y \codigo{\_\_getattribute\_\_()} es sutil pero fundamental. Puedo explicarlo con dos ejemplos:
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+class Dynamo:
+    def __getattr__(self, key):
+        if key == 'color':         
+            return 'PapayaWhip'
+        else:
+            raise AttributeError   
+
+>>> dyn = Dynamo()
+>>> dyn.color                      
+'PapayaWhip'
+>>> dyn.color = 'LemonChiffon'
+>>> dyn.color                      
+'LemonChiffon'
+\end{lstlisting}
+
+
+\begin{enumerate}
+  \item \emph{Línea 3:} se pasa el nombre de atributo a \codigo{\_\_getattr\_\_()} como una cadena de caracteres. Si el nombre es \codigo{'color'}, el método devuelve un valor (en este caso, está codificado de forma fija en el propio código, pero normalmente sería algún tipo de cálculo para devolver el resultado).
+  \item \emph{Línea 6:} si el nombre del atributo es desconocido, el método debe elevar una excepción \codigo{AttributeError}, de otro modo el código fallaría de forma silenciosa cuando accediera a atributos sin definir (Técnicamente, si el método no eleva una excepción o devuelve explícitamente un valor, devuelve \codigo{None}, el valor nulo de Python. Esto significaría que todos los atributos que no estuvieran definidos explícitamente valdrían \codigo{None}, que casi seguro que no es lo que quieres).
+  \item \emph{Línea 9:} la instancia \codigo{dyn} no tiene un atributo denominado \codigo{color}, por eso se llama al método \codigo{\_\_getattr\_\_()} que devuelve el valor calculado.
+  \item \emph{Línea 12:} después de establecer de forma explícita un valor a \codigo{dyn.color}, no se llama ya al método \codigo{\_\_getattr\_\_()} ya que \codigo{dyn.color} ya está definido en el objeto de forma explícita.
+\end{enumerate}
+
+El método \codigo{\_\_getattribute\_\_()}, sin embargo, es absoluto e incondicional:
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+class SuperDynamo:
+    def __getattribute__(self, key):
+        if key == 'color':
+            return 'PapayaWhip'
+        else:
+            raise AttributeError
+
+>>> dyn = SuperDynamo()
+>>> dyn.color                      
+'PapayaWhip'
+>>> dyn.color = 'LemonChiffon'
+>>> dyn.color                     
+'PapayaWhip'
+\end{lstlisting}
+
+
+\begin{enumerate}
+  \item \emph{Línea 9:} se llama al método \codigo{\_\_getattribute\_\_()} para obteer un valor para \codigo{dyn.color}.
+  \item \emph{Línea 12:} incluso después de haber establecido explícitamente un valor a \codigo{dyn.color}, se sigue llamando al método \codigo{\_\_getattribute\_\_()} para obtener un valor para este atributo. Si está presente este método, se llama de forma incondicional para buscar a todos los métodos y atributos del objeto, incluso aquellos que se definieran explícitamente después de crear la instancia.
+\end{enumerate}
+
+\cajaTextoAncho{Si tu clase define el método \codigo{\_\_getattributes\_\_()}, probablemente también debería definir \codigo{\_\_setattr\_\_()} para coordinarse entre ellos con el fin de llevar la cuenta de los valores de los atributos. De otro modo, cualquier atributo que modifiques después de crear la instancia desaparecerá en un agujero netro.}
+
+Tienes que ser súpercuidadoso con el método \codigo{\_\_getattributes\_\_()} puesto que también se llama cuando Python busca el nombre de un método de la clase.
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+class Rastan:
+    def __getattribute__(self, key):
+        raise AttributeError         
+    def swim(self):
+        pass
+
+>>> hero = Rastan()
+>>> hero.swim()                       
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 3, in __getattribute__
+AttributeError
+\end{lstlisting}
+
+
+
+\begin{enumerate}
+  \item \emph{Línea 3:} esta clase define un método \codigo{\_\_get attribute\_\_()} que siempre eleva la excepción \codigo{AttributeError}. No será posible encontrar ningún atributo o método de esta clase.
+  \item \emph{Línea 8:} Cuando llames a \codigo{hero.swim()}, Python buscará un método \codigo{swim()} en la clase \codigo{Rastan}. Esta búsqueda pasa por el método \codigo{\_\_getattribute\_\_()}, \emph{todas las búsquedas de atributos y métodos pasan a través del método \codigo{\_\_getattribute\_\_()}}. En este caso, este método eleva \codigo{AttributeError}, por lo que la búsqueda falla, así que la llamada al método también falla.
+\end{enumerate}
+
+\section{Clases que se comportan como funciones}
+
+Puedes hace que una instancia de una clase se pueda llamar directamente como si fuese una función. Para ello, se debe definir el método \codigo{\_\_call\_\_()}.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{clll}
+    \hline
+    Línea & Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+      & para ``llamar'' a una instancia & \codigo{miInstancia()} & \codigo{miInstancia.\_\_call\_\_()} \\
+      & como si fuera una función & \codigo{} & \codigo{} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+El módulo \href{http://docs.python.org/3.1/library/zipfile.html}{\codigo{zipfile}} utiliza esto para definir una clase que puede desencriptar y encriptar un fichero zip. El algoritmo de desencriptación zip requiere que almacenes el estado durante la misma. Al definir el desencriptador como una clase, puedes mantener el estado dentro de la instancia de la clase. El estado se inicializa en el método \codigo{\_\_init\_\_()} y se actualiza según se va desencriptando el fichero. Pero puesto que la clase se puede ``llamar'' como una función, puedes pasar la instancia como primer argumento de la función \codigo{map()}, así:
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+# fragmento de zipfile.py
+class _ZipDecrypter:
+.
+.
+.
+    def __init__(self, pwd):
+        self.key0 = 305419896             
+        self.key1 = 591751049
+        self.key2 = 878082192
+        for p in pwd:
+            self._UpdateKeys(p)
+
+    def __call__(self, c):      
+        assert isinstance(c, int)
+        k = self.key2 | 2
+        c = c ^ (((k * (k^1)) >> 8) & 255)
+        self._UpdateKeys(c)
+        return c
+.
+.
+.
+zd = _ZipDecrypter(pwd)        
+bytes = zef_file.read(12)
+h = list(map(zd, bytes[0:12]))
+\end{lstlisting}
+
+
+\begin{enumerate}
+  \item \emph{Línea 7:} la clase \codigo{\_ZipDecriptor} mantiene el estado en tres campos clave que rotan: que se van actualizando en el método \codigo{\_UpdateKeys()} (no se muestra aquí).
+  \item \emph{Línea 13:} la clase define un método \codigo{\_\_call\_\_()} que hace que se pueda llamar directamente a las instancias de la clase como si fuesen funciones. En este caso, el método \codigo{\_\_call\_\_()} desencripta un único byte del fichero zip, luego actualiza las claves basándose en el byte que se ha desencriptado.
+  \item \emph{Línea 22:} \codigo{zd} es una instancia de la clase \codigo{\_ZipDecriptor}. La variable \codigo{pwd} se pasa al método \codigo{\_\_init\_\_()}, en donde se almacena y se usa para actualizar las claves que rotan por vez primera.
+  \item \emph{Línea 24:} Dados los 12 primeros bytes de un fichero zip, los desencripta mediante el mapeo de los bytes a \codigo{zd}, llamando en la práctica 12 veces a \codigo{zd}, que invoca al método \codigo{\_\_call\_\_()} 12 veces, que, a su vez, actualiza el estado interno y devuelve el byte resultante 12 veces.
+\end{enumerate}
+
+
+\section{Clases que se comportan como conjuntos}
+
+Si tu clase actúa como un contenedor para conjuntos de valores ---esto es, si tiene sentido si tu clase ``contiene'' un valor--- entonces, probablemente deberías definirla utilizando los métodos especiales que la hacen comportarse como si fuera un conjunto.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{clll}
+    \hline
+    Línea & Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+      & el número de elementos & \codigo{len(s)} & \codigo{s.\_\_len\_\_()} \\
+      & para conocer si contiene un & \codigo{x in s} & \codigo{s.\_\_contains\_\_(x)} \\
+      & valor específico & \codigo{} & \codigo{} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+El módulo \href{http://docs.python.org/3.1/library/cgi.html}{\codigo{cgi}} utiliza estos métodos en su clase \codigo{FileStorage}, que representa todos los campos de formularios o parámetros de consulta enviados por una página web dinámica.
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+# Un script que responde a http://example.com/search?q=cgi
+import cgi
+fs = cgi.FieldStorage()
+if 'q' in fs:  
+  do_search()
+
+# Un fragmento de cgi.py que explica cómo funciona
+class FieldStorage:
+.
+.
+.
+    def __contains__(self, key):
+        if self.list is None:
+            raise TypeError('not indexable')
+        return any(item.name == key for item in self.list)
+
+    def __len__(self):                                   
+        return len(self.keys()) 
+\end{lstlisting}
+
+
+
+\begin{enumerate}
+  \item \emph{Línea 4:} cuando creas una instancia de la clase \codigo{cgi.FieldStorage}, puedes utilizar el operador \codigo{in} para validar si se incluyó un parámetro en particular en la cadena de caracteres de consulta.
+  \item \emph{Línea 12:} el método \codigo{\_\_contains\_\_()} es la magia que hace el trabajo. Cuando dices \codigo{if 'q' in fs}, Python busca el método \codigo{\_\_contains\_\_()}en el objeto \codigo{fs}, que está definido en \codigo{cgi.py}. El valor \codigo{'q'} se pasa a este método como el parámetro \codigo{key}.
+  \item \emph{Línea 15:} la función \codigo{any()} toma una expresión generadora para retornar \codigo{True} si el generador devuelve algún elemento. La función \codigo{any()} es lo suficientemente inteligente para parar en cuanto encuentra el primer resultado.
+  \item \emph{Línea 17:} la misma clase \codigo{FieldStorage} también sabe devolver su longitud, así que puedes utilizar \codigo{len(fs)} para que se llame al método \codigo{\_\_len\_\_()} de la clase \codigo{FieldStorage} y devuelva el número de elementos que contiene.
+  \item \emph{Línea 18:} el método \codigo{self.key()} comprueba si \codigo{self.list} está a \codigo{None}; por ello, el método \codigo{\_\_len\_\_()} no necestia duplicar esta validación.
+\end{enumerate}
+
+\section{Clases que se comportan como diccionarios}
+
+Si se extiende la sección anterior un poco, puedes definir clases que no solamente respondan al operador \codigo{in} y a la función \codigo{len()}, sino que también funcionen como diccionarios, devolviendo valores basados en claves.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+    Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    obtener valor a partir de clave & \codigo{x[clave]} & \codigo{x.\_\_getitem\_\_(clave)} \\
+    asignar un valor a una clave & \codigo{x[clave] = valor} & \codigo{s.\_\_setitem\_\_(clave, valor)} \\
+    borra una pareja clave-valor & \codigo{del x[clave]} & \codigo{x.\_\_delitem\_\_(clave)} \\
+    dar un valor por defecto a & \codigo{x[claveNoExist]} & \codigo{x.\_\_missing\_\_(claveNoExist)} \\
+      las claves no incluidas & \codigo{} & \codigo{} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+La clase \href{http://www.diveintopython3.net/special-method-names.html#acts-like-set-example}{\codigo{FieldStorage}} del módulo \href{http://docs.python.org/3.1/library/cgi.html}{\codigo{cgi}} también define estos métodos especiales, lo que significa que puedes hacer cosas como esta:
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+# Un script que responde a http://example.com/search?q=cgi
+import cgi
+fs = cgi.FieldStorage()
+if 'q' in fs:
+  do_search(fs['q'])    
+
+# fragmento de cgi.py que muestra cómo funciona
+class FieldStorage:
+.
+.
+.
+    def __getitem__(self, key): 
+        if self.list is None:
+            raise TypeError('not indexable')
+        found = []
+        for item in self.list:
+            if item.name == key: found.append(item)
+        if not found:
+            raise KeyError(key)
+        if len(found) == 1:
+            return found[0]
+        else:
+            return found
+\end{lstlisting}
+
+
+\begin{enumerate}
+  \item \emph{Línea 5:} El objeto \codigo{fs} es una instancia de \codigo{cgi.FieldStorage}, pero puedes evaluar expresiones como \codigo{fs['q']}.
+  \item \emph{Línea 12:} \codigo{fs['q']} invoca al método \codigo{\_\_getitem\_\_()} con el parámetro \codigo{key} que contiene el valor \codigo{'q'}. Busca in su lista interna de parámetros de consulta (\codigo{self.list}) por un elemento cuyo \codigo{.name} coincida con la clave pasada.
+\end{enumerate}
+
+\section{Clases que se comportan como números}
+
+Si se utilizan los métodos apropiados, puedes definir tus propias clases que funcionan como números. Puedes sumar, restar, y ejecutar otras operaciones matemáticas sobre los objetos de tu clase. Por ejemplo, así es cómo se implementan las facciones ---La clase \codigo{Fraction} implementa estos métodos especiales, luego puedes hacer cosas como esta.
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+>>> from fractions import Fraction
+>>> x = Fraction(1, 3)
+>>> x / 3
+Fraction(1, 9)
+\end{lstlisting}
+
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+    Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    suma & \codigo{x + y} & \codigo{x.\_\_add\_\_(y)} \\
+    resta & \codigo{x - y} & \codigo{x.\_\_sub\_\_(y)} \\
+    multiplicación & \codigo{x * y} & \codigo{x.\_\_mul\_\_(y)} \\
+    división & \codigo{x / y} & \codigo{x.\_\_truediv\_\_(y)} \\
+    división de suelo & \codigo{x // y} & \codigo{x.\_\_floordiv\_\_(y)} \\
+    módulo (resto) & \codigo{x \% y} & \codigo{x.\_\_mod\_\_(y)} \\
+    división de suelo y módulo & \codigo{divmod(x, y)} & \codigo{x.\_\_divmod\_\_(y)} \\
+    elevar a potencia & \codigo{x ** y} & \codigo{x.\_\_pow\_\_(y)} \\
+    desplaz. de bit a la izda & \codigo{x <{}< y} & \codigo{x.\_\_lshift\_\_(y)} \\
+    desplaz. de bit a la dcha & \codigo{x >{}> y} & \codigo{x.\_\_rshift\_\_(y)} \\
+    ``and'' bit a bit & \codigo{x \& y} & \codigo{x.\_\_and\_\_(y)} \\
+    ``or'' bit a bit & \codigo{x | y} & \codigo{x.\_\_or\_\_(y)} \\
+    ``xor'' bit a bit & \codigo{x \^{} y} & \codigo{x.\_\_xor\_\_(y)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Esto funciona si \codigo{x} es una instancia de una clase que implementa estos métodos. Pero ¿Qué pasa si no los implementa? O peor, sí los implementa, pero no pude manejar algunos tipos de parámetros. Por ejemplo:
+
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+>>> from fractions import Fraction
+>>> x = Fraction(1, 3)
+>>> 1 / x
+Fraction(3, 1)
+\end{lstlisting}
+
+Este ejemplo \emph{no} toma una fracción y la divide por un entero (como en el ejemplo anterior). Aquél ejemplo era simple: \codigo{x / 3} llama a \codigo{x.\_\_truediv\_\_(3)}, y este método de la clase \codigo{Fraction} calcula el resultado. Pero los números enteros no tienen operaciones aritméticas para manejar las fracciones. ¿Por qué funciona el ejemplo?
+
+Existe un segundo conjunto de métodos especiales aritméticos con los \emph{operadores reflejados}. Dada una operación que toma dos operandos (por ejemplo: x / y), hay dos modos de tratarla:
+
+\begin{enumerate}
+\item Decirle a \codigo{x} que se divida por \codigo{y}, o
+\item Decirle a \codigo{y} que divida a \codigo{x}.
+\end{enumerate}
+
+El conjunto de métodos que se han visto anteriormente cubren la primera aproximación: dado \codigo{x / y}, proporcionan una forma para que \codigo{x} diga ``sé cómo dividirme por \codigo{y}''.
+
+El siguiente conjunto de métodos especiales cubren la segunda parte: proporcionan una forma a \codigo{y} para decir ``sé que soy el denominador y sé dividir a \codigo{x}''.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+    Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    suma & \codigo{x + y} & \codigo{y.\_\_radd\_\_(y)} \\
+    resta & \codigo{x - y} & \codigo{y.\_\_rsub\_\_(y)} \\
+    multiplicación & \codigo{x * y} & \codigo{y.\_\_rmul\_\_(y)} \\
+    división & \codigo{x / y} & \codigo{y.\_\_rtruediv\_\_(y)} \\
+    división de suelo & \codigo{x // y} & \codigo{y.\_\_rfloordiv\_\_(y)} \\
+    módulo (resto) & \codigo{x \% y} & \codigo{y.\_\_rmod\_\_(y)} \\
+    división de suelo y módulo & \codigo{divmod(x, y)} & \codigo{y.\_\_rdivmod\_\_(y)} \\
+    elevar a potencia & \codigo{x ** y} & \codigo{y.\_\_rpow\_\_(y)} \\
+    desplaz. de bit a la izda & \codigo{x <{}< y} & \codigo{y.\_\_rlshift\_\_(y)} \\
+    desplaz. de bit a la dcha & \codigo{x >{}> y} & \codigo{y.\_\_rrshift\_\_(y)} \\
+    ``and'' bit a bit & \codigo{x \& y} & \codigo{y.\_\_rand\_\_(y)} \\
+    ``or'' bit a bit & \codigo{x | y} & \codigo{y.\_\_ror\_\_(y)} \\
+    ``xor'' bit a bit & \codigo{x \^{} y} & \codigo{y.\_\_rxor\_\_(y)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Pero, ¡Espera! Que hay más. Si quieres hacer operaciones en la asignación, como \codigo{ x /= 3}, hay aún más métodos especiales que puedes definir.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{clll}
+    \hline
+    Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    suma in-place & \codigo{x + y} & \codigo{x.\_\_iadd\_\_(y)} \\
+    resta in-place & \codigo{x - y} & \codigo{x.\_\_isub\_\_(y)} \\
+    multiplicación in-place & \codigo{x * y} & \codigo{x.\_\_imul\_\_(y)} \\
+    división in-place & \codigo{x / y} & \codigo{x.\_\_itruediv\_\_(y)} \\
+    división de suelo in-place & \codigo{x // y} & \codigo{x.\_\_ifloordiv\_\_(y)} \\
+    módulo (resto) in-place & \codigo{x \% y} & \codigo{x.\_\_imod\_\_(y)} \\
+    elevar a potencia in-place & \codigo{x ** y} & \codigo{x.\_\_ipow\_\_(y)} \\
+    desplaz. de bit a la izda in-place & \codigo{x <{}< y} & \codigo{x.\_\_ilshift\_\_(y)} \\
+    desplaz. de bit a la dcha in-place & \codigo{x >{}> y} & \codigo{x.\_\_irshift\_\_(y)} \\
+    ``and'' bit a bit in-place & \codigo{x \& y} & \codigo{x.\_\_iand\_\_(y)} \\
+    ``or'' bit a bit in-place & \codigo{x | y} & \codigo{x.\_\_ior\_\_(y)} \\
+    ``xor'' bit a bit in-place & \codigo{x \^{} y} & \codigo{x.\_\_ixor\_\_(y)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Nota: los métodos in-place no son requeridos. Si no defines un método de este tipo para una operación particular, Python intentará los métodos anteriores. Por ejemplo para ejecutar la expresión \codigo{x /= y}, Python intentará:
+
+\begin{enumerate}
+  \item Intentará llamar a \codigo{x.\_\_itruediv\_\_(y)}. Si este método está definido y devuelve un valor diferente de \codigo{NotImplemented}, finaliza los intentes.
+  \item Intentará llamar después a \codigo{x.\_\_truediv\_\_(y)}. Si este método está definido y devuelve un valor diferente de \codigo{NotImplemented}, asignará el valor del resultado a la variable \codigo{x}, tal y como si hubieras hecho \codigo{x = x / y}.
+  \item Intentará llamar a \codigo{y.\_\_rtruediv\_\_(x)}, si este método está definido y retorna un valor diferente de \codigo{NoImplementado}, el valor anterior de \codigo{x} se descartará y se reemplazará con el valor de retorno.
+\end{enumerate}
+
+Solamente necesitas definir métodos in-place si quieres algún tipo de optimización para este tipo de operadores. De otro modo Python reformulará la operación para utilizar el operador habitual y realizar la asignación después.
+
+Existen también algunas operaciones matemáticas ``unarias''.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+    Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    número negativo & \codigo{-x} & \codigo{x.\_\_neg\_\_()} \\
+    número positivo & \codigo{+x} & \codigo{x.\_\_pos\_\_()} \\
+    valor absoluto & \codigo{abs(x)} & \codigo{x.\_\_abs\_\_()} \\
+    inverso & \codigo{\textasciitilde x} & \codigo{x.\_\_invert\_\_()} \\
+    número complejo & \codigo{complex(x)} & \codigo{x.\_\_complex\_\_()} \\
+    integer & \codigo{int(x)} & \codigo{x.\_\_int\_\_()} \\
+    número flotante & \codigo{float(x)} & \codigo{x.\_\_float\_\_()} \\
+    redondeo a entero & \codigo{round(x)} & \codigo{x.\_\_round\_\_()} \\
+    redondeo a entero con decimales & \codigo{round(x, n)} & \codigo{x.\_\_round\_\_(n)} \\
+    menor entero >{}= x & \codigo{math.ceil(x)} & \codigo{x.\_\_ceil\_\_()} \\
+    mayor entero <{}= x & \codigo{math.floor(x)} & \codigo{x.\_\_floor\_\_()} \\
+    truncar x al entero hacia 0 & \codigo{math.trunc(x)} & \codigo{x.\_\_trunc\_\_()} \\
+    número como un índice de lista & \codigo{unaLista[x]} & \codigo{unaLista[x.\_\_index\_\_()]} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Clases que se pueden comparar entre sí}
+
+He separado esta sección de la anterior porque las comparaciones se pueden hacer más allá de que la clase sea ``numérica''. Muchos tipos de datos pueden compararse ---cadenas de caracteres, listas, e incluso diccionarios. Si has creado tu propia clase y tiene sentido que se comparen sus objetos, puedes utilizar los siguientes métodos para implementar las comparaciones.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+    Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    igualdad & \codigo{x ={}= y} & \codigo{x.\_\_eq\_\_(y)} \\
+    desigualdad & \codigo{x != y} & \codigo{x.\_\_ne\_\_(y)} \\
+    menor que & \codigo{x < y} & \codigo{x.\_\_lt\_\_(y)} \\
+    menor o igual que & \codigo{x <= y} & \codigo{x.\_\_le\_\_(y)} \\
+    mayor que & \codigo{x > y} & \codigo{x.\_\_gt\_\_(y)} \\
+    mayor o igual que & \codigo{x >= y} & \codigo{x.\_\_ge\_\_(y)} \\
+    verdadero o falso en contexto booleano & \codigo{if x:} & \codigo{x.\_\_bool\_\_()} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\cajaTextoAncho{Si defines un método \codigo{\_\_lt\_\_()}, pero no el método \codigo{\_\_gt\_\_()}, Python usará el primero con los operandos intercambiados. Sin embargo, Python no combinará métodos. Por ejempli, si defines \codigo{\_\_lt\_\_()} y \codigo{\_\_eq\_\_()} e intentas \codigo{x~<=~y}, Python no llamará a los anteriores métodos en secuencia, solamente llamará al método \codigo{\_\_le\_\_()}}
+
+\section{Clases que se pueden serializar}
+
+Python permite \href{http://www.diveintopython3.net/serializing.html}{serializar y deserializar objetos arbitrarios} (La mayoría de referencias a este proceso en Python lo llaman ``pickling'' y ``unplicking'', respectivamente). Esto es útil para almacenar el estado en un fichero para recuperarlo en otro momento. Todos los \href{http://www.diveintopython3.net/native-datatypes.html}{tipos de dato nativos} implementan su serialización. Si creas una clase que quieres que se pueda serializar, lee \href{http://docs.python.org/3.1/library/pickle.html}{el protocolo de serialización} para ver cuándo y cómo se llaman los siguientes métodos especiales.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+     Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+     una copia de tu objeto & \codigo{copy.copy(x)} & \codigo{x.\_\_copy\_\_()} \\
+     una copia profunda del objeto & \codigo{copy.deepcopy(x)} & \codigo{x.\_\_deepcopy\_\_()} \\
+     obtener el estado del objeto & \codigo{pickle.dump(x, fichero)} & \codigo{x.\_\_getstate\_\_()} \\
+     antes de la serialización & \codigo{} & \codigo{} \\
+     para serializar un objeto & \codigo{pickle.dump(x, fichero)} & \codigo{x.\_\_reduce\_\_()} \\
+     para serializar un objeto & \codigo{pickle.dump(x, fichero,} & \codigo{x.\_\_reduce\_ex\_\_(} \\
+     (nuevo protocolo) & \quad\codigo{versionProtocolo)} & \quad\codigo{versionProtocolo)} \\
+     para controlar cómo & \codigo{x = pickle.load(fichero)} & \codigo{x.\_\_getnewargs\_\_()} \\
+     se crea un objeto & \codigo{} & \codigo{} \\
+     durante la deserializ. & \codigo{} & \codigo{} \\
+     para recuperar el estado & \codigo{x = pickle.load(fichero)} & \codigo{x.\_\_setstate\_\_()} \\
+     de un objeto despues & \codigo{} & \codigo{} \\
+     de deserializ. \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+Para recuperar un objeto serializado, Python necesita crear un nuevo objeto que sea como el serializado para, luego, establecer los valores de todos los atributos del nuevo objeto. El método \codigo{\_\_getnewargs\_\_()} controla cómo se crea el objeto; después, el método \codigo{\_\_setstate\_\_()} controla cómo se recuperan los atributos.
+
+\section{Clases que se pueden utilizar en un bloque \codigo{with}}
+
+\codigo{with} define que un bloque tenga un contexto en tiempo de ejecución: entras en el contexto cuando ejecutas la sentencia, y sales cuando ejecutas la última sentencia del bloque.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+    Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    para hacer algo especial & \codigo{with x:} & \codigo{x.\_\_enter\_\_()} \\
+    cuando entras en el bloque & \codigo{} & \codigo{} \\
+    para hacer algo especial al & \codigo{with x:} & \codigo{x.\_\_exit\_\_(exc\_tipo, } \\
+    salir del bloque & \codigo{} & \quad \codigo{exc\_valor, traza)} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Así es cómo funciona el idiomatismo \codigo{with fichero}(ver capítulo \ref{ch:ficheros}).
+
+\begin{lstlisting}[language=Python,breaklines=true,mathescape=false]
+# fragmento de io.py:
+def _checkClosed(self, msg=None):
+    '''Internal: raise an ValueError if file is closed
+    '''
+    if self.closed:
+        raise ValueError('I/O operation on closed file.'
+                         if msg is None else msg)
+
+def __enter__(self):
+    '''Context management protocol.  Returns self.'''
+    self._checkClosed()      
+    return self                                     
+
+def __exit__(self, *args):
+    '''Context management protocol.  Calls close()'''
+    self.close()                                   
+\end{lstlisting}
+
+
+\begin{enumerate}
+  \item \emph{Línea 11:} el objeto \codigo{file} define ambos métodos \codigo{\_\_enter\_\_()} y \codigo{\_\_exit\_\_()}. El primero valida que el fichero esté abierto; si no lo está, eleva una excepción.
+  \item \emph{Línea 12:} el método \codigo{\_\_enter\_\_()} debería devolver casi siempre \codigo{self} ---este es el objeto que el bloque \codigo{with} utilizará para recuperar propiedades y métodos.
+  \item \emph{Línea 16:} después del bloque \codigo{with}, el objeto \codigo{file} se cierra automáticamente. ¿Cómo? En el método \codigo{\_\_exit\_\_()} se llama a \codigo{self.close()}.
+\end{enumerate}
+
+\cajaTextoAncho{El método \codigo{\_\_exit\_\_()} se llama siempre, incluso si se eleva una excepción en bloque. De hecho, si se eleva una excepción, la información de la misma se pasa al método \codigo{\_\_exit\_\_()}.}
+
+\section{Algunas cosas más bastante esotéricas}
+
+Si sabes lo que estás haciendo, puedes tomar el control casi completo sobre cómo se comparan las clases, cómo se definen los atributos, y qué clases se consideran subclases de tu clase.
+
+
+\begin{table}[htp]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+    Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
+    \hline
+    un constructor de clase & \codigo{x = MiClase()} & \codigo{x.\_\_new\_\_()} \\
+    un destructor de clase & \codigo{del x} & \codigo{x.\_\_del\_\_()} \\
+    definir solo un específico & \codigo{} & \codigo{x.\_\_slots\_\_()} \\
+    conjunto de atributos & \codigo{} & \codigo{} \\
+    un valor de has a medida & \codigo{hash(x)} & \codigo{x.\_\_hash\_\_()} \\
+    obtener el valor & \codigo{x.color} & \codigo{type(x).\_\_dict\_\_['color'].\_\_get\_\_(} \\
+    de una propiedad & \codigo{} & \quad\codigo{x, type(x))} \\
+    establecer el valor & \codigo{x.color = 'PapayaWhip'} & \codigo{type(x).\_\_dict\_\_['color'].\_\_set\_\_(} \\
+    de una propiedad & \codigo{} & \quad\codigo{x, 'PapayaWhip')} \\
+    borrar una propiedad & \codigo{del x.color} & \codigo{type(x).\_\_dict\_\_['color'].\_\_del\_\_()} \\
+    controlar si un objeto & \codigo{isinstance(x, MiClase)} & \codigo{MiClase.\_\_instancecheck\_\_(x)} \\
+    es instancia de tu clase & \codigo{} & \codigo{} \\
+    controlar si una clase & \codigo{issubclass(C, MiClase)} & \codigo{MiClase.\_\_subclasscheck\_\_(x)} \\
+    es subclase de tu clase & \codigo{} & \codigo{} \\
+    controlar si una clase & \codigo{issubclass(C, MiClase)} & \codigo{MiClase.\_\_subclasshook\_\_(x)} \\
+    es subclase de tu clase & \codigo{} & \codigo{} \\
+    abstracta & \codigo{} & \codigo{} \\
+    \hline
+  \end{tabular}
+\end{table}
+\FloatBarrier
+
+Conocer cuándo llama Python al método \codigo{\_\_del\_\_()} es extremadamente complejo. Para comprenderlo es necesario conocer cómo Python mantiene a los objetos en memoria, especialmente debido a que el recolector de basura se ejecuta de forma asíncrona. Es interesante leer sobre lo siguiente:
+
+\begin{itemize}
+  \item \href{http://www.electricmonk.nl/log/2008/07/07/python-destructor-and-garbage-collection-notes/}{recolección de basura y destructores de clase}
+  \item \href{https://docs.python.org/3.5/library/weakref.html}{el módulo \codigo{weakref}}
+  \item \href{https://docs.python.org/3/library/gc.html}{el módulo \codigo{gc}}
+\end{itemize}
+
+\section{Lecturas recomendadas}
+
+Módulos mencionados en este apéndice:
+
+\begin{itemize}
+  \item \href{https://docs.python.org/3.1/library/zipfile.html}{El módulo \codigo{zipfile}}
+  \item \href{https://docs.python.org/3.1/library/cgi.html}{El módulo \codigo{cgi}}
+  \item \href{http://www.python.org/doc/3.1/library/collections.html}{El módulo \codigo{collections}}
+  \item \href{http://docs.python.org/3.1/library/math.html}{El módulo \codigo{math}}
+  \item \href{http://docs.python.org/3.1/library/pickle.html}{El módulo \codigo{pickle}}
+  \item \href{http://docs.python.org/3.1/library/copy.html}{El módulo \codigo{copy}}
+  \item \href{http://docs.python.org/3.1/library/abc.html}{El módulo \codigo{abc}(clases base abstractas)}
+\end{itemize}
+
+Otras lecturas:
+
+\begin{itemize}
+  \item \href{https://docs.python.org/3/library/string.html#formatspec}{El minilenguaje de especificación de formato}
+  \item \href{https://docs.python.org/3/reference/datamodel.html}{El modelo de datos de Python}
+  \item \href{https://docs.python.org/3/library/stdtypes.html}{Los tipos internos de datos}
+  \item \href{http://www.python.org/dev/peps/pep-0357/}{\codigo{PEP 357:} permitiendo que cualquier objeto se use para seccionado}
+  \item \href{https://www.python.org/dev/peps/pep-3119/}{\codigo{PEP 3119:} introduciendo las clases base abstractas}
+\end{itemize}
+
+
