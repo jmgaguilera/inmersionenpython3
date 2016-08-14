@@ -49,7 +49,7 @@ Las cadenas y bytes son suficientemente importantes ---y complejas--- como para 
 
 \cajaTexto{En la práctica, puedes utilizar casi cualquier expresión en un contexto booleano.}
 
-El tipo de datos booleano solamente tiene dos valores posibles: verdadero o fals. Python dispone de dos constantes denominadas \codigo{True} y \codigo{False}, que se pueden utilizar para asignar valores booleanos directamente. Las expresiones también se pueden evaluar a un valor booleano. En algunos lugares (como las sentencias \codigo{if}, Python espera una expresión que se pueda evaluar a un valor booleano. Estos sitios se denominan \emph{contextos booleanos}. Puedes utilizar casi cualquier expresión en un contexto booleano, Python intentará determinar si el resultado puede ser verdadero o falso. Cada tipo de datos tiene sus propias reglas para identificar qué valores equivalen a verdadero y falso en un contexto booleano (Esto comenzará a tener un sentido más claro para ti cuando veas algunos ejemplos concretos).
+El tipo de datos booleano solamente tiene dos valores posibles: verdadero o falso. Python dispone de dos constantes denominadas \codigo{True} y \codigo{False}, que se pueden utilizar para asignar valores booleanos directamente. Las expresiones también se pueden evaluar a un valor booleano. En algunos lugares (como las sentencias \codigo{if}, Python espera una expresión que se pueda evaluar a un valor booleano. Estos sitios se denominan \emph{contextos booleanos}. Puedes utilizar casi cualquier expresión en un contexto booleano, Python intentará determinar si el resultado puede ser verdadero o falso. Cada tipo de datos tiene sus propias reglas para identificar qué valores equivalen a verdadero y falso en un contexto booleano (Esto comenzará a tener un sentido más claro para ti cuando veas algunos ejemplos concretos).
 
 Por ejemplo:
 
@@ -357,7 +357,7 @@ Crear una lista es fácil: utiliza unos corchetes para para delimitar una lista 
 
 \item \emph{Línea 8:} Si se usan índices con valor negativo se accede a los elementos de la lista contando desde el final. El último elemento de una lista siempre se puede indexar utilizando \codigo{lista[-1]}.
 
-\item \emph{Línea 10:} Si los números negativos en los índices te resultan confusos, puedes pensar de esta forma: \codigo{lista[-n] == lista[len(lista)-n]}. Por eso, en esta lista, \codigo{lista[-3] == lista[5 - 3] == lista[2]}.
+\item \emph{Línea 10:} Si los números negativos en los índices te resultan confusos, puedes pensar de esta forma: \codigo{lista[-n] == lista[len(lista)-n]}.\\ Por eso: \codigo{lista[-3] == lista[5 - 3] == lista[2]}.
 
 \end{enumerate}
 
@@ -472,7 +472,7 @@ Vamos a ver más de cerca la diferencia entre \codigo{append()} y \codigo{extend
 
 \item \emph{Línea 9:} Por otra parte, el método \codigo{append()} recibe un único parámetro, que puede ser de cualquier tipo. En este caso estamos ejecutando el método pasándole una lista de tres elementos.
 
-\item \emph{Línea 12:} Si partes de una lista de seis elementos y añades otra lista a ella, finalizas con una lista de... siete elementos. ¿Porqué siete? Porque el último elemento (que acabas de añadir) \emph{es en sí mismo una lista}. Una lista puede contener datos de cualquier tipo, incluídas otras listas. Puede que sea lo que quieras o puede que no. Pero es lo que le has pedido a Python al ejecutar \codigo{append()} con una lista como parámetro. 
+\item \emph{Línea 12:} Si partes de una lista de seis elementos y añades otra lista a ella, finalizas con una lista de... Siete elementos. ¿Porqué siete? Porque el último elemento (que acabas de añadir) \emph{es en sí mismo una lista}. Una lista puede contener datos de cualquier tipo, incluidas otras listas. Puede que sea lo que quieras o puede que no. Pero es lo que le has pedido a Python al ejecutar \codigo{append()} con una lista como parámetro. 
 
 \end{enumerate}
 
@@ -669,7 +669,7 @@ Una tupla es una lista inmutable. Una tupla no se puede modificar después de ha
 
 \end{enumerate}
 
-Lo que diferencia a las tuplas de las listas es que las primeras no se pueden modificar. En términos técnicos se dice que son inmutables. En términos prácticos esto significa que no tienen métodos que te permitan modificarlas. Las listas tienen métodos como \codigo{append(), extend(), insert(), remove()} y \codigo{pop()}. Las tuplas no tienen ninguno de estos métodos. Puedes particionar una tupla porque en realidad se crea una nueva tupla, y puedes consultar si contienen un valor determinado, y... eso es todo.
+Lo que diferencia a las tuplas de las listas es que las primeras no se pueden modificar. En términos técnicos se dice que son inmutables. En términos prácticos esto significa que no tienen métodos que te permitan modificarlas. Las listas tienen métodos como \codigo{append(), extend(), insert(), remove()} y \codigo{pop()}. Las tuplas no tienen ninguno de estos métodos. Puedes particionar una tupla porque en realidad se crea una nueva tupla, y puedes consultar si contienen un valor determinado, y... Eso es todo.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -976,7 +976,7 @@ KeyError: 21
 
 \begin{enumerate}
 
-\item \emph{Línea 4:} El método \codigo{discard()} toma un único parámetro y elminia el elemento del conjunto.
+\item \emph{Línea 4:} El método \codigo{discard()} toma un único parámetro y elimina el elemento del conjunto.
 
 \item \emph{Línea 7:} Si llamas al método \codigo{discard()} con un valor que no exista en el conjunto no se produce ningún error. Simplemente no se hace nada.
 
@@ -1166,7 +1166,8 @@ Crear diccionarios es sencillo. La sintaxis es similar a la de los conjuntos, pe
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
->>> un_dic = {'servidor': 'db.diveintopython3.org', 'basedatos': 'mysql'}
+>>> un_dic = {'servidor': 'db.diveintopython3.org',
+              'basedatos': 'mysql'}
 >>> un_dic
 {'servidor': 'db.diveintopython3.org', 'basedatos': 'mysql'}
 >>> un_dic['servidor']
@@ -1184,11 +1185,11 @@ KeyError: 'db.diveintopython3.org'
 
 \item \emph{Línea 1:} En el ejemplo creamos primero un diccionario con dos elementos y lo asignamos a la variable \codigo{un\_dic}. Cada elemento es una pareja clave-valor. El conjunto completo de elementos se encierra entre llaves.
 
-\item \emph{Línea 4:} \codigo{``servidor''} es una clave, y su valor asociado se obtiene mediante la referencia \codigo{un\_dic[``servidor'']} cuyo valor es ``db.diveintopython3.org''.
+\item \emph{Línea 5:} \codigo{``servidor''} es una clave, y su valor asociado se obtiene mediante la referencia \codigo{un\_dic[``servidor'']} cuyo valor es ``db.diveintopython3.org''.
 
-\item \emph{Línea 6:} \codigo{``basedatos''} es una clave y su valor asociado se obtiene mediante la referencia \codigo{un\_dic[``basedatos'']} cuyo valor es ``mysql''.
+\item \emph{Línea 7:} \codigo{``basedatos''} es una clave y su valor asociado se obtiene mediante la referencia \codigo{un\_dic[``basedatos'']} cuyo valor es ``mysql''.
 
-\item \emph{Línea 8:} Puedes recuperar los valores mediante la clave, pero no puedes recuperar las claves mediante el uso de su valor. Por eso \codigo{un\_dic[``servidor'']} vale \codigo{``db.diveintopython3.org''} pero \codigo{un\_dic[``db.diveintopython3.org'']} eleva una excepción de tipo \codigo{KeyError} al no ser una clave del diccionario.
+\item \emph{Línea 9:} Puedes recuperar los valores mediante la clave, pero no puedes recuperar las claves mediante el uso de su valor. Por eso \codigo{un\_dic[``servidor'']} vale \codigo{``db.diveintopython3.org''} pero \codigo{un\_dic[``db.diveintopython3.org'']} eleva una excepción de tipo \codigo{KeyError} al no ser una clave del diccionario.
 
 \end{enumerate}
 
@@ -1270,7 +1271,7 @@ True
 
 \item \emph{Línea 7:} \codigo{1000} es una clave del diccionario \codigo{SUFIJOS}; su valor es una lista de ocho elementos (ocho cadenas de texto, por ser más precisos).
 
-\item \emph{Línea 9:} De igual manera, \codigo{1024} es una clave del diccionario \codigo{SUFIJOS}; su valor también es una lista de ocho elmentos.
+\item \emph{Línea 9:} De igual manera, \codigo{1024} es una clave del diccionario \codigo{SUFIJOS}; su valor también es una lista de ocho elementos.
 
 \item \emph{Línea 11:} Puesto que \codigo{SUFIJOS[1000]} es una lista, puedes utilizar los corchetes para acceder a los elementos individuales. Recuerda que los índices en Python comienzan a contar en cero.
 
