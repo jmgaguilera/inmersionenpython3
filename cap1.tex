@@ -368,7 +368,7 @@ No necesitas manejar las excepciones en la función que las eleva. Si no se mane
 
 \subsection {Capturar errores al importar}
 
-Una de las excepciones internas de Python es \codigo{ImportError}, que se eleva cuando intentas importar un módulo y falla. Esto puede suceder por diversas causas, pero la más simple es que el módulo no exista en tu camino de búsqueda. Puedes utilizar esta excepción para incluir características opcionales a tu programa. Por ejemplo, la librería \codigo{chardet} que aparece en el capítulo~\ref{ch:casodeestudio} autodetecta la codificación de caracteres. Posiblemente tu programa quiera utilizar esta librería si está instalada, pero continuar funcionando si no lo está. Para ello puedes utilizar un bloque \codigo{try...except}.
+Una de las excepciones internas de Python es \codigo{ImportError}, que se eleva cuando intentas importar un módulo y falla. Esto puede suceder por diversas causas, pero la más simple es que el módulo no exista en tu camino de búsqueda. Puedes utilizar esta excepción para incluir características opcionales a tu programa. Por ejemplo, la librería \codigo{chardet} que aparece en el capítulo~\ref{ch:chardet} autodetecta la codificación de caracteres. Posiblemente tu programa quiera utilizar esta librería si está instalada, pero continuar funcionando si no lo está. Para ello puedes utilizar un bloque \codigo{try...except}.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
