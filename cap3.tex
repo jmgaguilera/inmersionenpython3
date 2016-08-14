@@ -176,7 +176,7 @@ El módulo \codigo{glob} es otra herramienta incluida en la librería estándar 
 
 \begin{enumerate}
 
-\item \emph{Línea 3:} El módulo \codigo{glob} utiliza comodines y devuelve el camino de todos los ficheros y directorios que coindicen con la búsqueda. En este ejemplo se busca un directorio que contenga ficheros terminados en ``*.xml'', lo que encontrará todos los ficheros xml que se encuentren en el directorio de ejemplos.
+\item \emph{Línea 3:} El módulo \codigo{glob} utiliza comodines y devuelve el camino de todos los ficheros y directorios que coinciden con la búsqueda. En este ejemplo se busca un directorio que contenga ficheros terminados en ``*.xml'', lo que encontrará todos los ficheros xml que se encuentren en el directorio de ejemplos.
 
 \item \emph{Línea 7:} Ahora cambio el directorio de trabajo al subdirectorio \codigo{ejemplos}. La función \codigo{os.chdir()} puede recibir como parámetro un camino relativo a la posición actual.
 
@@ -252,7 +252,7 @@ En el apartado anterior, se observó cómo la función \codigo{glob.glob()} devo
 
 \section{Listas por comprensión}
 
-La creacion de listas por comprensión proporciona una forma compacta de crear una lista a partir de otra mediante la realización de una operación a cada uno de los elementos de la lista original.
+La creación de listas por comprensión proporciona una forma compacta de crear una lista a partir de otra mediante la realización de una operación a cada uno de los elementos de la lista original.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -316,7 +316,7 @@ Las listas por comprensión también permiten filtrar elementos, generando una l
 
 \begin{enumerate}
 
-\item \emph{Línea 2:} Para filtrar una lista puedes incluir la claúsula \codigo{if} al final de la comprensión. Esta expresión se evalúa para cada elemento de la lista original. Si el resultado es verdadero, el elemento será calculado e incluido en el resultado. En este caso se seleccionan todos los ficheros que terminan en \codigo{.py} que se encuentren en el directorio de trabajo, se comprueba si son de tamaño mayor a \codigo{6000} bytes. Seis de ellos cumplen este requisito, por lo que son los que aparecen en el resultado final.
+\item \emph{Línea 2:} Para filtrar una lista puedes incluir la cláusula \codigo{if} al final de la comprensión. Esta expresión se evalúa para cada elemento de la lista original. Si el resultado es verdadero, el elemento será calculado e incluido en el resultado. En este caso se seleccionan todos los ficheros que terminan en \codigo{.py} que se encuentren en el directorio de trabajo, se comprueba si son de tamaño mayor a \codigo{6000} bytes. Seis de ellos cumplen este requisito, por lo que son los que aparecen en el resultado final.
 
 \end{enumerate}
 
@@ -325,9 +325,12 @@ Hasta el momento, todos los ejemplos de generación de listas por comprensión h
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
 >>> import os, glob
->>> [(os.stat(f).st_size, os.path.realpath(f)) for f in glob.glob('*.xml')]
-[(3074, 'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed-broken.xml'),
- (3386, 'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed-ns0.xml'),
+>>> [(os.stat(f).st_size, os.path.realpath(f)) for 
+...                f in glob.glob('*.xml')]
+[(3074,
+  'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed-broken.xml'),
+ (3386,
+  'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed-ns0.xml'),
  (3070, 'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed.xml')]
 >>> import parahumanos
 >>> [(parahumanos.tamanyo_aproximado(os.stat(f).st_size), f) 
@@ -342,7 +345,7 @@ Hasta el momento, todos los ejemplos de generación de listas por comprensión h
 
 \item \emph{Línea 2:} En este caso se buscan los ficheros que finalizan en \codigo{.xml} en el directorio de trabajo actual, se recupera su tamaño (mediante una llamada a la función \codigo{os.stat()}) y se construye una tupla con el tamaño del fichero y su ruta completa (mediante una llamada a \codigo{os.path.realpath()}.
 
-\item \emph{Línea 7:} En este caso se aprovecha la lista anterior para generar una nueva con el tamaño aproximado de cada fichero.
+\item \emph{Línea 10:} En este caso se aprovecha la lista anterior para generar una nueva con el tamaño aproximado de cada fichero.
 
 \end{enumerate}
  
@@ -355,9 +358,9 @@ Es similar al apartado anterior pero genera un diccionario en lugar de una lista
 >>> import os, glob
 >>> metadata = [(f, os.stat(f)) for f in glob.glob('*test*.py')]
 >>> metadata[0]
-('alphameticstest.py', nt.stat_result(st_mode=33206, st_ino=0, st_dev=0,
- st_nlink=0, st_uid=0, st_gid=0, st_size=2509, st_atime=1247520344,
- st_mtime=1247520344, st_ctime=1247520344))
+('alphameticstest.py', nt.stat_result(st_mode=33206, st_ino=0,
+  st_dev=0, st_nlink=0, st_uid=0, st_gid=0, st_size=2509,
+  st_atime=1247520344, st_mtime=1247520344, st_ctime=1247520344))
 >>> metadata_dict = {f:os.stat(f) for f in glob.glob('*test*.py')}
 >>> type(metadata_dict)
 <class 'dict'>
@@ -365,8 +368,8 @@ Es similar al apartado anterior pero genera un diccionario en lugar de una lista
 ['romantest8.py', 'pluraltest1.py', 'pluraltest2.py', 'pluraltest5.py',
  'pluraltest6.py', 'romantest7.py', 'romantest10.py', 'romantest4.py',
  'romantest9.py', 'pluraltest3.py', 'romantest1.py', 'romantest2.py',
- 'romantest3.py', 'romantest5.py', 'romantest6.py', 'alphameticstest.py',
- 'pluraltest4.py']
+ 'romantest3.py', 'romantest5.py', 'romantest6.py',
+ 'alphameticstest.py', 'pluraltest4.py']
 >>> metadata_dict['alphameticstest.py'].st_size
 2509
 \end{lstlisting}
@@ -388,7 +391,7 @@ Es similar al apartado anterior pero genera un diccionario en lugar de una lista
 
 \end{enumerate}
 
-Como con las listas, puedes incluir la claúsula \codigo{if} para filtrar los elementos de entrada mediante una expresión que se evalúa para cada uno de los elementos.
+Como con las listas, puedes incluir la cláusula \codigo{if} para filtrar los elementos de entrada mediante una expresión que se evalúa para cada uno de los elementos.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -428,7 +431,7 @@ Te presento un truco que puede serte de utilidad: intercambiar las claves y valo
 
 \section{Conjuntos por comprensión}
 
-Por último mostraré la sintaxis para generar conjuntos por comprensión. Es muy similiar a la de los diccionarios, con la única diferencia de que únicamente se incluyen valores en lugar de parejas clave-valor.
+Por último mostraré la sintaxis para generar conjuntos por comprensión. Es muy similar a la de los diccionarios, con la única diferencia de que únicamente se incluyen valores en lugar de parejas clave-valor.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -446,9 +449,9 @@ Por último mostraré la sintaxis para generar conjuntos por comprensión. Es mu
 
 \begin{enumerate}
 
-\item \emph{Línea 4:} Los conjuntos generados por comprensión pueden partir de otro conjunto en lugar de una lista. En este ejemlo se calcula el cuadrado de cada uno de los elementos (los números del 0 al 9).
+\item \emph{Línea 4:} Los conjuntos generados por comprensión pueden partir de otro conjunto en lugar de una lista. En este ejemplo se calcula el cuadrado de cada uno de los elementos (los números del 0 al 9).
 
-\item \emph{Línea 6:} Como en el caso de las listas y diccionarios, puedes incluir una claúsula \codigo{if} para filtrar elementos antes de calcularlos e incluirlos en el resultado.
+\item \emph{Línea 6:} Como en el caso de las listas y diccionarios, puedes incluir una cláusula \codigo{if} para filtrar elementos antes de calcularlos e incluirlos en el resultado.
 
 \item \emph{Línea 8:} Los conjuntos por comprensión no necesitan tomar un conjunto como entrada, pueden partir de cualquier tipo de secuencia.
 
