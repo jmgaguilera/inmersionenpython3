@@ -152,11 +152,11 @@ SyntaxError: non-keyword arg after keyword arg (<pyshell#5>, line 1)
 \end{lstlisting}
 
 \begin{enumerate}
-\item \emph{Línea 2:} Llama a la función \codigo{tamnyo\_aproximado()} pasándole \codigo{4000} al primer parámetro (\codigo{tamanyo}) y el valor \codigo{False} en el denominado \codigo{un\_kilobyte\_es\_1204\_bytes} (En este caso coincide que el parámetro con nombre se está pasando en la segunda posición y también está declarado en la función como segundo parámetro, pero esto es simplemente una coincidencia).
+\item \emph{Línea 2:} Llama a la función \codigo{tamanyo\_aproximado()} pasándole \codigo{4000} al primer parámetro (\codigo{tamanyo}) y el valor \codigo{False} en el denominado \codigo{un\_kilobyte\_es\_1204\allowbreak\_bytes} (En este caso coincide que el parámetro con nombre se está pasando en la segunda posición y también está declarado en la función como segundo parámetro, pero esto es simplemente una coincidencia).
 
-\item \emph{Línea 4:} Llama a la función \codigo{tamanyo\_aproximado()} pasándole \codigo{4000} al parámetro denominado \codigo{tamanyo} y \codigo{False} al parámetro denominado \codigo{un\_kilobyte\_es\_1024\_bytes} (Estos parámetros coinciden en orden con los de la declaración de la función, pero vuelve a ser una simple coincidencia).
+\item \emph{Línea 4:} Llama a la función \codigo{tamanyo\_aproximado()} pasándole \codigo{4000} al parámetro denominado \codigo{tamanyo} y \codigo{False} al parámetro denominado \codigo{un\_kilobyte\_es\allowbreak\_1024\_bytes} (Estos parámetros coinciden en orden con los de la declaración de la función, pero vuelve a ser una simple coincidencia).
 
-\item \emph{Línea 6:} Llama a a la función \codigo{tamanyo\_aproximado()} paándole \codigo{False} al parámetro denominado \codigo{un\_kilobyte\_es\_1024\_bytes} y \codigo{4000} al parámetro denominado \codigo{tamanyo} (Esta es la utilidad de usar nombres en las llamadas a una función, poder pasarlos en cualquier orden, e incluso no pasar alguno de los existentes para que tomen valores por defecto mientras sí que pasas uno de los últimos parámetros de la función).
+\item \emph{Línea 6:} Llama a a la función \codigo{tamanyo\_aproximado()} pasándole \codigo{False} al parámetro denominado \codigo{un\_kilobyte\_es\_1024\_bytes} y \codigo{4000} al parámetro denominado \codigo{tamanyo} (Esta es la utilidad de usar nombres en las llamadas a una función, poder pasarlos en cualquier orden, e incluso no pasar alguno de los existentes para que tomen valores por defecto mientras sí que pasas uno de los últimos parámetros de la función).
 
 \item \emph{Línea 8:} Esta llamada a la función falla porque se usa un parámetro con nombre seguido de uno sin nombre (por posición). Esta forma de llamar a la función siempre falla. Python lee la lista de parámetros de izquierda a derecha, en cuanto aparece un parámetro con nombre, el resto de parámetros debe también proporcionarse por nombre. Los primeros pueden ser por posición.
 
@@ -188,7 +188,7 @@ def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
 \end{lstlisting}
 \end{minipage}
 
-La comillas triples sirven para escribir cadenas de texto que ocupen más de una línea. Todo lo que se escribe entre las comillas triples forma parte de una única cadena de texto, incluídos los espacios en blanco, retornos de carro, saltos de línea y otras comillas \emph{sueltas}. Este tipo de cadenas de texto lo puedes utilizar donde quieras dentro del código Python, pero normalmente se utilizan para definir \codigo{docstring} (cadenas de texto de documentación).
+La comillas triples sirven para escribir cadenas de texto que ocupen más de una línea. Todo lo que se escribe entre las comillas triples forma parte de una única cadena de texto, incluidos los espacios en blanco, retornos de carro, saltos de línea y otras comillas \emph{sueltas}. Este tipo de cadenas de texto lo puedes utilizar donde quieras dentro del código Python, pero normalmente se utilizan para definir \codigo{docstring} (cadenas de texto de documentación).
 
 \begin{quote}
 Las comillas triples son la manera más simple de escribir cadenas de texto que incluyan, a su vez, comillas simples y/o dobles, como cuando en Perl 5 se utiliza \codigo{q/.../}
@@ -204,7 +204,7 @@ Muchos entornos integrados de programación (\codigo{IDEs}) utilizan los \codigo
 
 \section{El camino de búsqueda para \codigo{import}}\label{sc:search_path}
 
-Antes de continuar, quiero mencionar brevemente el camino\footnote{En español se usa también \codigo{ruta de búsqueda}. En inglés se usa la palabra \codigo{path} para referirse a este concepto} de búsqueda de las librerías. Cuando importas un módulo, Python busca en varios lugares hasta encontrarlo. En concreto, busca en todos los directorios que se encuentren definidos en la variable \codigo{sys.path}. Como se trata de una \codigo{lista}, puedes verla fácilmente o modificarla con los métodos estándares de manipulación de listas. (Aprenderás a trabajar con listas en el capítulo ~\ref{tiposdedatonativos} sobre Tipos de Dato Nativos).
+Antes de continuar, quiero mencionar brevemente el camino\footnote{En español se usa también \codigo{ruta de búsqueda}. En inglés se usa la palabra \codigo{path} para referirse a este concepto} de búsqueda de las librerías. Cuando importas un módulo, Python busca en varios lugares hasta encontrarlo. En concreto, busca en todos los directorios que se encuentren definidos en la variable \codigo{sys.path}. Como se trata de una \codigo{lista}, puedes verla fácilmente o modificarla con los métodos estándares de manipulación de listas. (Aprenderás a trabajar con listas en el capítulo ~\ref{ch:tiposdedato} sobre Tipos de Dato Nativos).
 
 \noindent\begin{minipage}{\textwidth}
 
@@ -237,7 +237,7 @@ Antes de continuar, quiero mencionar brevemente el camino\footnote{En español s
 
 \item \emph{Línea 1:} Al importar el paquete \codigo{sys} de esta forma, todas sus funciones y atributos quedan a disposición del programador para su uso.
 
-\item \emph{Líneas 2-8:} \codigo{sys.path} es una variable (\codigo{path}) del paquete \codigo{sys} que contiene una lista de los directorios que constituyen el camino de búsqueda (El tuyo será diferente, ya que depende del sistema operativo, de la versión de Python que tengas instalada, y del lugar en el que está instalada). Siempre que se haga un \codigo{import} en el código, Python buscará en estos directorios (por orden), hasta encontrar un fichero cuyo nombre coincida con el valor que se usa en la sentencia \codigo{import} cmás la extensión \codigo{.py}.
+\item \emph{Líneas 2-8:} \codigo{sys.path} es una variable (\codigo{path}) del paquete \codigo{sys} que contiene una lista de los directorios que constituyen el camino de búsqueda (El tuyo será diferente, ya que depende del sistema operativo, de la versión de Python que tengas instalada, y del lugar en el que está instalada). Siempre que se haga un \codigo{import} en el código, Python buscará en estos directorios (por orden), hasta encontrar un fichero cuyo nombre coincida con el valor que se usa en la sentencia \codigo{import} más la extensión \codigo{.py}.
 
 \item \emph{Líneas 9-10:} En realidad te he mentido un poco, la realidad es un poco más compleja, no todos los módulos se almacenan en ficheros con extensión \codigo{.py}. Algunos de ellos, como el módulo \codigo{sys} son módulos internos (\codigo{built-in}); no existen en ficheros, están construidos internamente en el propio lenguaje. En la práctica funcionan exactamente igual que los módulos que están en ficheros, la única diferencia es que no existe el código fuente, ¡Porque no están escritos en Python! (El módulo \codigo{sys} está escrito en lenguaje \codigo{c}).
 
@@ -278,7 +278,7 @@ Convierte un tama$\til{n}$o de fichero en un formato legible por personas
 
 \item \emph{Línea 1:} Importa (carga en memoria) el programa \codigo{parahumanos} como un módulo ---un trozo de código que puedes utilizar de forma interactiva o desde un programa Python mayor. Una vez se ha importado el módulo, puedes utilizar (referenciar) cualquiera de sus funciones públicas, clases o atributos. Si desde un módulo se desea utilizar la funcionalidad de otro, basta con hacer exactamente lo mismo que en esta línea de la consola interactiva.
 
-\item \emph{Línea 2:} Cuando quieres utilizar las funciones que estén definidas en los módulos importados, tienes que añadir el nombre del módulo. No es posible utilizar simplemente \codigo{tamanyo\_aproximado}, debes utilizar \codigo{parahumanos.tamanyo\_aproximado}. Si has utilizado Java, esta forma de utilizar una función debería sonarte.
+\item \emph{Línea 2:} Cuando quieres utilizar las funciones que estén definidas en los módulos importados, tienes que añadir el nombre del módulo. No es posible utilizar simplemente \codigo{tamanyo\_aproximado}, debes utilizar \codigo{parahumanos.tamanyo\allowbreak\_aproximado}. Si has utilizado Java, esta forma de utilizar una función debería sonarte.
 
 \item \emph{Línea 4:} En este caso, en lugar de llamar a la función como podrías esperar, se consulta uno de los atributos de la función, \codigo{\_\_doc\_\_}.
 
@@ -291,7 +291,7 @@ Cuando importas (\codigo{import}) un módulo de Python puedes acceder a todas su
 
 \subsection{¿Qué es un objeto?}
 
-En Python todo es un objeto, y todos los objetos pueden tener atributos y métodos. Todas las funciones son objetos, y tienen el atributo \codigo{\_\_doc\_\_}, que retorna el \codigo{docstring} que se haya definido en el código fuente. El módullo \codigo{sys} es también un objeto que tiene (entre otras cosas) un atributo denominado \codigo{path}. Como se ha dicho: todo lo que se defina en Python es un objeto y puede tener atributos y métodos.
+En Python todo es un objeto, y todos los objetos pueden tener atributos y métodos. Todas las funciones son objetos, y tienen el atributo \codigo{\_\_doc\_\_}, que retorna el \codigo{docstring} que se haya definido en el código fuente. El módulo \codigo{sys} es también un objeto que tiene (entre otras cosas) un atributo denominado \codigo{path}. Como se ha dicho: todo lo que se defina en Python es un objeto y puede tener atributos y métodos.
 
 Sin embargo, no hemos contestado aún a la pregunta fundamental: ¿Qué es un objeto? Los diferentes lenguajes de programación definen \emph{objeto} de diferente forma. En algunos, significa que \emph{todos} los objetos \emph{deben} tener atributos y métodos; en otros, significa que todos los objetos pueden tener subclases. En Python la definición es más \emph{relajada}. Algunos objetos no tienen ni atributos ni métodos, \emph{pero podrían}. No todos los objetos pueden tener subclases. Pero todo es un objeto en el sentido de que pueden asignarse a variables y pasarse como parámetro de una función.
 
@@ -321,15 +321,15 @@ def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
 
 \begin{enumerate}
 
-\item \emph{Línea 1:} Los bloques de código se definen por su indentado. Por ``bloque de código'' se entiende lo siguiente: funciones, sentencias \codigo{if}, bucles \codigo{for}, bucles {while} y similar. Al indentar se inicia el bloque y al desindentar se finaliza. No existen llaves, corchetes o palabras clave para iniciar y finalizar un bloque de forma explícita. Esto implica que los espacios en blanco son significativos, y deben ser consistentes. En este ejemplo, el código de la función está indentado con cuatro espacios. No es necesario que sean cuatro, pero sí que sea consistente y siempre sean los mismos. La primera línea que no esté indentada deliminta el final de la función.
+\item \emph{Línea 1:} Los bloques de código se definen por su indentado. Por ``bloque de código'' se entiende lo siguiente: funciones, sentencias \codigo{if}, bucles \codigo{for}, bucles {while} y similar. Al indentar se inicia el bloque y al desindentar se finaliza. No existen llaves, corchetes o palabras clave para iniciar y finalizar un bloque de forma explícita. Esto implica que los espacios en blanco son significativos, y deben ser consistentes. En este ejemplo, el código de la función está indentado con cuatro espacios. No es necesario que sean cuatro, pero sí que sea consistente y siempre sean los mismos. La primera línea que no esté indentada delimita el final de la función.
 
 \item \emph{Línea 2:} En Python, la sentencia \codigo{if} debe contener un bloque de código. Si la expresión que sigue al \codigo{if} es verdadera\footnote{Si el resultado de evaluarla es \textbf{True}.} se ejecuta el bloque indentado que contiene el \codigo{if}, en caso contrario lo que se ejecuta es el bloque contenido en el \codigo{else} (si existe). Observa la ausencia de paréntesis alrededor de la expresión.
 
 \item \emph{Línea 3:} Esta línea se encuentra \emph{dentro} del bloque de código del \codigo{if}. La sentencia \codigo{raise} elevará una excepción (del tipo \codigo{ValueError}, pero únicamente si \codigo{tamanyo < 0}.
 
-\item \emph{Línea 4:} Esta línea \emph{no} marca el final de la función. Las líneas que estan completamente en blanco no cuentan. Únicamente sirven para hacer más legible el código, pero no cuentan como delimitadores de código. La función continúa en la línea siguiente.
+\item \emph{Línea 4:} Esta línea \emph{no} marca el final de la función. Las líneas que están completamente en blanco no cuentan. Únicamente sirven para hacer más legible el código, pero no cuentan como delimitadores de código. La función continúa en la línea siguiente.
 
-\item \emph{Línea 6:} El bucle \codigo{for} también marca el comienzo de un bloque de código. Los bloques pueden contener múltiples líneas, siempre que estén indentadas con el mismo número de espacios. Este bucle \codigo{for} contiene tres líneas de código en él. No existe ninguna otra sintáxis especial para los bloques de varias líneas. Basta con indentar y... ¡seguir adelante con el trabajo!
+\item \emph{Línea 6:} El bucle \codigo{for} también marca el comienzo de un bloque de código. Los bloques pueden contener múltiples líneas, siempre que estén indentadas con el mismo número de espacios. Este bucle \codigo{for} contiene tres líneas de código en él. No existe ninguna otra sintaxis especial para los bloques de varias líneas. Basta con indentar y... ¡seguir adelante con el trabajo!
 
 \end{enumerate}
 
@@ -349,7 +349,7 @@ Cuando sucede un error se muestra en la consola de Python algunos detalles de la
 
 \cajaTexto{Python utiliza bloques \codigo{try...except} para manejar excepciones, y la sentencia \codigo{raise} para generarlas. Java y C++ utilizan bloques \codigo{try...catch} para manejarlas y la sentencia \codigo{throw} para generarlas.}
 
-El hecho de que suceda una excepción no implica necesariamente que el programa tenga que fallar. Las excepciones se pueden \emph{manejar}. Algunas veces una excepcion sucede porque tienes un error en el código (como por ejemplo, acceder al valor de una variable que no existe), pero en otras ocasiones puedes anticiparlo. Si vas a abrir un fichero, puede que no exista. Si vas a importar un módulo, puede que no esté instalado. Si te vas a conectar a una base de datos, puede que no esté disponible, o puede que no tengas las credenciales necesarias para acceder a ella. Si sabes que una línea de código puede \emph{elevar} una excepción, deberías \emph{manejar} la excepción utilizando el bloque \codigo{try...except}.
+El hecho de que suceda una excepción no implica necesariamente que el programa tenga que fallar. Las excepciones se pueden \emph{manejar}. Algunas veces una excepción sucede porque tienes un error en el código (como por ejemplo, acceder al valor de una variable que no existe), pero en otras ocasiones puedes anticiparlo. Si vas a abrir un fichero, puede que no exista. Si vas a importar un módulo, puede que no esté instalado. Si te vas a conectar a una base de datos, puede que no esté disponible, o puede que no tengas las credenciales necesarias para acceder a ella. Si sabes que una línea de código puede \emph{elevar} una excepción, deberías \emph{manejar} la excepción utilizando el bloque \codigo{try...except}.
 
 La función \codigo{tamanyo\_aproximado()} eleva excepciones por dos causas: el tamaño que se pasa es mayor que el previsto, o si es menor que cero.
 
@@ -390,7 +390,7 @@ Posteriormente, en el código, puedes consultar la presencia de la librería con
 \end{lstlisting}
 \end{minipage}
 
-Otro uso habitual de la excepcion \codigo{ImportError} es cuando dos módulos implementan una \codigo{API}\footnote{Application Programming Interface. Interfaz de programación de aplicaciones.} común, pero existe preferencia por uno de ellos por alguna causa (tal vez sea más rápida, o use menos memoria). Puedes probar a importar un módulo y si falla cargar el otro. Por ejemplo, en el capítulo~\ref{ch:xml} sobre XML se habla de dos módulos que implementan una \codigo{API} común, denominada \codigo{ElementTree API}. El primero \codigo{lxml.etree}, es un módulo desarrollado por terceros que requiere descargarlo e instalarlo tú mismo. El segundo, \codigo{xml.etree.ElementTree}, es más lento pero forma parte de la librería estándar de Python 3.
+Otro uso habitual de la excepción \codigo{ImportError} es cuando dos módulos implementan una \codigo{API}\footnote{Application Programming Interface. Interfaz de programación de aplicaciones.} común, pero existe preferencia por uno de ellos por alguna causa (tal vez sea más rápida, o use menos memoria). Puedes probar a importar un módulo y si falla cargar el otro. Por ejemplo, en el capítulo~\ref{ch:xml} sobre XML se habla de dos módulos que implementan una \codigo{API} común, denominada \codigo{ElementTree API}. El primero \codigo{lxml.etree}, es un módulo desarrollado por terceros que requiere descargarlo e instalarlo tú mismo. El segundo, \codigo{xml.etree.ElementTree}, es más lento pero forma parte de la librería estándar de Python 3.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -401,11 +401,11 @@ Otro uso habitual de la excepcion \codigo{ImportError} es cuando dos módulos im
 \end{lstlisting}
 \end{minipage}
 
-Al final de este bloque \codigo{try...except}, has importando \emph{algún} modulo y lo has llamado \codigo{etree}. Puesto que ambos módulos implementan una \codigo{API} común, el resto del código no se tiene que preocupar de qué módulo se ha cargado\footnote{Nota del Traductor:Al implementar la misma \codigo{API} ambos módulos se \emph{comportan} igual por lo que son indistingubles en cuanto a funcionamiento. Así, el resto del código puede funcionar sin conocer qué módulo se ha importado realmente.}. Asimismo, como el módulo que se haya importado termina llamándose \codigo{etree}, el resto del código no tiene que estar repleto de sentencias \codigo{if} para llamar a diferentes módulos con diferente nombre.
+Al final de este bloque \codigo{try...except}, has importando \emph{algún} modulo y lo has llamado \codigo{etree}. Puesto que ambos módulos implementan una \codigo{API} común, el resto del código no se tiene que preocupar de qué módulo se ha cargado\footnote{Nota del Traductor:Al implementar la misma \codigo{API} ambos módulos se \emph{comportan} igual por lo que son indistinguibles en cuanto a funcionamiento. Así, el resto del código puede funcionar sin conocer qué módulo se ha importado realmente.}. Asimismo, como el módulo que se haya importado termina llamándose \codigo{etree}, el resto del código no tiene que estar repleto de sentencias \codigo{if} para llamar a diferentes módulos con diferente nombre.
 
 \section{Variables sin declarar}
 
-Échale otro vistazo a la siguiente línea de código de la función \codigo{tamanyo\_aproximado}:
+Échale otro vistazo a la siguiente línea de código de la función \codigo{tamanyo\_aproxi\-mado}:
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
