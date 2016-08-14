@@ -24,7 +24,7 @@ En realidad es más complicado. Muchos caracteres son comunes a diferentes codif
 
 \cajaTexto{Todo lo que que pensabas que sabías sobre las cadenas de texto es erróneo.}
 
-Seguramente  habrás visto a veces paginas web con extraños caracteres de interrogación o similar, en donde esperabas algún caracter como el apóstrofo o vocales acentuadas. Esto suele indicar que el autor de la página no declaró correctamente la codificación de caracteres que utilizó por lo que tu navegador la tiene que adivinar y el resultado es una mezcla de caracteres esperados e inesperados. En inglés esto es simplemente desconcertante, pero en otros lenguajes el resultado puede ser completamente ilegible.
+Seguramente  habrás visto a veces paginas web con extraños caracteres de interrogación o similar, en donde esperabas algún carácter como el apóstrofo o vocales acentuadas. Esto suele indicar que el autor de la página no declaró correctamente la codificación de caracteres que utilizó por lo que tu navegador la tiene que adivinar y el resultado es una mezcla de caracteres esperados e inesperados. En inglés esto es simplemente desconcertante, pero en otros lenguajes el resultado puede ser completamente ilegible.
 
 Existen tablas de codificación de caracteres para cada uno de los lenguajes importantes del mundo. Puesto que cada lenguaje es diferente, y la memoria y el espacio en disco ha sido caro históricamente, cada tabla de codificación de caracteres está optimizada para un lenguaje en particular. Lo que quiero decir con esto es que cada una de las codificaciones usa los mismos números (0 - 255) para representar los caracteres de un lenguaje determinado. Por ejemplo, posiblemente estés familiarizado con la codificación \codigo{ASCII}, que almacena los caracteres del inglés como números que van del 0 al 127 (65 es la ``A'', 97 es la ``a'', etc). El inglés es un alfabeto muy simple, por lo que puede expresarse con menos de 128 números. Para aquellos que sepan contar en base 2, eso significa 7 bits de los 8 de un byte.
 
@@ -32,13 +32,13 @@ Algunos lenguajes de Europa como el francés, español y alemán necesitan más 
 
 Además existen lenguajes como el chino, japonés y coreano, que tienen tantos caracteres que requieren tablas de codificación de caracteres multibyte. Esto significa que cada ``carácter'' se representa como un número de dos bytes lo que abarca del 0 al 65535. Pero las codificaciones multibyte también tienen el mismo problema que las diferentes codificaciones de un único byte: cada una de ellas puede utilizar el mismo número para expresar un carácter diferente. La única diferencia entre ellas es que el rango de caracteres disponible es mayor en las codificaciones multibyte.
 
-Esto no suponía demasiado problema en un mundo desconectado, en donde ``texto'' era algo que tecleabas para tí y ocasionalmente imprimías. No existía mucho ``texto plano''. El código fuente era \codigo{ASCII} y todo el mundo usaba procesadores de textos que definían su propo formato que tenían en cuenta la información de codificación de caracteres junto con la información de estilo, etc. La gente leía estos documentos con el mismo programa procesador de texto que el autor original, por lo que todo funcionaba, más o menos.
+Esto no suponía demasiado problema en un mundo desconectado, en donde ``texto'' era algo que tecleabas para ti y ocasionalmente imprimías. No existía mucho ``texto plano''. El código fuente era \codigo{ASCII} y todo el mundo usaba procesadores de textos que definían su propio formato que tenían en cuenta la información de codificación de caracteres junto con la información de estilo, etc. La gente leía estos documentos con el mismo programa procesador de texto que el autor original, por lo que todo funcionaba, más o menos.
 
 Ahora piensa en la aparición de las redes globales y en el correo y la web. Mucho ``texto plano'' anda suelto por el mundo, se crea en un ordenador, se transmite a un segundo y se muestra en un tercero. Los ordenadores únicamente distinguen números, pero los números pueden significar cosas diferentes. ¡Oh no! ¿Qué hacer? Bien, los sistemas tuvieron que diseñarse para transportar la información de codificación junto con el ``texto plano''. Recuerda, se trata de las claves de descodificación que mapean los números entendidos por el ordenador a caracteres legibles por personas. Una clave de descodificación perdida da lugar a texto ilegible.
 
 Ahora piensa en intentar almacenar diversos documentos de texto en el mismo lugar, como en una tabla de una misma base de datos que almacena todo el correo electrónico que hayas recibido. Aún necesitas almacenar la codificación de caracteres junto con cada correo electrónico para que se pueda leer apropiadamente. ¿Parece difícil? Prueba a buscar en tu base de datos de correos, eso significa convertir entre múltiples tablas de codificación de caracteres sobre la marcha. ¿No suena divertido?.
 
-Piensa ahora en la posibilidad de documentos multilíngues, en donde aparecen caracteres en diferentes lenguajes\footnote{Pista: los programas que han intentando hacer esto utilizan habitualmente códigos de escape para conmutar entre ``modos''. Si estás en modo ruso koi8-r el código 241 significa $\reflectbox{R}$. Si cambias a modo Griego el código 241 significa $\stackrel{'}{\omega}$.}. Y, por supuesto, querrás buscar el contenido de \emph{esos} documentos.
+Piensa ahora en la posibilidad de documentos multilíngües, en donde aparecen caracteres en diferentes lenguajes\footnote{Pista: los programas que han intentando hacer esto utilizan habitualmente códigos de escape para conmutar entre ``modos''. Si estás en modo ruso koi8-r el código 241 significa $\reflectbox{R}$. Si cambias a modo Griego el código 241 significa $\stackrel{'}{\omega}$.}. Y, por supuesto, querrás buscar el contenido de \emph{esos} documentos.
 
 Ahora llora un rato, porque todo lo que creías conocer sobre las cadenas de texto es erróneo, y no existe algo así como el ``texto plano''.
 
@@ -54,7 +54,7 @@ Existe una tabla de codificación Unicode que utiliza cuatro bytes por cada car�
 
 Incluso aunque existen muchos caracteres Unicode, resulta que la mayoría de la gente nunca usará nada más allá de los primeros 65535. Por eso existe otra codificación Unicode denominada \codigo{UTF-16} (16 bits son 2 bytes) que codifica cada uno de los caracteres de 0 a 65535 como dos bytes. Además utiliza algunos ``trucos sucios'' por si necesitas representar aquellos caracteres que se usan raramente y que están más allá del 65535. La ventaja más obvia es que esta tabla de codificación de caracteres es el doble de eficiente que la de \codigo{UTF-32} puesto que cada carácter requiere únicamente dos bytes para almacenarse, en lugar de cuatro bytes. Aún se puede encontrar fácilmente el enésimo carácter de una cadena en un tiempo constante, siempre que se asuma que no existen caracteres especiales de los que están por encima de 65535. Lo que suele ser una buena asunción... ¡hasta el momento en que no lo es!
 
-También existen algunos inconvenientes no tan obvios tanto en \codigo{UFT-32} y \codigo{UTF-8}. Los ordenadores de sistemas diferentes suelen almacenar los bytes de diferentes formas. Esto significa que el carácter \codigo{U+4E2D} podría almacenarse en \codigo{UTF-16} bien como \codigo{4E 2D} o como \codigo{2D 4E}, dependiendo de que el sistema sea ``big-endian'' o ``little-endian''\footnote{Almacene los bytes en orden o invirtiendo el mismo.} (para UTF-32 existen más posibilidades de ordenación de los bytes). Mientras tus documentos no dejen tu ordenador estás seguro ---las diferentes aplicaciones del mismo ordenador utilizarán la misma ordenación de bytes. Pero en el momento que transfieras los documentos entre sistemas, tal vez a través de Internet, vas a necesitar una forma de indicar el orden en el que se han almacenado los bytes. De otra forma el sistema que recibe los datos no tiene forma de saber si la secuencia de dos bytes \codigo{4E 2D} significa \codigo{U+4E2D} o \codigo{U+2D4E}.
+También existen algunos inconvenientes no tan obvios tanto en \codigo{UTF-32} y \codigo{UTF-8}. Los ordenadores de sistemas diferentes suelen almacenar los bytes de diferentes formas. Esto significa que el carácter \codigo{U+4E2D} podría almacenarse en \codigo{UTF-16} bien como \codigo{4E 2D} o como \codigo{2D 4E}, dependiendo de que el sistema sea ``big-endian'' o ``little-endian''\footnote{Almacene los bytes en orden o invirtiendo el mismo.} (para UTF-32 existen más posibilidades de ordenación de los bytes). Mientras tus documentos no dejen tu ordenador estás seguro ---las diferentes aplicaciones del mismo ordenador utilizarán la misma ordenación de bytes. Pero en el momento que transfieras los documentos entre sistemas, tal vez a través de Internet, vas a necesitar una forma de indicar el orden en el que se han almacenado los bytes. De otra forma el sistema que recibe los datos no tiene forma de saber si la secuencia de dos bytes \codigo{4E 2D} significa \codigo{U+4E2D} o \codigo{U+2D4E}.
 
 Para resolver \emph{este} problema, las codificaciones multibyte de Unicode definen el ``Byte Orden Mark'' (BOM)\footnote{Nota del traductor: Marca de ordenación de bytes.}, que es un carácter especial no imprimible que se puede incluir al comienzo de tu documento para indica qué ordenación de bytes tiene el documento. Para \codigo{UTF-16} la marca de ordenación de bytes es \codigo{U+FEFF}, por lo que si recibes un documento \codigo{UTF-16} que comienza con los bytes \codigo{FF FE}, ya sabes en qué forma vienen ordenados los bytes; si comienza con \codigo{FE FF} sabes que el orden es el contrario.
 
@@ -98,7 +98,7 @@ En Python 3 todas las cadenas de texto son secuencias de caracteres Unicode. En 
 
 \item \emph{Línea 4:} De la misma forma que puedes obtener elementos individuales de una lista, puedes obtener caracteres individuales de una cadena mediante la notación de índices.
 
-\item \emph{Línea 6:} Como con las listas y tuplas, puedes contatenar las cadenas utilizando el operador \codigo{+}.
+\item \emph{Línea 6:} Como con las listas y tuplas, puedes concatenar las cadenas utilizando el operador \codigo{+}.
 
 \end{enumerate}
 
@@ -198,7 +198,7 @@ En el ejemplo anterior se muestra el ejemplo más simple, aquél en el que los c
 
 \item \emph{Línea 2:} En lugar de ejecutar una función del módulo \codigo{parahumanos} únicamente estás capturando una de las estructuras de datos que define; la lista de sufijos que representan las potencias de 1000.
 
-\item \emph{Línea 5:} Esta línea parece complicada, pero no lo es. \codigo{\{0\}} representa el primer párametro del método \codigo{format()}, \codigo{mis\_sufijos}. Por eso \codigo{\{0[0]\}} se refiere al primer elemento de la lista que esté definida como el primer parámetro del método \codigo{format()}: \codigo{'KB'}. Mientras que \codigo{\{0[1]\}} se refiere al segundo elemento de la misma lista: \codigo{'MB'}. Todo lo que está fuera de las llaves ---incluido el \codigo{1000}, los signos de igual, y los espacios--- quedan sin tocar. El resultado final es: \codigo{'1000KB = 1MB'}.
+\item \emph{Línea 5:} Esta línea parece complicada, pero no lo es. \codigo{\{0\}} representa el primer parámetro del método \codigo{format()}, \codigo{mis\_sufijos}. Por eso \codigo{\{0[0]\}} se refiere al primer elemento de la lista que esté definida como el primer parámetro del método \codigo{format()}: \codigo{'KB'}. Mientras que \codigo{\{0[1]\}} se refiere al segundo elemento de la misma lista: \codigo{'MB'}. Todo lo que está fuera de las llaves ---incluido el \codigo{1000}, los signos de igual, y los espacios--- quedan sin tocar. El resultado final es: \codigo{'1000KB = 1MB'}.
 
 \end{enumerate}
 
@@ -326,7 +326,8 @@ Pongamos un caso muy común. Supón que tienes una cadena de texto en forma de p
 ['usuario=pilgrim', 'basededatos=master', 'clave=PapayaWhip']
 >>> una_lista_de_listas = [v.split('=', 1) for v in una_lista]
 >>> una_lista_de_listas
-[['usuario', 'pilgrim'], ['basededatos', 'master'], ['clave', 'PapayaWhip']]
+[['usuario', 'pilgrim'], ['basededatos', 'master'],
+ ['clave', 'PapayaWhip']]
 >>> a_dict = dict(una_lista_de_listas)
 >>> a_dict
 {'clave': 'PapayaWhip', 'usuario': 'pilgrim', 'basededatos': 'master'}
@@ -339,12 +340,12 @@ Pongamos un caso muy común. Supón que tienes una cadena de texto en forma de p
 
 \item \emph{Línea 5:} Ahora tenemos una lista de cadenas, cada una de ellas con una clave seguida del símbolo \codigo{=} y de un valor. Podemos utilizar las listas por comprensión para iterar sobre esta lista y dividir cada una de estas cadenas de texto en dos cadenas utilizando el método \codigo{split} pasándole un segundo parámetro que indica que únicamente utilice la primera ocurrencia del carácter separador (En teoría una cadena podría tener más de un símbolo igual si el valor, a su vez, contiene también el símbolo igual, por ejemplo: \codigo{'clave=valor=cero'}, con lo que \codigo{'clave=valor=cero'.split('=')} daría como resultado \codigo{['clave', 'valor', 'cero']}).
 
-\item \emph{Línea 8:} Finalmente, Python puede convertir esa lista de listas en un diccionario con solo pasarla como parámetro a la función \codigo{dict()}.
+\item \emph{Línea 9:} Finalmente, Python puede convertir esa lista de listas en un diccionario con solo pasarla como parámetro a la función \codigo{dict()}.
 
 \end{enumerate}
 
 \begin{quote}
-El ejemplo anterior, explica un caso que se parece a lo que habría que hacer para reconocer los parámetros de una \codigo{URL}. pero en la vida real, el reconocimiento de los parámetros de una \codigo{URL} es más complejo. Si vas a tener que reconocer los parámetros que recibes mediante una \codigo{URL} utiliza la función de la librería \codigo{urlib.parse} denominada \codigo{parse\_qs()}\footnote{\href{http://docs.python.org/3.1/library/urllib.parse.html\#urllib.parse.parse\_qs}{http://docs.python.org/3.1/library/urllib.parse.html\#urllib.parse.parse\_qs}}, que reconoce los casos más complejos.
+El ejemplo anterior, explica un caso que se parece a lo que habría que hacer para reconocer los parámetros de una \codigo{URL}. Pero en la vida real, el reconocimiento de los parámetros de una \codigo{URL} es más complejo. Si vas a tener que reconocer los parámetros que recibes mediante una \codigo{URL} utiliza la función de la librería \codigo{urlib.parse} denominada \codigo{parse\_qs()}\footnote{\href{http://docs.python.org/3.1/library/urllib.parse.html\#urllib.parse.parse\_qs}{http://docs.python.org/3.1/library/urllib.parse.html\#urllib.parse.parse\_qs}}, que reconoce los casos más complejos.
 \end{quote}
 
 \subsection{Troceado de cadenas}
@@ -373,7 +374,7 @@ Cuando ya has definido una cadena puedes recuperar cualquier parte de ella crean
 
 \item \emph{Línea 4:} Como sucede con las listas, puedes utilizar índices negativos para seleccionar.
 
-\item \emph{Línea 6:} Las cadenas también comienzan a contar en cero, por lo que \codigo{una\_cadena[0:2]} devuelve los dos primeros elementos de la cadena, comenzando en la posición \codigo{una\_cadena[0]} hasta la posición \codigo{una\_cadena[2]}, pero sin incluirla.
+\item \emph{Línea 6:} Las cadenas también comienzan a contar en cero, por lo que \codigo{una\_\allowbreak cadena[0:2]} devuelve los dos primeros elementos de la cadena, comenzando en la posición \codigo{una\_cadena[0]} hasta la posición \codigo{una\_cadena[2]}, pero sin incluirla.
 
 \item \emph{Línea 8:} Si el índice de la parte izquierda vale \codigo{0} puedes omitirlo. De este modo, \codigo{una\_cadena[:23]} es lo mismo que \codigo{una\_cadena[0:18]}. Ya que en ausencia del primer índice se asume el número \codigo{0}.
 
@@ -422,7 +423,7 @@ TypeError: 'bytes' object does not support item assignment
 
 \item \emph{Línea 13:} Como sucede con las listas y cadenas, puedes utilizar la notación de índices para obtener bytes individuales del objeto \codigo{bytes}. Los elementos individuales de una cadena son de tipo cadena; los elementos individuales de un objeto \codigo{bytes} son números enteros. Específicamente, enteros entre 0 y 255.
 
-\item \emph{Línea 15:} Un objeto \codigo{bytes} es inmutable; no puedes asignar bytes individuales. Si necesitas modificar bytes individuales de un objeto \codigo{bytes}, es necesario particionar y concatener para crear un nuevo objeto \codigo{bytes} que contenga los elementos deseados. La alternativa es convertir el objeto \codigo{bytes} en un \codigo{bytearray} que sí permite modificación.
+\item \emph{Línea 15:} Un objeto \codigo{bytes} es inmutable; no puedes asignar bytes individuales. Si necesitas modificar bytes individuales de un objeto \codigo{bytes}, es necesario particionar y concatenar para crear un nuevo objeto \codigo{bytes} que contenga los elementos deseados. La alternativa es convertir el objeto \codigo{bytes} en un \codigo{bytearray} que sí permite modificación.
 
 \end{enumerate}
 
@@ -473,7 +474,7 @@ TypeError: Can't convert 'bytes' object to str implicitly
 
 \item \emph{Línea 3:} No puedes concatenar bytes y cadenas. Son dos tipos de dato diferentes.
 
-\item \emph{Línea 7:} No puedes contar las veces que aparece una secuencia de bytes en una cadena, porque no existen bytes en una cadena. Una cadena es una secuencia de caracteres. Tal vez lo que querías contar era las veces que aparece la cadena que obtendrías después de haber decodificado la secuencia de bytes interpretándola a partir de una tabla de codificación de caracteres particular. Si es así, debes decirlo explícitamente. Python 3 no convertirá implicítamente bytes en cadenas o cadenas en bytes.
+\item \emph{Línea 7:} No puedes contar las veces que aparece una secuencia de bytes en una cadena, porque no existen bytes en una cadena. Una cadena es una secuencia de caracteres. Tal vez lo que querías contar era las veces que aparece la cadena que obtendrías después de haber decodificado la secuencia de bytes interpretándola a partir de una tabla de codificación de caracteres particular. Si es así, debes decirlo explícitamente. Python 3 no convertirá implícitamente bytes en cadenas o cadenas en bytes.
 
 \item \emph{Línea 11:} Por una sorprendente coincidencia esta línea de código dice ``cuenta las ocurrencias de la cadena que se obtiene después de decodificar la secuencia de bytes en esta tabla de caracteres particular (ASCII)''. 
 
