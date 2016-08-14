@@ -22,7 +22,7 @@ Bienvenido a Python 3. ¡Vamos a mojarnos! En este capítulo, vas a instalar la 
 
 Lo primero que necesitas hacer es instalar Python 3.
 
-Si estás utilizando una sesión en un servidor remoto (posiblemente a través de Internet), el administrador del servidor puede que ya lo haya instalado por ti. Si estás utilizando Linux\footnote{Nota del Traductor: El nombre correcto del sistema operativo Linux es GNU/Linux, no obstante, por comodidad, en este libro se utilizará únicamente Linux para mayor comodidad} en casa, puede que también lo tengas ya instalado, aunque actualmente\footnote{año 2009} la mayor parte de las distribuciones de Linux vienen con Python 2 instalado (como verás en este capítulo, puedes tener simultáneamente más de una versión de Python en tu ordenador sin problemas). En los Mac OS X se incluye una versión de línea de comando de Python 2, pero no Python 3. Microsoft Windows no trae ninguna versión de Python. Pero ¡no te preocupes! siempre puedes instalarlo tú mismo, tengas el sistema operativo que tengas.
+Si estás utilizando una sesión en un servidor remoto (posiblemente a través de Internet), el administrador del servidor puede que ya lo haya instalado por ti. Si estás utilizando Linux\footnote{Nota del Traductor: El nombre correcto del sistema operativo Linux es GNU/Linux, no obstante, por comodidad, en este libro se utilizará únicamente Linux} en casa, puede que también lo tengas ya instalado, aunque actualmente\footnote{año 2009} la mayor parte de las distribuciones de Linux vienen con Python 2 instalado (como verás en este capítulo, puedes tener simultáneamente más de una versión de Python en tu ordenador sin problemas). En los Mac OS X se incluye una versión de línea de comando de Python 2, pero no Python 3. Microsoft Windows no trae ninguna versión de Python. Pero ¡no te preocupes! Siempre puedes instalarlo tú mismo, tengas el sistema operativo que tengas.
 
 La forma más sencilla para comprobar si tienes instalado Python 3 en tu sistema Linux o Mac OS X es abrir un terminal de línea de comandos. Para ello debes hacer lo siguiente:
 
@@ -78,7 +78,7 @@ La descarga exacta varía en función de las actualizaciones. Por eso he puesto 
   \end{center}
 \end{figure}
 
-Cuando la descarga finalize, pulsa (doble click) sobre el fichero \codigo{.msi} que has descargado. Windows mostrará una alerta de seguridad (figura~\ref{fig01}) para avisarte de que estás intentando ejecutar un fichero que instalará cosas en tu ordenador. El fichero instalador de Python está firmado electrónicamente por la \href{http://www.python.org/psf/}{\emph{Python Software Foundation}}, que es la organización sin ánimo de lucro que supervisa el desarrollo de Python. ¡No aceptes imitaciones!
+Cuando la descarga finalice, pulsa (doble click) sobre el fichero \codigo{.msi} que has descargado. Windows mostrará una alerta de seguridad (figura~\ref{fig01}) para avisarte de que estás intentando ejecutar un fichero que instalará cosas en tu ordenador. El fichero instalador de Python está firmado electrónicamente por la \href{http://www.python.org/psf/}{\emph{Python Software Foundation}}, que es la organización sin ánimo de lucro que supervisa el desarrollo de Python. ¡No aceptes imitaciones!
 
 Pulsa el botón \codigo{Run} o \codigo{Ejecutar}\footnote{dependerá del idioma en el que se encuentre tu sistema operativo} para que se inicie la ejecución del programa instalador de Python.
 
@@ -263,7 +263,7 @@ Si eliges una instalación personalizada (has pulsado el botón \codigo{Customiz
 \begin{itemize}
 \item \textbf{Python Framework}. Es el núcleo de Python, por lo que está seleccionado y deshabilitado con el fin de que no puedas cambiarlo.
 \item \textbf{Aplicaciones GUI} incluye \codigo{IDLE}, la consola interactiva gráfica de Python que usaremos a lo largo de todo el libro. Te recomiendo encarecidamente que mantengas esta opción seleccionada.
-\item \textbf{Herramientas de línea de comandos}, que incluyen la aplicación \codigo{python3}. También te recomiendo que mantegas esta opción seleccionada.
+\item \textbf{Herramientas de línea de comandos}, que incluyen la aplicación \codigo{python3}. También te recomiendo que mantengas esta opción seleccionada.
 \item \textbf{Documentación de Python}, que contiene mucha de la información disponible en \href{http://docs.python.org/}{docs.python.org}. Muy recomendables si tienes previsto estar desconectado de Internet.
 \item \textbf{Actualizador del perfil de la consola}, que controla si actualizas tu perfil de consola (utilizado por la aplicación \codigo{Terminal.app}) con el fin de que la versión de Python que estás instalando se encuentre en el camino de búsqueda de la consola. Para los propósitos de este libro, esta opción no es necesario que la instales.
 \item \textbf{Actualizar la versión de Python del sistema}. Esta opción no debería modificarse. Le dice a tu ordenador Mac que utilice Python 3 como versión por defecto para todos los scripts, incluido aquellos que vienen con el sistema operativo. Seleccionar esta opción podría producir efectos muy negativos en tu sistema, puesto que la mayor parte de los scripts del sistema operativo están escritos para Python 2, y pueden fallar en Python 3.
@@ -309,7 +309,7 @@ Pulsa el botón \codigo{Close} para salir del instalador.
   \end{center}
 \end{figure}
 
-Si no has cambiado la ubicación de la instalación, \codigo{Python 3.1.*} se habrá instalado en una carpeta denominada \codigo{Python 3.1} (figura~\ref{figm010}) dentro de la carpeta \codigo{/Aplications}. El elemento más importante en ella es \codigo{IDLE}, que es la consola gráfica interactiva de Python.
+Si no has cambiado la ubicación de la instalación, \codigo{Python 3.1.*} se habrá instalado en una carpeta denominada \codigo{Python 3.1} (figura~\ref{figm010}) dentro de la carpeta \mbox{\codigo{/Applications}}. El elemento más importante en ella es \codigo{IDLE}, que es la consola gráfica interactiva de Python.
 
 Haz doble click con el cursor sobre \codigo{IDLE} para ejecutar la consola de Python.
 
@@ -335,7 +335,7 @@ Las diferentes distribuciones existentes hoy día de Linux suelen disponer de va
   \end{center}
 \end{figure}
 
-Cuando ejecutas por primera vez el programa para \codigo{Añadir/Quitar} aplicaciones, se muestra una lista de aplicaciones preseleccionadas en diferentes categorías. Algunas ya se encuentran instaladas en tu ordenador, pero la mayoría no. Puesto que este repositorio consta de más de 10.000 aplicaciones, encontrar la que se desea puede ser difícil, para facilitar la labor es posible aplicar diferentes filtros que limitan las aplicaciones que se muestran en la lista de pantalla. El filtro por defecto es ``aplicaciones mantenidas por Canonical'' que es el pequeño subconjunto formado por aquellas apliicaciones que se mantienen oficialmente por parte de Canonical, la compañía que distribuye y mantiene Ubuntu Linux.
+Cuando ejecutas por primera vez el programa para \codigo{Añadir/Quitar} aplicaciones, se muestra una lista de aplicaciones preseleccionadas en diferentes categorías. Algunas ya se encuentran instaladas en tu ordenador, pero la mayoría no. Puesto que este repositorio consta de más de 10.000 aplicaciones, encontrar la que se desea puede ser difícil, para facilitar la labor es posible aplicar diferentes filtros que limitan las aplicaciones que se muestran en la lista de pantalla. El filtro por defecto es ``aplicaciones mantenidas por Canonical'' que es el pequeño subconjunto formado por aquellas aplicaciones que se mantienen oficialmente por parte de Canonical, la compañía que distribuye y mantiene Ubuntu Linux.
 
 Como Python 3 no está en este subconjunto de aplicaciones, el primer paso es desplegar los filtros (Mostrar:) y seleccionar \codigo{Todas las aplicaciones libres} (figura~\ref{figu01}).
 
@@ -428,7 +428,7 @@ Continúa en el apartado~\ref{sec:shell}
 
 \section{Instalación en otras plataformas}
 
-Python 3 está disponible en otras muchas plataformas. En particular, está disponible prácticamente en todas las distribuciones Linux, BSD y Sun Solaris. Por ejemplo, RedHat Linux utiliza el gestor de paquetes \codigo{yum}; FreeBSD tiene su propia colección de \href{http://www.freebsd.org/ports/}{paquetes}, y Solaris tiene el gestor de paquetes \codigo{pkgadd} y otros. Una rápida búsqueda en Internet de los términos Python 3 + emph{tu sistema operativo} te mostrará si existe un paquete de Python 3 disponible para tu sistema, y cómo instalarlo.
+Python 3 está disponible en otras muchas plataformas. En particular, está disponible prácticamente en todas las distribuciones Linux, BSD y Sun Solaris. Por ejemplo, RedHat Linux utiliza el gestor de paquetes \codigo{yum}; FreeBSD tiene su propia colección de \href{http://www.freebsd.org/ports/}{paquetes}, y Solaris tiene el gestor de paquetes \codigo{pkgadd} y otros. Una rápida búsqueda en Internet de los términos Python 3 + \emph{tu sistema operativo} te mostrará si existe un paquete de Python 3 disponible para tu sistema, y cómo instalarlo.
 
 \section{Uso de la consola interactiva de Python}\label{sec:shell}
 
@@ -449,7 +449,7 @@ Los tres símbolos de \emph{mayor que}, \codigo{$>>>$}, representan el \emph{pro
 
 Lo que tienes que teclear es \codigo{1 + 1}.  En la consola puedes teclear cualquier expresión o sentencia válida del lenguaje. ¡No seas tímido, no muerde! Lo peor que puede pasarte es que Python muestre un mensaje de error, si tecleas algo que no entiende. Las sentencias se ejecutan inmediatamente (después de que pulses la tecla \codigo{INTRO}); las expresiones se calculan en el momento, y la consola imprime en pantalla el resultado.
 
-\codigo{2} es el resultado de la expresión. Como \codigo{1 + 1} es una expresión válida en el lenguaje Python, al pulsar la tecla \codigo{INTRO} Python evalúa la expresióne imprime el resultado, que en este caso es \codigo{2}.
+\codigo{2} es el resultado de la expresión. Como \codigo{1 + 1} es una expresión válida en el lenguaje Python, al pulsar la tecla \codigo{INTRO} Python evalúa la expresión e imprime el resultado, que en este caso es \codigo{2}.
 
 Vamos a probar otro ejemplo.
 
@@ -462,7 +462,7 @@ Vamos a probar otro ejemplo.
 
 Muy sencillo, ¿no?
 
-Pero hay muchas otras cosas que puedes hacer en la consola de Python. Si en algún momento te bloqueas ---no recuerdas una sentencia, o no recuerdas los argumentos que debes pasar a una función determinada--- puedes obtener ayuda en la propia consola. Simplemente teclea \codigo{help} y pulsa \codigo{ENTER}.
+Pero hay muchas otras cosas que puedes hacer en la consola de Python. Si en algún momento te bloqueas ---no recuerdas una sentencia, o no recuerdas los argumentos que debes pasar a una función determinada--- puedes obtener ayuda en la propia consola. Simplemente teclea \codigo{help} y pulsa \codigo{INTRO}.
 
 \begin{listing}
 \begin{verbatim}
@@ -471,7 +471,7 @@ Type help() for interactive help, or help(object) for help about object.
 \end{verbatim}
 \end{listing}
 
-Exiten dos modos de ayuda:
+Existen dos modos de ayuda:
 \begin{itemize}
 \item Puedes solicitar ayuda de un objeto concreto, lo que muestra la documentación del mismo y vuelve al \codigo{prompt} de la consola de Python. 
 \item También puedes entrar en el \emph{modo ayuda}, en el que en lugar de evaluar expresiones de Python, puedes teclear palabras reservadas del lenguaje o nombres de sentencias y la consola imprime lo que sepa sobre ellas.
