@@ -31,11 +31,11 @@ Si has crecido en un país de habla inglesa o has aprendido inglés en el ámbit
 
 \item Si una palabra termina en \codigo{S}, \codigo{X} o \codigo{Z} añádele \codigo{ES}. \emph{Bass} se convierte en \emph{basses}, \emph{fax} en \emph{faxes} y \codigo{waltz} en \codigo{waltzes}.
 
-\item Si una palabra termina en una \codigo{H} sonora, añade \codigo{ES}, si termina en una \codigo{H} muda, añade \codigo{S}. ¿Qué es una \codigo{H} sonora? una que se combina con otras letras para crear un sonido que se puede escuchar. Por eso \emph{coach} se convierte en \emph{coaches} y \codigo{rash} en \codigo{rashes}, porque se pronuncian tanto la \codigo{CH} como la \codigo{SH}. Pero \emph{cheetah} se convierte en \emph{cheetahs}, puesto que la \codigo{H} es muda.
+\item Si una palabra termina en una \codigo{H} sonora, añade \codigo{ES}, si termina en una \codigo{H} muda, añade \codigo{S}. ¿Qué es una \codigo{H} sonora? Una que se combina con otras letras para crear un sonido que se puede escuchar. Por eso \emph{coach} se convierte en \emph{coaches} y \codigo{rash} en \codigo{rashes}, porque se pronuncian tanto la \codigo{CH} como la \codigo{SH}. Pero \emph{cheetah} se convierte en \emph{cheetahs}, puesto que la \codigo{H} es muda.
 
 \item Si una palabra termina en una \codigo{Y} que suene como \codigo{I}, se cambia la \codigo{Y} por \codigo{IES}; si la \codigo{Y} se combina con una vocal para de otro modo, simplemente añade una \codigo{S}. Por eso \emph{vacancy} se convierte en \emph{vacancies} y \codigo{day} se convierte en \codigo{days}.
 
-\item Si todo lo demás falla, simplemente añadie uan \codigo{S} y cruza los dedos por que hayas acertado.
+\item Si todo lo demás falla, simplemente añade una \codigo{S} y cruza los dedos por que hayas acertado.
 
 \end{itemize}
 
@@ -47,7 +47,7 @@ Vamos a diseñar una librería de Python que pase a plural los nombres ingleses 
 
 \section{Lo sé, ¡vamos a usar expresiones regulares!}
 
-Así que estás analizando palabras, lo que, al menos en inglés, significa que estás analizando cadenas de caracteres. Tienes reglas que requieren la existencida de diferentes combinaciones de caracteres, y después de encontrarlas necesitas hacerles modificaciones. ¡Esto parece un buen trabajo para las expresiones regulares!
+Así que estás analizando palabras, lo que, al menos en inglés, significa que estás analizando cadenas de caracteres. Tienes reglas que requieren la existencia de diferentes combinaciones de caracteres, y después de encontrarlas necesitas hacerles modificaciones. ¡Esto parece un buen trabajo para las expresiones regulares!
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=False]
@@ -290,7 +290,7 @@ def build_match_and_apply_functions(pattern, search, replace):
 
 \begin{enumerate}
 
-\item \emph{Línea 3:} \codigo{build\_match\_and\_apply\_functions} es una función que construye otras funciones dinámicamente. Toma los parámetros y define la función \codigo{matches\_rule()} que llama a \codigo{re.search()} con el \codigo{pattern} que se haya pasado y el parámetro \codigo{word} que se pasará a la función cuando se llame en el futuro. ¡Vaya!
+\item \emph{Línea 3:} \codigo{build\_match\_and\_apply\_functions} es una función que construye otras funciones dinámicamente. Toma los parámetros y define la función \codigo{matches\_\allowbreak rule()} que llama a \codigo{re.search()} con el \codigo{pattern} que se haya pasado y el parámetro \codigo{word} que se pasará a la función cuando se llame en el futuro. ¡Vaya!
 
 \item \emph{Línea 6:} La construcción de la función de sustitución es similar. Es una función que toma un parámetro \codigo{word} y llama a \codigo{re.sub()} con él y los parámetros \codigo{search} y \codigo{replace} que se pasaron a la función constructora. Esta técnica de utilizar los valores de los parámetros exteriores a una función dentr ode una función dinámica se denomina \emph{closures}\footnote{Nota del Traductor: en español se utiliza la palabra ``cierre'' para referirse a este término.}. En el fondo se están definiendo constantes que se utilizan dentro detro de la función que se está construyendo: la función construida toma un único parámetro (\codigo{word}) y los otros dos valores utilizados (\codigo{search} y \codigo{replace}) son los que tuvieran almacenados en el momento en que se definió la función.
 
@@ -398,7 +398,8 @@ def rules(rules_filename):
     with open(rules_filename, encoding='utf-8') as pattern_file:
         for line in pattern_file:
             pattern, search, replace = line.split(None, 3)
-            yield build_match_and_apply_functions(pattern, search, replace)
+            yield build_match_and_apply_functions(pattern, search,
+                                                  replace)
 
 def plural(noun, rules_filename='plural5-rules.txt'):
     for matches_rule, apply_rule in rules(rules_filename):
@@ -510,7 +511,8 @@ def rules(rules_filename):
     with open(rules_filename, encoding='utf-8') as pattern_file:
         for line in pattern_file:
             pattern, search, replace = line.split(None, 3)
-            yield build_match_and_apply_functions(pattern, search, replace)
+            yield build_match_and_apply_functions(pattern, search,
+                                                  replace)
 
 def plural(noun, rules_filename='plural5-rules.txt'):
     for matches_rule, apply_rule in rules(rules_filename):
@@ -524,9 +526,9 @@ def plural(noun, rules_filename='plural5-rules.txt'):
 
 \item \emph{Línea 4:} No hay ninguna magia aquí. Recuerda que las líneas del fichero de reglas tienen tres valores separados por espacios en blanco, por lo que utilizas \codigo{line.split(None, 3)} para retornar las tres ``columnas'' y asignarlas a las tres variables locales.
 
-\item \emph{Línea 5:} \emph{Y lo siguiente es un \codigo{yield}}. ¿Qué es lo que se cede? las dos funciones que se construyen dinámicamente con la ya conocida \codigo{build\_match\_and\_apply\_functions}, que es idéntica a los ejemplos anteriores. En otras palabras, \codigo{rules()} es un generador que va retornando funciones de búsqueda y sustitución \emph{bajo demanda}.
+\item \emph{Línea 5:} \emph{Y lo siguiente es un \codigo{yield}}. ¿Qué es lo que se cede? las dos funciones que se construyen dinámicamente con la ya conocida \codigo{build\_match\_and\_apply\_\allowbreak functions}, que es idéntica a los ejemplos anteriores. En otras palabras, \codigo{rules()} es un generador que va retornando funciones de búsqueda y sustitución \emph{bajo demanda}.
 
-\item \emph{Línea 8:} Puesto que \codigo{rules()} es un generador, puedes utilizarlo directamente en un bucle \codigo{for}. La primera vez, el bucle \codigo{for} llama a la función \codigo{rules()}, que abre el fichero de patrones, lee la primera línea, construye de forma dinámica las funciones de búsqueda y sustitución de los patrones de esa línea y cede el control devolviendo ambas funciones. La segunda vuelta en el bucle \codigo{for} continúa en el lugar exacto en el que se cedió el control por parte del generador \codigo{rules()}. Lo primero que hará es leer la siguiente línea del fichero (que continúa abierto), construirá dinámicamente otras dos funciones de búsqueda y sustitución basadas en los patrones de esa línea del fichero y, de nuevo, cederá el control devolviendo las dos nuevas funciones.
+\item \emph{Línea 9:} Puesto que \codigo{rules()} es un generador, puedes utilizarlo directamente en un bucle \codigo{for}. La primera vez, el bucle \codigo{for} llama a la función \codigo{rules()}, que abre el fichero de patrones, lee la primera línea, construye de forma dinámica las funciones de búsqueda y sustitución de los patrones de esa línea y cede el control devolviendo ambas funciones. La segunda vuelta en el bucle \codigo{for} continúa en el lugar exacto en el que se cedió el control por parte del generador \codigo{rules()}. Lo primero que hará es leer la siguiente línea del fichero (que continúa abierto), construirá dinámicamente otras dos funciones de búsqueda y sustitución basadas en los patrones de esa línea del fichero y, de nuevo, cederá el control devolviendo las dos nuevas funciones.
 
 \end{enumerate}
 
