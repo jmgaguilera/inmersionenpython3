@@ -10,7 +10,7 @@ Nivel de dificultad:\diflll
 
 \begin{citaCap}
 ``Algunas personas, cuando se enfrentan a un problema, piensan: \\
-"¡Ya sé! usaré expresiones regulares". Y así, acaban \\
+"¡Ya sé! Usaré expresiones regulares". Y así, acaban \\
 enfrentándose a dos problemas.'' \\
 ---\href{http://www.jwz.org/hacks/marginal.html}{Jamie Zawinski}
 \end{citaCap}
@@ -21,7 +21,7 @@ Todo lenguaje de programación moderno dispone de funciones internas para trabaj
 
 Si tu objetivo se cumple con estos métodos deberías usarlos. Son rápidos, simples y sencillos de leer; y hay mucho que decir a favor del código legible, simple y rápido. Pero si te descubres escribiendo un montón de funciones para manipular cadenas con sentencias \codigo{if} para contemplar casos especiales, o te encuentras encadenando llamadas a \codigo{split()} y \codigo{join()} para trocear tus cadenas de texto, puede que necesites utilizar \emph{expresiones regulares}.
 
-Las expresiones regualres son una forma poderosa y (en su mayor parte) estándar de búsqueda, reemplazo y análisis de texto con patrones de caracteres complejos. Aunque la sintaxis de las expresiones regulares es compacta y muy diferente del código \emph{normal}, el resultado puede resultar ser más legible que una solución manual que utilice un montón de funciones de cadenas de texto encadenadas. Incluso existe un modo estándar de incluir comentarios dentro de las expresiones regulares, por lo que puedes incluir una documentación detallada dentro de ellas.
+Las expresiones regulares son una forma poderosa y (en su mayor parte) estándar de búsqueda, reemplazo y análisis de texto con patrones de caracteres complejos. Aunque la sintaxis de las expresiones regulares es compacta y muy diferente del código \emph{normal}, el resultado puede resultar ser más legible que una solución manual que utilice un montón de funciones de cadenas de texto encadenadas. Incluso existe un modo estándar de incluir comentarios dentro de las expresiones regulares, por lo que puedes incluir una documentación detallada dentro de ellas.
 
 \begin{quote}
 Si has utilizado expresiones regulares en otros lenguajes (como Perl, JavaScript o PHP), la sintaxis de Python te será muy familiar. Puedes limitarte a leer las funciones disponibles y sus parámetros en el resumen de la documentación del \href{http://docs.python.org/dev/library/re.html\#module-contents}{módulo \codigo{re}}\footnote{\href{http://docs.python.org/dev/library/re.html\#module-contents}{http://docs.python.org/dev/library/re.html\#module-contents}}
@@ -61,7 +61,7 @@ Esta serie de ejemplos se inspira en un problema de la vida real que tuve en en 
 
 \end{enumerate}
 
-\cajaTexto{\^ encuentra el comienzo de una cadena. \$ encuentra el final.}
+\cajaTexto{El símbolo \^{} encuentra el comienzo de una cadena, \$ encuentra el final.}
 
 Continuando con mi relato sobre la depuración de las direcciones postales, pronto descubrí que el ejemplo anterior, encontrar \codigo{'ROAD'} al final de la dirección, no era suficiente; no todas las direcciones incluían la destinación de la calle. Algunas direcciones simplemente terminaban con el nombre de la calle. La mayor parte de las veces no pasaba nada, pero si el nombre de la calle era \codigo{'BROAD'} la expresión regular encontraba \codigo{'ROAD'} al final de la cadena como parte de la palabra, que no era lo que quería yo.
 
@@ -468,7 +468,7 @@ AttributeError: 'NoneType' object has no attribute 'groups'
 
 \item \emph{Línea 1:} Las expresiones regulares siempre se leen de izquierda a derecha. Esta detecta el comienzo de la línea y luego \codigo{($\backslash$d\{3\})}. ¿Qué es \codigo{($\backslash$d\{3\})}? Bueno, \codigo{$\backslash$d} significa ``cualquier dígito numérico'' (0 a 9). El \codigo{\{3\}} significa que ``coincida exactamente tres veces'' (tres dígitos en este caso), es una variación de la sintaxis \codigo{\{n,m\}} que viste antes. Al ponerlo todo entre paréntesis se está diciendo ``identifica exactamente tres dígitos numéricos y \emph{recuérdalos como un grupo para que te pueda preguntar por ellos más tarde}''
 
-\item \emph{Línea 2:} Para acceder a los grupos, que se guardan durante la búsqueda de la coincidencia de la cadena con expresión regular, se utiliza el método \codigo{groups()} en el objeto que devuelve el método \codigo{search()}. Este métod (\codigo{groups()}) retornará una tupla con tantos elementos como grupos se definieran en la expresion regular. En este caso se han definido tres grupos, dos con tres dígitos y un tercero con cuatro.
+\item \emph{Línea 2:} Para acceder a los grupos, que se guardan durante la búsqueda de la coincidencia de la cadena con expresión regular, se utiliza el método \codigo{groups()} en el objeto que devuelve el método \codigo{search()}. Este método (\codigo{groups()}) retornará una tupla con tantos elementos como grupos se definieran en la expresión regular. En este caso se han definido tres grupos, dos con tres dígitos y un tercero con cuatro.
 
 \item \emph{Línea 4:} Esta expresión regular no es perfecta, porque no es capaz de manejar números telefónicos con extensiones. Por eso será necesario expandir la expresión regular.
  
@@ -564,7 +564,8 @@ El siguiente ejemplo muestra como manejar los caracteres previos al número de t
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=False]
->>> phonePattern = re.compile(r'^\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+>>> phonePattern = re.compile(
+...                   r'^\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
 >>> phonePattern.search('(800)5551212 ext. 1234').groups()
 ('800', '555', '1212', '1234')
 >>> phonePattern.search('800-555-1212').groups()
@@ -576,13 +577,13 @@ El siguiente ejemplo muestra como manejar los caracteres previos al número de t
 
 \begin{enumerate}
 
-\item \emph{Línea 1:} Esto es igual que en el ejemplo anterior salvo que ahora estás buscando \codigo{$\backslash$D*}, cero o más caracteres numéricos, antes del primero grupo (el código de área). Observa que no se ``recuerdan'' esos caracteres, no están en un grupo (no están entre paréntesis). Si aparecen, simplemente se saltan y luego se comienza a reconocer el codigo de área que será almacenado por la búsqueda (al encontrarse entre paréntesis). 
+\item \emph{Línea 1:} Esto es igual que en el ejemplo anterior salvo que ahora estás buscando \codigo{$\backslash$D*}, cero o más caracteres numéricos, antes del primero grupo (el código de área). Observa que no se ``recuerdan'' esos caracteres, no están en un grupo (no están entre paréntesis). Si aparecen, simplemente se saltan y luego se comienza a reconocer el código de área que será almacenado por la búsqueda (al encontrarse entre paréntesis). 
 
-\item \emph{Línea 2:} Ahora puedes reconocer satisfactoriamente el número de teléfono incluso con el paréntesis de la izquierda antes del código de área. El paréntesis de la derecha del código de área ya estaba controlado, se trata como un carácter no numérico y se detecta con el \codigo{$\backslash$D*} posterior al primer grupo.
+\item \emph{Línea 3:} Ahora puedes reconocer satisfactoriamente el número de teléfono incluso con el paréntesis de la izquierda antes del código de área. El paréntesis de la derecha del código de área ya estaba controlado, se trata como un carácter no numérico y se detecta con el \codigo{$\backslash$D*} posterior al primer grupo.
 
-\item \emph{Línea 4:} Solamente, para tener la seguridad de que no has roto nada que funcionase. Puesto que los caracteres iniciales son totalmente opcionales, primero detecta el comienzo de la cadena, luego cero caracteres no numéricos, luego un grupo de tres dígitos de área \codigo{(800)}, luego un carácter no numérico (el guión), luego un grupo de tres dígitos \codigo{(555)}, luego un carácter no numérico (el guión), luego un grupo de cuatro dígitos \codigo{(1212)}, luego cero caracteres no numéricos, luego un grupo de cero dígitos opcionales, para terminar con el final de la cadena.
+\item \emph{Línea 5:} Solamente, para tener la seguridad de que no has roto nada que funcionase. Puesto que los caracteres iniciales son totalmente opcionales, primero detecta el comienzo de la cadena, luego cero caracteres no numéricos, luego un grupo de tres dígitos de área \codigo{(800)}, luego un carácter no numérico (el guión), luego un grupo de tres dígitos \codigo{(555)}, luego un carácter no numérico (el guión), luego un grupo de cuatro dígitos \codigo{(1212)}, luego cero caracteres no numéricos, luego un grupo de cero dígitos opcionales, para terminar con el final de la cadena.
 
-\item \emph{Línea 6:} Por eso las expresiones regulares me hacen querer sacarme los ojos con un objeto punzante. ¿Porqué no funciona con este número de teléfono? Porque hay un \codigo{1} antes del código de área pero has asumido que todos los caracteres que van delante del código de área serán no numéricos (\codigo{$\backslash$D*}), ¡¡¡Aarggghhhh!!!
+\item \emph{Línea 7:} Por eso las expresiones regulares me hacen querer sacarme los ojos con un objeto punzante. ¿Porqué no funciona con este número de teléfono? Porque hay un \codigo{1} antes del código de área pero has asumido que todos los caracteres que van delante del código de área serán no numéricos (\codigo{$\backslash$D*}), ¡¡¡Aarggghhhh!!!
 
 \end{enumerate}
 
