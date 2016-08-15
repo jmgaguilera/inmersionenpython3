@@ -9,14 +9,14 @@
 Nivel de dificultad:\difllll
 
 \begin{citaCap}
-``Despues de haber tocado una vasta cantidad de notas y más notas. \\
+``Después de haber tocado una vasta cantidad de notas y más notas. \\
 es la simplicidad la que emerge como la recompensa coronada del arte.'' \\
 ---\href{http://en.wikiquote.org/wiki/Frédéric\_Chopin}{Frédéric Chopin}
 \end{citaCap}
 
 \section{Inmersión}
 
-A pesar tus mejores esfuerzos para escribir un conjunto amplio de pruebas uitarias, tendrás errores (bugs). ¿Qué significa que haya un error? Que nos falta un caso de prueba por escribir.
+A pesar tus mejores esfuerzos para escribir un conjunto amplio de pruebas unitarias, tendrás errores (bugs). ¿Qué significa que haya un error? Que nos falta un caso de prueba por escribir.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -75,7 +75,8 @@ FAIL: from_roman should fail with blank string
 ----------------------------------------------------------------------
 Traceback (most recent call last):
   File "romantest8.py", line 117, in test_blank
-    self.assertRaises(roman8.InvalidRomanNumeralError, roman8.from_roman, '')
+    self.assertRaises(roman8.InvalidRomanNumeralError,
+                      roman8.from_roman, '')
 AssertionError: InvalidRomanNumeralError not raised by from_roman
 
 ----------------------------------------------------------------------
@@ -116,7 +117,7 @@ def from_roman(s):
 
 \item \emph{Línea 3:} Solamente se necesitan dos líneas de código: una comprobación explícita por la cadena de texto vacía y la sentencia \codigo{raise}.
 
-\item \emph{Línea 6:} Creo que no lo he mencionado en ninguna otra parte del libro, por lo que te puede servir como tu última lección en formateo de cadenas de texto. Desde Python 3.1 puedes dejar de poner los valors numéricos cuando utilizas índices posicionales en el especificador de formatos. En lugar de utilizar el especificador de formato \codigo{\{0\}} para indicar el primer parámetro del método \codigo{format()}, puedes utilizar directamente \codigo{\{\}} y Python lo sustituirá por el índice posicional apropiado. Esto funciona para cualquier número de parámetros; el primer \codigo{\{\}} equivale a \codigo{\{0\}}, el segundo \codigo{\{\}} a \codigo{\{1\}} y así sucesivamente.
+\item \emph{Línea 6:} Creo que no lo he mencionado en ninguna otra parte del libro, por lo que te puede servir como tu última lección en formateo de cadenas de texto. Desde Python 3.1 puedes dejar de poner los valores numéricos cuando utilizas índices posicionales en el especificador de formatos. En lugar de utilizar el especificador de formato \codigo{\{0\}} para indicar el primer parámetro del método \codigo{format()}, puedes utilizar directamente \codigo{\{\}} y Python lo sustituirá por el índice posicional apropiado. Esto funciona para cualquier número de parámetros; el primer \codigo{\{\}} equivale a \codigo{\{0\}}, el segundo \codigo{\{\}} a \codigo{\{1\}} y así sucesivamente.
 
 \end{enumerate}
 
@@ -312,7 +313,7 @@ def from_roman(s):
 
 \begin{enumerate}
 
-\item \emph{Línea 3:} No necesitas hacer ningún cambio a la función \codigo{from\_roman()}. Lo único que hay que modificar es \codigo{roman\_numeral\_pattern}. Si observas detenidamente, lo primero que notarás es que he cambiado el valor máximo de caracteres \codigo{M} opcionales, para poner \codigo{4} donde antes había \codigo{3}. Esto permitirá la existencia de valores romanos de \codigo{4999}. La función \codigo{from\_roman()} es totalmente genérica. simplemente busca caracteres romanos y los va acumulando, sin preocuparse sobre las veces que se repite. La única razón por la que no permitía \codigo{MMMM} es que lo impedíamos expresamente en la comprobación contra la expresión regular.
+\item \emph{Línea 3:} No necesitas hacer ningún cambio a la función \codigo{from\_roman()}. Lo único que hay que modificar es \codigo{roman\_numeral\_pattern}. Si observas detenidamente, lo primero que notarás es que he cambiado el valor máximo de caracteres \codigo{M} opcionales, para poner \codigo{4} donde antes había \codigo{3}. Esto permitirá la existencia de valores romanos de \codigo{4999}. La función \codigo{from\_roman()} es totalmente genérica. Simplemente busca caracteres romanos y los va acumulando, sin preocuparse sobre las veces que se repite. La única razón por la que no permitía \codigo{MMMM} es que lo impedíamos expresamente en la comprobación contra la expresión regular.
 
 \item \emph{Línea 15:} La función \codigo{to\_roman()} solamente necesita un pequeño cambio en el rango de validación. Donde se comprobaba que el valor se encontrase en \codigo{0 < n < 4000}, ahora se comprueba que se cumpla \codigo{0 < n < 5000}. Y se modifica el mensaje de error que se eleva para reflejar el nuevo rango (\codigo{1...4999} en lugar de \codigo{1...3999}). No necesitas realizar más cambios a la función (Es capaz de añadir una \codigo{M} por cada millar que encuentra. La única razón por la que antes no funcionaba con \codigo{4000} es que la validación del rango de valores válidos lo impedía explícitamente).
 
@@ -347,7 +348,7 @@ Pasan todas las pruebas, paramos de codificar.
 
 Un conjunto amplio y exhaustivo de pruebas significa que nunca tienes que depender de un programador que dice ``Confía en mi''.
 
-\section{Rectorización}
+\section{Refactorización}
 
 Lo mejor de disponer de un conjunto de pruebas exhaustivo no es la sensación agradable que se obtiene cuando todas las pruebas pasan satisfactoriamente,ni la sensación de éxito cuando alguien te culpa de romper su código y \emph{pruebas} que no has sido tú. Lo mejor de las pruebas unitarias es que te dan la libertad de refactorizar el código sin ``piedad''.
 
@@ -432,7 +433,7 @@ build_lookup_tables()
 
 Se trata de una llamada a función pero no está rodeada de una sentencia \codigo{if}. No es un bloque \codigo{if \_\_name\_\_ == ``\_\_main\_\_''}, esta función se llama cuando el módulo se importa (Es importante conocer que los módulos únicamente se importan una vez, cuando se cargan en memoria la primera vez que se usan. Si importas de nuevo un módulo ya cargado, Python no hace nada. Por eso esta función únicamente se ejecuta la primera vez que importas este módulo.
 
-¿Qué es lo que hace la función \codigo{build\_lookup\_tables()}? me alegor de que me lo preguntes.
+¿Qué es lo que hace la función \codigo{build\_lookup\_tables()}? Me alegro de que me lo preguntes.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -466,7 +467,7 @@ def build_lookup_tables():
 
 \item \emph{Línea 19:} Esta línea de código llamará a la función \codigo{to\_roman()} redefinida, la que realmente calcula el número romano.
 
-\item \emph{Línea 20:} Una vez dispones del resultado (de la función \codigo{to\_roman()} redefinida), añaders el valor entero y su equivalente romano a las dos tablas de búsqueda.
+\item \emph{Línea 20:} Una vez dispones del resultado (de la función \codigo{to\_roman()} redefinida), añades el valor entero y su equivalente romano a las dos tablas de búsqueda.
 
 \end{enumerate}
 
