@@ -79,11 +79,11 @@ Esta clase \codigo{PapayaWhip} no define ningún método o atributos, pero es co
 La sentencia \codigo{pass} de Python es como una pareja vacía de llaves (\codigo{\{\}}) en Java o C.
 \end{quote}
 
-Muchas clases heredan de otras, pero esta no. Muchas clases definen métodos, pero esta no. No hay nada que tenga que tener obligatoriamente una clase de Python, salvo el nombre. En particular, los programadores de C++ pueden encontrar extraño que las clases de Python no tengan que tener constructores y destructores explicitos. Aunque no es obligatorio, las clases de Python pueden tener algo parecido a un constructor: el método \codigo{\_\_init\_\_()}.
+Muchas clases heredan de otras, pero esta no. Muchas clases definen métodos, pero esta no. No hay nada que tenga que tener obligatoriamente una clase de Python, salvo el nombre. En particular, los programadores de C++ pueden encontrar extraño que las clases de Python no tengan que tener constructores y destructores explícitos. Aunque no es obligatorio, las clases de Python pueden tener algo parecido a un constructor: el método \codigo{\_\_init\_\_()}.
 
 \subsection{El método \codigo{\_\_init\_\_()}}
 
-Este ejemplo muestra la inicializacion de la clase \codigo{Fib} utilizando el método \codigo{\_\_init\_\_()}.
+Este ejemplo muestra la inicialización de la clase \codigo{Fib} utilizando el método \codigo{\_\_init\_\_()}.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -129,7 +129,7 @@ Instanciar clases en Python es inmediato. Para crear un objeto de la clase, simp
 
 \item \emph{Línea 3:} La variable \codigo{fib} se refiere ahora a un objeto que es instancia de la clase \codigo{Fib}.
 
-\item \emph{Línea 5:} Toda instancia de una clase tiene el atributo interno \codigo{\_\_class\_\_} que es la clase del objeto. Muchos programadores java estarán familiarizados con la clase \codigo{Class}, que contiene métodos como \codigo{getName()} y \codigo{getSuperClass()} para conseguir información de metadatos del objeto. En Python, esta clase de metadados está disponible mediante el uso de atributos, pero la idea es la misma.
+\item \emph{Línea 5:} Toda instancia de una clase tiene el atributo interno \codigo{\_\_class\_\_} que es la clase del objeto. Muchos programadores java estarán familiarizados con la clase \codigo{Class}, que contiene métodos como \codigo{getName()} y \codigo{getSuperClass()} para conseguir información de metadatos del objeto. En Python, esta clase de metadatos está disponible mediante el uso de atributos, pero la idea es la misma.
 
 \item \emph{Línea 7:} Puedes acceder al \codigo{docstring} de la instancia como se hace con cualquier otro módulo o función. Todos los objetos que son instancia de una misma clase comparten el mismo \codigo{docstring}
 
@@ -197,7 +197,7 @@ Las variables de instancia son específicas de cada objeto de la clase. Por ejem
 
 Ahora estás preparado para aprender cómo construir un iterador. Un iterador es una clase que define el método \codigo{\_\_iter\_\_()}.
 
-\cajaTextoAncho{Los tres métodos de clase, \codigo{\_\_init\_\_}, \codigo{\_\_iter\_\_} y \codigo{\_\_next\_\_}, comienzan y terminan con un par de guiones bajos (\codigo{\_}). ¿Porqué? No es nada mágico, pero habitualmente significa que son métodos ``especiales''. Lo único que tienen en ``especial'' estos métodos especiales es que no se llaman directamente; Python los llama cuando utilizas otra sintaxis en la clase o en una instancia de la clase.}
+\cajaTextoAncho{Los tres métodos de clase, \codigo{\_\_init\_\_}, \codigo{\_\_iter\_\_} y \codigo{\_\_next\_\_}, comienzan y terminan con un par de guiones bajos (\codigo{\_}). ¿Por qué? No es nada mágico, pero habitualmente significa que son métodos ``especiales''. Lo único que tienen en ``especial'' estos métodos especiales es que no se llaman directamente; Python los llama cuando utilizas otra sintaxis en la clase o en una instancia de la clase.}
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -225,11 +225,11 @@ class Fib:
 
 \item \emph{Línea 2:} Al llamar a \codigo{Fib(max)} se está creando un objeto que es instancia de esta clase y llamándose a su método \codigo{\_\_init\_\_()} con el parámetro \codigo{max}. El método \codigo{\_\_init\_\_()} guarda el valor máximo como una variable del objeto de forma que los otros métodos de la instancia puedan utilizarlo más tarde.
 
-\item \emph{Línea 5:} El método \codigo{\_\_iter\_\_()} se llama siempre que alguien llama a \codigo{iter(fib)} (Como verás en un minuo, el bucle \codigo{for} llamará a este método automáticamente, pero tú también puedes llamarlo manualmente). Después de efectuar la inicialización necesaria de comienzo de la iteración (en este caso inicializar \codigo{self.a} y \codigo{self.b}) el método \codigo{\_\_iter\_\_()} puede retornar cualquier objeto que implemente el método \codigo{\_\_next\_\_()}. En este caso (y en la mayoría), \codigo{\_\_iter\_\_()} se limita a devolver \codigo{self}, puesto que la propia clase implementa el método \codigo{\_\_next\_\_()}.
+\item \emph{Línea 5:} El método \codigo{\_\_iter\_\_()} se llama siempre que alguien llama a \codigo{iter(fib)} (Como verás en un minuto, el bucle \codigo{for} llamará a este método automáticamente, pero tú también puedes llamarlo manualmente). Después de efectuar la inicialización necesaria de comienzo de la iteración (en este caso inicializar \codigo{self.a} y \codigo{self.b}) el método \codigo{\_\_iter\_\_()} puede retornar cualquier objeto que implemente el método \codigo{\_\_next\_\_()}. En este caso (y en la mayoría), \codigo{\_\_iter\_\_()} se limita a devolver \codigo{self}, puesto que la propia clase implementa el método \codigo{\_\_next\_\_()}.
 
 \item \emph{Línea 10:} El método \codigo{\_\_next\_\_()} se llama siempre que alguien llame al método \codigo{next()} sobre un iterador de una instancia de una clase. Esto adquirirá todo su sentido en un minuto.
 
-\item \emph{Línea 13:} Cuando el método \codigo{\_\_next\_\_()} lanza la excepción \codigo{StopIteration} le está indicando a quién lo haya llamado que el iterador se ha agotado. Al contrario que la mayoría de las excepciones, no se trata de un error. es una condición normal que simplemente significa que no quedan más valores que generar. Si el llamante es un bucle \codigo{for} se dará cuenta de que se ha elevado esta excepción y finalizará el bucle sin que se produzca ningún error (En otras palabrás, se tragará la excepción). Esta pequeña magia es el secreto clave del uso de iteradores en los bucles \codigo{for}.
+\item \emph{Línea 13:} Cuando el método \codigo{\_\_next\_\_()} lanza la excepción \codigo{StopIteration} le está indicando a quién lo haya llamado que el iterador se ha agotado. Al contrario que la mayoría de las excepciones, no se trata de un error. es una condición normal que simplemente significa que no quedan más valores que generar. Si el llamante es un bucle \codigo{for} se dará cuenta de que se ha elevado esta excepción y finalizará el bucle sin que se produzca ningún error (En otras palabras, se tragará la excepción). Esta pequeña magia es el secreto clave del uso de iteradores en los bucles \codigo{for}.
 
 \item \emph{Línea 15:} Para devolver el siguiente valor del iterador, el método \codigo{\_\_next\_\_()} simplemente utiliza \codigo{return} para devolver el valor. No se utiliza \codigo{yield}, que únicamente se utiliza para los generadores. Cuando se está creando un iterador desde cero, se utiliza \codigo{return} en el método \codigo{\_\_next\_\_()}.
 
@@ -458,7 +458,7 @@ Si seguimos moviéndonos hacia el comienzo del método \codigo{\_\_next\_\_()}..
 
 \item \emph{Línea 4:} \codigo{self.cache} contendrá una lista con las funciones que necesitamos para buscar y aplicar las diferentes reglas (¡Al menos esto te debería resultar familiar!). \codigo{self.cache\_index} mantiene el índice del elemento de la caché que se debe retornar. Si no hemos consumido toda la caché (si la longitud de \codigo{self.cache} es mayor que \codigo{self.cache\_index}), ¡tenemos un elemento en la caché para retornar! Podemos devolver las funciones de búsqueda y sustitución de la caché en lugar de construirlas desde cero.
  
-\item \emph{Línea 7:} Por otra parte, si no obtenemos un elemento de la caché \emph{y} el fichero se ha cerrado (lo que podrá haber sucedido en la parte de más abajo del método, como se vio anteriormente) entonces ya no hay nada más que hacer. Si el fichero se ha cerrado, significa que lo hemos leido completamente ---ya hemos recorrido todas las líneas del fichero de patrones y hemos construido y cacheado las funciones de búsqueda y sustitución de cada patrón. El fichero se ha agotado y la caché también, ¡Uff! ¡yo también estoy agotado! Espera un momento, casi hemos terminado.
+\item \emph{Línea 7:} Por otra parte, si no obtenemos un elemento de la caché \emph{y} el fichero se ha cerrado (lo que podrá haber sucedido en la parte de más abajo del método, como se vio anteriormente) entonces ya no hay nada más que hacer. Si el fichero se ha cerrado, significa que lo hemos leído completamente ---ya hemos recorrido todas las líneas del fichero de patrones y hemos construido y cacheado las funciones de búsqueda y sustitución de cada patrón. El fichero se ha agotado y la caché también, ¡Uff! ¡yo también estoy agotado! Espera un momento, casi hemos terminado.
 
 \end{enumerate}
 
@@ -470,7 +470,7 @@ Si lo ponemos todo junto esto es lo que sucede cuando:
 
 \item Cuando pedimos la primera pareja de funciones de búsqueda y sustitución, busca en la caché pero está vacía. Por lo que lee una línea del fichero de patrones, construye la pareja de funciones de búsqueda y sustitución para ellas y las guarda en la caché (además de retornarlas).
 
-\item Digamos, por simplicidad, que la primera regla coincidió con la búsqueda. Si es así no se busca ndad más y no se lee nada más del fichero de patrones.
+\item Digamos, por simplicidad, que la primera regla coincidió con la búsqueda. Si es así no se busca nada más y no se lee nada más del fichero de patrones.
 
 \item Además, por continuar con el argumento, supón que el programa que está usando este objeto llama a la función \codigo{plural()} de nuevo para pasar al plural una palabra diferente. El bucle \codigo{for} de la función \codigo{plural()} llamará a la función \codigo{iter(rules)}, que resetea el índice de la caché pero no resetea el fichero abierto.
 
