@@ -16,7 +16,7 @@ especialmente si se hace bajo la lluvia.'' \\
 
 \section{Inmersión}
 
-Mi portátil con Windows tenía 38.493 ficheros antes de instalar ninguna aplicación. Al instalar Python se añadieron unos 3.000 más. El fichero es el paradigma principal de almacenamiento de cualquie sistema operativo importante; este concepto está tan arraigado que la mayoría de la gente tendría problemas imaginando una alternativa. Metafóricamente hablando, tu ordenador se está ``ahogándose'' en ficheros.
+Mi portátil con Windows tenía 38.493 ficheros antes de instalar ninguna aplicación. Al instalar Python se añadieron unos 3.000 más. El fichero es el paradigma principal de almacenamiento de cualquier sistema operativo importante; este concepto está tan arraigado que la mayoría de la gente tendría problemas imaginando una alternativa. Metafóricamente hablando, tu ordenador se está ``ahogándose'' en ficheros.
 
 \section{Leer contenido de ficheros de texto}
 \label{sec:leer_ficheros}
@@ -37,7 +37,7 @@ Python dispone de la función interna \codigo{open()}, que toma el nombre de un 
 
 \item El camino al directorio utiliza la barra inclinada hacia adelante, independientemente del sistema operativo que se esté utilizando. Windows utiliza barras inclinadas invertidas para desplazarse entre subdirectorios, mientras que Mac OS X y Linux utilizan barras inclinadas hacia adelante. Pero en Python, las barras inclinadas hacia adelante siempre funcionan, incluso en Windows.
 
-\item El camino al directorio no comienza con barra inclinada o letra de unidad, por lo que se trata de un \emph{camino relativo}. ¿Relativo a qué? podrías preguntar... paciencia, mi pequeño saltamontes.
+\item El camino al directorio no comienza con barra inclinada o letra de unidad, por lo que se trata de un \emph{camino relativo}. ¿Relativo a qué? Podrías preguntar... Paciencia, mi pequeño saltamontes.
 
 \item Es una cadena. Todos los sistemas operativos modernos (¡incluso Windows!) utilizan Unicode para almacenar los nombres de los ficheros y directorios. Python 3 permite trabajar con caminos y ficheros \codigo{no ASCII}.
 
@@ -45,11 +45,11 @@ Python dispone de la función interna \codigo{open()}, que toma el nombre de un 
 
 \end{itemize}
 
-Pero esta llamada a la función \codigo{open()} no se acaba con el nombre del fichero. Existe otro parámetro, denominado \codigo{encoding}. ¡Oh! esto está resultando \emph{terriblemente} familiar.
+Pero esta llamada a la función \codigo{open()} no se acaba con el nombre del fichero. Existe otro parámetro, denominado \codigo{encoding}. ¡Oh! Esto está resultando \emph{terriblemente} familiar.
 
 \subsection{La codificación de caracteres enseña su fea cara}
 
-Los bytes son bytes; los caracteres son una abstracción. Una cadena es una secuencia de caracteres Unicode. Pero un fichero en disco no es una secuencia de caracteres Unicode; un fichero en disco es una secuencia de caracteres. Por eso si lees un fichero de ``texto'' del disco, ¿Cómo convierte Python la secuencia de bytes en una secuencia de caracteres? Decodifica los bytes de acuerdo a un algoritmo específica de codificación de caracteres y retorna una secuenca de caracteres Unicode (también conocida como una cadena de texto).
+Los bytes son bytes; los caracteres son una abstracción. Una cadena es una secuencia de caracteres Unicode. Pero un fichero en disco no es una secuencia de caracteres Unicode; un fichero en disco es una secuencia de caracteres. Por eso si lees un fichero de ``texto'' del disco, ¿Cómo convierte Python la secuencia de bytes en una secuencia de caracteres? Decodifica los bytes de acuerdo a un algoritmo específica de codificación de caracteres y retorna una secuencia de caracteres Unicode (también conocida como una cadena de texto).
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -109,7 +109,7 @@ La \href{http://docs.python.org/3.1/library/io.html#module-interface}{documentac
 
 \subsection{Leer datos de un fichero de texto}
 
-Después de abrir un fichero para lectura problemente querrás leer su contenido.
+Después de abrir un fichero para lectura probablemente querrás leer su contenido.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True,escapeinside=@@]
@@ -286,17 +286,17 @@ with open('examples/chinese.txt', encoding='utf-8') as a_file:
 
 Este código llama a \codigo{open()} pero no a \codigo{a\_file.close()}. La sentencia \codigo{with} inicia un bloque de código, como el de una sentencia \codigo{if} o un bucle \codigo{for}. Dentro del bloque puedes utilizar la variable \codigo{a\_file} que contiene el objeto de flujo devuelto por la función \codigo{open()}. Lógicamente, están disponibles todos los métodos del objeto de flujo ---\codigo{seek()}, \codigo{read()} o lo que necesites. Cuando el bloque \codigo{with} finaliza, Python \emph{llama automáticamente} a \codigo{a\_file.close()}.
 
-Lo importante es: no importa cómo o cuándo finalices el bloque \codigo{with}, Python cerrará el fichero... incluso si la salida se produce a causa de una excepción sin manejar. Sí, lo oyes bien, incluso si el código eleva una excepción y el programa finaliza, el fichero se cerrará. Garantizado.
+Lo importante es: no importa cómo o cuándo finalices el bloque \codigo{with}, Python cerrará el fichero... Incluso si la salida se produce a causa de una excepción sin manejar. Sí, lo oyes bien, incluso si el código eleva una excepción y el programa finaliza, el fichero se cerrará. Garantizado.
 
 \begin{quote}
 En términos técnicos, la sentencia \codigo{with} crea un contexto de ejecución. En estos ejemplo, el objeto de flujo actúa como gestor del contexto. Python crea el objeto de flujo \codigo{a\_file} y le dice que está entrando en un contexto de ejecución. Cuando el bloque \codigo{with} finaliza, Python le dice al objeto de flujo que está saliendo del contexto de ejecución y el objeto de flujo llama por sí mismo al método \codigo{close()}. Para conocer más detalles puedes ver el Apéndice B, ``Clases que se pueden utilizar en un bloque \codigo{with}''. 
 \end{quote}
 
-No hay nada específico relacionado con los ficheros en una sentencia \codigo{with}, es un marco general para crear contextos de ejecución y decirle a los objetos que están entrando y saliendo de él. Si el objeto en cuestión es un objeto de flujo (streams), entonces hace cosas útiles relacionadas con los ficheros (como cerrar el fichero automáticamente). Pero el comportamiento lo define el propio objeto de flujo, no la sentencia \codigo{with}. Existen otras muchas formas de utilizar gestores de contexto que no tienen nada que ver con los ficheros. Puedes crear los tuyos propios, como verás más tarde neeste mismo capítulo.
+No hay nada específico relacionado con los ficheros en una sentencia \codigo{with}, es un marco general para crear contextos de ejecución y decirle a los objetos que están entrando y saliendo de él. Si el objeto en cuestión es un objeto de flujo (streams), entonces hace cosas útiles relacionadas con los ficheros (como cerrar el fichero automáticamente). Pero el comportamiento lo define el propio objeto de flujo, no la sentencia \codigo{with}. Existen otras muchas formas de utilizar gestores de contexto que no tienen nada que ver con los ficheros. Puedes crear los tuyos propios, como verás más tarde en este mismo capítulo.
 
 \subsection{Leer los datos línea a línea}
 
-Una ``línea'' en un fichero de texto es lo que te puedes imaginar --- tecleas unas cuantas palabras y pulsas \codigo{INTRO} y ya estás en una nueva línea. Una línea de texto es una secuencia de caracteres que está delimitada por... ¿qué cosa exactamente? Bueno, es complicado de decir, porque los ficheros de texto pueden utilizar diferentes caracteres para marcar el final de una línea. Cada sistema operativo tiene su propia convención. En algunos se utiliza el carácter de ``retorno de carro'', otros utilizan el caracter de ``salto de línea'' y algunos utilizan ambos al final de cada línea.
+Una ``línea'' en un fichero de texto es lo que te puedes imaginar --- tecleas unas cuantas palabras y pulsas \codigo{INTRO} y ya estás en una nueva línea. Una línea de texto es una secuencia de caracteres que está delimitada por... ¿qué cosa exactamente? Bueno, es complicado de decir, porque los ficheros de texto pueden utilizar diferentes caracteres para marcar el final de una línea. Cada sistema operativo tiene su propia convención. En algunos se utiliza el carácter de ``retorno de carro'', otros utilizan el carácter de ``salto de línea'' y algunos utilizan ambos al final de cada línea.
 
 Ahora respira con expresión de relajación, porque Python \emph{controla estos tipos diferentes de fin de línea  de forma automática} por defecto. Si le dices que ``quieres leer un fichero de texto de línea en línea'', Python descubrirá por su cuenta la clase de fin de línea que el fichero de texto utiliza y simplemente funcionará como esperas.
 
@@ -320,9 +320,9 @@ with open('examples/favorite-people.txt', encoding='utf-8') as a_file:
 
 \item \emph{Línea 2:} Utilizando el patrón \codigo{with} abres el fichero de forma segura y dejas a Python que lo cierre por ti.
 
-\item \emph{Línea 3:} Para leer un fichero línea a línea lo mejor es utilizar el bucle \codigo{for}. Además de tener métodos explícitos como el \codigo{read()}, un objeto de flujoo también es un \codigo{iterador} que retorna una línea del fichero cada vez que le pides un valor.
+\item \emph{Línea 3:} Para leer un fichero línea a línea lo mejor es utilizar el bucle \codigo{for}. Además de tener métodos explícitos como el \codigo{read()}, un objeto de flujo también es un \codigo{iterador} que retorna una línea del fichero cada vez que le pides un valor.
 
-\item \emph{Línea 5:} Si utilizas el método \codigo{format} puedes ir imprimendo el número de línea y la propia línea. El especificador de formaot \codigo{\{:>4\}} significa que imprima el parámetro justificado a la derecha dentro de cuatro espacios. La variable \codigo{a\_line} contiene una línea completa, incluyendo el retorno de carro. El método \codigo{rstrip()} de las cadenas de texto elimina los espacios en blanco del final de una cadena, incluyendo los caracteres de retorno de carro y salto de línea. 
+\item \emph{Línea 5:} Si utilizas el método \codigo{format} puedes ir imprimiendo el número de línea y la propia línea. El especificador de formato \codigo{\{:>4\}} significa que imprima el parámetro justificado a la derecha dentro de cuatro espacios. La variable \codigo{a\_line} contiene una línea completa, incluyendo el retorno de carro. El método \codigo{rstrip()} de las cadenas de texto elimina los espacios en blanco del final de una cadena, incluyendo los caracteres de retorno de carro y salto de línea. 
 
 \end{enumerate}
 
@@ -419,8 +419,10 @@ test succeededand again
 \section{Ficheros binarios}
 
 No todos los ficheros contienen texto. Algunos contienen fotos de mi perro.
-
-\includegraphics{imagen/beauregard.jpg}
+\begin{figure}[htp]
+  \centering
+  \includegraphics{imagen/beauregard.jpg}
+\end{figure}
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -476,7 +478,7 @@ b'\xff\xd8\xff'
 
 \item \emph{Línea 7:} ...estás leyendo bytes, no cadenas de texto. Puesto que el fichero se ha abierto en modo binario, el método \codigo{read()} toma como parámetro el \emph{número de bytes que se desea leer}, no el número de caracteres.
 
-\item \emph{Línea 9:} Lo que signific que nunca hay diferencia entre el número que le pasas como parámetro al método \codigo{read(9} y el índice que devuelve el método \codigo{tell()}. El método \codigo{read()} lee bytes, y los métodos \codigo{seek()} y \codigo{tell()} cuentan el número de bytes leídos. Siempre coinciden en el caso de los ficheros binarios.
+\item \emph{Línea 9:} Lo que significa que nunca hay diferencia entre el número que le pasas como parámetro al método \codigo{read(9} y el índice que devuelve el método \codigo{tell()}. El método \codigo{read()} lee bytes, y los métodos \codigo{seek()} y \codigo{tell()} cuentan el número de bytes leídos. Siempre coinciden en el caso de los ficheros binarios.
 
 \end{enumerate}
 
@@ -486,9 +488,9 @@ Imagina que estás escribiendo una librería, y una de las funciones de ésta le
 
 \cajaTexto{Para leer de un fichero ficticio, simplemente utiliza \codigo{read()}.}
 
-En el caso más simple, un objeto de flujo es cualquier objeto que tenga un método \codigo{read()} con un parámetro opcional \codigo{size} para pasarle el tamaño a leer y que devuelve una cadena de texto. Cuando se le llama sin el parámetro \codigo{size}, el métod \codigo{read()} debería leer todo lo que falta por leer para devolver todos los datos como una única cadena de texto. Cuando se llama con el parámetro \codigo{size}, lee esa cantidad desde la entrada devolviendo una cadena de texto con estos datos. Cuando se le llama de nuevo, continúa por donde quedó y devuelve el siguiente trozo de los datos de entrada.
+En el caso más simple, un objeto de flujo es cualquier objeto que tenga un método \codigo{read()} con un parámetro opcional \codigo{size} para pasarle el tamaño a leer y que devuelve una cadena de texto. Cuando se le llama sin el parámetro \codigo{size}, el método \codigo{read()} debería leer todo lo que falta por leer para devolver todos los datos como una única cadena de texto. Cuando se llama con el parámetro \codigo{size}, lee esa cantidad desde la entrada devolviendo una cadena de texto con estos datos. Cuando se le llama de nuevo, continúa por donde quedó y devuelve el siguiente trozo de los datos de entrada.
 
-Este comportamiento es idéntico a los objetos de flujo que obtienes cuando abres un fichero real. La diferencia es que \emph{no te estás limitando a ficheros reales}. La fuente de etrada que se está leyendo puede ser cualquier cosa: una página web, una cadena en memoria o, incluso, la salida de otro programa. Siempre que tus funciones tomen como parámetro un objeto de flujo y llamen al método \codigo{read()} podrás manejar cualquier fuente de entrada que se comporte como un fichero, sin que tengas que escribir código que maneje cada tipo específico de entrada.
+Este comportamiento es idéntico a los objetos de flujo que obtienes cuando abres un fichero real. La diferencia es que \emph{no te estás limitando a ficheros reales}. La fuente de entrada que se está leyendo puede ser cualquier cosa: una página web, una cadena en memoria o, incluso, la salida de otro programa. Siempre que tus funciones tomen como parámetro un objeto de flujo y llamen al método \codigo{read()} podrás manejar cualquier fuente de entrada que se comporte como un fichero, sin que tengas que escribir código que maneje cada tipo específico de entrada.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -576,9 +578,9 @@ A nine mile walk is no joke, especially in the rain.
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
 >>> with gzip.open('out.log.gz', mode='wb') as z_file:
-...         z_file.write(
-...         'A nine mile walk is no joke, especially in the rain.'.encode(
-...         'utf-8'))
+...     z_file.write(
+...     'A nine mile walk is no joke, especially in the rain.'.encode(
+...     'utf-8'))
 ... 
 Traceback (most recent call last):
  File "<stdin>", line 1, in <module>
@@ -595,7 +597,7 @@ Los gurús de la línea de comando están familiarizados con el concepto de entr
 
 \cajaTexto{\codigo{sys.stdin}, \codigo{sys.stdout}, \codigo{sys.stderr}.}
 
-La salida estándar y la salida de error estándar (comunmente abreviadas como \codigo{stdout} y \codigo{stderr}) son ``tuberías'' (pipes) que vienen en cualquier sistema de tipo \codigo{UNIX}, incluyendo Mac OS X y Linux. Cuando llamas a la función \codigo{print()}, lo que se imprime se envía a la tubería de salida \codigo{stdout}. Cuando tu programa falla e imprime la traza de error, la salida va a la tubería \codigo{stderr}. Por defecto, ambas tuberías están conectadas directamenten a la ventana del terminal en el que estás trabajando; cuando tu programa imprime algo, ves la salida en la ventana del terminal; y cuando el programa falla, también ves la traza de error en la misma ventana del terminal. En la consola gráfica de Python, las tuberías \codigo{stdout} y \codigo{stderr} están conectadas por defecto a la ``ventana interactiva'' en la que te encuentras.
+La salida estándar y la salida de error estándar (comúnmente abreviadas como \codigo{stdout} y \codigo{stderr}) son ``tuberías'' (pipes) que vienen en cualquier sistema de tipo \codigo{UNIX}, incluyendo Mac OS X y Linux. Cuando llamas a la función \codigo{print()}, lo que se imprime se envía a la tubería de salida \codigo{stdout}. Cuando tu programa falla e imprime la traza de error, la salida va a la tubería \codigo{stderr}. Por defecto, ambas tuberías están conectadas directamente a la ventana del terminal en el que estás trabajando; cuando tu programa imprime algo, ves la salida en la ventana del terminal; y cuando el programa falla, también ves la traza de error en la misma ventana del terminal. En la consola gráfica de Python, las tuberías \codigo{stdout} y \codigo{stderr} están conectadas por defecto a la ``ventana interactiva'' en la que te encuentras.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -636,7 +638,7 @@ IOError: not readable
 \end{lstlisting}
 \end{minipage}
 
-\subsection{Redirección de la salida estándar}
+\subsection{Redireccionamiento de la salida estándar}
 
 \codigo{sys.stdout} y \codigo{sys.stderr} son objetos de flujo, aunque únicamente soportan la escritura. Pero no son constantes, son variables. Esto significa que puedes asignarles un nuevo valor ---cualquier otro objeto de flujo--- para redirigir su salida.
 
