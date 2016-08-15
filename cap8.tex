@@ -37,7 +37,7 @@ E = 4
 \end{lstlisting}
 \end{minipage}
 
-Las letras forman palabras existentes, pero si sustituyes cada palabra por un dígito del \codigo{0 a 9}, también forman una equación aritmética. El truco consiste en descubrir cómo se emparejan letras y dígitos. Todas las apariciones de una misma letra deben sustituirse por el mismo dígito, no de puede repetir ningún dígito y ninguna palabra debe comenzar por el dígito \codigo{0}.
+Las letras forman palabras existentes, pero si sustituyes cada palabra por un dígito del \codigo{0 a 9}, también forman una ecuación aritmética. El truco consiste en descubrir cómo se emparejan letras y dígitos. Todas las apariciones de una misma letra deben sustituirse por el mismo dígito, no de puede repetir ningún dígito y ninguna palabra debe comenzar por el dígito \codigo{0}.
 
 \cajaTextoAncho {El rompecabezas más conocido de este tipo es: \codigo{SEND + MORE = MONEY}.}
 
@@ -149,7 +149,8 @@ Los conjuntos hacen que esta tarea sea trivial.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
->>> a_list = ['The', 'sixth', 'sick', "sheik's", 'sixth', "sheep's", 'sick']
+>>> a_list = ['The', 'sixth', 'sick', "sheik's", 'sixth', "sheep's",
+              'sick']
 >>> set(a_list)
 {'sixth', 'The', "sheep's", 'sick', "sheik's"}
 >>> a_string = 'EAST IS EAST'
@@ -167,11 +168,11 @@ Los conjuntos hacen que esta tarea sea trivial.
 
 \item \emph{Línea 2:} Dada una lista de varias cadenas, la funcion \codigo{set()} devolverá un conjunto de cadenas únicas de la lista. Esto cobra sentido si piensas en ello como si fuese un bucle \codigo{for}. Toma el primer elemento de la lista y lo pone en el conjunto. Luego el segundo, tercero, cuarto, quinto ---un momento, este ya está en el conjunto, por lo que no se vuelve a incluir, porque los conjuntos de Python no permiten duplicados. El sexto, séptimo ---de nuevo un duplicado, por lo que se no se vuelve a incluir. ¿El resultado final? Todos los elementos sin repeticiones de la lista original. La lista original ni siquiera necesita estar ordenada primero.
 
-\item \emph{Línea 5:} La misma técnica funciona con cadenas, puesto que una cadena es simplemente una secuencia de caracteres.
+\item \emph{Línea 6:} La misma técnica funciona con cadenas, puesto que una cadena es simplemente una secuencia de caracteres.
 
-\item \emph{Línea 8:} Dada una lista de cadenas, \codigo{''.join(a\_list)} concatena todas las cadenas en una única cadena.
+\item \emph{Línea 9:} Dada una lista de cadenas, \codigo{''.join(a\_list)} concatena todas las cadenas en una única cadena.
 
-\item \emph{Línea 10:} Dada una cadena (secuencia de caracteres -al usar la función \codigo{join}-), esta línea de código retorna todos los caracteres sin duplicados.
+\item \emph{Línea 11:} Dada una cadena (secuencia de caracteres -al usar la función \codigo{join}-), esta línea de código retorna todos los caracteres sin duplicados.
 
 \end{enumerate}
 
@@ -739,7 +740,8 @@ Vale, eso significa que aún puedes hacer cosas malignas, incluso aunque explici
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
->>> eval("__import__('subprocess').getoutput('rm /some/random/file')", {}, {})
+>>> eval("__import__('subprocess').getoutput('rm /some/random/file')",
+         {}, {})
 \end{lstlisting}
 \end{minipage}
 
