@@ -46,13 +46,13 @@ La prueba unitaria es una parte importante de una estrategia de desarrollo centr
 
 \begin{itemize}
 
-\item Antes de escribir el código, el escribir las pruebas unitarias te oblica a detallar los requisitos de forma útil.
+\item Antes de escribir el código, el escribir las pruebas unitarias te obliga a detallar los requisitos de forma útil.
 
 \item Durante la escritura del código, las pruebas unitarias evitan que escribas demasiad código. Cuando pasan los todos los casos de prueba, la función está completa.
 
 \item Cuando se está reestructurando el código\footnote{refactoring}, pueden ayudar a probar que la nueva versión se comporta de igual manera que la vieja.
 
-\item Cuando se mantiene el código, disponer de pruebas te ayuda a cubrirte el trasero cuando alquien viene gritando que tu último cambio en el código ha roto el antiguo que ya funcionaba.
+\item Cuando se mantiene el código, disponer de pruebas te ayuda a cubrirte el trasero cuando alguien viene gritando que tu último cambio en el código ha roto el antiguo que ya funcionaba.
 
 \item Cuando codificas en un equipo, disponer de un juego de pruebas completo disminuye en gran medida la probabilidad de que tu código rompa el de otra persona, ya que puedes ejecutar los casos de prueba antes de introducir cambios (He visto esto pasar en las competiciones de código. Un equipo trocea el trabajo asignado, todo el mundo toma las especificaciones de su tarea, escribe los casos de prueba para ella en primer lugar, luego comparte sus casos de prueba con el resto del equipo. De ese modo, nadie puede perderse demasiado desarrollando código que no funcione bien con el del resto).
 
@@ -133,7 +133,7 @@ if __name__ == '__main__':
 
 \begin{enumerate}
 
-\item \emph{Línea 5:} Para escribir un caso de prueba, lo primero es crear una subclase de \codigo{TestCase} del módulo \codigo{unittest}. Esta clase proporciona muchos métodos útiles que se puedne utilizar en los casos de prueba para comprobar condiciones específicas.
+\item \emph{Línea 5:} Para escribir un caso de prueba, lo primero es crear una subclase de \codigo{TestCase} del módulo \codigo{unittest}. Esta clase proporciona muchos métodos útiles que se pueden utilizar en los casos de prueba para comprobar condiciones específicas.
 
 \item \emph{Línea 33:} Esto es una lista de pares de números enteros y sus números romanos equivalentes que he verificado manualmente. Incluye a los diez primeros números, el mayor, todos los números que se convierten un único carácter romano, y una muestra aleatoria de otros números válidos. No es necesario probar todas las entradas posibles, pero deberían probarse los casos de prueba límite.
 
@@ -286,7 +286,7 @@ OK
 
 \begin{enumerate}
 
-\item \emph{Línea 3:} ¡Bien! la función \codigo{to\_roman()} pasa los valores conocidos del caso de prueba. No es exhaustivo, pero revisa la función con una amplia variedad de entradas. Incluyendo entradas cuyo resultado son todos los números romanos de un único carácter, el valor mayor (\codigo{3999}) y la entrada que produce el número romano más largo posible (\codigo{3888}). En este punto puedes confiar razonablemente en que la función está bien hecha y funciona para cualquier valor de entrada válido que puedas consultar.
+\item \emph{Línea 3:} ¡Bien! La función \codigo{to\_roman()} pasa los valores conocidos del caso de prueba. No es exhaustivo, pero revisa la función con una amplia variedad de entradas. Incluyendo entradas cuyo resultado son todos los números romanos de un único carácter, el valor mayor (\codigo{3999}) y la entrada que produce el número romano más largo posible (\codigo{3888}). En este punto puedes confiar razonablemente en que la función está bien hecha y funciona para cualquier valor de entrada válido que puedas consultar.
 
 \end{enumerate}
 
@@ -313,7 +313,7 @@ No es suficiente con probar que las funciones pasan las pruebas cuando éstas in
 
 \begin{enumerate}
 
-\item \emph{Línea 6:} Esto no es lo que querías ---ni siquiera es un número romano válido. De hecho, todos estos números están fuera del rango de los que son aceptables como entrada a la función, pero aún así, la función devuelve valores falsos. Devolver valores ``malos'' sin advertencia alguna es algo \emph{maaaalo}. Si un programa debe fallar, lo mejor es que lo haga lo más cerca del error, rápida y evidentemente. Mejor ``parar y prenderle fuego'' como diche el dicho. La forma de hacerlo en Python es elevar una excepción.
+\item \emph{Línea 6:} Esto no es lo que querías ---ni siquiera es un número romano válido. De hecho, todos estos números están fuera del rango de los que son aceptables como entrada a la función, pero aún así, la función devuelve valores falsos. Devolver valores ``malos'' sin advertencia alguna es algo \emph{maaaalo}. Si un programa debe fallar, lo mejor es que lo haga lo más cerca del error, rápida y evidentemente. Mejor ``parar y prenderle fuego'' como dice el dicho. La forma de hacerlo en Python es elevar una excepción.
 
 \end{enumerate}
 
@@ -375,7 +375,7 @@ FAILED (errors=1)
 
 \begin{enumerate}
 
-\item \emph{Línea 5:} Deberías esperar que fallara (puesto que aún no has escrito ningún código que pase la prueba), pero... en realidad no ``falló'', en su lugar se produjo un ``error''. Hay una sutil pero importante diferencia. Una prueba unitaria puede terminar con tres tipos de valores: pasar la prueba, fallar y error. Pasar la prueba significa que el código hace lo que se espera. ``fallar'' es lo que hacía la primera prueba que hicimos (hasta que escribimos el código que permitía pasar la prueba) ---ejecutaba el código pero el resultado no era el esperado. ``error'' significa que el código ni siquiera se ejecutó apropiadamente.
+\item \emph{Línea 5:} Deberías esperar que fallara (puesto que aún no has escrito ningún código que pase la prueba), pero... En realidad no ``falló'', en su lugar se produjo un ``error''. Hay una sutil pero importante diferencia. Una prueba unitaria puede terminar con tres tipos de valores: pasar la prueba, fallar y error. Pasar la prueba significa que el código hace lo que se espera. ``fallar'' es lo que hacía la primera prueba que hicimos (hasta que escribimos el código que permitía pasar la prueba) ---ejecutaba el código pero el resultado no era el esperado. ``error'' significa que el código ni siquiera se ejecutó apropiadamente.
 
 \item \emph{Línea 13:} ¿Porqué el código no se ejecutó correctamente? La traza del error lo indica. El módulo que estás probando no dispone de una excepción denominada \codigo{OutOfRangeError}. Recuerda, has pasado esta excepción al método \codigo{assertRaises()} porque es la excepción que quieres que que la función eleve cuando se le pasa una entrada fuera del rango válido de valores. Pero la excepción aún no existe, por lo que la llamada al método \codigo{assertRaises()} falla. Ni siquiera ha tenido la oportunidad de probar el funcionamiento de la función \codigo{to\_roman()}; no llega tan lejos.
 
@@ -428,7 +428,7 @@ FAILED (failures=1)
 
 \item \emph{Línea 5:} Aún no pasa la nueva prueba, pero ya no devuelve un error. En su lugar, la prueba falla. ¡Es un avance! Significa que la llamada al método \codigo{assertRaises()} se completó con éxito esta vez, y el entorno de pruebas unitarias realmente comprobó el funcionamiento de la función \codigo{to\_roman()}.
 
-\item \emph{Línea 13:} Es evidente que la función \codigo{to\_roman()} no eleva la excepción \codigo{OutOfRangeError} que acabas de definir, puesto que aún no se lo has dicho. ¡Son noticias excelentes! significa que es una prueba válida ---falla antes de que escribas el código que hace falta para que pueda pasar.
+\item \emph{Línea 13:} Es evidente que la función \codigo{to\_roman()} no eleva la excepción \codigo{OutOfRangeError} que acabas de definir, puesto que aún no se lo has dicho. ¡Son noticias excelentes! Significa que es una prueba válida ---falla antes de que escribas el código que hace falta para que pueda pasar.
 
 \end{enumerate}
 
@@ -439,7 +439,8 @@ Ahora toca escribir el código que haga pasar esta prueba satisfactoriamente.
 def to_roman(n):
     '''convert integer to Roman numeral'''
     if n > 3999:
-        raise OutOfRangeError('number out of range (must be less than 4000)')
+        raise OutOfRangeError(
+                'number out of range (must be less than 4000)')
 
     result = ''
     for numeral, integer in roman_numeral_map:
@@ -456,7 +457,7 @@ def to_roman(n):
 
 \end{enumerate}
 
-¿Pasará ahora la prueba? veámoslo.
+¿Pasará ahora la prueba? Veámoslo.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -579,7 +580,7 @@ def to_roman(n):
 
 \begin{enumerate}
 
-\item \emph{Línea 3:} Esta es una forma muy Phytónica de hacer las cosas: dos comparaciones a la vez. Es equivalente a \codigo{if not ((0<n) and (n<400))}, pero es mucho más fácil de leer. Esta línea de código debería capturar todas las entradas que sean demasiado grandes, negativas o cero.
+\item \emph{Línea 3:} Esta es una forma muy Pythónica de hacer las cosas: dos comparaciones a la vez. Es equivalente a \codigo{if not ((0<n) and (n<400))}, pero es mucho más fácil de leer. Esta línea de código debería capturar todas las entradas que sean demasiado grandes, negativas o cero.
 
 \item \emph{Línea 4:} Si cambias las condiciones, asegúrate de actualizar las cadenas de texto para que coincidan con la nueva condición. Al paquete \codigo{unittest} no le importará, pero será más difícil depurar el código si lanza excepciones que están descritas de forma incorrecta.
 
@@ -622,9 +623,9 @@ Había un requisito funcional más para convertir números a números romanos: t
 
 \begin{enumerate}
 
-\item \emph{Línea 2:} ¡Oh! qué mal.
+\item \emph{Línea 2:} ¡Oh! Qué mal.
 
-\item \emph{Línea 4:} ¡Oh! incluso peor. Ambos casos deberían lanzar una excepción. En vez de ello, retornan valores falsos.
+\item \emph{Línea 4:} ¡Oh! Incluso peor. Ambos casos deberían lanzar una excepción. En vez de ello, retornan valores falsos.
 
 \end{enumerate}
 
@@ -780,7 +781,7 @@ class RoundtripCheck(unittest.TestCase):
 \end{lstlisting}
 \end{minipage}
 
-Estas pruebas ni siquiera fallarán. No hemos definido aún la función \codigo{from\_roman()} por lo que únicamente se elevarán errores.
+Estas pruebas ni siquiera fallarán. No hemos definido aún la función \codigo{from\_\allowbreak roman()} por lo que únicamente se elevarán errores.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -888,7 +889,8 @@ def from_roman(s):
         while s[index:index+len(numeral)] == numeral:
             result += integer
             index += len(numeral)
-            print('found', numeral, 'of length', len(numeral), ', adding', integer)
+            print('found', numeral, 'of length', len(numeral),
+                  ', adding', integer)
 >>> import roman5
 >>> roman5.from_roman('MCMLXXII')
 found M of length 1, adding 1000
@@ -915,7 +917,7 @@ OK
 \end{lstlisting}
 \end{minipage}
 
-Tenemos dos buenas noticias aquí. Por un lado que la función \codigo{from\_roman()} pasa las pruebas ante entradas válidas, al menos para los valores conocidos. Por otro, la prueba de ida y vuelta también ha pasado. Combinada con las pruebas de valores conocidos, puedes estar razonablemente seguro de que ambas funciones \codigo{to\_roman()} y \codigo{from\_roman()} funcionan correctamente para todos los valores válidos (Esto no está garantizado: es teóricamente posible que la función \codigo{to\_roman()} tuviera un fallo que produjera un valor erróneo de número romano y que la función \codigo{from\_roman()} tuviera un fallo recíproco que produjera el mismo valor erróneo como número entero. Dependiendo de la aplicación y de los requisitos, esto puede ser más o menos preocupante; si es así, hay que escribir un conjunto de casos de prueba mayor hasta que puedas quedar razonablemente traquilo en cuanto a la fiabilidad del código desarrollado).
+Tenemos dos buenas noticias aquí. Por un lado que la función \codigo{from\_roman()} pasa las pruebas ante entradas válidas, al menos para los valores conocidos. Por otro, la prueba de ida y vuelta también ha pasado. Combinada con las pruebas de valores conocidos, puedes estar razonablemente seguro de que ambas funciones \codigo{to\_roman()} y \codigo{from\_roman()} funcionan correctamente para todos los valores válidos (Esto no está garantizado: es teóricamente posible que la función \codigo{to\_roman()} tuviera un fallo que produjera un valor erróneo de número romano y que la función \codigo{from\_roman()} tuviera un fallo recíproco que produjera el mismo valor erróneo como número entero. Dependiendo de la aplicación y de los requisitos, esto puede ser más o menos preocupante; si es así, hay que escribir un conjunto de casos de prueba mayor hasta que puedas quedar razonablemente tranquilo en cuanto a la fiabilidad del código desarrollado).
 
 \section{Más entradas erróneas}
 
@@ -1076,5 +1078,5 @@ OK
 \end{lstlisting}
 \end{minipage}
 
-Y el premio al anticlimax del año va para... la palabra ``OK'', que se imprime por parte del módulo \codigo{unittest} cuando todas pruebas pasan correctamente.
+Y el premio al anticlimax del año va para... La palabra ``OK'', que se imprime por parte del módulo \codigo{unittest} cuando todas pruebas pasan correctamente.
 
