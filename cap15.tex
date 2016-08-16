@@ -30,7 +30,7 @@ Consiste en tomar una secuencia de bytes con una codificación de caracteres des
 
 \subsection{¿Eso no es imposible?}
 
-En general: sí. Sin embargo, algunas codificaciones están optimizadas para idiomas específicos, y los idiomas no son aleatorios. Algunas secuencias de caracteres se repiten constantemente, mientras que otras no tienen sentido. Una persona con un inglés fluido que abre un períodico y lee “txzqJv 2!dasd0a QqdKjvz” reconoce instantáneamente que eso no es inglés (incluso aunque esté compuesto de letras ingles). Mediante el estudio de grandes cantidades de texto “típico”, un algoritmo puede simular esta clase de “lectura” fluida y proponer la codificación de caracteres en la que puede encontrar un texto.
+En general: sí. Sin embargo, algunas codificaciones están optimizadas para idiomas específicos, y los idiomas no son aleatorios. Algunas secuencias de caracteres se repiten constantemente, mientras que otras no tienen sentido. Una persona con un inglés fluido que abre un periódico y lee “txzqJv 2!dasd0a QqdKjvz” reconoce instantáneamente que eso no es inglés (incluso aunque esté compuesto de letras ingles). Mediante el estudio de grandes cantidades de texto “típico”, un algoritmo puede simular esta clase de “lectura” fluida y proponer la codificación de caracteres en la que puede encontrar un texto.
 
 En otras palabras, la detección de la codificación de caracteres es en realidad la detección del idioma, combinada con el conocimiento de las codificaciones de caracteres que tienden a utilizar.
 
@@ -75,7 +75,7 @@ Si el texto contiene una cadena de caracteres de escape reconocible podría indi
 
 \subsection{Codificaciones multibyte}
 
-Asumiendo que no existe \codigo{BOM}, \codigo{UniversalDetector} chequea si el texto contiene algún carácter con bits altos activados. Si es así, crea una serie de ``sondas'' para detectar codificaciones multibyte, de un byte y, como último recurso, \codigo{windos-1252}.
+Asumiendo que no existe \codigo{BOM}, \codigo{UniversalDetector} chequea si el texto contiene algún carácter con bits altos activados. Si es así, crea una serie de ``sondas'' para detectar codificaciones multibyte, de un byte y, como último recurso, \codigo{windows-1252}.
 
 La sonda de codificaciones multibyte, \codigo{MBCSGroupProber} (definida en \codigo{mbcsgroupprober.py}), es en realidad un envoltorio que gestiona un grupo de sondas, una para cada tipo de codificación multibyte: \codigo{BIG5}, \codigo{GB2313}, \codigo{EUC-TW}, \codigo{EUC-KR}, \codigo{EUC-JP}, \codigo{SHIFT\_JIS}, y \codigo{UTF-8}. \codigo{MBCSGroupProber} alimenta el texto a cada una de las sondas específicas y chequea el resultado. Si una sonda reporta una secuencia de bytes ilegal, se elimina de la búsqueda (cualquier llamada posterior a \codigo{UniversalDetector.feed()} para este texto se saltará a esta sonda). Si una sonda informa que está segura razonablemente de que ha detectado la codificación, \codigo{MBCSGroupProber} informa del resultado positivo a \codigo{UniversalDetector}, que devuelve el resultado al llamante.
 
@@ -97,7 +97,7 @@ El hebreo se maneja como un caso especial. Si el texto parece hebreo, basado en 
 
 \subsection{windows-1252}
 
-Si \codigo{UniversalDetector} encuentra en el texto un carácter con el bit alto activado, pero ninguno de las sondas anteriores devuelve un resultado fiable, crea un objeto \codigo{Latin1Prober} (definido en \codigo{latin1prober.py}) para intentar detectar texto en inglés en una codificación \codigo{windows-1252}. Esta no es fiable (inherentemente), porque las letras en inglés se codifican de la misma forma en diferentes codificaciones. La única forma de distinguir \codigo{windows-1252} es a través de algunos símbolos comúnmente utilizados como las comillas inteligentes, los apostrofos, símbolos de copyright, y otros similares. \codigo{Latin1Prober} reduce su estimación del nivel de confianza para permitir que le ``ganen'' otras sondas más precisas, si es posible.
+Si \codigo{UniversalDetector} encuentra en el texto un carácter con el bit alto activado, pero ninguno de las sondas anteriores devuelve un resultado fiable, crea un objeto \codigo{Latin1Prober} (definido en \codigo{latin1prober.py}) para intentar detectar texto en inglés en una codificación \codigo{windows-1252}. Esta no es fiable (inherentemente), porque las letras en inglés se codifican de la misma forma en diferentes codificaciones. La única forma de distinguir \codigo{windows-1252} es a través de algunos símbolos comúnmente utilizados como las comillas inteligentes, los apóstrofos, símbolos de copyright, y otros similares. \codigo{Latin1Prober} reduce su estimación del nivel de confianza para permitir que le ``ganen'' otras sondas más precisas, si es posible.
 
 \section{Ejecutando \codigo{2to3}}
 
@@ -295,7 +295,7 @@ Traducido, significa que ``se importe el módulo \codigo{universaldetector}; que
 
 Estos dos conceptos ---\codigo{\_\_init\_\_.py} e importación relativa--- permiten que puedas dividir un módulo en las piezas que quieras. El módulo \codigo{chardet} consta de 36 ficheros \codigo{.py}, ¡36!. Aún así, para utilizarlo únicamente necesitas usar \codigo{import chardet}, y luego llamar a la función \codigo{chardet.detect()}. Para tu código es transparente dónde está definida la función, si utiliza una importación relativa de \codigo{universaldetector} y que este, a su vez, utiliza cinco importaciones relativas de otros tantos ficheros, todos contenidos en el directorio \codigo{chardet/}.
 
-\cajaTextoAncho{Si alguna vez te encuentras en la necesidad de escribir una librería grande en Python (o más problemente, cuando te des cuenta de que tu pequeña librería ha crecido hasta convertirse en grande), tómate tu tiempo en refactorizarla en un módulo multifichero. Es una de las muchas cosas en las que Python es muy bueno, así que aprovéchate de ello.}
+\cajaTextoAncho{Si alguna vez te encuentras en la necesidad de escribir una librería grande en Python (o más probablemente, cuando te des cuenta de que tu pequeña librería ha crecido hasta convertirse en grande), tómate tu tiempo en refactorizarla en un módulo multifichero. Es una de las muchas cosas en las que Python es muy bueno, así que aprovéchate de ello.}
 
 \section{Arreglando lo que \codigo{2to3} no puede}
 
@@ -392,7 +392,7 @@ Hay diversas variaciones de este problema repartidas a lo largo de la librería 
 
 ¡Sigamos!
 
-\subsection{El nombre ``file'' no etá definido}
+\subsection{El nombre ``file'' no está definido}
 
 Y aquí vamos de nuevo, ejecutamos \codigo{test.py} para ver qué sucede con los casos de prueba\ldots
 
@@ -553,7 +553,7 @@ TypeError: Can't convert 'bytes' object to str implicitly
 \end{lstlisting}
 \end{minipage}
 
-¡Ajá! El problema no estaba  en la primera parte de la condición (\codigo{self.\_mInputState == ePureAscii}) sino en la segunda. ¿Qué ha podido causar el error? Quizás pienses que el método \codigo{search()} está esperando un valor de un tipo diferente, pero eso no generaría esta traza. Las funciones de Python pueden tomar cualquier valor; si pasas el número correcto de parámetros, la función se ejecutará. Puede \emph{cascar} si le pasas un valor de un tipo diferente el que esté esperando, pero si eso sucediera, la traza apuntaría a algún lugar interno de la función. Esta traza, sin embargo, dice que ni siquiera a podido llamar al método \codigo{search()}. Así que el problema debe estar en la operación \codigo{+}, cuando intenta construir el valor que posteriormente deberá pasarse a \codigo{search()}.
+¡Ajá! El problema no estaba  en la primera parte de la condición (\codigo{self.\_mInput\allowbreak State == ePureAscii}) sino en la segunda. ¿Qué ha podido causar el error? Quizás pienses que el método \codigo{search()} está esperando un valor de un tipo diferente, pero eso no generaría esta traza. Las funciones de Python pueden tomar cualquier valor; si pasas el número correcto de parámetros, la función se ejecutará. Puede \emph{cascar} si le pasas un valor de un tipo diferente el que esté esperando, pero si eso sucediera, la traza apuntaría a algún lugar interno de la función. Esta traza, sin embargo, dice que ni siquiera a podido llamar al método \codigo{search()}. Así que el problema debe estar en la operación \codigo{+}, cuando intenta construir el valor que posteriormente deberá pasarse a \codigo{search()}.
 
 Sabemos por la depuración anterior que \codigo{aBuf} es un array de bytes. Pero ¿qué contiene \codigo{self.\_mLastChar}? Es una variable de instancia, definida en el método \codigo{reset()}, que se llama desde el método \codigo{\_\_init\_\_()}.
 
@@ -865,9 +865,9 @@ def feed(self, aBuf, aLen):
 
 Otra vez nuestro viejo amigo \codigo{aBuf}. Como ya has adivinado de todos los problemas anteriores \codigo{aBuf} es un array de bytes. Aquí, el método \codigo{feed()} no lo pasa completo; pasa una sección. Pero como viste anteriormente en el capítulo, una partición de un array de bytes devuelve un array de bytes, así que el parámetro \codigo{aStr} que se pasa, a su vez, al método \codigo{get\_order()} es un array de bytes.
 
-¿Y qué intenta hacer el código con \codigo{aStr}? Toma el primer elemento del array de bytes y lo compara con una cadena de longitud 1. En Python 2 esto funcionaba porque \codigo{aStr} y \codigo{aBuf} eran cadenas, y \codigo{aStr[0]} seguía siendo una cadena de caracteres, y se pueden comparar cadenas de carateres para ver si son distintas. Pero en Python 3 \codigo{aStr} y \codigo{aBuf} son arrays de bytes, \codigo{aStr[0]} es un número entero y no se pueden comparar enteros y cadenas de caracteres sin realizar la conversión de uno de ellos.
+¿Y qué intenta hacer el código con \codigo{aStr}? Toma el primer elemento del array de bytes y lo compara con una cadena de longitud 1. En Python 2 esto funcionaba porque \codigo{aStr} y \codigo{aBuf} eran cadenas, y \codigo{aStr[0]} seguía siendo una cadena de caracteres, y se pueden comparar cadenas de caracteres para ver si son distintas. Pero en Python 3 \codigo{aStr} y \codigo{aBuf} son arrays de bytes, \codigo{aStr[0]} es un número entero y no se pueden comparar enteros y cadenas de caracteres sin realizar la conversión de uno de ellos.
 
-En este caso no hay necesidad de hacer el código más complicado añadiendo una conversión explícita. \codigo{aStr[0]} devuelve un entero; las cosas que estás comparanto son constantes. Así que vamos a cambiarlas de ser cadenas de caracteres de longitud 1 a números enteros. Y mientras estamos en ello, vamos a cambiar \codigo{aStr} a \codigo{aBuf}, ya que realmente no es una cadena de caracteres.
+En este caso no hay necesidad de hacer el código más complicado añadiendo una conversión explícita. \codigo{aStr[0]} devuelve un entero; las cosas que estás comparando son constantes. Así que vamos a cambiarlas de ser cadenas de caracteres de longitud 1 a números enteros. Y mientras estamos en ello, vamos a cambiar \codigo{aStr} a \codigo{aBuf}, ya que realmente no es una cadena de caracteres.
 
 \begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
   class SJISContextAnalysis(JapaneseContextAnalysis):
@@ -953,7 +953,7 @@ NameError: global name 'reduce' is not defined
 \end{lstlisting}
 \end{minipage}
 
-De acuerdo a la guía oficial ``Qué es lo nuevo de Python 3.0''\footnote{\href{http://docs.python.org/3.0/whatsnew/3.0.html\#builtins}{http://docs.python.org/3.0/whatsnew/3.0.html\#builtins}}, la función \codigo{reduce()} se ha movido del espacio global de nombres al módulo \codigo{functools}. Parafraseando a la guía: utiliza \codigo{functools.reduce()} si realmente lo necesitas; sin embargo, el 99\% de las ocasiones, un buble \codigo{for loop} resulta más legible. Puedes leer más sobre esta decisión de Guido van Rossum en su blog: La fortuna de reduce() en Python 3.00\footnote{\href{http://www.artima.com/weblogs/viewpost.jsp?thread=98196}{http://www.artima.com/weblogs/viewpost.jsp?thread=98196}}.
+De acuerdo a la guía oficial ``Qué es lo nuevo de Python 3.0''\footnote{\href{http://docs.python.org/3.0/whatsnew/3.0.html\#builtins}{http://docs.python.org/3.0/whatsnew/3.0.html\#builtins}}, la función \codigo{reduce()} se ha movido del espacio global de nombres al módulo \codigo{functools}. Parafraseando a la guía: utiliza \codigo{functools.reduce()} si realmente lo necesitas; sin embargo, el 99\% de las ocasiones, un bucle \codigo{for loop} resulta más legible. Puedes leer más sobre esta decisión de Guido van Rossum en su blog: La fortuna de reduce() en Python 3.00\footnote{\href{http://www.artima.com/weblogs/viewpost.jsp?thread=98196}{http://www.artima.com/weblogs/viewpost.jsp?thread=98196}}.
 
 
 \begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
