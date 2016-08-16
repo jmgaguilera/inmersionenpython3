@@ -30,7 +30,7 @@ Para casos como estos, el módulo \codigo{pickle} es ideal. Forma parte de la li
 
 \item Listas, tuplas, diccionarios y conjuntos que contengan cualquier combinación de tipos de dato nativos.
 
-\item Listas, tuplas, diccionarios y conjuntos de datos que contengan cualquier combinación de listas, tiplas, diccionarios y conjuntos conteniendo cualquier combinación de tipos de datos nativos (y así sucesivamente, hasta alcanzar un máximo nivel de anidamiento\footnote{\href{http://docs.python.org/3.1/library/sys.html\#sys.getrecursionlimit}{http://docs.python.org/3.1/library/sys.html\#sys.getrecursionlimit}}).
+\item Listas, tuplas, diccionarios y conjuntos de datos que contengan cualquier combinación de listas, tuplas, diccionarios y conjuntos conteniendo cualquier combinación de tipos de datos nativos (y así sucesivamente, hasta alcanzar un máximo nivel de anidamiento\footnote{\href{http://docs.python.org/3.1/library/sys.html\#sys.getrecursionlimit}{http://docs.python.org/3.1/library/sys.html\#sys.getrecursionlimit}}).
 
 \item Funciones, clases e instancias de clases (con ciertas limitaciones).
 
@@ -58,7 +58,7 @@ Mantén la ventana abierta. Ahora abre otra consola de Python y define la siguie
 \end{lstlisting}
 \end{minipage}
 
-A lo largo de este capítulo, utilizaré la variable \codigo{shell} para inidcar en qué consola de Python se ejecuta cada ejemplo.
+A lo largo de este capítulo, utilizaré la variable \codigo{shell} para indicar en qué consola de Python se ejecuta cada ejemplo.
 
 \section{Almacenamiento de datos a un fichero ``pickle''}
 
@@ -88,11 +88,11 @@ time.struct_time(tm_year=2009, tm_mon=3, tm_mday=27,
 
 \begin{enumerate}
 
-\item \emph{Línea 1:} Tecléalo en la consolo \#1.
+\item \emph{Línea 1:} Tecléalo en la consola \#1.
 
 \item \emph{Línea 3:} La idea aquí es construir un diccionario de Python que pueda representar algo que sea útil, como una \emph{entrada de una fuente Atom}. Pero también quiero asegurarme de que contiene diferentes tipos de datos para mostrar el funcionamiento del módulo \codigo{pickle}. No entres demasiado en los valores concretos.
 
-\item \emph{Línea 13:} El módulo \codigo{time} contiene una estructura de datos (\codigo{time\_struct}) que representa un punto en el tiempo (con una precisión de milisegundo) y funcionees que sirven para manipular estructuras de este tipo. La función \codigo{strptime()} recibe una cadena formateada y la convierte en una estructura \codigo{time\_struct}. Esta cadena se encuentra en el formato por defecto, pero puedes controlarlo con los códigos de formato. Para más detalles consulta el módulo \codigo{time}\footnote{\href{http://docs.python.org/3.1/library/time.html}{http://docs.python.org/3.1/library/time.html}}.
+\item \emph{Línea 13:} El módulo \codigo{time} contiene una estructura de datos (\codigo{time\_struct}) que representa un punto en el tiempo (con una precisión de milisegundo) y funciones que sirven para manipular estructuras de este tipo. La función \codigo{strptime()} recibe una cadena formateada y la convierte en una estructura \codigo{time\_struct}. Esta cadena se encuentra en el formato por defecto, pero puedes controlarlo con los códigos de formato. Para más detalles consulta el módulo \codigo{time}\footnote{\href{http://docs.python.org/3.1/library/time.html}{http://docs.python.org/3.1/library/time.html}}.
 
 \end{enumerate}
 
@@ -360,7 +360,7 @@ highest protocol among opcodes = 3
 \end{lstlisting}
 \end{minipage}
 
-La información más interesante de este volcado es la que aparece en la última línea, ya que muestra la versión del protocolo de ``pickle'' con la que el fichero se grabó. No existe un marcador de versión explício en el protocolo de ``pickle''. Para determinar la versión del protocolo, se observan los marcadores (códigos de operación - ``opcodes'') existentes en los datos almacenados y se utiliza el conocimiento expreso de qué códigos fueron introducidos en cada versión del protocolo ``pickle''. La función \codigo{pickle.dis()} hace exactamente eso e imprime el resultado en la última línea del volcado de salida.
+La información más interesante de este volcado es la que aparece en la última línea, ya que muestra la versión del protocolo de ``pickle'' con la que el fichero se grabó. No existe un marcador de versión explícito en el protocolo de ``pickle''. Para determinar la versión del protocolo, se observan los marcadores (códigos de operación - ``opcodes'') existentes en los datos almacenados y se utiliza el conocimiento expreso de qué códigos fueron introducidos en cada versión del protocolo ``pickle''. La función \codigo{pickle.dis()} hace exactamente eso e imprime el resultado en la última línea del volcado de salida.
 
 La siguiente es una función que simplemente devuelve el número de versión sin imprimir nada:
 
@@ -392,7 +392,7 @@ Y aquí la vemos en acción:
 
 El formato utilizado por el módulo \codigo{pickle} es específico de Python. No intenta ser compatible con otros lenguajes de programación. Si la compatibilidad entre lenguajes es un requisito, necesitas utilizar otros formatos de serialización. Uno de ellos es JSON\footnote{\href{http://json.org/}{http://json.org/}}. ``JSON'' significa ``JavaScript Object Notation - Notación de Objetos JavaScript'', pero no dejes que el nombre te engañe ---\codigo{JSON} está diseñado explícitamente para permitir su uso en diferentes lenguajes de programación.
 
-Python 3 inclyye un módulo \codigo{json} en su librería estándar. Como el módulo \codigo{pickle}, el módulo \codigo{json} dispone de funciones para la serialización de estructuras de datos, almacenamiento de los datos serializados en disco, carga de los mismos y deserialización en un nuevo objeto Python. Pero también tiene importantes diferencias. La primera es que \codigo{JSON} es un formato de datos textual, no binario. La especificación \codigo{RFC 4627}\footnote{\href{http://www.ietf.org/rfc/rfc4627.txt}{http://www.ietf.org/rfc/rfc4627.txt}} define el formato y cómo se codifican los diferentes tipos de datos de forma textual. Por ejemplo, un valor booleano se almacena como la cadena texto de cinco caracteres \codigo{``false''} o como la cadena de texto de cuatro caracters \codigo{``true''}. Todos los valores de \codigo{JSON} tienen en cuenta las mayúsculas y minúsculas.
+Python 3 incluye un módulo \codigo{json} en su librería estándar. Como el módulo \codigo{pickle}, el módulo \codigo{json} dispone de funciones para la serialización de estructuras de datos, almacenamiento de los datos serializados en disco, carga de los mismos y deserialización en un nuevo objeto Python. Pero también tiene importantes diferencias. La primera es que \codigo{JSON} es un formato de datos textual, no binario. La especificación \codigo{RFC 4627}\footnote{\href{http://www.ietf.org/rfc/rfc4627.txt}{http://www.ietf.org/rfc/rfc4627.txt}} define el formato y cómo se codifican los diferentes tipos de datos de forma textual. Por ejemplo, un valor booleano se almacena como la cadena texto de cinco caracteres \codigo{``false''} o como la cadena de texto de cuatro caracteres \codigo{``true''}. Todos los valores de \codigo{JSON} tienen en cuenta las mayúsculas y minúsculas.
 
 Segundo, como cualquier formato basado en texto, existe el problema de los espacios en blanco. \codigo{JSON} permite el uso de un número arbitrario de espacios en blanco (espacios, tabuladores, retornos de carro y saltos de línea) entre los valores. Estos espacios en blanco son ``no significativos'', lo que significa que los codificadores de \codigo{JSON} pueden añadir tantos como deseen, y los decodificadores de \codigo{JSON} están obligados a ignorarlos siempre que se encuentren entre dos valores. Esto permite que los datos de un fichero \codigo{JSON} se puedan imprimir bien formateados, anidando de forma clara los valores que se encuentran dentro de otros para que puedas verlos bien en un editor o visor de texto estándar. El módulo \codigo{json} de Python dispone de opciones para codificar la salida con formato apropiado para la lectura.
 
@@ -400,7 +400,7 @@ Tercero, existe el problema perenne de la codificación de caracteres. Puesto qu
 
 \section{Almacenamiento de datos en un fichero JSON}
 
-\codigo{JSON} se parece mucho a una estructura de datos que pudieras definir en JavaScript. No es casualidad, en realidad, puedes utilizar la función \codigo{eval()} de JavaScript para ``decodificar'' los datos serializados en JSON. Lo fundamental es conocer que \codigo{JSON} forma parte del propio lenguaje JavaScript. Como tal, \codigo{JSON} puede que ya te sea familiar.
+\codigo{JSON} se parece mucho a una estructura de datos que pudieras definir en Java\-Script. No es casualidad, en realidad, puedes utilizar la función \codigo{eval()} de JavaScript para ``decodificar'' los datos serializados en JSON. Lo fundamental es conocer que \codigo{JSON} forma parte del propio lenguaje JavaScript. Como tal, \codigo{JSON} puede que ya te sea familiar.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -560,7 +560,7 @@ def to_json(python_object):
 
 \item \emph{Línea 2:} La función debe validar el tipo de datos que recibe. No es estrictamente necesario pero así queda totalmente claro que casos cubre esta función, y hace más sencillo ampliarla más tarde.
 
-\item \emph{Línea 4:} En este caso, he elegido convertir el objeto \codigo{bytes} en un diccionario. La clave \codigo{\_\_class\_\_} guardará el tipo de datos original (como una cadena, \codigo{``bytes''}), y la clave \codigo{\_\_value\_\_} guardará el valor real. Como hay que convertirlo a algo que pueda serializarse en JSON, no se puede guardar directamente el objeto \codigo{bytes}. Como un objeto bytes es una secuencia de números entereos; con cada entero entre el 0 y el 255, podemos utilizar la función \codigo{list()} para convertir el objeto \codigo{bytes} en una lista de enteros. De forma que el objeto \codigo{b'$\backslash$xDE$\backslash$xD5$\backslash$x84$\backslash$xF8'} se convierte en \codigo{[222, 213, 180, 248]}. Por ejemplo, el byte \codigo{$\backslash$xDE} en hexadecimal, se convierte en \codigo{222} en decimal, \codigo{$\backslash$xD5} es \codigo{213} y así cada uno de ellos.
+\item \emph{Línea 4:} En este caso, he elegido convertir el objeto \codigo{bytes} en un diccionario. La clave \codigo{\_\_class\_\_} guardará el tipo de datos original (como una cadena, \codigo{``bytes''}), y la clave \codigo{\_\_value\_\_} guardará el valor real. Como hay que convertirlo a algo que pueda serializarse en JSON, no se puede guardar directamente el objeto \codigo{bytes}. Como un objeto bytes es una secuencia de números enteros; con cada entero entre el 0 y el 255, podemos utilizar la función \codigo{list()} para convertir el objeto \codigo{bytes} en una lista de enteros. De forma que el objeto \codigo{b'$\backslash$xDE$\backslash$xD5$\backslash$x84$\backslash$xF8'} se convierte en \codigo{[222, 213, 180, 248]}. Por ejemplo, el byte \codigo{$\backslash$xDE} en hexadecimal, se convierte en \codigo{222} en decimal, \codigo{$\backslash$xD5} es \codigo{213} y así cada uno de ellos.
 
 \item \emph{Línea 5:} Esta línea es importante. La estructura de datos que estás serializando puede contener tipos de dato que ni el serializador interno del módulo de Python ni el tuyo puedan manejar. En este caso, tu serializador debe elevar una excepción \codigo{TypeError} para que la función \codigo{json.dump()} sepa que tu serializador no reconoció el tipo de dato del objeto.
 
@@ -758,7 +758,7 @@ tm_yday=86, tm_isdst=-1),
 
 \item \emph{Línea 5:} Para utilizar la función \codigo{from\_json()} durante el proceso de deserialización, hay que pasarla en el parámetro \codigo{object\_hook} a la función \codigo{json.load()}. Una función que toma como parámetro a otra función ¡es muy útil!
 
-\item \emph{Línea 7:} La estructura de datos \codigo{entry} ahora contiene uan clave \codigo{'internal\_id'} que tiene como valor a un objeto \codigo{bytes}. Y también contiene una clave \codigo{'published\_date'} cuyo valor es un objeto \codigo{time.struct\_time}.
+\item \emph{Línea 7:} La estructura de datos \codigo{entry} ahora contiene una clave \codigo{'internal\_id'} que tiene como valor a un objeto \codigo{bytes}. Y también contiene una clave \codigo{'published\_date'} cuyo valor es un objeto \codigo{time.struct\_time}.
 
 \end{enumerate}
 
@@ -793,11 +793,9 @@ False
 
 \section{Lecturas recomendadas}
 
-\begin{quote}
 Muchos artículos del módulo \codigo{pickle} hacen referencia a \codigo{cPickle}. En Python 2 existen dos implementaciones del módulo \codigo{pickle}, uno escrito en Python puro y otro escrito en C (pero que se puede llamar desde Python). En Python 3 se han consolidado ambos módulos, por lo que siempre deberías utilizar \codigo{import pickle}. 
-\end{quote}
 
-Sobre el módulo \codigo{pickle}:
+\noindent Sobre el módulo \codigo{pickle}:
 
 \begin{itemize}
 
@@ -815,7 +813,7 @@ Sobre el módulo \codigo{pickle}:
 
 \end{itemize}
 
-Sobre el módulo \codigo{json}:
+\noindent Sobre el módulo \codigo{json}:
 
 \begin{itemize}
 
@@ -827,8 +825,9 @@ Sobre el módulo \codigo{json}:
 
 \end{itemize}
 
-Sobre la extensibilidad de pickle:
-
+\pagebreak[3]
+\noindent Sobre la extensibilidad de pickle:
+\nopagebreak[4]
 \begin{itemize}
 
 \item Sobre el almacenamiento de instancias de clase: \newline

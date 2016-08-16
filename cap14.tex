@@ -15,7 +15,7 @@ Nivel de dificultad:\difllll
 
 \section{Inmersión}
 
-Los servicios web HTTP permiten el envío y recepción de información desde servidores remotos, sin utilizar nada más que operaciones \codigo{HTTP}. Si quieres recuperar información desde un servidor, utiliza \codigo{HTTP GET}; si quieres enviar información al servidor, utiliza \codigo{HTTP POST}. Los servicios web \codigo{HTTP} más avanzados disponen de \codigo{API}s avanzadas que permiten crear, modifiar y borrar información, utilizando \codigo{HTTP PUT} y \codigo{HTTP DELETE}. En otras palabras, los ``verbos'' construidos en el protocolo \codigo{HTTP} (\codigo{GET}, \codigo{POST}, \codigo{PUT} y \codigo{DELETE}) pueden mapearse directamente en operaciones de nivel de aplicación para recuperar, crear, modificar y borrar datos.
+Los servicios web HTTP permiten el envío y recepción de información desde servidores remotos, sin utilizar nada más que operaciones \codigo{HTTP}. Si quieres recuperar información desde un servidor, utiliza \codigo{HTTP GET}; si quieres enviar información al servidor, utiliza \codigo{HTTP POST}. Los servicios web \codigo{HTTP} más avanzados disponen de \codigo{API}s avanzadas que permiten crear, modificar y borrar información, utilizando \codigo{HTTP PUT} y \codigo{HTTP DELETE}. En otras palabras, los ``verbos'' construidos en el protocolo \codigo{HTTP} (\codigo{GET}, \codigo{POST}, \codigo{PUT} y \codigo{DELETE}) pueden mapearse directamente en operaciones de nivel de aplicación para recuperar, crear, modificar y borrar datos.
 
 La principal ventaja de esta aproximación es la simplicidad, y esta simplicidad se ha demostrado que es muy popular. La información ---normalmente en \codigo{XML} o \codigo{JSON}--- puede estar construida y almacenada estáticamente, o generada dinámicamente por un programa del servidor y todos los lenguajes de programación importantes (incluido Python ¡desde luego!) incluyen una librería \codigo{HTTP} para descargarla. La depuración también es más sencilla, porque cada recurso de un servicio web \codigo{HTTP} dispone de una dirección única (en forma de \codigo{URL}), puedes cargarla en tu navegador web e inmediatamente ver la información obtenida.
 
@@ -43,7 +43,7 @@ Python 3 dispone de dos librerías diferentes para interactuar con los servicios
 
 \end{enumerate}
 
-¿Cuál deberiamos usar? Ninguna de ellas. En su lugar deberías utilizar \codigo{httplib2}\footnote{\href{http://code.google.com/p/httplib2/}{http://code.google.com/p/httplib2/}}, una librería de código abierto de terceros que implementa \codigo{HTTP} de forma más completa que \codigo{http.client} y proporciona una mejor abstracción que \codigo{urllib.request}.
+¿Cuál deberíamos usar? Ninguna de ellas. En su lugar deberías utilizar \codigo{httplib2}\footnote{\href{http://code.google.com/p/httplib2/}{http://code.google.com/p/httplib2/}}, una librería de código abierto de terceros que implementa \codigo{HTTP} de forma más completa que \codigo{http.client} y proporciona una mejor abstracción que \codigo{urllib.request}.
 
 Para comprender porqué \codigo{httplib2} es la elección correcta necesitas comprender primero \codigo{HTTP}.
 
@@ -53,13 +53,13 @@ Hay cinco características importantes que todos los clientes \codigo{HTTP} debe
 
 \subsection{Caché}
 
-Lo más importante que se debe comprender para usar cualquier servicio web es que el acceso a través de la web es increiblemente costoso. No quiero decir que cueste en ``euros y céntimos'' (aunque el ancho de banda no sea gratis). Quiero decir que lleva mucho tiempo abrir una conexión, enviar una petición y recuperar una respuesta de un servidor remoto. Incluso en la conexión más rápida existente, la \emph{latencia} (el tiempo que tarda desde el envío de una petición hasta que se inicia la recogida de los datos en la respuesta) puede ser mayor de lo que puedas esperar. Un router puede tener un malfuncionamiento, un paquete se pierde, un proxy está bajo ataque ---nunca existe un momento de aburrimiento en la red de Internet y no puedes hacer nada contra esto.
+Lo más importante que se debe comprender para usar cualquier servicio web es que el acceso a través de la web es increíblemente costoso. No quiero decir que cueste en ``euros y céntimos'' (aunque el ancho de banda no sea gratis). Quiero decir que lleva mucho tiempo abrir una conexión, enviar una petición y recuperar una respuesta de un servidor remoto. Incluso en la conexión más rápida existente, la \emph{latencia} (el tiempo que tarda desde el envío de una petición hasta que se inicia la recogida de los datos en la respuesta) puede ser mayor de lo que puedas esperar. Un router puede tener un malfuncionamiento, un paquete se pierde, un proxy está bajo ataque ---nunca existe un momento de aburrimiento en la red de Internet y no puedes hacer nada contra esto.
 
 \cajaTexto{Cache-Control: max-age significa ``no me moleste hasta dentro de una semana''}
 
 \codigo{HTTP} está diseñado con la posibilidad de cacheo en mente. Existe toda una clase de dispositivos (llamados ``proxys caché'') cuyo único trabajo consiste en interponerse entre ti y el resto del mundo para minimizar el acceso a la red. Tu empresa o tu proveedor de servicios de Internet es muy probable que tengan proxys de este tipo, incluso aunque no seas consciente de ello. Funcionan gracias al sistema de caché construido en el protocolo \codigo{HTTP}.
 
-Veamos un ejemplo concreto sobre cómo funciona la caché. Visita \codigo{diveintomark.org} en tu navegador. Esta página incluye una imagen de fondo \codigo{wearehugh.com/m.jpg}. Cuando tu navegador descarga esa imagen, el servidor incluye las siguientes cabeceras \codigo{HTTP}:
+Veamos un ejemplo concreto sobre cómo funciona la caché. Visita \codigo{diveintomark.org} en tu navegador. Esta página incluye una imagen de fondo \codigo{wearehugh.com/\allowbreak m.jpg}. Cuando tu navegador descarga esa imagen, el servidor incluye las siguientes cabeceras \codigo{HTTP}:
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -79,7 +79,7 @@ Content-Type: image/jpeg
 
 Las cabeceras \codigo{Cache-Control} y \codigo{Expires} le dicen a tu navegador (y a cualquier proxy con caché entre tú y el servidor) que esta imagen puede cachearse durante un año. \emph{¡un año!} y si, durante el próximo año, visitas alguna página que incluya un enlace a esta imagen, tu navegador cargará la imagen desde su caché \emph{sin generar ninguna actividad en la red}.
 
-Pero espera, que es aún mejor. Digamos que tu navegador borra la imagen de su caché local por alguna razón. Puede que se le acabe el espacio que tiene reservado en el disco, puede que tú borres manualmente la caché. Lo que sea. Pero las cabeceras \codigo{HTTP} dicen que esta información se puede almacenar en cualquier caché pública\footnote{Técnicamente lo importante es que la cabecera \codigo{Cache-Control} no tiene la clave \codigo{private}, por lo que esta información se puede almacenar en una caché por defecto.}. Los proxies con caché están diseñados para disponer de ``toneladas'' de espacio de almacenamiento, probablemete mucho más del que dispone tu navegador.
+Pero espera, que es aún mejor. Digamos que tu navegador borra la imagen de su caché local por alguna razón. Puede que se le acabe el espacio que tiene reservado en el disco, puede que tú borres manualmente la caché. Lo que sea. Pero las cabeceras \codigo{HTTP} dicen que esta información se puede almacenar en cualquier caché pública\footnote{Técnicamente lo importante es que la cabecera \codigo{Cache-Control} no tiene la clave \codigo{private}, por lo que esta información se puede almacenar en una caché por defecto.}. Los proxies con caché están diseñados para disponer de ``toneladas'' de espacio de almacenamiento, probablemente mucho más del que dispone tu navegador.
 
 Si tu compañía o proveedor de Interne disponen de un proxy con caché, el proxy puede que tenga todavía la información disponible en la caché. Cuando visites de nuevo \codigo{diveintomark.org} tu navegador buscará la imagen en la caché local, si no la encuentra hará una petición a la red para intentar descargarla del servidor remoto. Pero si el proxy aún dispone de una copia de la imagen, interceptará la petición y servirá la imagen desde la caché. Esto significa que tu petición nunca alcanzará el servidor remoto. De hecho, nunca saldrá de la red de tu compañía. Esto hace que la descarga sea más rápida (menos saltos en la red) y ahorra dinero a tu compañía (menos información descargándose del mundo exterior).
 
@@ -153,9 +153,9 @@ Content-Type: image/jpeg
 
 La segunda vez que solicites la misma información, incluirás el código \codigo{ETag} en una cabecera \codigo{If-None-Match}. Si la información no ha cambiado, el servidor enviará un código de estado \codigo{304}. Como en el caso de la comprobación de la fecha de última modificación, el servidor únicamente envía el código de estado \codigo{304}; no envía la misma información una segunda vez. Al incluir un código Etag en tu segunda petición, le estás diciendo al servidor que no existe necesidad de volver a enviar la misma información si aún coincide con este hash, puesto que aún tienes la información desde la última vez.
 
-\cajaTexto{Etag \emph{significa} ``no hay nada nuevo bajo el sol''}
-
+\pagebreak[3]
 De nuevo con \codigo{curl}:
+\nopagebreak[4]
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=False]
@@ -170,6 +170,8 @@ Expires: Mon, 31 May 2010 18:04:39 GMT
 Cache-Control: max-age=31536000, public
 \end{lstlisting}
 \end{minipage}
+
+\cajaTexto{Etag \emph{significa} ``no hay nada nuevo bajo el sol''}
 
 Las \codigo{ETag} se suelen encerrar entre comillas, pero las comillas forman parte del valor. Esto significa que necesitas enviar al servidor esas comillas en la cabecera \codigo{If-None-Match}.
 
@@ -190,13 +192,13 @@ Las librerías \codigo{HTTP} de Python no soportan compresión, \codigo{httplib2
 \subsection{Redireccionamiento}
 
 
-Las \codigo{URI}s buenas no cambian, pero muchas no lo son. Los sitios web se reorganizan, las páginas se mueven a nuevas direcciones, incluso los servicios web se pueden reorganizar. Un flujo de información sindicada en \codigo{http://example.com/index.xml} podría moverse a \codigo{http://example.com/xml/atom.xml}. O el dominio completo podría moverse, según una organización pueda expandirse y reorganizarse \codigo{http://example.com/index.xml} se podría convertir en \codigo{http://server-farm-1.example.com/index.xm}.
+Las \codigo{URI}s buenas no cambian, pero muchas no lo son. Los sitios web se reorganizan, las páginas se mueven a nuevas direcciones, incluso los servicios web se pueden reorganizar. Un flujo de información sindicada en \codigo{http://example.com/\allowbreak index.xml} podría moverse a \codigo{http://example.com/xml/atom.xml}. O el dominio completo podría moverse, según una organización pueda expandirse y reorganizarse \codigo{http://example.com/index.xml} se podría convertir en \codigo{http://server-farm-1.example.\allowbreak com/index.xml}.
 
-Cada vez que solicitas alguna clase de recurso de un servidor \codigo{HTTP}, el servidor incluye un código de estado en su respuesta. El código de estado \codigo{200} significa ``todo es normal, aquí está la página solicitada''. El código de estado \codigo{404} significa ``página no encontrada'' (probabblemente te ha pasado alguna vez mientras navegabas en Internet). Los códigos de estado de la gama de los \codigo{300} indican algún tipo de redireccionamiento.
+Cada vez que solicitas alguna clase de recurso de un servidor \codigo{HTTP}, el servidor incluye un código de estado en su respuesta. El código de estado \codigo{200} significa ``todo es normal, aquí está la página solicitada''. El código de estado \codigo{404} significa ``página no encontrada'' (probablemente te ha pasado alguna vez mientras navegabas en Internet). Los códigos de estado de la gama de los \codigo{300} indican algún tipo de redireccionamiento.
 
 \cajaTexto{Location significa ``mira aquí''.}
 
-\codigo{HTTP} dispone de varias formas de indicar que un recurso se ha movido. Las dos técnicas más habituales son los códigos de estado \codigo{302} y \codigo{301}. El código de estado \codigo{302} es una \emph{redirección temporal}; lo que significa ``¡uh! se ha movido temporalmente a otra dirección'' (y luego se indica la dirección temporal en la cabecera \codigo{Location}). El código de estado \codigo{301} es una \emph{redirección permanente}; significa ``¡uh! se ha movido permanentemente'' (y luego indica la nueva dirección en una cabecera \codigo{Location}). Si el código de estado es \codigo{302} y una nueva dirección, la especificación \codigo{HTTP} indica que deberías utilizar la nueva dirección para obtener lo que has solicitdo, pero la siguiente vez que quieras acceder al mismo recurso, deberías reintentarlo con la vieja dirección. Pero si lo que obtienes es un codigo de estado \codigo{301} y una nueva dirección, se supone que debes usar la nueva dirección a partir de ese momento.
+\codigo{HTTP} dispone de varias formas de indicar que un recurso se ha movido. Las dos técnicas más habituales son los códigos de estado \codigo{302} y \codigo{301}. El código de estado \codigo{302} es una \emph{redirección temporal}; lo que significa ``¡uh! Se ha movido temporalmente a otra dirección'' (y luego se indica la dirección temporal en la cabecera \codigo{Location}). El código de estado \codigo{301} es una \emph{redirección permanente}; significa ``¡uh! Se ha movido permanentemente'' (y luego indica la nueva dirección en una cabecera \codigo{Location}). Si el código de estado es \codigo{302} y una nueva dirección, la especificación \codigo{HTTP} indica que deberías utilizar la nueva dirección para obtener lo que has solicitado, pero la siguiente vez que quieras acceder al mismo recurso, deberías reintentarlo con la vieja dirección. Pero si lo que obtienes es un código de estado \codigo{301} y una nueva dirección, se supone que debes usar la nueva dirección a partir de ese momento.
 
 El módulo \codigo{urllib.request} sigue automáticamente los redireccionamientos cuando recibe los códigos de estado indicados desde el servidor \codigo{HTTP}, pero no te indica que lo haya hecho. Obtendrás los datos que solicitaste, pero no sabrás nunca que la librería te ayudó siguiendo el redireccionamiento necesario. Siempre seguirás usando la vieja dirección, y cada vez que suceda, serás redirigido a la nueva dirección mediante la ayuda que te presta el módulo \codigo{urllib.request}. En otras palabras, trata las redirecciones permanentes de la misma forma que las temporales. Esto significa que hacen falta dos ``vueltas'' en lugar de una para cada acceso, lo que es malo para el servidor y para ti.
 
@@ -220,7 +222,8 @@ Digamos que quieres descargar un recurso a través de \codigo{HTTP}, por ejemplo
   <subtitle>currently between addictions</subtitle>
   <id>tag:diveintomark.org,2001-07-29:/</id>
   <updated>2009-03-27T21:56:07Z</updated>
-  <link rel='alternate' type='text/html' href='http://diveintomark.org/'/>
+  <link rel='alternate' type='text/html'
+        href='http://diveintomark.org/'/>
  ... 
 \end{lstlisting}
 \end{minipage}
@@ -307,7 +310,7 @@ Content-Type: application/xml
 
 \item \emph{Línea 8:} La información ocupa 3070 bytes. Observa lo que \emph{no aparece}: una cabecera \codigo{Content-encoding}. Tu petición indicó que solamente aceptas información sin comprimir (\codigo{Accept-encoding: identity}), y estamos seguros de que esta respuesta solamente contiene información sin comprimir.
 
-\item \emph{Línea 9:} La respuesta incluye cabecerás de caché que indican que este flujo se puede mantener en caché durante 24 horas (86400 segundos).
+\item \emph{Línea 9:} La respuesta incluye cabeceras de caché que indican que este flujo se puede mantener en caché durante 24 horas (86400 segundos).
 
 \item \emph{Línea 14:} Y finalmente, se descarga la información real mediante una llamada a \codigo{response.read()}. Como puedes ver mediante el uso de la función \codigo{len()}, la descarga es completa: los 3070 bytes de una vez.
 
@@ -368,12 +371,12 @@ True
 
 \end{enumerate}
 
-\codigo{HTTP} está diseñado para funcionar mejor que esto, \codigo{urllib} habla \codigo{HTTP} como yo hablo español ---lo suficiente para integrarme en una fiesta, pero no lo suficente como para mantener una conversación. \codigo{HTTP} es una conversación. Es hora de actualizarnos a una librería que hable \codigo{HTTP} de forma fluida.
+\codigo{HTTP} está diseñado para funcionar mejor que esto, \codigo{urllib} habla \codigo{HTTP} como yo hablo español ---lo suficiente para integrarme en una fiesta, pero no lo suficiente como para mantener una conversación. \codigo{HTTP} es una conversación. Es hora de actualizarnos a una librería que hable \codigo{HTTP} de forma fluida.
 
 \section{Introducción a \codigo{httplib2}}
 \label{sec:httplib2}
 
-Antes de que puedas utilizar \codigo{httplib2} necesitarás instalarla. Visita \href{http://code.google.com/p/httplib2/}{http://code.google.com/p/httplib2/} y descarga la última versión. \codigo{httplib2} está disponible para Python 2.x y para Python 3.x; asegúrate de que descargas la versión de Python 3, denominada algo así como \codigo{httplib2-python3-0.5.0.zip}.
+Antes de que puedas utilizar \codigo{httplib2} necesitarás instalarla. Visita \href{http://code.google.com/p/httplib2/}{http://code.\allowbreak google.com/p/httplib2/} y descarga la última versión. \codigo{httplib2} está disponible para Python 2.x y para Python 3.x; asegúrate de que descargas la versión de Python 3, denominada algo así como \codigo{httplib2-python3-0.5.0.zip}.
 
 Descomprime el archivo, abre el terminal en una ventana y vete al directorio recién creado \codigo{httplib2}. En Windows abre el menú \codigo{Inicio}, selecciona \codigo{Ejecutar...}, teclea \codigo{cmd.exe} y pulsa \codigo{INTRO}.
 
@@ -414,7 +417,7 @@ httplib2-python3_0.5.0-py3.1.egg-info
 \end{lstlisting}
 \end{minipage}
 
-En Mac OS X ejecuta la aplicación \codigo{Terminal.app} de la carpeta \codigo{/Aplicaciones/Utilidades}. En Linux, ejecuta la aplicación de \codigo{Terminal}, que normalmente se encuentra en el menu de \codigo{Aplicaciones} bajo \codigo{Accesorios} o \codigo{Sistema}.
+En Mac OS X ejecuta la aplicación \codigo{Terminal.app} de la carpeta \codigo{/Aplicaciones/Utilidades}. En Linux, ejecuta la aplicación de \codigo{Terminal}, que normalmente se encuentra en el menú de \codigo{Aplicaciones} bajo \codigo{Accesorios} o \codigo{Sistema}.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=False]
@@ -489,7 +492,7 @@ Probablemente necesites un único objeto \codigo{httplib2.Http}. No obstante, ex
 
 Bytes, cadenas de texto, ¡qué cansancio! ¿Porqué \codigo{httplib2} no hace simplemente la conversión por ti? Bueno, es complejo, porque las reglas para determinar la codificación de caracteres son específicas del tipo de recurso que estés solicitano. ¿Cómo podría \codigo{httplib2} conocer la clase de recurso que estás solicitando? Normalmente se encuentra en la cabecera \codigo{Content-Type HTTP}, pero se trata de una característica opcional de \codigo{HTTP} y no todos los servidores \codigo{HTTP} la incluyen. Si esa cabecera no está incluida en la respuesta \codigo{HTTP}, es el cliente el que tiene que adivinarlo (A esto se le suele llamar ``inspección del contenido'', y no es una solución perfecta).
 
-Si supieras que clase de recursos estás esperando (un documento \codigo{XML} en este caso), tal vez podrías `simplemente'' pasar el objeto \codigo{bytes} a la función \codigo{xml.etree.ElementTree.parse()}. Eso funcionaría siempre que el documento \codigo{XML} incluyera la información de su propia codificación de caracteres (como hace en este caso), pero eso es una característica opcional y no todos los documentos \codigo{XML} lo indican. Si un documento \codigo{XML} no incluye la información de codificación de caracteres, se supone que el cliente tiene que mirar en el protocolo de transporte ---en este caso la cabecera \codigo{Content-Type HTTP}, que puede incluir el parámetro \codigo{charset}.
+Si supieras que clase de recursos estás esperando (un documento \codigo{XML} en este caso), tal vez podrías `simplemente'' pasar el objeto \codigo{bytes} a la función \codigo{xml.etree.\allowbreak ElementTree.parse()}. Eso funcionaría siempre que el documento \codigo{XML} incluyera la información de su propia codificación de caracteres (como hace en este caso), pero eso es una característica opcional y no todos los documentos \codigo{XML} lo indican. Si un documento \codigo{XML} no incluye la información de codificación de caracteres, se supone que el cliente tiene que mirar en el protocolo de transporte ---en este caso la cabecera \codigo{Content-Type HTTP}, que puede incluir el parámetro \codigo{charset}.
 
 Pero es aún peor. Ahora la información sobre la codificación de caracteres puede encontrarse en dos lugares: dentro del propio documento \codigo{XML} y dentro de la cabecera \codigo{Content-Type HTTP}. Si la información está en \emph{ambos} lugares... ¿cuál gana? De acuerdo a la especifiación \codigo{RFC3023}\href{http://www.ietf.org/rfc/rfc3023.txt}{http://www.ietf.org/rfc/rfc3023.txt} (te lo juro, no me lo estoy inventando), si el tipo de medio indicado en la cabecera \codigo{Content-Type HTTP} es \codigo{application/xml}, \codigo{application/xml-dtd}, \codigo{application/xml-external-parsed-entity} o cualquier otro subtipo de \codigo{application/xml} como \codigo{application/atom+xml} o incluso \codigo{application/rdf+xml}, entonces la codificación de caracteres es:
 
@@ -513,7 +516,7 @@ Por otra parte, si el tipo de medio dado en la cabecera \codigo{Content-Type HTT
 
 \end{enumerate}
 
-Y eso únicamente para los documentos \codigo{XML}. Para los documentos \codigo{HTML} los navegadores han construido unas reglas tan bizantinas para identificación del contenido\href{http://www.adambarth.com/papers/2009/barth-caballero-song.pdf}{http://www.adambarth.com/papers/2009/barth-caballero-song.pdf} que aún estamos intentando aclarar las que son\href{http://www.google.com/search?q=barth+content-type+processing+model}{http://www.google.com/search?q=barth+content-type+processing+model}.
+Y eso únicamente para los documentos \codigo{XML}. Para los documentos \codigo{HTML} los navegadores han construido unas reglas tan bizantinas para identificación del contenido \href{http://www.adambarth.com/papers/2009/barth-caballero-song.pdf}{http://www.adambarth.com/papers/2009/barth-caballero-song.pdf} que aún estamos intentando aclarar las que son \href{http://www.google.com/search?q=barth+content-type+processing+model}{http://www.google.com/search?q=barth+\allowbreak content-type+processing+model}.
 
 \subsection{Cómo \codigo{httplib2} gestiona la caché}
 
@@ -801,7 +804,7 @@ reply: 'HTTP/1.1 200 OK'
 
 \item \emph{Línea 11:} Y esta es la respuesta \codigo{302 Found}. No se muestra aquí, esta respuesta también incluye una cabecera \codigo{Location} que apunta a la dirección \codigo{URL} real. 
 
-\item \emph{Línea 12:} \codigo{httplib2} se dirige a la nueva dirección mediante una nueva petición a la \codigo{URL} indicada en la cabecera \codigo{Location}: \codigo{http://diveintopython3.org/examples/feed.xml}
+\item \emph{Línea 12:} \codigo{httplib2} se dirige a la nueva dirección mediante una nueva petición a la \codigo{URL} indicada en la cabecera \codigo{Location}: \codigo{http://diveintopython3.org/examples/\allowbreak feed.xml}
 
 \end{enumerate}
 
@@ -869,7 +872,7 @@ La respuesta que obtienes (\codigo{response}) te informa sobre la \codigo{URL} \
 
 \item \emph{Línea 2:} El atributo \codigo{response.previous} almacena una referencia al objeto \codigo{response} seguido anteriormente a que \codigo{httplib2} obtuviera la respuesta actual.
 
-\item \emph{Línea 13:} Ambos objetos, \codigo{response} y \codigo{response.previous}, son del tipo \codigo{httplib2.Response}.
+\item \emph{Línea 13:} Ambos objetos, \codigo{response} y \codigo{response.previous}, son del tipo \codigo{httplib2.\allowbreak Response}.
 
 \item \emph{Línea 17:} Esto significa que puedes hacer \codigo{response.previous.previous} para seguir la cadena de redireccionamiento más atrás en el tiempo. El escenario podría ser: una \codigo{URL} redirige a una segunda \codigo{URL} que a su vez redirige a una tercera ¡podría ser! En este ejemplo ya hemos alcanzado el comienzo de la cadena de redireccionamiento por lo que el atributo vale \codigo{None}.
 
@@ -899,7 +902,7 @@ True
 
 \item \emph{Línea 5:} La respuesta \codigo{302} no se guardó en la caché, por eso \codigo{httplib2} vuelve a enviar una petición por la misma \codigo{URL}.
 
-\item \emph{Línea 9:} De nuevo, el servidor responde con un código de estado \codigo{302}. Pero observa lo que \emph{no} ocurrió: No hay una segunda petición a la \codigo{URL} final, \codigo{http://diveintopython.org/examples/feed.xml}. Esta \codigo{URL} está en la caché (recuerda la cabecera \codigo{Cache-Contro} que viste en el ejemplo anterior. Una vez \codigo{httplib2} recibe el código \codigo{302 Found}, \emph{comprueba la caché antes de pedir otra vez la página}. La caché contiene una copia vigente de \codigo{http://diveintopython3.org/examples/feed.xml}, por lo que no hay ninguna necesidad de volver a pedirla.
+\item \emph{Línea 9:} De nuevo, el servidor responde con un código de estado \codigo{302}. Pero observa lo que \emph{no} ocurrió: No hay una segunda petición a la \codigo{URL} final, \codigo{http://diveintopython.org/examples/feed.xml}. Esta \codigo{URL} está en la caché (recuerda la cabecera \codigo{Cache-Contro} que viste en el ejemplo anterior. Una vez \codigo{httplib2} recibe el código \codigo{302 Found}, \emph{comprueba la caché antes de pedir otra vez la página}. La caché contiene una copia vigente de \codigo{http://diveintopython3.org/\allowbreak examples/feed.xml}, por lo que no hay ninguna necesidad de volver a pedirla.
 
 \item \emph{Línea 10:} Al finalizar el método \codigo{request()} ha leído los datos de la caché y los ha devuelto. Por supuesto, son los mismos datos que recibiste la vez anterior.
 
@@ -927,7 +930,7 @@ True
 
 \begin{enumerate}
 
-\item \emph{Línea 3:} De nuevo, esta \codigo{URL} no existe en realidad. He configurado mi servidor para que retorne una redirección permanente a \codigo{http://diveintopython3.org/examples/feed.xml}.
+\item \emph{Línea 3:} De nuevo, esta \codigo{URL} no existe en realidad. He configurado mi servidor para que retorne una redirección permanente a \codigo{http://diveintopython3.org/\allowbreak examples/feed.xml}.
 
 \item \emph{Línea 9:} Aquí está: el código de estado \codigo{301}. Pero de nuevo, observa lo que \emph{no} ha sucedido: no hay una nueva petición a la \codigo{URL} nueva. ¿Por qué? porque ya está en la caché.
 
@@ -1136,7 +1139,7 @@ reply: 'HTTP/1.1 200 OK'
 
 \item \emph{Línea 5:} Este es el texto del mensaje de estado recién publicado.
 
-\item \emph{Línea 10:} Este es el identificador único del nuevo mensaje. Idnti.ca lo utiliza para construir una \codigo{URL} para poder ver el mensaje en la web: \codigo{http://identi.ca/notice/5131472}
+\item \emph{Línea 10:} Este es el identificador único del nuevo mensaje. Idnti.ca lo utiliza para construir una \codigo{URL} para poder ver el mensaje en la web: \codigo{http://identi.ca/\allowbreak notice/5131472}
 
 \end{enumerate}
 
@@ -1222,9 +1225,9 @@ Así que ahora al intentar el enlace \codigo{http://identi.ca/notice/5131472} en
 
 \item Más ejemplos de código \codigo{httplib2}: \newline \href{http://code.google.com/p/httplib2/wiki/ExamplesPython3}{http://code.google.com/p/httplib2/wiki/ExamplesPython3}
 
-\item Cómo hacer correctamente la caché de \codigo{HTTP}: Introducción a \codigo{httplib2}: \newline \href{http://www.xml.com/pub/a/2006/02/01/doing-http-caching-right-introducing-httplib2.html}{http://www.xml.com/pub/a/2006/02/01/doing-http-caching-right-introducing-httplib2.html}
+\item Cómo hacer correctamente la caché de \codigo{HTTP}: Introducción a \codigo{httplib2}: \newline \href{http://www.xml.com/pub/a/2006/02/01/doing-http-caching-right-introducing-httplib2.html}{http://www.xml.com/pub/a/2006/02/01/doing-http-caching-right-introdu\allowbreak cing-httplib2.html}
 
-\item \codigo{httplib2:} Persistencia y autentificación \codigo{HTTP}: \newline \href{http://www.xml.com/pub/a/2006/03/29/httplib2-http-persistence-and-authentication.html}{http://www.xml.com/pub/a/2006/03/29/httplib2-http-persistence-and-authentication.html}
+\item \codigo{httplib2:} Persistencia y autentificación \codigo{HTTP}: \newline \href{http://www.xml.com/pub/a/2006/03/29/httplib2-http-persistence-and-authentication.html}{http://www.xml.com/pub/a/2006/03/29/httplib2-http-persistence-and-authen\allowbreak tication.html}
 
 \end{itemize} 
 
