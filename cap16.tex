@@ -19,7 +19,7 @@ Los verdaderos artistas lanzan productos. O eso dice Steve Jobs. ¿Quieres sacar
 \begin{itemize}
   \item Una herramienta de construcción (para ti).
   \item Una herramienta de instalación (para tus usuarios).
-  \item Un formto de metadatos para los paquetes (para las herramientas de búsqueda).
+  \item Un formato de metadatos para los paquetes (para las herramientas de búsqueda).
   \item Y mas\ldots
 \end{itemize}
 
@@ -75,7 +75,7 @@ This version requires Python 3 or later; a Python 2 version is available separat
 )
 \end{lstlisting}
 
-\cajaTextoAncho{\codigo{chardet} y \codigo{httplib2} son librerías de código abierto, pero no existe ningún requisito para que tú liberes tus propias librerias Python bajo la licencia que quieras. El proceso descrito en este capítulo funcionará para cualquier software Python, independientemente del tipo de licencia.}
+\cajaTextoAncho{\codigo{chardet} y \codigo{httplib2} son librerías de código abierto, pero no existe ningún requisito para que tú liberes tus propias librerías Python bajo la licencia que quieras. El proceso descrito en este capítulo funcionará para cualquier software Python, independientemente del tipo de licencia.}
 
 \section{Cosas que \codigo{Distutils} no puede hacer por ti}
 
@@ -117,7 +117,7 @@ httplib2/
 
 \begin{enumerate}
   \item \emph{Línea 1:} Crea un directorio raíz para contenerlo todo. Dale el mismo nombre que el de tu módulo Python.
-  \item \emph{Línea 3:} Para acomodar a tus usuarios de windows, el fichero ``README'' debería incluir la extensión \codigo{.txt}, y debería utilizar el estilo de retorno de caracteres de Windows. Solo porque utilices un moderno editor de texto que se ejecuta desde la línea de comando e incluya su propio lenguaje de macros, eso no significa que tengas que hacerle la vida más difícil a tus usuarios (Tus usuarios usan el block de notas de Windows, triste pero cierto). Incluso aunque estés en Linux o en Mac OS X, tu editor de textos seguro que tiene una opción para grabar los ficheros con retornos de carro al estilo de Windows.
+  \item \emph{Línea 3:} Para acomodar a tus usuarios de windows, el fichero ``README'' debería incluir la extensión \codigo{.txt}, y debería utilizar el estilo de retorno de caracteres de Windows. Solo porque utilices un moderno editor de texto que se ejecuta desde la línea de comando e incluya su propio lenguaje de macros, eso no significa que tengas que hacerle la vida más difícil a tus usuarios (Tus usuarios usan el cuaderno de notas de Windows, triste pero cierto). Incluso aunque estés en Linux o en Mac OS X, tu editor de textos seguro que tiene una opción para grabar los ficheros con retornos de carro al estilo de Windows.
 
   \item \emph{Línea 5:} Tu script de configuración de \codigo{Distutils} debería llamarse \codigo{setup.py}, a menos que tengas una buena razón para no hacerlo así. Pero no la tienes.
   \item \emph{Línea 7:} Si tu paquete Python es un único fichero \codigo{.py}, deberías ponerlo en el directorio ``raíz'' junto al fichero ``README'' y tu script de configuración. Pero la librería \codigo{httplib2} no es un único fichero; es un módulo multifichero. Simplemente añade el directorio \codigo{httplib2} dentro del directorio raíz. De este modo tendrás el fichero \codigo{\_\_init\_\_.py} dentro de un directorio \codigo{httplib2} que, a su vez, está dentro del directorio raíz \codigo{httplib2}. Esto no es un problema; de hecho, simplifica el proceso de empaquetado.
@@ -163,7 +163,7 @@ La primera línea de cualquier fichero de script de configuración es:
 form distutils.core import setup
 \end{lstlisting}
 
-Esta línea importa la función \codigo{setup()}, que es el punto de entrada principal a \codigo{Distutils}. El 95\% de los ficheros de configuración de \codigo{Distutils} constan simplemente de una llamada al método \codigo{steup()} y nada más (me he inventado la estadística, pero si tu script hace más cosas, deberías tener una buena razón. ¿La tienes? Seguramente no).
+Esta línea importa la función \codigo{setup()}, que es el punto de entrada principal a \codigo{Distutils}. El 95\% de los ficheros de configuración de \codigo{Distutils} constan simplemente de una llamada al método \codigo{setup()} y nada más (me he inventado la estadística, pero si tu script hace más cosas, deberías tener una buena razón. ¿La tienes? Seguramente no).
 
 La función \codigo{setup()} puede tomar docenas de parámetros\footnote{\href{http://docs.python.org/3.1/distutils/apiref.html\#distutils.core.setup}{http://docs.python.org/3.1/distutils/apiref.html\#distutils.core.setup}}. Para mantener la cordura de los que tengan que leerla, deberías usar argumentos con nombre para cada uno que uses. Esto no es solamente una convención; es un requisito. Tu script de configuración fallará si intentas llamar a la función con argumentos sin nombre.
 
@@ -201,11 +201,11 @@ setup(
 )
 \end{lstlisting}
 
-El parámetro \codigo{packages} destaca un solapamiento desafortunado en el vocabulario del proceso de distribución. Hemos estado hablando del ``paquete'' como la cosa que estamos construyendo (y potencialmente, listándola en el Índice de Paquetes de Python). Pero eso no es lo que el parámetro \codigo{packages} quiere expresar. Se refiere al hecho de que el módulo \codigo{chardet} es un módulo multifichero, algunas veces conocido como\ldots un ``paquete''. El parámetro \codigo{packages} le indica a \codigo{Distutils} que incluya el directorio \codigo{chardet}, su fichero \codigo{\_\_init\_\_.py} y todos los ficheros \codigo{.py} que constituyen el módulo \codigo{chardet}. Esto es muy importante; toda esta parrafada sobre la documentación y los metadatos es irrelevante si te olvidas de incluir el código propiamente dicho.
+El parámetro \codigo{packages} destaca un solapamiento desafortunado en el vocabulario del proceso de distribución. Hemos estado hablando del ``paquete'' como la cosa que estamos construyendo (y potencialmente, listándolo en el Índice de Paquetes de Python). Pero eso no es lo que el parámetro \codigo{packages} quiere expresar. Se refiere al hecho de que el módulo \codigo{chardet} es un módulo multifichero, algunas veces conocido como\ldots un ``paquete''. El parámetro \codigo{packages} le indica a \codigo{Distutils} que incluya el directorio \codigo{chardet}, su fichero \codigo{\_\_init\_\_.py} y todos los ficheros \codigo{.py} que constituyen el módulo \codigo{chardet}. Esto es muy importante; toda esta parrafada sobre la documentación y los metadatos es irrelevante si te olvidas de incluir el código propiamente dicho.
 
 \section{Clasificando tu paquete}
 
-El Índice de Paquetes Python (``PyPI'') contiene miles de librerías Python. Una correcta clasificación utilizando metadatos permite encontrarlas con más facilidad. PyPI te permite mostrar los paquetes filtrando por clasificador\footnote{\href{http://pypi.python.org/pypi?:action=browse}{http://pypi.python.org/pypi?:action=browse}}. Puedes seleccionar varios para acotar la búsqueda. ¡Estos clasificadores no son metadatos invisitbles que puedas ignorar!
+El Índice de Paquetes Python (``PyPI'') contiene miles de librerías Python. Una correcta clasificación utilizando metadatos permite encontrarlas con más facilidad. PyPI te permite mostrar los paquetes filtrando por clasificador\footnote{\href{http://pypi.python.org/pypi?:action=browse}{http://pypi.python.org/pypi?:action=browse}}. Puedes seleccionar varios para acotar la búsqueda. ¡Estos clasificadores no son metadatos invisibles que puedas ignorar!
 
 Para clasificar tu software debes pasar un parámetro \codigo{classifiers} a la función \codigo{setup} de \codigo{Distutils}. Este parámetro es una lista de cadenas de caracteres que \emph{no} son texto libre. Todas las cadenas de clasificación deben salir una lista que existe en PyPI que está accesible en el siguiente enlace \href{http://pypi.python.org/pypi?:action=list\_classifiers}{http://pypi.python.org/pypi?:action=list\_classifiers}.
 
@@ -318,7 +318,7 @@ recursive-include docs *.html *.css *.png *.gif
   \item \emph{Línea 2:} La segunda línea es un poco más complicada. El comando \codigo{recursive-include} toma el nombre de un directorio y de un o más ficheros. Los ficheros pueden incluir caracteres comodín. Esta línea significa ``¿Ves el directorio \codigo{docs/} en el directorio raíz del proyecto? Mira dentro, recursivamente, y busca ficheros \codigo{.html}, \codigo{.css}, \codigo{.png}, y \codigo{.gif}. Inclúyelos a todos en la distribución de mi paquete''.
 \end{enumerate}
 
-Todos los comandos de manifiesto conservan la estructura de directorios que tengas en el directorio de tu proyecto. Este comando \codigo{recursive-include} no va a poner un puñado de ficheros \codigo{.html} y \codigo{.png} en el directorio raíz del paquete. Va a mantener la estructura de directorios de \codigo{docs/}, pero solamente incluirá los ficheros que coincidan con los comodines especificados\footnote{No lo he mencionado antes, pero la documentación de \codigo{chardet} está escrita en \codigo{XML} y se convierte a \codigo{HTML} posteriomente mediante un script. No quiero incluir los ficheros \codigo{XML} en el paquete de distribución, solo el código \codigo{HTML} y las imágenes}.
+Todos los comandos de manifiesto conservan la estructura de directorios que tengas en el directorio de tu proyecto. Este comando \codigo{recursive-include} no va a poner un puñado de ficheros \codigo{.html} y \codigo{.png} en el directorio raíz del paquete. Va a mantener la estructura de directorios de \codigo{docs/}, pero solamente incluirá los ficheros que coincidan con los comodines especificados\footnote{No lo he mencionado antes, pero la documentación de \codigo{chardet} está escrita en \codigo{XML} y se convierte a \codigo{HTML} posteriormente mediante un script. No quiero incluir los ficheros \codigo{XML} en el paquete de distribución, solo el código \codigo{HTML} y las imágenes}.
 
 \cajaTextoAncho{Los ficheros de manifiesto tienen su propio formato. Puedes consultar ``Especificando los ficheros a distribuir'' \\ (\href{http://docs.python.org/3.1/distutils/sourcedist.html\#manifest}{http://docs.python.org/3.1/distutils/sourcedist.html\#manifest}) \\ y ``los comandos de la plantilla de manifiesto'' \\ (\href{http://docs.python.org/3.1/distutils/commandref.html\#sdist-cmd}{http://docs.python.org/3.1/distutils/commandref.html\#sdist-cmd}), \\ para conocer los detalles del mismo.}
 
