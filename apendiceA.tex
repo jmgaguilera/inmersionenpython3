@@ -484,9 +484,9 @@ En Python 2, la función \codigo{filter()} devolvía una lista, el resultado de 
 \begin{enumerate}
   \item \emph{Línea 1:} en el caso básico, \codigo{2to3} envolverá la llamada a \codigo{filter()} con una llamada a \codigo{list()}, lo que simplemente itera y devuelve una lista verdadera.
   \item \emph{Línea 2:} sin embargo, si la llamada a \codigo{filter()} ya está envuelta en una llamada a \codigo{list()}, \codigo{2to3} no hará nada, ya que no es necesario.
-  \item \emph{Línea 3:} para sintaxis especial \codigo{filter(None, \ldots)}, \codigo{2to3} transformará la llamada en una comprensión de lista semánticamente equivalente.
+  \item \emph{Línea 3:} para sintaxis especial \codigo{filter(None, \ldots)}, \codigo{2to3} transformará la llamada en una lista por comprensión semánticamente equivalente.
   \item \emph{Línea 4:} en contextos como el bucle \codigo{for}, que iteran a través de la secuencia completa siempre, no se requieren cambios.
-  \item \emph{Línea 5:} tampoco se requieren cambios, cuando ya se itere de forma completa por encontrarse \codigo{filter()} en una sentencia de comprensión de listas.
+  \item \emph{Línea 5:} tampoco se requieren cambios, cuando ya se itere de forma completa por encontrarse \codigo{filter()} en una sentencia de lista por comprensión.
 \end{enumerate}
 
 \section{La función global \codigo{map()}}
@@ -512,9 +512,9 @@ De forma parecida a como se comporta \codigo{filter()}, la función \codigo{map(
 \begin{enumerate}
   \item \emph{Línea 1:} como sucede con \codigo{filter()}, en el caso más básico, \codigo{2to3} envolverá la llamada a \codigo{map()}con una llamada a \codigo{list()}.
   \item \emph{Línea 2:} para la sintaxis especial \codigo{map(None, \ldots)}, la función identidad, \codigo{2to3} la convertirá en una llamada equivalente a \codigo{list()}.
-  \item \emph{Línea 3:} si el primer argumento de \codigo{map()} es una función lambda, \codigo{2to3} la convertirá en una comprensión de listas equivalente.
+  \item \emph{Línea 3:} si el primer argumento de \codigo{map()} es una función lambda, \codigo{2to3} la convertirá en una lista por comprensión equivalente.
   \item \emph{Línea 4:} en contextos como los bucles \codigo{for}, en los que se itera a través de la secuencia completa, no se requieren cambios.
-  \item \emph{Línea 4:} de nuevo, no hacen falta cambios, ya que la comprensión de listas iterará a través de la secuencia completa, y esto es posible tanto si el valor de retorno de \codigo{map()} es un iterador, como si es una lista.
+  \item \emph{Línea 4:} de nuevo, no hacen falta cambios, ya que la lista por comprensión iterará a través de la secuencia completa, y esto es posible tanto si el valor de retorno de \codigo{map()} es un iterador, como si es una lista.
 \end{enumerate}
 
 \section{La función global \codigo{reduce()}}
@@ -763,7 +763,7 @@ En Python 2, había dos formas de obtener un rango de números: \codigo{range()}
 \begin{enumerate}
   \item \emph{Línea 1:} en su forma más simple, \codigo{2to3} convierte \codigo{xrange()} en \codigo{range()}.
   \item \emph{Línea 2:} Si tu código Python 2 usa \codigo{range()}, \codigo{2to3} no sabe si necesitas una lista o un iterador; por ello, opta por lo seguro, que es envolver la función en una lista llamando a la función \codigo{list()}.
-  \item \emph{Línea 3:} si la función \codigo{xrange()} se encontraba en una comprensión de lista, \codigo{2to3} es suficientemente inteligente como para no envolverla en una lista.
+  \item \emph{Línea 3:} si la función \codigo{xrange()} se encontraba en una lista por comprensión, \codigo{2to3} es suficientemente inteligente como para no envolverla en una lista.
   \item \emph{Línea 4:} De forma similar, un bucle \codigo{for} funcionará igual de bien con un iterador. Por lo que no hay necesidad de cambiar nada en e este caso.
   \item \emph{Línea 5:} la función \codigo{sum()} también funciona con un iterador, por eso \codigo{2to3} no hace ningún cambio. Esto se aplica a \codigo{min()}, \codigo{max()}, \codigo{sum()}, \codigo{list()}, \codigo{tuple()}, \codigo{set()}, \codigo{sorted()}, \codigo{any()}, y \codigo{all()}.
 \end{enumerate}
