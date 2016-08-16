@@ -16,7 +16,7 @@ Draco aplicó sus ordenanzas.'' \\
 
 \section{Inmersión}
 
-La mayoría de los capítulos de este libro se han desarrollado alrededor de un código de ejemplo. Pero \codigo{XML} no trata sobre código, trata sobre datos. Un uso muy común para \codigo{XML} es la ``provisión de contenidos sindicados'' que lista los últimos artículos de un blog, foro u otro sitio web con actualizaciones frecuentes. El software para blogs más popular puede generar fuentes de información y actualizarlas cada vez que hay nuevos artículos, hilos de discusión o nuevas entradas en un blog. Puedes seguir un blog ``sscribiéndote'' a su canal (feed), y puedes seguir diversos blogs mediante un agregador de canales como el lector de Google.
+La mayoría de los capítulos de este libro se han desarrollado alrededor de un código de ejemplo. Pero \codigo{XML} no trata sobre código, trata sobre datos. Un uso muy común para \codigo{XML} es la ``provisión de contenidos sindicados'' que lista los últimos artículos de un blog, foro u otro sitio web con actualizaciones frecuentes. El software para blogs más popular puede generar fuentes de información y actualizarlas cada vez que hay nuevos artículos, hilos de discusión o nuevas entradas en un blog. Puedes seguir un blog ``escribiéndote'' a su canal (feed), y puedes seguir diversos blogs mediante un agregador de canales como el lector de Google.
 
 Aquí están los datos de \codigo{XML} que utilizaremos en este capítulo. Es un canal ---específicamente, una fuente de información sindicada \textbf{Atom}.
 
@@ -159,7 +159,7 @@ Los elementos pueden tener \emph{atributos}, que son parejas de nombres con valo
 
 \end{enumerate}
 
-Si un elemento tiene más de un atributo, el orden de los mismos no es significativo. Los atributos de un elemento forman un conjunto desordenado de claves y valores, como en un diccionario de Python. No exite límite en el número de atributos que puedes definir para cada elemento.
+Si un elemento tiene más de un atributo, el orden de los mismos no es significativo. Los atributos de un elemento forman un conjunto desordenado de claves y valores, como en un diccionario de Python. No existe límite en el número de atributos que puedes definir para cada elemento.
 
 Los elementos pueden contener \codigo{texto}.
 
@@ -191,7 +191,7 @@ Como pasa con las funciones de Python que se pueden declarar en diferentes \emph
 
 \begin{enumerate}
 
-\item \emph{Línea 1:} El elemento \codigo{feed} se encuentra en el espacio de nombres \codigo{http://www.w3.org/2005/Atom}.
+  \item \emph{Línea 1:} El elemento \codigo{feed} se encuentra en el espacio de nombres \codigo{http://www.w3.\allowbreak{}org/2005/Atom}.
 
 \item \emph{Línea 2:} El elemento \codigo{title} se encuentra también en el espacio de nombres \codigo{http://www.w3.org/2005/Atom}. La declaración del espacio de nombres afecta al elemento en el que está declarado y a todos los elementos hijo.
 
@@ -208,7 +208,7 @@ Como pasa con las funciones de Python que se pueden declarar en diferentes \emph
 
 \begin{enumerate}
 
-\item \emph{Línea 1:} El elemento \codigo{feed} se encuentra en el espacio de nombres \codigo{http://www.w3.org/2005/Atom}.
+  \item \emph{Línea 1:} El elemento \codigo{feed} se encuentra en el espacio de nombres \codigo{http://www.w3.\allowbreak{}org/2005/Atom}.
 
 \item \emph{Línea 2:} El elemento \codigo{title} también se encuentra en el espacio de nombres \codigo{http://www.w3.org/2005/Atom}.
 
@@ -258,7 +258,8 @@ Una fuente Atom contiene diversas partes de información sobre la propia fuente.
   <subtitle>currently between addictions</subtitle>
   <id>tag:diveintomark.org,2001-07-29:/</id>
   <updated>2009-03-27T21:56:07Z</updated>
-  <link rel='alternate' type='text/html' href='http://diveintomark.org/'/>
+  <link rel='alternate' type='text/html'
+        href='http://diveintomark.org/'/>
 \end{lstlisting}
 \end{minipage}
 
@@ -272,7 +273,7 @@ Una fuente Atom contiene diversas partes de información sobre la propia fuente.
 
 \item \emph{Línea 5:} Esta fuente fue actualizada por última vez el 27 de marzo de 2009 a las 21:56 GMT. Normalmente es equivalente a la fecha de última modificación del artículo más reciente.
 
-\item \emph{Línea 6:} Ahora las cosas comienzan a ponerse interesantes. Esteelemento \codigo{link} no tiene contenido de texto, pero tiene tres atributos: \codigo{rel}, \codigo{type} y \codigo{href}. El valor de \codigo{rel} indica la clase de enlace que es; \codigo{rel='alternate'} significa que es un enlace a una representación alternativa de esta fuente. El atributo \codigo{type='text/html'} significa que es un enlace a una página \codigo{HTML}. Por último, el destino del enlace se indica en el atributo \codigo{href}.
+\item \emph{Línea 6:} Ahora las cosas comienzan a ponerse interesantes. Este elemento \codigo{link} no tiene contenido de texto, pero tiene tres atributos: \codigo{rel}, \codigo{type} y \codigo{href}. El valor de \codigo{rel} indica la clase de enlace que es; \codigo{rel='alternate'} significa que es un enlace a una representación alternativa de esta fuente. El atributo \codigo{type='text/html'} significa que es un enlace a una página \codigo{HTML}. Por último, el destino del enlace se indica en el atributo \codigo{href}.
 
 \end{enumerate}
 
@@ -303,8 +304,8 @@ dive-into-history-2009-edition'/>
   <category scheme='http://diveintomark.org' term='html'/>
   <summary type='html'>Putting an entire chapter on one page sounds
     bloated, but consider this &amp;mdash; my longest chapter so far
-    would be 75 printed pages, and it loads in under 5 seconds&amp;hellip;
-    On dialup.</summary>
+    would be 75 printed pages, and it loads in under 5 seconds
+    &amp;hellip; On dialup.</summary>
 </entry>             
 \end{lstlisting}
 \end{minipage}
@@ -347,21 +348,21 @@ Python puede analizar documentos \codigo{XML} de diversas formas. Dispone de ana
 
 \item \emph{Línea 1:} La librería ElementTree forma parte de la librería estándar de Python, se encuentra en \codigo{xml.etree.ElementTree}.
 
-\item \emph{Línea 2:} El punto de entrada primario de la librería es la función \codigo{parse()} que puede tomar como parámetro el nombre de un fichero o un objeto de flujo. Esta función analiza el documento entero de una vez. Si la memoria es escasa, existen formas para analiar un documento XML de forma incremental\footnote{\href{http://effbot.org/zone/element-iterparse.htm}{http://effbot.org/zone/element-iterparse.htm}}.
+\item \emph{Línea 2:} El punto de entrada primario de la librería es la función \codigo{parse()} que puede tomar como parámetro el nombre de un fichero o un objeto de flujo. Esta función analiza el documento entero de una vez. Si la memoria es escasa, existen formas para analizar un documento XML de forma incremental\footnote{\href{http://effbot.org/zone/element-iterparse.htm}{http://effbot.org/zone/element-iterparse.htm}}.
 
 \item \emph{Línea 3:} La función \codigo{parse()} devuelve un objeto que representa al documento completo. \emph{No} es el elemento raíz. Para obtener una referencia al elemento raíz, debes llamar al método \codigo{getroot()}.
 
-\item \emph{Línea 4:} Como cabría esperar, el elemento raíz es el elemento \codigo{feed} del espacio de nombres \codigo{http://www.w3.org/2005/Atom}. La representación en cadena de texto de este elemento incide en un punto importante: un elemento \codigo{XML} es una combinación de su espacio de nombres y la etiqueta de su nombre (también de nominado el \emph{nombre local}). todo elemento de este documento se encuentra en el espacio de nombres Atom, por lo que el elemento raíz se representa como \codigo{\{http://www.w3.org/2005/Atom\}feed}.
+\item \emph{Línea 4:} Como cabría esperar, el elemento raíz es el elemento \codigo{feed} del espacio de nombres \codigo{http://www.w3.org/2005/Atom}. La representación en cadena de texto de este elemento incide en un punto importante: un elemento \codigo{XML} es una combinación de su espacio de nombres y la etiqueta de su nombre (también de nominado el \emph{nombre local}). Todo elemento de este documento se encuentra en el espacio de nombres Atom, por lo que el elemento raíz se representa como \codigo{\{http://www.w3.org/2005/Atom\}feed}.
 
 \end{enumerate}
 
 \begin{quote}
-ElementTree represena a los elementos \codigo{XML} como \codigo{\{espacio\_de\_nombres\}nombre\_local}. Verás y utilizarás este formato en muchos lugares de la \codigo{API} de ElementTree.
+ElementTree representa a los elementos \codigo{XML} como \codigo{\{espacio\_de\_nombres\}nombre\_local}. Verás y utilizarás este formato en muchos lugares de la \codigo{API} de ElementTree.
 \end{quote}
 
 \subsection{Los elementos son listas}
 
-En la \codigo{API} de ElementTree los eleemntos se comportan como listas. Los elementos de la lista son los hijos del elemento.
+En la \codigo{API} de ElementTree los elementos se comportan como listas. Los elementos de la lista son los hijos del elemento.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -386,7 +387,7 @@ En la \codigo{API} de ElementTree los eleemntos se comportan como listas. Los el
 
 \begin{enumerate}
 
-\item \emph{Línea 2:} Continuando con el ejemplo anterior, el elemento raíz es \codigo{\{http://www.w3.org/2005/Atom\}feed}.
+  \item \emph{Línea 2:} Continuando con el ejemplo anterior, el elemento raíz es \codigo{\{http://www.\allowbreak{}w3.org/2005/Atom\}feed}.
 
 \item \emph{Línea 4:} La ``longitud'' del elemento raíz es el número de elementos hijo.
 
@@ -396,7 +397,7 @@ En la \codigo{API} de ElementTree los eleemntos se comportan como listas. Los el
 
 \end{enumerate}
 
-Puede que ya te hayas dado cuenta, pero quiero dejarlo explícito: la lista de los elementos hijo, únicamente incluye los hijos \emph{directos}. cada uno de los elementos \codigo{entry} tiene sus propios hijos, pero no se muestran en esta lista. Estarán incluidos en la lista de hijos del elemento \codigo{entry}, pero no se encuentran en la lista de \codigo{feed}. Existen formas de encontrar elementos independientemente de los profundamente anidados que se encuentren; lo veremos más adelante en este mismo capítulo.
+Puede que ya te hayas dado cuenta, pero quiero dejarlo explícito: la lista de los elementos hijo, únicamente incluye los hijos \emph{directos}. Cada uno de los elementos \codigo{entry} tiene sus propios hijos, pero no se muestran en esta lista. Estarán incluidos en la lista de hijos del elemento \codigo{entry}, pero no se encuentran en la lista de \codigo{feed}. Existen formas de encontrar elementos independientemente de los profundamente anidados que se encuentren; lo veremos más adelante en este mismo capítulo.
 
 \subsection{Los atributos son diccionarios}
 
@@ -553,7 +554,7 @@ Existe una forma de buscar entre los elementos \emph{descendientes}: hijos, niet
 
 \item \emph{Línea 7:} El primer resultado es hijo directo del elemento raíz. Como puedes observar por sus atributos, es el enlace alternativo que apunta a la versión \codigo{HTML} del sitio web que esta fuente describe.
 
-\item \emph{Línea 11:} Los otros tres resultados son cada uno de los enlaces alternativos de cada entrada. cada \codigo{entry} tiene un único elemento hijo \codigo{link}. Debido a la doble barra inclinada al comienzo de la consulta, se encuentran todos estos enlaces.
+\item \emph{Línea 11:} Los otros tres resultados son cada uno de los enlaces alternativos de cada entrada. Cada \codigo{entry} tiene un único elemento hijo \codigo{link}. Debido a la doble barra inclinada al comienzo de la consulta, se encuentran todos estos enlaces.
 
 \end{enumerate}
 
@@ -625,7 +626,7 @@ Pero \codigo{lxml} proporciona algo más que el ser más rápido que \codigo{Ele
 
 \item \emph{Línea 1:} En este ejemplo voy a importar \codigo{lxml.tree} en lugar de utilizar \codigo{from lxml import etree}, para destacar que estas características son específicas de \codigo{lxml}.
 
-\item \emph{Línea 3:} Esta consulta encuentra todos los elementos del espacio de nombres Atom, en cualquier sitio del documento, que contengan el atributo \codigo{href}. Las \codigo{//} al comienzo de la consulta significa ``elementos en cualquier parte del documento (no únicamente los hijos del elemento raíz)''. \codigo{\{http://www.w3.org/2005/Atom\}} significa ``únicamente los elementos en el espacio de nombres de Atom''. \codigo{*} significa ``elementos con cualquier nombre local'' y \codigo{@href} significa ``tiene un atributo \codigo{href}''.
+\item \emph{Línea 3:} Esta consulta encuentra todos los elementos del espacio de nombres Atom, en cualquier sitio del documento, que contengan el atributo \codigo{href}. Las \codigo{//} al comienzo de la consulta significa ``elementos en cualquier parte del documento (no únicamente los hijos del elemento raíz)''. \codigo{\{http://www.w3.org/2005/\allowbreak{}Atom\}} significa ``únicamente los elementos en el espacio de nombres de Atom''. \codigo{*} significa ``elementos con cualquier nombre local'' y \codigo{@href} significa ``tiene un atributo \codigo{href}''.
 
 \item \emph{Línea 8:} La consulta encuentra todos los elementos Atom con el atributo \codigo{href} cuyo valor sea \codigo{http://diveintomark.org/}.
 
@@ -633,7 +634,7 @@ Pero \codigo{lxml} proporciona algo más que el ser más rápido que \codigo{Ele
 
 \end{enumerate}
 
-¿No es suficiente para tí? \codigo{lxml} tampoco integra soporte de expresiones XPath 1.0. No voy a entrar en profundidad en la sintaxis de XPath; se podría escribir un libro entero sobre ello. Pero te mostraré cómo se integra en \codigo{lxml}.
+¿No es suficiente para ti? \codigo{lxml} tampoco integra soporte de expresiones XPath 1.0. No voy a entrar en profundidad en la sintaxis de XPath; se podría escribir un libro entero sobre ello. Pero te mostraré cómo se integra en \codigo{lxml}.
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -696,7 +697,7 @@ Un analizador \codigo{XML} no verá ninguna diferencia entre un documento \codig
 \end{lstlisting}
 \end{minipage}
 
-es idéntico al \codigo{DOM} de esta otra:
+Es idéntico al \codigo{DOM} de esta otra:
 
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=True]
@@ -704,7 +705,7 @@ es idéntico al \codigo{DOM} de esta otra:
 \end{lstlisting}
 \end{minipage}
 
-La única diferencia práctica es que la segunda serialización es varios caracteres más corta. Si tuvieramos que modificar nuestro ejemplo para añadirle el prefijo \codigo{ns0:} en cada etiqueta de inicio y fin, serían 4 caracteres por cada etiqueta de inicio x 79 etiquetas + 4 caracteres por la propia declaración del espacio de nombres, en total son 320 caracteres más. En el caso de que asumamos una codificación de caracteres UTF8 se trata de 320 bytes extras (después de comprimir la diferencia se reduce a 21 bytes). Puede que no te importe mucho, pero para una fuente Atom, que puede descargarse miles de veces cada vez que cambia, una diferencia de unos cuantos bytes por petición puede suponer una cierta diferencia.
+La única diferencia práctica es que la segunda serialización es varios caracteres más corta. Si tuviéramos que modificar nuestro ejemplo para añadirle el prefijo \codigo{ns0:} en cada etiqueta de inicio y fin, serían 4 caracteres por cada etiqueta de inicio x 79 etiquetas + 4 caracteres por la propia declaración del espacio de nombres, en total son 320 caracteres más. En el caso de que asumamos una codificación de caracteres UTF-8 se trata de 320 bytes extras (después de comprimir la diferencia se reduce a 21 bytes). Puede que no te importe mucho, pero para una fuente Atom, que puede descargarse miles de veces cada vez que cambia, una diferencia de unos cuantos bytes por petición puede suponer una cierta diferencia.
 
 La librería \codigo{ElementTree} no ofrece un control fino sobre la serialización de los elementos con espacios de nombres, pero \codigo{lxml} sí:
 
@@ -723,7 +724,7 @@ La librería \codigo{ElementTree} no ofrece un control fino sobre la serializaci
 
 \begin{enumerate}
 
-\item \emph{Línea 2:} Para comenzar, se define el mapeo de los espacios de nombre como un diccionario. Los valores del diccionario son espacios de nombres; las claves son el prefijo deseao. Utilizar \codigo{None} como prefijo, sirve para declarar el espacio de nombres por defecto.
+\item \emph{Línea 2:} Para comenzar, se define el mapeo de los espacios de nombre como un diccionario. Los valores del diccionario son espacios de nombres; las claves son el prefijo deseado. Utilizar \codigo{None} como prefijo, sirve para declarar el espacio de nombres por defecto.
 
 \item \emph{Línea 3:} Ahora puedes pasar el parámetro \codigo{nsmap}, que es específico de \codigo{lxml}, cuando vayas a crear un elemento, y \codigo{lxml} respectará los prefijos que hayas definido.
 
@@ -849,7 +850,7 @@ examples/feed-broken.xml:3:28:FATAL:PARSER:ERR_UNDECLARED_ENTITY:
 
 \begin{enumerate}
 
-\item \emph{Línea 1:} Para crear un analizador específico, se debe instanciar la clase \codigo{lxml.etree.XMLParser}. Puede recibir un número diferente de parámetros. Nos interesa ahora el parámetro \codigo{recover}. Cuando se establece a \codigo{True}, el analizador \codigo{XML} intentará ``recuperarse'' de este tipo de errores.
+  \item \emph{Línea 1:} Para crear un analizador específico, se debe instanciar la clase \codigo{lxml.\allowbreak{}etree.XMLParser}. Puede recibir un número diferente de parámetros. Nos interesa ahora el parámetro \codigo{recover}. Cuando se establece a \codigo{True}, el analizador \codigo{XML} intentará ``recuperarse'' de este tipo de errores.
 
 \item \emph{Línea 2:} Para analizar un documento \codigo{XML} con este analizador, basta con pasar este objeto \codigo{parser} como segundo parámetro de la función \codigo{parse()}. Observa que \codigo{lxml} no eleva ninguna excepción sobre la entidad no definida \codigo{\&hellip;}.
 
@@ -861,7 +862,7 @@ examples/feed-broken.xml:3:28:FATAL:PARSER:ERR_UNDECLARED_ENTITY:
 
 \end{enumerate}
 
-Es importante reiterar que \textbf{no existe garantía de interoperabilidad} entre analizadores \codigo{XML} que se recuperan de los errores. Una analizador diferente podría decidir que reconoce la entidad \codigo{\&hellip;} de \codigo{HTML} y reemplazarla por \codigo{\&amp;hellip;}? ¿Es esto mejor? Puede ser. ¿Es más correcto? No, ambas soluciones son igualmente erróneas. El comportamiento correcto (de acuerdo a la especificación \codigo{XML}) es pararse y elevar el error. Si has decidido que no es lo que quieres hacer, lo haces bajo tu propia responsabilidad.
+Es importante reiterar que \textbf{no existe garantía de interoperabilidad} entre analizadores \codigo{XML} que se recuperan de los errores. Una analizador diferente podría decidir que reconoce la entidad \codigo{\&hellip;} de \codigo{HTML} y reemplazarla por \codigo{\&amp;hellip;} ¿Es esto mejor? Puede ser. ¿Es más correcto? No, ambas soluciones son igualmente erróneas. El comportamiento correcto (de acuerdo a la especificación \codigo{XML}) es pararse y elevar el error. Si has decidido que no es lo que quieres hacer, lo haces bajo tu propia responsabilidad.
 
 \section{Lecturas recomendadas}
 
