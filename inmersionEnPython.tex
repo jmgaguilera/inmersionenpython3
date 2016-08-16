@@ -22,11 +22,12 @@
 \usepackage{placeins}
 \usepackage{pbox}
 \usepackage{tikz}
+\usepackage{pgfornament}
 \usetikzlibrary{trees}
 \hypersetup{
     pdfauthor={Jos\'{e} Miguel Gonz\'{a}lez Aguilera},
     pdftitle={Inmersi\'{o}n en Python 3},
-    pdfsubject={Programaci\'{o}n en Python 3},
+    pdfsubject={Programaci\'{o}n en Python 3, versión 1 en español},
     pdfkeywords={python,python 3,programaci\'{o}n}
 }
 \parindent 1cm
@@ -93,22 +94,44 @@
         basicstyle=\footnotesize, mathescape=true}
 \pagestyle{empty}
 \frontmatter
-\begin{titlepage}
-\begin{textblock*}{210mm}(-10mm,-2mm)
-\includegraphics{portada/portada.png}
-\end{textblock*}
-. 
-\end{titlepage}
+%\begin{titlepage}
+%\begin{textblock*}{210mm}(-10mm,-2mm)
+%\includegraphics{portada/portada.png}
+%\end{textblock*}
+%. 
+%\end{titlepage}
 
 
-\newpage
+\vspace*{\fill}
+\begin{center}
+
+  {\Huge Inmersión en Python 3}
+
+  \pgfornament[width = 3cm]{82}
+  
+  {\Large Mark Pilgrim}
+
+
+\end{center}
+\vspace{\fill}
+\vspace{\fill}
+
+\begin{flushright}
+  Original en inglés: \href{http://www.diveintopython3.net/}{http://www.diveintopython3.net/}
+
+  Versión en español: \href{https://github.com/jmgaguilera/inmersionenpython3/releases}{https://github.com/jmgaguilera/inmersionenpython3/releases} 
+\end{flushright}
+
+\clearpage
+
 \pagestyle{headings}
 
-\tableofcontents
-
-\pagenumbering{arabic}
-
 \include{portada}
+
+\pagenumbering{Roman}
+\tableofcontents
+\cleardoublepage
+
 \pagestyle{headings}
 \pagenumbering{arabic}
 \include{cap-1}
