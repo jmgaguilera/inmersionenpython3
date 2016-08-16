@@ -26,15 +26,17 @@ Si has leído la introducción a las clases, en el capítulo \ref{ch:clases}, ya
     \hline
     Línea & Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
     \hline
-    1  & inicializar una instancia & \codigo{x = MiClase()} & \codigo{x.\_\_init\_\_()} \\
-    2  & la representación oficial de & \codigo{repr(x)} & \codigo{x.\_\_repr\_\_()} \\
-       & una cadena de caracteres & \codigo{} & \codigo{} \\
-    3  & el valor informal como & \codigo{str(x)} & \codigo{x.\_\_str\_\_()} \\
+    1  & inicializar instancia & \codigo{x = MiClase()} & \codigo{x.\_\_init\_\_()} \\
+    2  & representación oficial & \codigo{repr(x)} & \codigo{x.\_\_repr\_\_()} \\
+       & de una cadena de & \codigo{} & \codigo{} \\
+       & caracteres & \codigo{} & \codigo{} \\
+    3  & valor informal como & \codigo{str(x)} & \codigo{x.\_\_str\_\_()} \\
       & cadena de caracteres & \codigo{} & \codigo{} \\
-    4  & el valor informal como & \codigo{bytes(x)} & \codigo{x.\_\_bytes\_\_()} \\
+    4  & valor informal como & \codigo{bytes(x)} & \codigo{x.\_\_bytes\_\_()} \\
       & array de bytes & \codigo{} & \codigo{} \\
     5  & el valor formateado & \codigo{format(x, format\_spec)} & \codigo{x.\_\_format\_\_(format\_spec)} \\
-     & como una cadena de caracteres \\
+     & como una cadena de \\
+     & caracteres \\
     \hline
   \end{tabular}
 \end{table}
@@ -57,9 +59,12 @@ En el capítulo, \ref{ch:clases}, sobre iteradores viste cómo construir un iter
     \hline
     Línea & Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
     \hline
-    1  & para iterar a través de una secuencia & \codigo{iter(seq)} & \codigo{seq.\_\_iter\_\_()} \\
-    2  & para obtener el siguiente valor de un iterador & \codigo{next(seq)} & \codigo{seq.\_\_next\_\_()} \\
-    3  & para crear un iterador con orden inverso & \codigo{reversed(seq)} & \codigo{seq.\_\_reversed\_\_()} \\
+    1  & para iterar a través & \codigo{iter(seq)} & \codigo{seq.\_\_iter\_\_()} \\
+      & de una secuencia & \codigo{} & \codigo{} \\
+    2  & para obtener el siguiente & \codigo{next(seq)} & \codigo{seq.\_\_next\_\_()} \\
+     & valor de un iterador & \codigo{} & \codigo{} \\
+    3  & para crear un iterador & \codigo{reversed(seq)} & \codigo{seq.\_\_reversed\_\_()} \\
+      & con orden inverso & \codigo{} & \codigo{} \\
     \hline
   \end{tabular}
 \end{table}
@@ -89,13 +94,13 @@ Python 3 llamará a \codigo{seg.\_\_iter\_\_()} para crear un iterador, luego ll
     \hline
     Línea & Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
     \hline
-    1  & para obtener un atributo & \codigo{x.mi\_propiedad} & \codigo{x.\_\_getattribute\_\_(} \\
-       & calculado (incondicional) & \codigo{} &\quad \codigo{'mi\_propiedad')} \\
-    2  & para obtener un atributo  & \codigo{x.mi\_propiedad} & \codigo{x.\_\_getattr\_\_(} \\
-       & calculado (por defecto) & \codigo{} &\quad \codigo{'mi\_propiedad')} \\
+    1  & para obtener un atrib. & \codigo{x.mi\_propiedad} & \codigo{x.\_\_getattribute\_\_(} \\
+       & calculado (incondic.) & \codigo{} &\quad \codigo{'mi\_propiedad')} \\
+    2  & para obtener un atrib.  & \codigo{x.mi\_propiedad} & \codigo{x.\_\_getattr\_\_(} \\
+       & calculado por defecto & \codigo{} &\quad \codigo{'mi\_propiedad')} \\
     3  & para dar valor a un & \codigo{x.mi\_propiedad = valor} & \codigo{x.\_\_setattr\_\_(} \\
        & atributo & \codigo{} & \quad \codigo{'mi\_propiedad', valor)} \\
-    4  & para borrar un atributo & \codigo{del x.mi\_propiedad} & \codigo{x.\_\_delattr\_\_(} \\
+    4  & para borrar un atrib. & \codigo{del x.mi\_propiedad} & \codigo{x.\_\_delattr\_\_(} \\
     5  & para listar todos los & \codigo{dir(x)} & \codigo{x.\_\_dir\_\_()} \\
        & atributos y métodos & \codigo{} & \quad\codigo{'mi\_propiedad')} \\
     \hline
@@ -108,7 +113,7 @@ Python 3 llamará a \codigo{seg.\_\_iter\_\_()} para crear un iterador, luego ll
   \item \emph{Línea 2:} si tu clase define un método \codigo{\_\_getattr\_\_()}, Python la llamará solamente después de buscar al atributo en todos los lugares \emph{normales}. Si una instancia \codigo{x} define una atributo \codigo{color}, \codigo{x.color} no llamará a \codigo{x.getattr('color')}; solamente devolverá el valor definido ya por \codigo{x.color}.
   \item \emph{Línea 3:} el método \codigo{\_\_setattr\_\_()} se llama siempre que asignes un valor a un atributo.
   \item \emph{Línea 4:} el método \codigo{\_\_delattr\_\_()} se llama siempre que eliminas un atributo.
-  \item \emph{Línea 5:} el método \codigo{\_\_dir\_\_()} es útil si defines \codigo{\_\_getattr\_\_()} o \codigo{\_\_getattribute\_\_()}. Normalmente llamar a \codigo{dir()} solamente devolvería una lista con los atributos y métodos normales. Si tu método \codigo{\_\_getattr\_\_()} maneja un atributo \codigo{color} de forma dinámica, \codigo{dir()} no devolvería \codigo{color} como uno de los atributos disponibles. La sustitución del método \codigo{\_\_dir\_\_()} te permite listar \codigo{color} como uno de los atributos disponibles, lo que es útil para que otros puedan utilizar tu clase sin que tengan que investigar su código interno.
+  \item \emph{Línea 5:} \codigo{\_\_dir\_\_()} es útil si defines \codigo{\_\_getattr\_\_()} o \codigo{\_\_getattribute\_\_()}. Normalmente llamar a \codigo{dir()} solamente devolvería una lista con los atributos y métodos normales. Si tu método \codigo{\_\_getattr\_\_()} maneja un atributo \codigo{color} de forma dinámica, \codigo{dir()} no devolvería \codigo{color} como uno de los atributos disponibles. La sustitución del método \codigo{\_\_dir\_\_()} te permite listar \codigo{color} como uno de los atributos disponibles, lo que es útil para que otros puedan utilizar tu clase sin que tengan que investigar su código interno.
 \end{enumerate}
 
 La distinción entre \codigo{\_\_getattr\_\_()} y \codigo{\_\_getattribute\_\_()} es sutil pero fundamental. Puedo explicarlo con dos ejemplos:
@@ -295,7 +300,7 @@ class FieldStorage:
   \item \emph{Línea 12:} el método \codigo{\_\_contains\_\_()} es la magia que hace el trabajo. Cuando dices \codigo{if 'q' in fs}, Python busca el método \codigo{\_\_contains\_\_()}en el objeto \codigo{fs}, que está definido en \codigo{cgi.py}. El valor \codigo{'q'} se pasa a este método como el parámetro \codigo{key}.
   \item \emph{Línea 15:} la función \codigo{any()} toma una expresión generadora para retornar \codigo{True} si el generador devuelve algún elemento. La función \codigo{any()} es lo suficientemente inteligente para parar en cuanto encuentra el primer resultado.
   \item \emph{Línea 17:} la misma clase \codigo{FieldStorage} también sabe devolver su longitud, así que puedes utilizar \codigo{len(fs)} para que se llame al método \codigo{\_\_len\_\_()} de la clase \codigo{FieldStorage} y devuelva el número de elementos que contiene.
-  \item \emph{Línea 18:} el método \codigo{self.key()} comprueba si \codigo{self.list} está a \codigo{None}; por ello, el método \codigo{\_\_len\_\_()} no necestia duplicar esta validación.
+  \item \emph{Línea 18:} el método \codigo{self.key()} comprueba si \codigo{self.list} está a \codigo{None}; por ello, el método \codigo{\_\_len\_\_()} no necesita duplicar esta validación.
 \end{enumerate}
 
 \section{Clases que se comportan como diccionarios}
@@ -439,10 +444,9 @@ El siguiente conjunto de métodos especiales cubren la segunda parte: proporcion
 
 Pero, ¡Espera! Que hay más. Si quieres hacer operaciones en la asignación, como \codigo{ x /= 3}, hay aún más métodos especiales que puedes definir.
 
-
 \begin{table}[htp]
   \centering
-  \begin{tabular}{clll}
+  \begin{tabular}{lll}
     \hline
     Tu quieres\ldots & Por eso escribes\ldots & Y Python llama\ldots \\
     \hline
@@ -520,7 +524,7 @@ He separado esta sección de la anterior porque las comparaciones se pueden hace
   \end{tabular}
 \end{table}
 
-\cajaTextoAncho{Si defines un método \codigo{\_\_lt\_\_()}, pero no el método \codigo{\_\_gt\_\_()}, Python usará el primero con los operandos intercambiados. Sin embargo, Python no combinará métodos. Por ejempli, si defines \codigo{\_\_lt\_\_()} y \codigo{\_\_eq\_\_()} e intentas \codigo{x~<=~y}, Python no llamará a los anteriores métodos en secuencia, solamente llamará al método \codigo{\_\_le\_\_()}}
+\cajaTextoAncho{Si defines un método \codigo{\_\_lt\_\_()}, pero no el método \codigo{\_\_gt\_\_()}, Python usará el primero con los operandos intercambiados. Sin embargo, Python no combinará métodos. Por ejemplo, si defines \codigo{\_\_lt\_\_()} y \codigo{\_\_eq\_\_()} e intentas \codigo{x~<=~y}, Python no llamará a los anteriores métodos en secuencia, solamente llamará al método \codigo{\_\_le\_\_()}}
 
 \section{Clases que se pueden serializar}
 
@@ -608,6 +612,7 @@ Si sabes lo que estás haciendo, puedes tomar el control casi completo sobre có
 
 
 \begin{table}[htp]
+  \small
   \centering
   \begin{tabular}{lll}
     \hline

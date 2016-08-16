@@ -15,7 +15,7 @@
 
 \section{Inmersión}
 
- Han cambiado tantas cosas entre Python 2 y Python 3 que son pocos los programas que funcionan con ambos sin modificaciones. ¡Pero no te desalientes! Para ayudar con la transición, Python 3 incorpora una herramienta denomidada \codigo{2to3}, que analiza el código fuente en Python 2 y lo convierte en Python 3 tanto como puede. El capítulo \ref{ch:chardet}, se describe como ejecutar \codigo{2to3}, y muestra algunas cosas que este no puede resolver de forma automática. Este apéndice documenta aquello que sí puede convertir de forma automática.
+ Han cambiado tantas cosas entre Python 2 y Python 3 que son pocos los programas que funcionan con ambos sin modificaciones. ¡Pero no te desalientes! Para ayudar con la transición, Python 3 incorpora una herramienta denominada \codigo{2to3}, que analiza el código fuente en Python 2 y lo convierte en Python 3 tanto como puede. El capítulo \ref{ch:chardet}, se describe como ejecutar \codigo{2to3}, y muestra algunas cosas que este no puede resolver de forma automática. Este apéndice documenta aquello que sí puede convertir de forma automática.
 
 \section{La sentencia \codigo{print}}
 
@@ -114,7 +114,7 @@ Para profundizar, se puede leer el documento \href{http://www.python.org/dev/pep
   \item \emph{Línea 1:} los enteros largos en base 10 se transforman en enteros en base 10.
   \item \emph{Línea 2:} los enteros largos en base 16 se transforman en enteros en base 16.
   \item \emph{Línea 3:} en Python 3, la función \codigo{long()} desaparece. Para forzar una variable al tipo entero, se utiliza la función \codigo{int()}.
-  \item \emph{Línea 4:} la función \codigo{isinstance()} sirve para comprobar el tipo de datos de una variable; de nueveo, se debe utilizar \codigo{int} en lugar de \codigo{long}.
+  \item \emph{Línea 4:} la función \codigo{isinstance()} sirve para comprobar el tipo de datos de una variable; de nuevo, se debe utilizar \codigo{int} en lugar de \codigo{long}.
 \end{enumerate}
 
 \section{Comparación <{}>}
@@ -198,7 +198,7 @@ En Python 2, muchos métodos de diccionario devuelven listas. Los métodos más 
 \begin{enumerate}
   \item \emph{Línea 1:} \codigo{2to3} tiene a ir a lo más seguro, convirtiendo el valor de retorno de \codigo{keys()} a una lista estática con la función \codigo{list()}. Esto siempre funciona, pero será menos eficiente que utilizar una vista. Deberías examinar el código convertido para ver si es absolutamente necesaria la conversión, o si sería suficiente con una vista.
   \item \emph{Línea 2:} se produce otra conversión a lista con la función \codigo{items()}. Y también con la función \codigo{values()}.
-  \item \emph{Línea 3:}Phyton 3 elimina el método \codigo{iterkeys()}. Utiliza \codigo{keys()} y, si es necesario, convierte la vista a un iterador con la función \codigo{iter()}.
+  \item \emph{Línea 3:} Python 3 elimina el método \codigo{iterkeys()}. Utiliza \codigo{keys()} y, si es necesario, convierte la vista a un iterador con la función \codigo{iter()}.
   \item \emph{Línea 4:} \codigo{2to3} reconoce cuando el método \codigo{iterkeys()} se utiliza dentro de una comprensión de lista, y  lo convierte al método \codigo{keys()} (sin la llamada extra a la función \codigo{iter()}. Esto funciona porque las vistas son iterables.
   \item \emph{Línea 5:} \codigo{2to3} reconoce que el método \codigo{keys()} se va a pasar inmediatamente como parámetro de una función que itera a través de la secuencia completa, por eso no hay necesidad de convertir el valor de retorno en una lista. La función \codigo{min()} iterará sin problemas a través de la vista. Esto se aplica a los funciones: \codigo{min()}, \codigo{max()}, \codigo{sum()}, \codigo{list()}, \codigo{tuple()}, \codigo{set()}, \codigo{sorted()}, \codigo{any()} y \codigo{all()}.
 \end{enumerate}
@@ -229,7 +229,7 @@ En Python 3, se han combinado en un único paquete, \codigo{http}, varios módul
 \end{table}
 
 \begin{enumerate}
-  \item \emph{Línea 1:} el módulo \codigo{http.client} implelmenta una librería de bajo nivel que puede solicitar recursos \codigo{HTTP} e interpretar respuestas \codigo{HTTP}.
+  \item \emph{Línea 1:} el módulo \codigo{http.client} implementa una librería de bajo nivel que puede solicitar recursos \codigo{HTTP} e interpretar respuestas \codigo{HTTP}.
   \item \emph{Línea 2:} el módulo \codigo{http.cookies} proporciona un interfaz \emph{pythonico} a las cookies del navegador que se envían en una cabecera \codigo{Set-Cookie: HTTP}.
   \item \emph{Línea 3:} el módulo \codigo{http.cookiejar} manipula los ficheros en los que se almacenan las cookies de los navegadores más populares.
   \item \emph{Línea 4:} el módulo \codigo{http.server} proporciona un servidor \codigo{HTTP} básico.
@@ -252,11 +252,12 @@ Python 2 tiene un \emph{nido de ratas} de módulos solapados para procesar, codi
                                  } \\
     2 & \codigo{import urllib2}  & \codigo{import urllib.request, urllib.error} \\
     3 & \codigo{import urlparse} & \codigo{import urllib.parse} \\
-    4 & \codigo{import robotparse} & \codigo{import urllib.robotparse} \\
+    4 & \codigo{import robotparse} & \codigo{import urllib.robotparse} \\ \\
     5 & \pbox{10cm}{\codigo{from urllib import FancyURLopener} \\
                     \codigo{from urllib import urlencode}} &
-        \pbox{10cm}{\codigo{from urllib.request import FancyURLopener} \\
-                    \codigo{from urllib.parse urlencode}} \\
+        \pbox{10cm}{\codigo{from urllib.request} \\
+                    \hbox{}\quad\quad\codigo{import FancyURLopener} \\
+                    \codigo{from urllib.parse urlencode}} \\ \\
     6 & \pbox{10cm}{\codigo{from urllib2 import Request} \\
                     \codigo{from urllib2 import HTTPError}} &
         \pbox{10cm}{\codigo{from urllib.request import Request} \\
@@ -384,7 +385,7 @@ Los diversos clones de \codigo{DBM} se encuentran ahora en un único paquete, \c
 
 \section{Importación relativa dentro de un paquete}
 
-Un paquete es un grupo de módulos relacionados que funcionan como una única entidad. En Python 2, cuando los módulos de un paquete necesitaban referenciarse entre sí, podías utilizar \codigo{import foo} o \codigo{from foo import Bar}. El interprete de Python 2 primero buscaba en el paquete actual el fichero \codigo{foo.py}, y luego se movía a los demás directorios del camino de búsqueda (\codigo{sys.path}). Python 3 funciona diferente. En lugar de buscar en el paquete actua, va directamente al camino de búsqueda. Si quieres que un módulo de un pauqete importe a otro módulo en el mismo paquete, necesitas proporcionar explícitamente el camino relativo entre estos dos módulos.
+Un paquete es un grupo de módulos relacionados que funcionan como una única entidad. En Python 2, cuando los módulos de un paquete necesitaban referenciarse entre sí, podías utilizar \codigo{import foo} o \codigo{from foo import Bar}. El interprete de Python 2 primero buscaba en el paquete actual el fichero \codigo{foo.py}, y luego se movía a los demás directorios del camino de búsqueda (\codigo{sys.path}). Python 3 funciona diferente. En lugar de buscar en el paquete actual, va directamente al camino de búsqueda. Si quieres que un módulo de un paquete importe a otro módulo en el mismo paquete, necesitas proporcionar explícitamente el camino relativo entre estos dos módulos.
 
 Supón que tenías el siguiente paquete con múltiples ficheros en el mismo directorio:
 
@@ -424,7 +425,7 @@ Ahora supón que el fichero \codigo{universaldetector.py} necesita importar el c
 
 \begin{enumerate}
   \item \emph{Línea 1:} cuando necesitas importar un módulo completo de cualquier otra parte de tu paquete, utiliza la nueva sintaxis \codigo{from . import}. EL punto es el path relativo desde este fichero (\codigo{universaldetector.py}) al fichero que quieres importar (\codigo{constants.py}). En este caso, están en el mismo directorio, por lo que se coloca un único punto. También puedes importar desde el directorio padre (\codigo{from .. import otro\_módulo}) o desde un subdirectorio.
-  \item \emph{Línea 2:} Para importar un clase específicao función desde otro módulo directamente en el espacio de nombres de tu módulo, introduce el prefijo del módulo objetivo con un camino relativo, sin usar la barra inclinada del final. En este caso, \codigo{mbcharsetprober.py} está en el mismo directorio que \codigo{universaldetector.py}, por lo que el camino es un único punto. También puedes importar desde el directorio padre (\codigo{from ..otro\_modulo import otra\_clase} o desde un subdirectorio.
+  \item \emph{Línea 2:} Para importar un clase específica, o función, desde otro módulo directamente en el espacio de nombres de tu módulo, introduce el prefijo del módulo objetivo con un camino relativo, sin usar la barra inclinada del final. En este caso, \codigo{mbcharsetprober.py} está en el mismo directorio que \codigo{universaldetector.py}, por lo que el camino es un único punto. También puedes importar desde el directorio padre (\codigo{from ..otro\_modulo import otra\_clase} o desde un subdirectorio.
 \end{enumerate}
 
 \section{El método iterador \codigo{next()}}
@@ -458,7 +459,7 @@ En Python 2, los iteradores tienen el método \codigo{next()} que devuelve el si
   \item \emph{Línea 2:} si tienes una función que devuelve un iterador, puedes llamar a la función y pasarle el resultado a la función \codigo{next()}.
   \item \emph{Línea 3:} si defines tu propia clase y quieres usarla como un iterador, debes definir el método especial \codigo{\_\_next\_\_()}.
   \item \emph{Línea 4:} si defines tu clase y resulta que ya tiene un método \codigo{next()} con uno o más parámetros (sin contar \codigo{self}), \codigo{2to3} no la modificará. Esta clase no podrá utilizarse como iterador puesto que su método \codigo{next()} tiene parámetros.
-  \item \emph{Línea 5:} esta última es un poco compleja. Si tienes una variable local que se llame \codigo{next}, tiene precedencia sobre la nueva función global \codigo{next()}. En este caso, necestias llamar al método especial \codigo{\_\_next\_\_()} directamente para poder obtener el siguiente elemento de la secuencia (Alternativamente, podrías refactorizar el código para que la variable local no se llamara \codigo{next}, pero \codigo{2to3} no lo hará por ti.
+  \item \emph{Línea 5:} esta última es un poco compleja. Si tienes una variable local que se llame \codigo{next}, tiene precedencia sobre la nueva función global \codigo{next()}. En este caso, necesitas llamar al método especial \codigo{\_\_next\_\_()} directamente para poder obtener el siguiente elemento de la secuencia (Alternativamente, podrías refactorizar el código para que la variable local no se llamara \codigo{next}, pero \codigo{2to3} no lo hará por ti.
 \end{enumerate}
 
 \section{La función global \codigo{filter()}}
@@ -598,7 +599,7 @@ Igual que se ha convertido la sentencia \codigo{print} en función en Python 3, 
 
 \begin{enumerate}
   \item \emph{Línea 1:} en su forma más simple, \codigo{2to3} simplemente envuelve entre paréntesis a la cadena de caracteres que contiene el código fuente.
-  \item \emph{Línea 2:} la antigua sentencia \codigo{exec} pordía tomar un espacio de nombres, un espacio privado de elementos globales en el que el código fuente se ejecutaría. En Python 3, esto se hace pasando el espacio de nombres como segundo parámetro de la función \codigo{exec()}.
+  \item \emph{Línea 2:} la antigua sentencia \codigo{exec} podía tomar un espacio de nombres, un espacio privado de elementos globales en el que el código fuente se ejecutaría. En Python 3, esto se hace pasando el espacio de nombres como segundo parámetro de la función \codigo{exec()}.
   \item \emph{Línea 3:} la anterior sentencia \codigo{exec} podía tomar como parámetro un espacio de nombres local (como las variables definidas dentro de una función). En Python 3, aún se puede hacer con la función \codigo{exec()}.
 \end{enumerate}
 
@@ -637,14 +638,13 @@ En Python 2, existe una sintaxis especial para envolver cualquier objeto en comi
 \end{table}
 
 \begin{enumerate}
-  \item \emph{Línea 1:} recuerda, \codigo{x} puede ser cualquier cosa: una clase, una función, un módulo, un tipo de datos primitivo, etc. La función \codigo{repr()} funciona sobre cualquier cosa.
-  \item \emph{Línea 2:} En Python 2, las comillas invertidas se pueden anidar, \codigo{2to3} es lo suficientemente inteligente para detectarlas y convertirlas en llamadas anidadas a \codigo{repr()}.
+  \item \emph{Línea 1:} \codigo{x} puede ser cualquier cosa: una clase, una función, un módulo, un tipo de datos primitivo, etc. La función \codigo{repr()} funciona sobre cualquier cosa.
+  \item \emph{Línea 2:} En Python 2, las comillas invertidas se pueden anidar, \codigo{2to3} las detectar y convierte en llamadas anidadas a \codigo{repr()}.
 \end{enumerate}
 
 \section{La sentencia \codigo{try \ldots except}}
 
-La sintaxis para capturar excepciones ha cambiado ligeramente entre Python 2 y Python 3.
-
+La sintaxis para capturar excepciones ha cambiado algo entre Python 2 y 3.
 
 \begin{table}[htp]
   \centering
@@ -656,19 +656,17 @@ La sintaxis para capturar excepciones ha cambiado ligeramente entre Python 2 y P
        & \quad \codigo{import mymodule} & \quad \codigo{import mymodule} \\
        & \codigo{except ImportError, e} & \codigo{except ImportError as e:} \\
        & \quad \codigo{pass} & \quad \codigo{pass} \\
-    & \\
     2  & \codigo{try:} & \codigo{try:} \\
        & \quad \codigo{import mymodule} & \quad \codigo{import mymodule} \\
-       & \codigo{except (RuntimeError, ImportError), e} & \codigo{except (RuntimeError, ImportError) as e:} \\
+       & \codigo{except (RuntimeError,} & \codigo{except (RuntimeError} \\
+       & \quad\quad\codigo{ImportError), e} & \quad\quad\codigo{ImportError) as e:} \\
        & \quad \codigo{pass} & \quad \codigo{pass} \\
 
-    & \\
     3  & \codigo{try:} & \codigo{} \\
     & \quad \codigo{import mymodule} & \emph{no cambia} \\
        & \codigo{except ImportError:} & \codigo{} \\
        & \quad \codigo{pass} & \quad \codigo{} \\
 
-    & \\
        4  & \codigo{try:} & \codigo{} \\
        & \quad \codigo{import mymodule} & \emph{no cambia} \\
        & \codigo{except:} & \codigo{} \\
@@ -793,7 +791,7 @@ Python 2 tiene dos funciones globales para pedir al usuario que introduzca datos
 \begin{enumerate}
   \item \emph{Línea 1:} en su forma más simple, \codigo{raw\_input()} pasa a ser \codigo{input()}.
   \item \emph{Línea 2:} en Python 2, la función \codigo{raw\_input()} podía pedir al usuario (con una cadena de caracteres) la entrada de datos mediante un ``prompt'' que se pasaba como parámetro. Esto se mantiene en Python 3 en la nueva función \codigo{input()}.
-  \item \emph{Línea 3:} si realmente necesitas pedirle al usuario una expresión que luego debes evaluar, utiliza \codigo{input()} y pasa el resultado a la funicón \codigo{eval()}.
+  \item \emph{Línea 3:} si realmente necesitas pedirle al usuario una expresión que luego debes evaluar, utiliza \codigo{input()} y pasa el resultado a la función \codigo{eval()}.
 \end{enumerate}
 
 \section{Los atributos de función \codigo{func\_*}}
@@ -875,9 +873,9 @@ En Python 2, podías definir una función \codigo{lambda} anónima que tomara va
 
 
 \begin{enumerate}
-  \item \emph{Línea 1:} si habías definido una función \codigo{lambda} que toma como parámetro una tupla con un único elemento, en Python 3, \codigo{2to3} lo convertirá en referencias al rimer elemento \codigo{x1[0]}. El nombre \codigo{x1} es autogenerado, y se basa en el nombre del parámetro de la tupla original.
+  \item \emph{Línea 1:} si habías definido una función \codigo{lambda} que toma como parámetro una tupla con un único elemento, en Python 3, \codigo{2to3} lo convertirá en referencias al primer elemento \codigo{x1[0]}. El nombre \codigo{x1} es autogenerado, y se basa en el nombre del parámetro de la tupla original.
   \item \emph{Línea 2:} una función \codigo{lambda} con una tupla de dos elementos \codigo{(x, y)} se convierte en \codigo{x\_y} con los parámetros en las posiciones \codigo{x\_y[0]} \codigo{x\_y[1]}
-  \item \emph{Línea 3:} \codigo{2to3} puede manejar funciones \codigo{lambda} con tuplas anidadas como parámetros. El código resultate en Python 3 es poco legible.
+  \item \emph{Línea 3:} \codigo{2to3} puede manejar funciones \codigo{lambda} con tuplas anidadas como parámetros. El código resultante en Python 3 es poco legible.
   \item \emph{Línea 4:} puedes definir funciones \codigo{lambda} con varios parámetros que no sean tuplas; en este caso la sintaxis de Python 3 no cambia.
 \end{enumerate}
 
@@ -888,13 +886,13 @@ En Python 2, los métodos de las clases pueden referenciar al objeto clase en el
 
 \begin{table}[htp]
   \centering
-  \begin{tabular}{cll}
+  \begin{tabular}{ll}
     \hline
-    Línea & Python 2 & Python 3 \\
+    Python 2 & Python 3 \\
     \hline
-    & \codigo{instDeClase.MétDeClase.im\_func} & \codigo{instDeClase.MétDeClase.\_\_func\_\_} \\
-         & \codigo{instDeClase.MétDeClase.im\_self} & \codigo{instDeClase.MétDeClase.\_\_self\_\_} \\
-         & \codigo{instDeClase.MétDeClase.im\_class} & \codigo{instDeClase.MétDeClase.\_\_self\_\_.\_\_class\_\_} \\
+     \codigo{instDeClase.MétDeClase.im\_func} & \codigo{instDeClase.MétDeClase.\_\_func\_\_} \\
+          \codigo{instDeClase.MétDeClase.im\_self} & \codigo{instDeClase.MétDeClase.\_\_self\_\_} \\
+          \codigo{instDeClase.MétDeClase.im\_class} & \codigo{instDeClase.MétDeClase.\_\_self\_\_.\_\_class\_\_} \\
     \hline
   \end{tabular}
 \end{table}
@@ -1184,15 +1182,16 @@ En Python 2, podías crear metaclases, bien definiendo el parámetros \codigo{me
     2  & \codigo{class Whip:} & \codigo{class Whip(metaclass=PapayaMeta):} \\
       & \quad \codigo{\_\_metaclass\_\_} & \quad \codigo{pass} \\
       & \\
-      3 & \codigo{class C(Whipper, Beater):} & \codigo{class C(Whipper, Beater, metaclass=PapayaMeta):} \\
-      4 & \quad \codigo{\_\_metaclass\_\_ = PapayaMeta} & \quad \codigo{pass} \\
+      3 & \codigo{class C(Whipper, Beater):} & \codigo{class C(Whipper, Beater,} \\
+       & \codigo{\_\_metaclass\_\_ = PapayaMeta} & \quad\quad\codigo{metaclass=PapayaMeta):} \\
+       & \quad \codigo{} & \quad \codigo{pass} \\
     \hline
   \end{tabular}
 \end{table}
 \FloatBarrier
 
 \begin{enumerate}
-  \item \emph{Línea 1:} Declarar la metaclase en la declaración de clase funcinoa tanto en Python 2, como en Python 3.
+  \item \emph{Línea 1:} Declarar la metaclase en la declaración de clase funciona tanto en Python 2, como en Python 3.
   \item \emph{Línea 2:} Declarar la metaclase en un atributo de clase funcionaba en Python 2, pero no en Python 3.
   \item \emph{Línea 3:} \codigo{2to3} es lo suficientemente inteligente como para construir una declaración de clase válida, incluso si la clase hereda de otras clases.
 \end{enumerate}
@@ -1241,7 +1240,7 @@ Los objetos Python implementados en C pueden exportar un ``interfaz de buffer'',
 
 \subsection{Espacios en blanco alrededor de comas}
 
-A pesar de ser draconiano sobre el uso del espacio en blanco para la indentación, Python es bastante liberal sobre su uso en otras areas. En listas, tuplas, conjuntos y diccionaros, el espacio en blanco puede aparecer antes y después de las comas sin que ello provoque error. Sin embargo, la recomendación de la guía de estilo es que las comas no deben tener espacios en blanco delante de ellas y deben ir seguidas por uno. Aunque se trata de un tema puramente estético, \codigo{2to2} puede arreglarlo por ti.
+A pesar de ser draconiano sobre el uso del espacio en blanco para la indentación, Python es bastante liberal sobre su uso en otras areas. En listas, tuplas, conjuntos y diccionarios, el espacio en blanco puede aparecer antes y después de las comas sin que ello provoque error. Sin embargo, la recomendación de la guía de estilo es que las comas no deben tener espacios en blanco delante de ellas y deben ir seguidas por uno. Aunque se trata de un tema puramente estético, \codigo{2to2} puede arreglarlo por ti.
 
 \cajaTextoAncho{Para habilitar esta opción debes especificar el parámetro \codigo{-f wscomma} en la línea de comando de \codigo{2to3}}
 
