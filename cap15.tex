@@ -984,8 +984,9 @@ Ya que dejamos de usar el módulo \codigo{operator}, podemos suprimir el \codigo
 \begin{lstlisting}[language=Python,escapeinside={(*}{*)}]
 from .charsetprober import CharSetProber
   from . import constants
-  (* \color{red}- import operator *)
-\end{lstlisting}
+  (* \color{red}- import operator *) (* \color{black} *)
+ \end{lstlisting}
+% la última vuelta a black es necesaria para que funcione bien la versión html (recupere el color estándar)
 
 ¿Otra prueba?
 

@@ -24,6 +24,7 @@
 \usepackage{tikz}
 \usepackage{pgfornament}
 \usetikzlibrary{trees}
+\usepackage{html}
 \hypersetup{
     pdfauthor={Jos\'{e} Miguel Gonz\'{a}lez Aguilera},
     pdftitle={Inmersi\'{o}n en Python 3},
@@ -71,9 +72,24 @@
 
 \newcommand{\diflllll}{$\blackdiamond\blackdiamond\blackdiamond\blackdiamond\blackdiamond$}
 
-\setcounter {chapter}{-2}
+\begin{htmlonly}
+  \renewenvironment{lstlisting}%
+      {\rawhtml <pre>\endrawhtml\verbatim}%
+      {\endverbatim\rawhtml </pre>\endrawhtml}
 
-\newcommand{\code}{\textcolor{OliveGreen}\bfseries}
+      \renewcommand{\difl}{1 sobre 5}
+      \renewcommand{\difll}{2 sobre 5}
+      \renewcommand{\diflll}{3 sobre 5}
+      \renewcommand{\difllll}{4 sobre 5}
+      \renewcommand{\diflllll}{5 sobre 5}
+      \renewcommand{\cajaTexto}[1]{\rawhtml <blockquote>#1</blockquote> \endrawhtml}
+      \renewcommand{\cajaTextoAncho}[1]{\rawhtml <blockquote>#1</blockquote> \endrawhtml}
+      \renewcommand{\sqrt}[1]{sqrt(#1)}
+\end{htmlonly}
+
+  \setcounter {chapter}{-2}
+
+  \newcommand{\code}{\textcolor{OliveGreen}\bfseries}
 
 \title{Inmersión en Python 3}
 \author{Mark Pilgrim}
@@ -85,6 +101,7 @@
 
 \begin{document}
 
+\begin{latexonly}
 \widowpenalty=10000
 \clubpenalty=10000
 \raggedbottom
@@ -92,6 +109,8 @@
         numberstyle=\footnotesize,backgroundcolor=\color{gray},
         rulesep=1pt, rulesepcolor=\color{black},frame=leftline,
         basicstyle=\footnotesize, mathescape=true}
+\end{latexonly}
+
 \pagestyle{empty}
 \frontmatter
 %\begin{titlepage}
@@ -107,8 +126,10 @@
 
   {\Huge Inmersión en Python 3}
 
+  \begin{latexonly}
   \pgfornament[width = 3cm]{82}
-  
+\end{latexonly}
+
   {\Large Mark Pilgrim}
 
 

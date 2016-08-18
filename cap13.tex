@@ -430,14 +430,27 @@ Tercero, existe el problema perenne de la codificación de caracteres. Puesto qu
 
 ¿Cómo queda el resultado serializado?
 
+\begin{htmlonly}
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~/diveintopython3/examples> cat basic.json
+\{"published": true, "tags": ["diveintopython", "docbook", "html"],
+"comments_link": null, "id": 256,
+"title": "Dive into history, 2009 edition"\}
+\end{lstlisting}
+\end{minipage}
+\end{htmlonly}
+
+\begin{latexonly}
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=False]
 you@localhost:~/diveintopython3/examples$ cat basic.json
-{"published": true, "tags": ["diveintopython", "docbook", "html"], 
-"comments_link": null, "id": 256, 
+{"published": true, "tags": ["diveintopython", "docbook", "html"],
+"comments_link": null, "id": 256,
 "title": "Dive into history, 2009 edition"}
 \end{lstlisting}
 \end{minipage}
+\end{latexonly}
 
 Es más legible que el fichero en formato de \codigo{pickle}. Pero como \codigo{JSON} puede contener tantos espacios en blanco como se desee entre diferentes valores, y el módulo \codigo{json} proporciona una forma sencilla de utilizar esta capacidad, podemos crear ficheros \codigo{JSON} aún más legibles.
 
@@ -454,6 +467,26 @@ Si se pasa el parámetro \codigo{indent} a la función \codigo{json.dump()} el f
 
 Por lo que éste es el resultado:
 
+\begin{htmlonly}
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[mathescape=False]
+you@localhost:~/diveintopython3/examples> cat basic-pretty.json
+\{
+  "published": true, 
+  "tags": [
+    "diveintopython", 
+    "docbook", 
+    "html"
+  ], 
+  "comments_link": null, 
+  "id": 256, 
+  "title": "Dive into history, 2009 edition"
+\}
+\end{lstlisting}
+\end{minipage}
+\end{htmlonly}
+
+\begin{latexonly}
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[mathescape=False]
 you@localhost:~/diveintopython3/examples$ cat basic-pretty.json
@@ -470,6 +503,7 @@ you@localhost:~/diveintopython3/examples$ cat basic-pretty.json
 }
 \end{lstlisting}
 \end{minipage}
+\end{latexonly}
 
 \section{Mapeo de los tipos de datos de Python a JSON}
 

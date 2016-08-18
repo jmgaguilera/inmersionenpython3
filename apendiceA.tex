@@ -390,7 +390,7 @@ Un paquete es un grupo de módulos relacionados que funcionan como una única en
 Supón que tenías el siguiente paquete con múltiples ficheros en el mismo directorio:
 
 % Figura de árbol con tikz
-
+\begin{latexonly}
 \tikzstyle{carpeta}=[draw=black,thick,anchor=west]
 \tikzstyle{fichero}=[anchor=west]
 
@@ -404,6 +404,22 @@ Supón que tenías el siguiente paquete con múltiples ficheros en el mismo dire
     child { node [fichero] {mbcharsetprober.py}}
     child { node [fichero] {universaldetector.py}};
 \end{tikzpicture}
+\end{latexonly}
+
+
+\begin{htmlonly}
+\begin{lstlisting}[breaklines=true]
+chardet/
+|
++--__init__.py
+|
++--constants.py
+|
++--mbcharsetprober.py
+|
++--universaldetector.py
+\end{lstlisting}
+\end{htmlonly}
 
 Ahora supón que el fichero \codigo{universaldetector.py} necesita importar el contenido completo del fichero \codigo{constants.py} y una clase del fichero \codigo{mbcharsetprober.py}. ¿Cómo lo harías?
 
