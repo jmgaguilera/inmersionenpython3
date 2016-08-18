@@ -29,4 +29,6 @@ done
 
 cd ..
 
+cp ./inmersionEnPython.css ./output_html
+
 rm -Rf ./intermedio
