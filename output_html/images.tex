@@ -1,0 +1,622 @@
+\batchmode
+
+
+\documentclass[12pt,leqno,a4paper,spanish]{book}
+\RequirePackage{ifthen}
+
+
+\usepackage[dvips]{graphicx}
+\usepackage[dvipsnames,usenames]{color}
+\usepackage{makeidx}
+\usepackage[absolute]{textpos}
+\usepackage{wrapfig}
+\usepackage{eso-pic}
+\usepackage{xcolor}
+\usepackage[no-math]{fontspec}
+\usepackage{mathabx}
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+\usepackage{listings}
+\usepackage[colorlinks,unicode]{hyperref}
+\usepackage{soul}
+\usepackage{xeCJK}
+\usepackage{placeins}
+\usepackage{pbox}
+\usepackage{tikz}
+\usepackage{pgfornament}
+\usetikzlibrary{trees}
+\usepackage{html}
+\hypersetup{
+    pdfauthor={Jos\'{e} Miguel Gonz\'{a}lez Aguilera},
+    pdftitle={Inmersi\'{o}n en Python 3},
+    pdfsubject={Programaci\'{o}n en Python 3, versión 1 en español},
+    pdfkeywords={python,python 3,programaci\'{o}n}
+}
+\parindent 1cm
+\parskip 0.2cm
+\topmargin 0.2cm
+\oddsidemargin 1cm
+\evensidemargin 0.5cm
+\textwidth 15cm
+\textheight 21cm
+
+
+\graphicspath{{./imagen/}}
+
+
+
+\hyphenation{Python} 
+
+%
+\providecommand{\cajaTexto}[1]{\begin{wrapfigure}{r}{.4\linewidth}\fbox{\colorbox{gray}{\parbox{.9\linewidth} {#1}}}\end{wrapfigure}} 
+
+%
+\providecommand{\cajaTextoAncho}[1]{\fbox{\colorbox{gray}{\parbox{0.9\linewidth} {#1}}}} 
+
+
+
+%
+\newenvironment{citaCap}{\begin{flushright}\begin{itshape}}
+{\end{itshape}\end{flushright}} 
+
+
+
+%
+\newenvironment{listing}{\begin{list}{}{\setlength{\leftmargin}{1em}}\item\footnotesize\samepage}
+{\end{list}} 
+
+%
+\providecommand{\ac}[1]{\textrm{\'{#1}}}%
+\providecommand{\til}[1]{\textrm{\~{#1}}} 
+
+%
+\providecommand{\codigo}[1]{\textsf{#1}} 
+
+%
+\providecommand{\difl}{$\blackdiamond\diamond\diamond\diamond\diamond$} 
+
+%
+\providecommand{\difll}{$\blackdiamond\blackdiamond\diamond\diamond\diamond$} 
+
+%
+\providecommand{\diflll}{$\blackdiamond\blackdiamond\blackdiamond\diamond\diamond$} 
+
+%
+\providecommand{\difllll}{$\blackdiamond\blackdiamond\blackdiamond\blackdiamond\diamond$} 
+
+%
+\providecommand{\diflllll}{$\blackdiamond\blackdiamond\blackdiamond\blackdiamond\blackdiamond$} 
+
+
+\renewenvironment{lstlisting}%
+{\rawhtml <pre>\endrawhtml\verbatim}%
+{\endverbatim\rawhtml </pre>\endrawhtml}
+
+
+%
+\renewcommand{\difl}{1 sobre 5}
+      %
+\renewcommand{\difll}{2 sobre 5}
+      %
+\renewcommand{\diflll}{3 sobre 5}
+      %
+\renewcommand{\difllll}{4 sobre 5}
+      %
+\renewcommand{\diflllll}{5 sobre 5}
+      %
+\renewcommand{\cajaTexto}[1]{\rawhtml <blockquote>#1</blockquote> \endrawhtml}
+      %
+\renewcommand{\cajaTextoAncho}[1]{\rawhtml <blockquote>#1</blockquote> \endrawhtml}
+      %
+\renewcommand{\sqrt}[1]{sqrt(#1)}
+\setcounter{chapter}{-2}
+
+%
+\providecommand{\code}{\textcolor{OliveGreen}\bfseries} 
+
+
+\title{Inmersión en Python 3}
+\author{Mark Pilgrim}
+
+
+\makeindex
+
+
+\definecolor{gray}{rgb}{0.98,0.98,0.98}
+\definecolor{black}{rgb}{0,0,0}
+
+
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
+
+
+\lstset{language=Python,showstringspaces=false,numbers=left,
+        numberstyle=\footnotesize ,backgroundcolor=\color{gray},
+        rulesep=1pt, rulesepcolor=\color{black},frame=leftline,
+        basicstyle=\footnotesize , mathescape=true}
+
+
+
+
+
+\pagecolor[gray]{.7}
+
+\usepackage[latin1]{inputenc}
+
+
+
+\makeatletter
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/inmersionEnPython.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/portada.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap-1.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap0.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap1.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap2.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap3.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap4.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap5.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap6.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap7.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap8.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap9.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap10.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap11.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap12.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap13.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap14.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap15.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/cap16.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/apendiceA.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/apendiceB.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/apendiceC.aux
+\makeatother
+}
+\AtBeginDocument{\makeatletter
+\input /home/jmgaguilera/Documentos/inmersionenpython3/intermedio/apendiceD.aux
+\makeatother
+}
+
+\makeatletter
+\count@=\the\catcode`\_ \catcode`\_=8 
+\newenvironment{tex2html_wrap}{}{}%
+\catcode`\<=12\catcode`\_=\count@
+\newcommand{\providedcommand}[1]{\expandafter\providecommand\csname #1\endcsname}%
+\newcommand{\renewedcommand}[1]{\expandafter\providecommand\csname #1\endcsname{}%
+  \expandafter\renewcommand\csname #1\endcsname}%
+\newcommand{\newedenvironment}[1]{\newenvironment{#1}{}{}\renewenvironment{#1}}%
+\let\newedcommand\renewedcommand
+\let\renewedenvironment\newedenvironment
+\makeatother
+\let\mathon=$
+\let\mathoff=$
+\ifx\AtBeginDocument\undefined \newcommand{\AtBeginDocument}[1]{}\fi
+\newbox\sizebox
+\setlength{\hoffset}{0pt}\setlength{\voffset}{0pt}
+\addtolength{\textheight}{\footskip}\setlength{\footskip}{0pt}
+\addtolength{\textheight}{\topmargin}\setlength{\topmargin}{0pt}
+\addtolength{\textheight}{\headheight}\setlength{\headheight}{0pt}
+\addtolength{\textheight}{\headsep}\setlength{\headsep}{0pt}
+\setlength{\textwidth}{349pt}
+\newwrite\lthtmlwrite
+\makeatletter
+\let\realnormalsize=\normalsize
+\global\topskip=2sp
+\def\preveqno{}\let\real@float=\@float \let\realend@float=\end@float
+\def\@float{\let\@savefreelist\@freelist\real@float}
+\def\liih@math{\ifmmode$\else\bad@math\fi}
+\def\end@float{\realend@float\global\let\@freelist\@savefreelist}
+\let\real@dbflt=\@dbflt \let\end@dblfloat=\end@float
+\let\@largefloatcheck=\relax
+\let\if@boxedmulticols=\iftrue
+\def\@dbflt{\let\@savefreelist\@freelist\real@dbflt}
+\def\adjustnormalsize{\def\normalsize{\mathsurround=0pt \realnormalsize
+ \parindent=0pt\abovedisplayskip=0pt\belowdisplayskip=0pt}%
+ \def\phantompar{\csname par\endcsname}\normalsize}%
+\def\lthtmltypeout#1{{\let\protect\string \immediate\write\lthtmlwrite{#1}}}%
+\newcommand\lthtmlhboxmathA{\adjustnormalsize\setbox\sizebox=\hbox\bgroup\kern.05em }%
+\newcommand\lthtmlhboxmathB{\adjustnormalsize\setbox\sizebox=\hbox to\hsize\bgroup\hfill }%
+\newcommand\lthtmlvboxmathA{\adjustnormalsize\setbox\sizebox=\vbox\bgroup %
+ \let\ifinner=\iffalse \let\)\liih@math }%
+\newcommand\lthtmlboxmathZ{\@next\next\@currlist{}{\def\next{\voidb@x}}%
+ \expandafter\box\next\egroup}%
+\newcommand\lthtmlmathtype[1]{\gdef\lthtmlmathenv{#1}}%
+\newcommand\lthtmllogmath{\dimen0\ht\sizebox \advance\dimen0\dp\sizebox
+  \ifdim\dimen0>.95\vsize
+   \lthtmltypeout{%
+*** image for \lthtmlmathenv\space is too tall at \the\dimen0, reducing to .95 vsize ***}%
+   \ht\sizebox.95\vsize \dp\sizebox\z@ \fi
+  \lthtmltypeout{l2hSize %
+:\lthtmlmathenv:\the\ht\sizebox::\the\dp\sizebox::\the\wd\sizebox.\preveqno}}%
+\newcommand\lthtmlfigureA[1]{\let\@savefreelist\@freelist
+       \lthtmlmathtype{#1}\lthtmlvboxmathA}%
+\newcommand\lthtmlpictureA{\bgroup\catcode`\_=8 \lthtmlpictureB}%
+\newcommand\lthtmlpictureB[1]{\lthtmlmathtype{#1}\egroup
+       \let\@savefreelist\@freelist \lthtmlhboxmathB}%
+\newcommand\lthtmlpictureZ[1]{\hfill\lthtmlfigureZ}%
+\newcommand\lthtmlfigureZ{\lthtmlboxmathZ\lthtmllogmath\copy\sizebox
+       \global\let\@freelist\@savefreelist}%
+\newcommand\lthtmldisplayA{\bgroup\catcode`\_=8 \lthtmldisplayAi}%
+\newcommand\lthtmldisplayAi[1]{\lthtmlmathtype{#1}\egroup\lthtmlvboxmathA}%
+\newcommand\lthtmldisplayB[1]{\edef\preveqno{(\theequation)}%
+  \lthtmldisplayA{#1}\let\@eqnnum\relax}%
+\newcommand\lthtmldisplayZ{\lthtmlboxmathZ\lthtmllogmath\lthtmlsetmath}%
+\newcommand\lthtmlinlinemathA{\bgroup\catcode`\_=8 \lthtmlinlinemathB}
+\newcommand\lthtmlinlinemathB[1]{\lthtmlmathtype{#1}\egroup\lthtmlhboxmathA
+  \vrule height1.5ex width0pt }%
+\newcommand\lthtmlinlineA{\bgroup\catcode`\_=8 \lthtmlinlineB}%
+\newcommand\lthtmlinlineB[1]{\lthtmlmathtype{#1}\egroup\lthtmlhboxmathA}%
+\newcommand\lthtmlinlineZ{\egroup\expandafter\ifdim\dp\sizebox>0pt %
+  \expandafter\centerinlinemath\fi\lthtmllogmath\lthtmlsetinline}
+\newcommand\lthtmlinlinemathZ{\egroup\expandafter\ifdim\dp\sizebox>0pt %
+  \expandafter\centerinlinemath\fi\lthtmllogmath\lthtmlsetmath}
+\newcommand\lthtmlindisplaymathZ{\egroup %
+  \centerinlinemath\lthtmllogmath\lthtmlsetmath}
+\def\lthtmlsetinline{\hbox{\vrule width.1em \vtop{\vbox{%
+  \kern.1em\copy\sizebox}\ifdim\dp\sizebox>0pt\kern.1em\else\kern.3pt\fi
+  \ifdim\hsize>\wd\sizebox \hrule depth1pt\fi}}}
+\def\lthtmlsetmath{\hbox{\vrule width.1em\kern-.05em\vtop{\vbox{%
+  \kern.1em\kern0.8 pt\hbox{\hglue.17em\copy\sizebox\hglue0.8 pt}}\kern.3pt%
+  \ifdim\dp\sizebox>0pt\kern.1em\fi \kern0.8 pt%
+  \ifdim\hsize>\wd\sizebox \hrule depth1pt\fi}}}
+\def\centerinlinemath{%
+  \dimen1=\ifdim\ht\sizebox<\dp\sizebox \dp\sizebox\else\ht\sizebox\fi
+  \advance\dimen1by.5pt \vrule width0pt height\dimen1 depth\dimen1 
+ \dp\sizebox=\dimen1\ht\sizebox=\dimen1\relax}
+
+\def\lthtmlcheckvsize{\ifdim\ht\sizebox<\vsize 
+  \ifdim\wd\sizebox<\hsize\expandafter\hfill\fi \expandafter\vfill
+  \else\expandafter\vss\fi}%
+\providecommand{\selectlanguage}[1]{}%
+\makeatletter \tracingstats = 1 
+\providecommand{\Tau}{\textrm{T}}
+\providecommand{\Rho}{\textrm{R}}
+\providecommand{\Chi}{\textrm{X}}
+\providecommand{\Iota}{\textrm{J}}
+\providecommand{\Beta}{\textrm{B}}
+\providecommand{\Mu}{\textrm{M}}
+\providecommand{\Eta}{\textrm{H}}
+\providecommand{\Kappa}{\textrm{K}}
+\providecommand{\Epsilon}{\textrm{E}}
+\providecommand{\Alpha}{\textrm{A}}
+\providecommand{\omicron}{\textrm{o}}
+\providecommand{\Zeta}{\textrm{Z}}
+\providecommand{\Omicron}{\textrm{O}}
+\providecommand{\Nu}{\textrm{N}}
+
+
+\begin{document}
+\pagestyle{empty}\thispagestyle{empty}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength hsize=\the\hsize}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength vsize=\the\vsize}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength hoffset=\the\hoffset}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength voffset=\the\voffset}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength topmargin=\the\topmargin}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength topskip=\the\topskip}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength headheight=\the\headheight}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength headsep=\the\headsep}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength parskip=\the\parskip}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength oddsidemargin=\the\oddsidemargin}\lthtmltypeout{}%
+\makeatletter
+\if@twoside\lthtmltypeout{latex2htmlLength evensidemargin=\the\evensidemargin}%
+\else\lthtmltypeout{latex2htmlLength evensidemargin=\the\oddsidemargin}\fi%
+\lthtmltypeout{}%
+\makeatother
+\setcounter{page}{1}
+\onecolumn
+
+% !!! IMAGES START HERE !!!
+
+\setcounter{chapter}{-2}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline32305}%
+
+% latex2html id marker 32305
+$ \reflectbox{R}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\appendix
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{chapter}
+\stepcounter{section}
+
+\end{document}

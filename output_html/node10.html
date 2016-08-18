@@ -1,0 +1,1319 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>7. XML</TITLE>
+<META NAME="description" CONTENT="7. XML">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node11.html">
+<LINK REL="previous" HREF="node9.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node11.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html780"
+  HREF="node11.html">8. Serialización de Objetos</A>
+<B> Subir a:</B> <A NAME="tex2html778"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html772"
+  HREF="node9.html">6. Refactorizar</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html781"
+  HREF="node10.html#SECTION001010000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+<LI><A NAME="tex2html782"
+  HREF="node10.html#SECTION001020000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN> Curso rápido de 5 minutos sobre XML</A>
+<LI><A NAME="tex2html783"
+  HREF="node10.html#SECTION001030000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN> La estructura de una fuente de información Atom</A>
+<LI><A NAME="tex2html784"
+  HREF="node10.html#SECTION001040000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN> Análisis de XML</A>
+<UL>
+<LI><A NAME="tex2html785"
+  HREF="node10.html#SECTION001041000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Los elementos son listas</A>
+<LI><A NAME="tex2html786"
+  HREF="node10.html#SECTION001042000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Los atributos son diccionarios</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html787"
+  HREF="node10.html#SECTION001050000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">5</SPAN> Búsqueda de nodos en un documento XML</A>
+<LI><A NAME="tex2html788"
+  HREF="node10.html#SECTION001060000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">6</SPAN> Ir más allá con LXML</A>
+<LI><A NAME="tex2html789"
+  HREF="node10.html#SECTION001070000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">7</SPAN> Generación de XML</A>
+<LI><A NAME="tex2html790"
+  HREF="node10.html#SECTION001080000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">8</SPAN> Análisis de XML ``estropeado''</A>
+<LI><A NAME="tex2html791"
+  HREF="node10.html#SECTION001090000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">9</SPAN> Lecturas recomendadas</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION001000000000000000000"></A><A NAME="ch:xml"></A>
+<BR>
+<SPAN CLASS="arabic">7</SPAN>. XML
+</H1>
+
+<P>
+Nivel de dificultad:4 sobre 5
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``En el gobierno de Aristemo, 
+<BR>
+Draco aplicó sus ordenanzas.'' 
+<BR>--<SPAN  CLASS="textbf">Aristóteles</SPAN></I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION001010000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+</H1>
+
+<P>
+La mayoría de los capítulos de este libro se han desarrollado alrededor de un código de ejemplo. Pero <SPAN  CLASS="textsf">XML</SPAN> no trata sobre código, trata sobre datos. Un uso muy común para <SPAN  CLASS="textsf">XML</SPAN> es la ``provisión de contenidos sindicados'' que lista los últimos artículos de un blog, foro u otro sitio web con actualizaciones frecuentes. El software para blogs más popular puede generar fuentes de información y actualizarlas cada vez que hay nuevos artículos, hilos de discusión o nuevas entradas en un blog. Puedes seguir un blog ``escribiéndote'' a su canal (feed), y puedes seguir diversos blogs mediante un agregador de canales como el lector de Google.
+
+<P>
+Aquí están los datos de <SPAN  CLASS="textsf">XML</SPAN> que utilizaremos en este capítulo. Es un canal --específicamente, una fuente de información sindicada <SPAN  CLASS="textbf">Atom</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;?xml version='1.0' encoding='utf-8'?&gt;
+&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'&gt;
+  &lt;title&gt;dive into mark&lt;/title&gt;
+  &lt;subtitle&gt;currently between addictions&lt;/subtitle&gt;
+  &lt;id&gt;tag:diveintomark.org,2001-07-29:/&lt;/id&gt;
+  &lt;updated&gt;2009-03-27T21:56:07Z&lt;/updated&gt;
+  &lt;link rel='alternate' type='text/html' 
+        href='http://diveintomark.org/'/&gt;
+  &lt;link rel='self' type='application/atom+xml' 
+        href='http://diveintomark.org/feed/'/&gt;
+  &lt;entry&gt;
+    &lt;author&gt;
+      &lt;name&gt;Mark&lt;/name&gt;
+      &lt;uri&gt;http://diveintomark.org/&lt;/uri&gt;
+    &lt;/author&gt;
+    &lt;title&gt;Dive into history, 2009 edition&lt;/title&gt;
+    &lt;link rel='alternate' type='text/html'
+      href='http://diveintomark.org/archives/2009/03/27/ (sigue abajo)
+      dive-into-history-2009-edition'/&gt;
+    &lt;id&gt;tag:diveintomark.org,2009-03-27:/archives/20090327172042&lt;/id&gt;
+    &lt;updated&gt;2009-03-27T21:56:07Z&lt;/updated&gt;
+    &lt;published&gt;2009-03-27T17:20:42Z&lt;/published&gt;
+    &lt;category scheme='http://diveintomark.org' term='diveintopython'/&gt;
+    &lt;category scheme='http://diveintomark.org' term='docbook'/&gt;
+    &lt;category scheme='http://diveintomark.org' term='html'/&gt;
+  &lt;summary type='html'&gt;Putting an entire chapter on one page sounds
+    bloated, but consider this &amp;amp;mdash; my longest chapter so far
+    would be 75 printed pages, and it loads in under 5 
+    seconds&amp;amp;hellip; On dialup.&lt;/summary&gt;
+  &lt;/entry&gt;</pre></TD></TR>
+</TABLE>
+
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+  &lt;entry&gt;
+    &lt;author&gt;
+      &lt;name&gt;Mark&lt;/name&gt;
+      &lt;uri&gt;http://diveintomark.org/&lt;/uri&gt;
+    &lt;/author&gt;
+    &lt;title&gt;Accessibility is a harsh mistress&lt;/title&gt;
+    &lt;link rel='alternate' type='text/html'
+      href='http://diveintomark.org/archives/2009/03/21/ (sigue)
+      accessibility-is-a-harsh-mistress'/&gt;
+    &lt;id&gt;tag:diveintomark.org,2009-03-21:/archives/20090321200928&lt;/id&gt;
+    &lt;updated&gt;2009-03-22T01:05:37Z&lt;/updated&gt;
+    &lt;published&gt;2009-03-21T20:09:28Z&lt;/published&gt;
+    &lt;category scheme='http://diveintomark.org' term='accessibility'/&gt;
+    &lt;summary type='html'&gt;The accessibility orthodoxy does not permit
+      people to question the value of features that are rarely 
+      useful and rarely used.&lt;/summary&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;author&gt;
+      &lt;name&gt;Mark&lt;/name&gt;
+    &lt;/author&gt;
+    &lt;title&gt;A gentle introduction to video encoding, part 1: 
+           container formats&lt;/title&gt;
+    &lt;link rel='alternate' type='text/html'
+      href='http://diveintomark.org/archives/2008/12/18/ (sigue)
+            give-part-1-container-formats'/&gt;
+    &lt;id&gt;tag:diveintomark.org,2008-12-18:/archives/20081218155422&lt;/id&gt;
+    &lt;updated&gt;2009-01-11T19:39:22Z&lt;/updated&gt;
+    &lt;published&gt;2008-12-18T15:54:22Z&lt;/published&gt;
+    &lt;category scheme='http://diveintomark.org' term='asf'/&gt;
+    &lt;category scheme='http://diveintomark.org' term='avi'/&gt;
+    &lt;category scheme='http://diveintomark.org' term='encoding'/&gt;
+    &lt;category scheme='http://diveintomark.org' term='flv'/&gt;
+    &lt;category scheme='http://diveintomark.org' term='GIVE'/&gt;
+    &lt;category scheme='http://diveintomark.org' term='mp4'/&gt;
+    &lt;category scheme='http://diveintomark.org' term='ogg'/&gt;
+    &lt;category scheme='http://diveintomark.org' term='video'/&gt;
+    &lt;summary type='html'&gt;These notes will eventually become part of a
+      tech talk on video encoding.&lt;/summary&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<H1><A NAME="SECTION001020000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN> Curso rápido de 5 minutos sobre XML</A>
+</H1>
+
+<P>
+Si conoces ya <SPAN  CLASS="textsf">XML</SPAN> puedes saltarte esta sección.
+
+<P>
+<SPAN  CLASS="textsf">XML</SPAN> es una forma generalizada de describir una estructura de datos jerárquica. Un <SPAN  CLASS="textbf">documento</SPAN> <SPAN  CLASS="textsf">XML</SPAN> contiene uno o más <SPAN  CLASS="textbf">elementos</SPAN>, que están delimitados por <SPAN  CLASS="textbf">etiquetas</SPAN> de inicio y fin. Lo siguiente es un documento <SPAN  CLASS="textsf">XML</SPAN> completo (aunque bastante aburrido).
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;foo&gt;
+&lt;/foo&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Esta es la etiqueta de inicio del elemento <SPAN  CLASS="textsf">foo</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> Esta es la etiqueta de fin del elemento <SPAN  CLASS="textsf">foo</SPAN>, que es pareja de la anterior. Como los paréntesis en la escritura, matemáticas o código, toda etiqueta de inicio debe <SPAN  CLASS="textbf">cerrase</SPAN> con una etiqueta de fin.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Los elementos se pueden <SPAN  CLASS="textbf">anidar</SPAN> a cualquier profundidad. Si un elemento <SPAN  CLASS="textsf">bar</SPAN> se encuentra dentro de un elemento <SPAN  CLASS="textsf">foo</SPAN>, se dice que <SPAN  CLASS="textsf">bar</SPAN> es un <SPAN  CLASS="textbf">subelemento</SPAN> o <SPAN  CLASS="textbf">hijo</SPAN> de <SPAN  CLASS="textsf">foo</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;foo&gt;
+  &lt;bar&gt;&lt;/bar&gt;
+&lt;/foo&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+Al primer elemento de un documento <SPAN  CLASS="textsf">XML</SPAN> se le llama el <SPAN  CLASS="textbf">elemento raíz</SPAN>. Un documento <SPAN  CLASS="textsf">XML</SPAN> únicamente puede tener un elemento raíz. Lo siguiente <SPAN  CLASS="textbf">no es un documento <SPAN  CLASS="textsf">XML</SPAN></SPAN> porque tiene dos elementos raíz:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;foo&gt;&lt;/foo&gt;
+&lt;bar&gt;&lt;/bar&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+Los elementos pueden tener <SPAN  CLASS="textbf">atributos</SPAN>, que son parejas de nombres con valores. Los atributos se deben incluir dentro de la etiqueta de inicio del elemento y deben estar separados por un espacio en blanco. Los <SPAN  CLASS="textbf">nombres de atributo</SPAN> no se pueden repetir dentro de un elemento. Los valores de los atributos deben ir entre comillas. Es posible utilizar tanto comillas simples como dobles.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;foo lang='en'&gt;
+  &lt;bar id='papayawhip' lang="fr"&gt;&lt;/bar&gt;
+&lt;/foo&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> El elemento <SPAN  CLASS="textsf">foo</SPAN> tiene un atributo denominado <SPAN  CLASS="textsf">lang</SPAN>. El valor del atributo <SPAN  CLASS="textsf">lang</SPAN> es <SPAN  CLASS="textsf">en</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> El elemento <SPAN  CLASS="textsf">bar</SPAN> tiene dos atributos. El valor del atributo <SPAN  CLASS="textsf">lang</SPAN> es <SPAN  CLASS="textsf">fr</SPAN>. Esto no entra en conflicto con el elemento <SPAN  CLASS="textsf">foo</SPAN>, cada elemento tiene su propio conjunto de atributos.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Si un elemento tiene más de un atributo, el orden de los mismos no es significativo. Los atributos de un elemento forman un conjunto desordenado de claves y valores, como en un diccionario de Python. No existe límite en el número de atributos que puedes definir para cada elemento.
+
+<P>
+Los elementos pueden contener <SPAN  CLASS="textsf">texto</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;foo lang='en'&gt;
+  &lt;bar lang='fr'&gt;PapayaWhip&lt;/bar&gt;
+&lt;/foo&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+Existe una forma de escribir elementos vacíos de forma compacta. Colocando un carácter <SPAN  CLASS="textsf">/</SPAN> al final de la etiqueta de inicio se puede evitar tener que escribir la etiqueta de fin. El documento <SPAN  CLASS="textsf">XML</SPAN> del ejemplo anterior se puede escribir de esta otra forma:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;foo/&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+Como pasa con las funciones de Python que se pueden declarar en diferentes <SPAN  CLASS="textbf">módulos</SPAN>, los elementos <SPAN  CLASS="textsf">XML</SPAN> se pueden declarar en diferentes espacios de nombre. Los espacios de nombre se suelen representar como <SPAN  CLASS="textsf">URLs</SPAN>. Se puede utilizar una declaración <SPAN  CLASS="textsf">xmlns</SPAN> para definir un <SPAN  CLASS="textsf">espacio de nombres por defecto</SPAN>. Una declaración de un espacio de nombres es parecida a un atributo, pero tiene un significado y propósito diferente.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;feed xmlns='http://www.w3.org/2005/Atom'&gt;
+  &lt;title&gt;dive into mark&lt;/title&gt;
+&lt;/feed&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> El elemento <SPAN  CLASS="textsf">feed</SPAN> se encuentra en el espacio de nombres <SPAN  CLASS="textsf">http://www.w3.org/2005/Atom</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> El elemento <SPAN  CLASS="textsf">title</SPAN> se encuentra también en el espacio de nombres <SPAN  CLASS="textsf">http://www.w3.org/2005/Atom</SPAN>. La declaración del espacio de nombres afecta al elemento en el que está declarado y a todos los elementos hijo.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;atom:feed xmlns:atom='http://www.w3.org/2005/Atom'&gt;
+  &lt;atom:title&gt;dive into mark&lt;/atom:title&gt;
+&lt;/atom:feed&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> El elemento <SPAN  CLASS="textsf">feed</SPAN> se encuentra en el espacio de nombres <SPAN  CLASS="textsf">http://www.w3.org/2005/Atom</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> El elemento <SPAN  CLASS="textsf">title</SPAN> también se encuentra en el espacio de nombres <SPAN  CLASS="textsf">http://www.w3.org/2005/Atom</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+En lo que concierne al analizador de <SPAN  CLASS="textsf">XML</SPAN>, los dos documentos anteriores son <SPAN  CLASS="textbf">idénticos</SPAN>. Espacio de nombres + nombre de elemento = identidad en <SPAN  CLASS="textsf">XML</SPAN>. Los prefijos existen únicamente para referirse a los espacios de nombres, por lo que el prefijo utilizado en la práctica (<SPAN  CLASS="textsf">atom:</SPAN>) es irrelevante. Los espacios de nombre coinciden, los nombres de elemento coinciden, los atributos (o falta de ellos) coinciden y cada contenido de texto coincide, por lo que estos dos documentos <SPAN  CLASS="textsf">XML</SPAN> son el idénticos a efectos prácticos.
+
+<P>
+Finalmente, los documentos <SPAN  CLASS="textsf">XML</SPAN> pueden contener en la primera línea información sobre la codificación de caracteres, antes del elemento raíz. Si tienes curiosidad sobre cómo un documento puede contener información que necesita conocerse antes de que el documento pueda analizarse consulta la Sección F de la especificación XML (http://www.w3.org/TR/REC-xml/#sec-guessing-no-ext-infohttp://www.w3.org/TR/REC-xml/#sec-guessing-no-ext-info) para ver los detalles sobre cómo resolver este problema.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;?xml version='1.0' encoding='utf-8'?&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+Y con esto ya conoces suficiente <SPAN  CLASS="textsf">XML</SPAN> como para ¡ser peligroso!
+
+<P>
+
+<H1><A NAME="SECTION001030000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN> La estructura de una fuente de información Atom</A>
+</H1>
+
+<P>
+Piensa en un blog o en cualquier sitio web que tenga contenido frecuentemente actualizado como <SPAN  CLASS="textsf">CNN.com</SPAN>. El propio sitio dispone de un título (CNN.com), un subtítulo (Breaking News, U.S., World, Weather, Entertaintment y Video News), una fecha de última actualización (actualizado a 12:43 p.m. EDT, Sat May 16, 2009) y una lista de artículos publicados en diferente momentos. Cada artículo, a su vez, tiene título, una fecha de primera publicación (y posiblemente una fecha de última actualización, si se publicó una corrección) y una <SPAN  CLASS="textsf">URL</SPAN> única.
+
+<P>
+El formato de sindicación de contenidos Atom está diseñado para capturar toda esta información en un formato estándar. Mi blog y CNN.com son muy diferentes en diseño, ámbito y audiencia; pero ambos tienen la misma estructura básica. CNN.com tiene un título, mi blog tiene un título. CNN.com publica artículos, yo publico artículos.
+
+<P>
+En el nivel más alto existe el <SPAN  CLASS="textbf">elemento raíz</SPAN>, que toda fuente Atom comparte: el elemento <SPAN  CLASS="textsf">feed</SPAN> del espacio de nombres <SPAN  CLASS="textsf">http://www.w3.org/2005/Atom</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;feed xmlns='http://www.w3.org/2005/Atom'
+      xml:lang='en'&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> El espacio de nombres de Atom es <SPAN  CLASS="textsf">http://www.w3.org/2005/Atom</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> Cualquier elemento puede contener un atributo <SPAN  CLASS="textsf">xml:lang</SPAN> que sirve para declarar el idioma del elemento y de sus hijos. En este caso, el atributo <SPAN  CLASS="textsf">xml:lang</SPAN> se declara una única vez en el elemento raíz, lo que significa que toda la fuente se encuentra en inglés.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Una fuente Atom contiene diversas partes de información sobre la propia fuente. Se declaran como hijas del elemento raíz <SPAN  CLASS="textsf">feed</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'&gt;
+  &lt;title&gt;dive into mark&lt;/title&gt;
+  &lt;subtitle&gt;currently between addictions&lt;/subtitle&gt;
+  &lt;id&gt;tag:diveintomark.org,2001-07-29:/&lt;/id&gt;
+  &lt;updated&gt;2009-03-27T21:56:07Z&lt;/updated&gt;
+  &lt;link rel='alternate' type='text/html'
+        href='http://diveintomark.org/'/&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> El título de esta fuente es <SPAN  CLASS="textsf">dive into mark</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> El subtítulo es <SPAN  CLASS="textsf">currently between addictions</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Toda fuente necesita un identificador único global. Hay que mirar la RFC 4151<A NAME="tex2html76"
+  HREF="footnode.html#foot13208"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> para ver cómo crear uno.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 5:</SPAN> Esta fuente fue actualizada por última vez el 27 de marzo de 2009 a las 21:56 GMT. Normalmente es equivalente a la fecha de última modificación del artículo más reciente.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> Ahora las cosas comienzan a ponerse interesantes. Este elemento <SPAN  CLASS="textsf">link</SPAN> no tiene contenido de texto, pero tiene tres atributos: <SPAN  CLASS="textsf">rel</SPAN>, <SPAN  CLASS="textsf">type</SPAN> y <SPAN  CLASS="textsf">href</SPAN>. El valor de <SPAN  CLASS="textsf">rel</SPAN> indica la clase de enlace que es; <SPAN  CLASS="textsf">rel='alternate'</SPAN> significa que es un enlace a una representación alternativa de esta fuente. El atributo <SPAN  CLASS="textsf">type='text/html'</SPAN> significa que es un enlace a una página <SPAN  CLASS="textsf">HTML</SPAN>. Por último, el destino del enlace se indica en el atributo <SPAN  CLASS="textsf">href</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Ahora ya conocemos que esta fuente lo es de un sitio denominado ``dive into mark'' que está disponible en <SPAN  CLASS="textsf">http://diveintomark.org</SPAN> y que fue actualizada por última vez el 27 de marzo de 2009.
+
+<P>
+<BLOCKQUOTE>
+Aunque el orden de los elementos puede ser relevante en algunos documentos <SPAN  CLASS="textsf">XML</SPAN>, no es relevante en una fuente Atom.
+
+</BLOCKQUOTE>
+
+<P>
+Después de los metadatos de la fuente se encuentra una lista con los artículos más recientes. Un artículo se representa así:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;entry&gt;
+  &lt;author&gt;
+    &lt;name&gt;Mark&lt;/name&gt;
+    &lt;uri&gt;http://diveintomark.org/&lt;/uri&gt;
+  &lt;/author&gt;
+  &lt;title&gt;Dive into history, 2009 edition&lt;/title&gt;
+  &lt;link rel='alternate' type='text/html'     
+    href='http://diveintomark.org/archives/2009/03/27/
+dive-into-history-2009-edition'/&gt;
+  &lt;id&gt;tag:diveintomark.org,2009-03-27:/archives/20090327172042&lt;/id&gt;
+  &lt;updated&gt;2009-03-27T21:56:07Z&lt;/updated&gt;     
+  &lt;published&gt;2009-03-27T17:20:42Z&lt;/published&gt;        
+  &lt;category scheme='http://diveintomark.org' term='diveintopython'/&gt;
+  &lt;category scheme='http://diveintomark.org' term='docbook'/&gt;
+  &lt;category scheme='http://diveintomark.org' term='html'/&gt;
+  &lt;summary type='html'&gt;Putting an entire chapter on one page sounds
+    bloated, but consider this &amp;amp;mdash; my longest chapter so far
+    would be 75 printed pages, and it loads in under 5 seconds
+    &amp;amp;hellip; On dialup.&lt;/summary&gt;
+&lt;/entry&gt;             </pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> El elemento <SPAN  CLASS="textsf">author</SPAN> indica quién escribió este artículo: un individuo llamado Mark, a quién puedes encontrar en <SPAN  CLASS="textsf">http://diveintomark.org/</SPAN> (Es el mismo sitio que el enlace alternativo para la fuente, pero no tiene porqué serlo. Muchos blogs tienen varios autores, cada uno con su propio sitio web personal).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> El elemento <SPAN  CLASS="textsf">title</SPAN> indica el título del artículo. ``Dive into history, 2009 edition''.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 7:</SPAN> Como con el enlace alternativo en el nivel de la fuente, este elemento <SPAN  CLASS="textsf">link</SPAN> indica la dirección de la versión <SPAN  CLASS="textsf">HTML</SPAN> de este artículo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 10:</SPAN> Las entradas, como la fuente, necesitan un identificador único.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 11:</SPAN> Las entradas tienen dos fechas: la fecha de primera publicación (<SPAN  CLASS="textsf">published</SPAN>) y la fecha de última modificación (<SPAN  CLASS="textsf">updated</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 13:</SPAN> Las entradas pueden tener un número arbitrario de categorías. Este artículo está archivado bajo las categorías <SPAN  CLASS="textsf">diveintopython</SPAN>, <SPAN  CLASS="textsf">docbook</SPAN> y <SPAN  CLASS="textsf">html</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 16:</SPAN> El elemento <SPAN  CLASS="textsf">summary</SPAN> ofrece un breve resumen del artículo (Existe también un elemento <SPAN  CLASS="textsf">content</SPAN>, que no se muestra aquí, por si quieres incluir el texto completo del artículo en tu fuente). Este resumen tiene el atributo específico de Atom <SPAN  CLASS="textsf">type='html'</SPAN> que indica que este resumen está escrito en <SPAN  CLASS="textsf">HTML</SPAN>, no es texto plano. Esto es importante puesto que existen entidades específicas de <SPAN  CLASS="textsf">HTML</SPAN> e el texto (<SPAN  CLASS="textsf">&amp;mdash;</SPAN> y <SPAN  CLASS="textsf">&amp;hellip;</SPAN>) que se deben mostrar como ``--'' y ``...'' en lugar de que se muestre el texto directamente.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 20:</SPAN> Por último, la etiqueta de cierre del elemento <SPAN  CLASS="textsf">entry</SPAN>, que señala el final de los metadatos de este artículo. 
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION001040000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN> Análisis de XML</A>
+</H1>
+
+<P>
+Python puede analizar documentos <SPAN  CLASS="textsf">XML</SPAN> de diversas formas. Dispone de analizadores <SPAN  CLASS="textsf">DOM</SPAN> y <SPAN  CLASS="textsf">SAX</SPAN> como otros lenguajes, pero me centraré en una librería diferente denominada ElementTree.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import xml.etree.ElementTree as etree
+&#187;&gt; tree = etree.parse('examples/feed.xml')
+&#187;&gt; root = tree.getroot()
+&#187;&gt; root
+&lt;Element http://www.w3.org/2005/Atomfeed at cd1eb0&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> La librería ElementTree forma parte de la librería estándar de Python, se encuentra en <SPAN  CLASS="textsf">xml.etree.ElementTree</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> El punto de entrada primario de la librería es la función <SPAN  CLASS="textsf">parse()</SPAN> que puede tomar como parámetro el nombre de un fichero o un objeto de flujo. Esta función analiza el documento entero de una vez. Si la memoria es escasa, existen formas para analizar un documento XML de forma incremental<A NAME="tex2html77"
+  HREF="footnode.html#foot13209"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> La función <SPAN  CLASS="textsf">parse()</SPAN> devuelve un objeto que representa al documento completo. <SPAN  CLASS="textbf">No</SPAN> es el elemento raíz. Para obtener una referencia al elemento raíz, debes llamar al método <SPAN  CLASS="textsf">getroot()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Como cabría esperar, el elemento raíz es el elemento <SPAN  CLASS="textsf">feed</SPAN> del espacio de nombres <SPAN  CLASS="textsf">http://www.w3.org/2005/Atom</SPAN>. La representación en cadena de texto de este elemento incide en un punto importante: un elemento <SPAN  CLASS="textsf">XML</SPAN> es una combinación de su espacio de nombres y la etiqueta de su nombre (también de nominado el <SPAN  CLASS="textbf">nombre local</SPAN>). Todo elemento de este documento se encuentra en el espacio de nombres Atom, por lo que el elemento raíz se representa como <SPAN  CLASS="textsf">{http://www.w3.org/2005/Atom}feed</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+ElementTree representa a los elementos <SPAN  CLASS="textsf">XML</SPAN> como <SPAN  CLASS="textsf">{espacio_de_nombres}nombre_local</SPAN>. Verás y utilizarás este formato en muchos lugares de la <SPAN  CLASS="textsf">API</SPAN> de ElementTree.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION001041000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Los elementos son listas</A>
+</H2>
+
+<P>
+En la <SPAN  CLASS="textsf">API</SPAN> de ElementTree los elementos se comportan como listas. Los elementos de la lista son los hijos del elemento.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+# sigue del ejemplo anterior
+&#187;&gt; root.tag
+'http://www.w3.org/2005/Atomfeed'
+&#187;&gt; len(root)
+8
+&#187;&gt; for child in root:
+...   print(child)
+... 
+&lt;Element http://www.w3.org/2005/Atomtitle at e2b5d0&gt;
+&lt;Element http://www.w3.org/2005/Atomsubtitle at e2b4e0&gt;
+&lt;Element http://www.w3.org/2005/Atomid at e2b6c0&gt;
+&lt;Element http://www.w3.org/2005/Atomupdated at e2b6f0&gt;
+&lt;Element http://www.w3.org/2005/Atomlink at e2b4b0&gt;
+&lt;Element http://www.w3.org/2005/Atomentry at e2b720&gt;
+&lt;Element http://www.w3.org/2005/Atomentry at e2b510&gt;
+&lt;Element http://www.w3.org/2005/Atomentry at e2b750&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> Continuando con el ejemplo anterior, el elemento raíz es <SPAN  CLASS="textsf">{http://www.w3.org/2005/Atom}feed</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> La ``longitud'' del elemento raíz es el número de elementos hijo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> Puedes utilizar el elemento como iterador para recorrer todos los elementos hijo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 7:</SPAN> Como ves por la salida, existen ocho elementos hijos: todos los metadatos de la fuente (<SPAN  CLASS="textsf">title</SPAN>. <SPAN  CLASS="textsf">subtitle</SPAN>, <SPAN  CLASS="textsf">id</SPAN>, <SPAN  CLASS="textsf">updated</SPAN> y <SPAN  CLASS="textsf">link</SPAN>) seguidos por los tres elementos <SPAN  CLASS="textsf">entry</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Puede que ya te hayas dado cuenta, pero quiero dejarlo explícito: la lista de los elementos hijo, únicamente incluye los hijos <SPAN  CLASS="textbf">directos</SPAN>. Cada uno de los elementos <SPAN  CLASS="textsf">entry</SPAN> tiene sus propios hijos, pero no se muestran en esta lista. Estarán incluidos en la lista de hijos del elemento <SPAN  CLASS="textsf">entry</SPAN>, pero no se encuentran en la lista de <SPAN  CLASS="textsf">feed</SPAN>. Existen formas de encontrar elementos independientemente de los profundamente anidados que se encuentren; lo veremos más adelante en este mismo capítulo.
+
+<P>
+
+<H2><A NAME="SECTION001042000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Los atributos son diccionarios</A>
+</H2>
+
+<P>
+<SPAN  CLASS="textsf">XML</SPAN> no solamente es una colección de elementos; cada elemento puede tener también su propio conjunto de atributos. Una vez tienes la referencia a un elemento específico puedes recuperar fácilmente sus atributos utilizando un diccionario de Python.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+# sigue del ejemplo anterior
+&#187;&gt; root.attrib
+'http://www.w3.org/XML/1998/namespacelang': 'en'
+&#187;&gt; root[4]
+&lt;Element http://www.w3.org/2005/Atomlink at e181b0&gt;
+&#187;&gt; root[4].attrib
+'href': 'http://diveintomark.org/',
+ 'type': 'text/html',
+ 'rel': 'alternate'
+&#187;&gt; root[3]
+&lt;Element http://www.w3.org/2005/Atomupdated at e2b4e0&gt;
+&#187;&gt; root[3].attrib</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> La propiedad <SPAN  CLASS="textsf">attrib</SPAN> es un diccionario que contiene los atributos del elemento. El texto <SPAN  CLASS="textsf">XML</SPAN> original era <SPAN  CLASS="textsf">&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'&gt;</SPAN>. El prefijo <SPAN  CLASS="textsf">xml:</SPAN> se refiere a un espacio de nombres interno que todo documento <SPAN  CLASS="textsf">XML</SPAN> puede utilizar sin necesidad de declararlo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> El quinto hijo --<SPAN  CLASS="textsf">[4]</SPAN> en una lista cuyo primer elemento se cuenta como cero-- es el elemento <SPAN  CLASS="textsf">link</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> El elemento <SPAN  CLASS="textsf">link</SPAN> tiene tres atributos: <SPAN  CLASS="textsf">href</SPAN>, <SPAN  CLASS="textsf">type</SPAN> y <SPAN  CLASS="textsf">rel</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 10:</SPAN> El cuarto hijo --<SPAN  CLASS="textsf">[3]</SPAN>-- es elemento <SPAN  CLASS="textsf">updated</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 12:</SPAN> El elemento <SPAN  CLASS="textsf">updated</SPAN> no tiene atributos por lo que <SPAN  CLASS="textsf">.attrib</SPAN> es un diccionario vacío.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION001050000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">5</SPAN> Búsqueda de nodos en un documento XML</A>
+</H1>
+
+<P>
+Hasta ahora hemos trabajado con este documento <SPAN  CLASS="textsf">XML</SPAN> de ``arriba hacia abajo'', comenzando por el elemento raíz, recuperando sus hijos y luego los nietos, etc. Pero muchas aplicaciones de <SPAN  CLASS="textsf">XML</SPAN> necesitan encontrar elementos específicos. <SPAN  CLASS="textsf">ElementTree</SPAN> puede hacer esto también.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import xml.etree.ElementTree as etree
+&#187;&gt; tree = etree.parse('examples/feed.xml')
+&#187;&gt; root = tree.getroot()
+&#187;&gt; root.findall('http://www.w3.org/2005/Atomentry')
+[&lt;Element http://www.w3.org/2005/Atomentry at e2b4e0&gt;,
+ &lt;Element http://www.w3.org/2005/Atomentry at e2b510&gt;,
+ &lt;Element http://www.w3.org/2005/Atomentry at e2b540&gt;]
+&#187;&gt; root.tag
+'http://www.w3.org/2005/Atomfeed'
+&#187;&gt; root.findall('http://www.w3.org/2005/Atomfeed')
+[]
+&#187;&gt; root.findall('http://www.w3.org/2005/Atomauthor')
+[]</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> El método <SPAN  CLASS="textsf">findall()</SPAN> encuentra todos los elementos hijo que coinciden con una consulta específica (En breve veremos los formatos posibles de la consulta).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 10:</SPAN> Cada elemento --incluido el elemento raíz, pero también sus hijos-- tiene un método <SPAN  CLASS="textsf">findall()</SPAN>. Permite encontrar todos los elementos que coinciden entre sus hijos. Pero ¿porqué no devuelve esta consulta ningún resultado? Aunque no sea obvio, esta consulta particular únicamente busca entre los hijos del elemento. Puesto que el elemento raíz <SPAN  CLASS="textsf">feed</SPAN> no tiene ningún hijo denominado <SPAN  CLASS="textsf">feed</SPAN>, esta consulta devuelve una lista vacía.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 12:</SPAN> También te puede sorprender este resultado. Existe un elemento <SPAN  CLASS="textsf">author</SPAN> en este documento; de hecho hay tres (uno en cada <SPAN  CLASS="textsf">entry)</SPAN>. Pero estos elementos <SPAN  CLASS="textsf">author</SPAN> no son <SPAN  CLASS="textbf">hijos directos</SPAN> el elemento raíz; son ``nietos'' (literalmente, un elemento hijo de otro elemento hijo). Si quieres buscar elementos <SPAN  CLASS="textsf">author</SPAN> en cualquier nivel de profundidad puedes hacerlo, pero el formato de la consulta es algo distinto.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; tree.findall('http://www.w3.org/2005/Atomentry')
+[&lt;Element http://www.w3.org/2005/Atomentry at e2b4e0&gt;,
+ &lt;Element http://www.w3.org/2005/Atomentry at e2b510&gt;,
+ &lt;Element http://www.w3.org/2005/Atomentry at e2b540&gt;]
+&#187;&gt; tree.findall('http://www.w3.org/2005/Atomauthor')
+[]</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Por comodidad, el objeto <SPAN  CLASS="textsf">tree</SPAN> (devuelto por la función <SPAN  CLASS="textsf">etree.parse()</SPAN> tiene varios métodos que replican aquellos disponibles en el elemento raíz. Los resultados son idénticos a los que se obtienen si se llamase a <SPAN  CLASS="textsf">tree.getroot().findall()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Linea 5:</SPAN> Tal vez te pueda sorprender, pero esta consulta no encuentra a los elementos <SPAN  CLASS="textsf">author</SPAN> del documento. ¿Porqué no? porque es simplemente una forma de llamar a <SPAN  CLASS="textsf">tree.getroot().findall('{http://www.w3.org/2005/Atom}author')</SPAN>, lo que significa ``encuentra todos los elementos <SPAN  CLASS="textsf">author</SPAN> que sean hijos directos del elemento raíz''. Los elementos <SPAN  CLASS="textsf">author</SPAN> no son hijos del elemento raíz; son hijos de los elementos <SPAN  CLASS="textsf">entry</SPAN>. Por eso la consulta no retorna ninguna coincidencia.
+
+<P>
+</LI>
+</OL>
+
+<P>
+También hay un método <SPAN  CLASS="textsf">find()</SPAN> que retorna el primer elemento que coincide. Es útil para aquellas situaciones en las que únicamente esperas una coincidencia, o cuando haya varias pero solamente te importa la primera de ellas.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; entries = tree.findall('http://www.w3.org/2005/Atomentry')
+&#187;&gt; len(entries)
+3
+&#187;&gt; title_element = entries[0].find('http://www.w3.org/2005/Atomtitle')
+&#187;&gt; title_element.text
+'Dive into history, 2009 edition'
+&#187;&gt; foo_element = entries[0].find('http://www.w3.org/2005/Atomfoo')
+&#187;&gt; foo_element
+&#187;&gt; type(foo_element)
+&lt;class 'NoneType'&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Viste esto en el ejemplo anterior. Encuentra todos los elementos <SPAN  CLASS="textsf">atom:entry</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> El método <SPAN  CLASS="textsf">find()</SPAN> toma una consulta y retorna el primer elemento que coincide.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 7:</SPAN> No existen elementos denominados <SPAN  CLASS="textsf">foo</SPAN> por lo que retorna <SPAN  CLASS="textsf">None</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+Hay una complicación en el método <SPAN  CLASS="textsf">find()</SPAN> que te pasará en algún momento. En un contexto booleano los objetos elemento de ElementTree se evalúan a <SPAN  CLASS="textsf">False</SPAN> si no tienen hijos (si <SPAN  CLASS="textsf">len(element)</SPAN> es cero). Esto significa que <SPAN  CLASS="textsf">if element.find('...')</SPAN> no está comprobando si el método <SPAN  CLASS="textsf">find()</SPAN> encontró un elemento coincidente; está comprobando si ¡el elemento coincidente tiene algún elemento hijo! Para comprobar si el método <SPAN  CLASS="textsf">find()</SPAN> retornó algún elemento debes utilizar <SPAN  CLASS="textsf">if element.find('...') is not None</SPAN>.
+
+</BLOCKQUOTE>
+
+<P>
+Existe una forma de buscar entre los elementos <SPAN  CLASS="textbf">descendientes</SPAN>: hijos, nietos y niveles más profundos de anidamiento.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; all_links = tree.findall('//http://www.w3.org/2005/Atomlink')
+&#187;&gt; all_links
+[&lt;Element http://www.w3.org/2005/Atomlink at e181b0&gt;,
+ &lt;Element http://www.w3.org/2005/Atomlink at e2b570&gt;,
+ &lt;Element http://www.w3.org/2005/Atomlink at e2b480&gt;,
+ &lt;Element http://www.w3.org/2005/Atomlink at e2b5a0&gt;]
+&#187;&gt; all_links[0].attrib
+'href': 'http://diveintomark.org/',
+ 'type': 'text/html',
+ 'rel': 'alternate'
+&#187;&gt; all_links[1].attrib
+'href': 'http://diveintomark.org/archives/2009/03/27/
+  dive-into-history-2009-edition',
+ 'type': 'text/html',
+ 'rel': 'alternate'
+&#187;&gt; all_links[2].attrib
+'href': 'http://diveintomark.org/archives/2009/03/21/
+  accessibility-is-a-harsh-mistress',
+ 'type': 'text/html',
+ 'rel': 'alternate'
+&#187;&gt; all_links[3].attrib
+'href': 'http://diveintomark.org/archives/2008/12/18/
+  give-part-1-container-formats',
+ 'type': 'text/html',
+ 'rel': 'alternate'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Esta consulta --<SPAN  CLASS="textsf">//http://www.w3.org/2005/Atomlink</SPAN>-- es muy similar a las anteriores, excepto por las dos barras inclinadas al comienzo de la consulta. Estas dos barras significan que ``no se busque únicamente entre los hijos directos; quiero cualquier elemento que coincida <SPAN  CLASS="textbf">independientemente</SPAN> del nivel de anidamiento''. Por eso el resultado es una lista de cuatro elementos <SPAN  CLASS="textsf">link</SPAN>, no únicamente uno.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 7:</SPAN> El primer resultado es hijo directo del elemento raíz. Como puedes observar por sus atributos, es el enlace alternativo que apunta a la versión <SPAN  CLASS="textsf">HTML</SPAN> del sitio web que esta fuente describe.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 11:</SPAN> Los otros tres resultados son cada uno de los enlaces alternativos de cada entrada. Cada <SPAN  CLASS="textsf">entry</SPAN> tiene un único elemento hijo <SPAN  CLASS="textsf">link</SPAN>. Debido a la doble barra inclinada al comienzo de la consulta, se encuentran todos estos enlaces.
+
+<P>
+</LI>
+</OL>
+
+<P>
+En general, el método <SPAN  CLASS="textsf">findall()</SPAN> de ElementTree es una característica muy potente, pero el lenguaje de consulta puede ser un poco sorprendente. Está descrito oficialmente en http://effbot.org/zone/element-xpath.htmhttp://effbot.org/zone/element-xpath.htm(Soporte limitado a expresiones XPath). XPath es un estándar del W3C para consultar documentos XML. El lenguaje de consulta de ElementTree es suficientemente parecido a XPath para poder hacer búsquedas básicas, pero también suficientemente diferente como para desconcertarte si ya conoces XPath. 
+
+<P>
+Ahora vamos a ver una librería de terceros que extiende la <SPAN  CLASS="textsf">API</SPAN> de ElementTree para proporcionar un soporte completo de XPath.
+
+<P>
+
+<H1><A NAME="SECTION001060000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">6</SPAN> Ir más allá con LXML</A>
+</H1>
+
+<P>
+<SPAN  CLASS="textsf">lxml</SPAN><A NAME="tex2html78"
+  HREF="footnode.html#foot13213"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A> es una librería de terceros de código abierto que se desarrolla sobre el popular analizador <SPAN  CLASS="textsf">libxml2</SPAN><A NAME="tex2html79"
+  HREF="footnode.html#foot13214"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>. Proporciona una <SPAN  CLASS="textsf">API</SPAN> que es 100% compatible con ElementTree, y la extiende con soporte completo a Xpath 1.0 y otras cuantas bondades. Existe un instalador disponible para Windows<A NAME="tex2html80"
+  HREF="footnode.html#foot13215"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A>; los usuarios de Linux siempre deberían intentar usar las herramientas específicas de la distribución como <SPAN  CLASS="textsf">yum</SPAN> o <SPAN  CLASS="textsf">apt-get</SPAN> para instalar los binarios precompilados desde sus repositorios. En otro caso, necesitarás instalar los binarios manualmente<A NAME="tex2html81"
+  HREF="footnode.html#foot13216"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; from lxml import etree
+&#187;&gt; tree = etree.parse('examples/feed.xml')
+&#187;&gt; root = tree.getroot()
+&#187;&gt; root.findall('http://www.w3.org/2005/Atomentry')
+[&lt;Element http://www.w3.org/2005/Atomentry at e2b4e0&gt;,
+ &lt;Element http://www.w3.org/2005/Atomentry at e2b510&gt;,
+ &lt;Element http://www.w3.org/2005/Atomentry at e2b540&gt;]</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Una vez importado, <SPAN  CLASS="textsf">lxml</SPAN> proporciona la misma <SPAN  CLASS="textsf">API</SPAN> que la librería estándar <SPAN  CLASS="textsf">ElementTree</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> La función <SPAN  CLASS="textsf">parse()</SPAN>, igual que en ElementTree.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> El método <SPAN  CLASS="textsf">getroot()</SPAN>, también igual.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> El método <SPAN  CLASS="textsf">findall()</SPAN>, exactamente igual.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Para documentos <SPAN  CLASS="textsf">XML</SPAN> grandes, <SPAN  CLASS="textsf">lxml</SPAN> es significativamente más rápido que la librería <SPAN  CLASS="textsf">ElementTree</SPAN>. Si solamente estás utilizando la <SPAN  CLASS="textsf">API</SPAN> <SPAN  CLASS="textsf">ElementTree</SPAN> y quieres usar la implementación más rápida existente, puedes intentar importar <SPAN  CLASS="textsf">lxml</SPAN> y de no estar disponible, usar como segunda opción <SPAN  CLASS="textsf">ElementTree</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+try:
+    from lxml import etree
+except ImportError:
+    import xml.etree.ElementTree as etree</pre></TD></TR>
+</TABLE>
+
+<P>
+Pero <SPAN  CLASS="textsf">lxml</SPAN> proporciona algo más que el ser más rápido que <SPAN  CLASS="textsf">ElementTree</SPAN>. Su método <SPAN  CLASS="textsf">findall()</SPAN> incluye el soporte de expresiones más complicadas.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import lxml.etree
+&#187;&gt; tree = lxml.etree.parse('examples/feed.xml')
+&#187;&gt; tree.findall('//http://www.w3.org/2005/Atom*[@href]')
+[&lt;Element http://www.w3.org/2005/Atomlink at eeb8a0&gt;,
+ &lt;Element http://www.w3.org/2005/Atomlink at eeb990&gt;,
+ &lt;Element http://www.w3.org/2005/Atomlink at eeb960&gt;,
+ &lt;Element http://www.w3.org/2005/Atomlink at eeb9c0&gt;]
+&#187;&gt; tree.findall("//http://www.w3.org/2005/Atom*"                   "[@href='http://diveintomark.org/']")
+[&lt;Element http://www.w3.org/2005/Atomlink at eeb930&gt;]
+&#187;&gt; NS = 'http://www.w3.org/2005/Atom'
+&#187;&gt; tree.findall('//NSauthor[NSuri]'.format(NS=NS))
+[&lt;Element http://www.w3.org/2005/Atomauthor at eeba80&gt;,
+ &lt;Element http://www.w3.org/2005/Atomauthor at eebba0&gt;]</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> En este ejemplo voy a importar <SPAN  CLASS="textsf">lxml.tree</SPAN> en lugar de utilizar <SPAN  CLASS="textsf">from lxml import etree</SPAN>, para destacar que estas características son específicas de <SPAN  CLASS="textsf">lxml</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Esta consulta encuentra todos los elementos del espacio de nombres Atom, en cualquier sitio del documento, que contengan el atributo <SPAN  CLASS="textsf">href</SPAN>. Las <SPAN  CLASS="textsf">//</SPAN> al comienzo de la consulta significa ``elementos en cualquier parte del documento (no únicamente los hijos del elemento raíz)''. <SPAN  CLASS="textsf">{http://www.w3.org/2005/Atom}</SPAN> significa ``únicamente los elementos en el espacio de nombres de Atom''. <SPAN  CLASS="textsf">*</SPAN> significa ``elementos con cualquier nombre local'' y <SPAN  CLASS="textsf">@href</SPAN> significa ``tiene un atributo <SPAN  CLASS="textsf">href</SPAN>''.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 8:</SPAN> La consulta encuentra todos los elementos Atom con el atributo <SPAN  CLASS="textsf">href</SPAN> cuyo valor sea <SPAN  CLASS="textsf">http://diveintomark.org/</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 11:</SPAN> Después de hacer un rápido formateo de las cadenas de texto (porque de otro modo estas consultas compuestas se vuelven ridículamente largas), esta consulta busca los elementos <SPAN  CLASS="textsf">author</SPAN> que tienen un elemento <SPAN  CLASS="textsf">uri</SPAN> como hijo. Solamente retorna dos elementos <SPAN  CLASS="textsf">author</SPAN>, los de la primera y segunda <SPAN  CLASS="textsf">entry</SPAN>. El <SPAN  CLASS="textsf">author</SPAN> del último <SPAN  CLASS="textsf">entry</SPAN> contiene únicamente el elemento <SPAN  CLASS="textsf">name</SPAN>, no <SPAN  CLASS="textsf">uri</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¿No es suficiente para ti? <SPAN  CLASS="textsf">lxml</SPAN> tampoco integra soporte de expresiones XPath 1.0. No voy a entrar en profundidad en la sintaxis de XPath; se podría escribir un libro entero sobre ello. Pero te mostraré cómo se integra en <SPAN  CLASS="textsf">lxml</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import lxml.etree
+&#187;&gt; tree = lxml.etree.parse('examples/feed.xml')
+&#187;&gt; NSMAP = 'atom': 'http://www.w3.org/2005/Atom'
+&#187;&gt; entries = tree.xpath("//atom:category[@term='accessibility']/..",
+...     namespaces=NSMAP)
+&#187;&gt; entries 
+[&lt;Element http://www.w3.org/2005/Atomentry at e2b630&gt;]
+&#187;&gt; entry = entries[0]
+&#187;&gt; entry.xpath('./atom:title/text()', namespaces=NSMAP)
+['Accessibility is a harsh mistress']</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Para realizar consultas XPath en elementos de un espacio de nombres, necesitas definir dichos espacios de nombre con el mapeo a sus alias. Esto se realiza con un diccionario de Python.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Esto es una consulta XPath. La expresión XPath busca elementos <SPAN  CLASS="textsf">category</SPAN> (en el espacio de nombres de Atom) que contengan el atributo <SPAN  CLASS="textsf">term</SPAN> con el valor <SPAN  CLASS="textsf">accesibility</SPAN>. Pero ése no es el resultado real de la consulta. Observa el final de la cadena de texto de la consulta; ¿observaste el trozo <SPAN  CLASS="textsf">/..</SPAN>? Significa que ``devuelve el elemento padre del elemento <SPAN  CLASS="textsf">category</SPAN> que se acaba de encontrar''. Así esta consulta XPath encontrará todas las entradas que tengan un hijo <SPAN  CLASS="textsf">&lt;category term='accessibility'&gt;</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> La función <SPAN  CLASS="textsf">xpath()</SPAN> devuelve una lista de objetos <SPAN  CLASS="textsf">ElementTree</SPAN>. En este documento, únicamente hay una entrada con un elemento <SPAN  CLASS="textsf">category</SPAN> cuyo <SPAN  CLASS="textsf">term</SPAN> sea <SPAN  CLASS="textsf">accesibility</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 9:</SPAN> Las expresiones XPath no siempre devuelven una lista de elementos. Técnicamente, el modelo <SPAN  CLASS="textsf">DOM</SPAN> de un documento <SPAN  CLASS="textsf">XML</SPAN> no contiene elementos, contiene <SPAN  CLASS="textbf">nodos</SPAN>. Dependiendo de su tipo, los nodos pueden ser elementos, atributos o incluso contenido de texto. El resultado de una consulta XPath es una lista de nodos. Esta consulta retorna una lista de nodos de texto: el contenido de texto (<SPAN  CLASS="textsf">text()</SPAN>) del elemento <SPAN  CLASS="textsf">title</SPAN> (<SPAN  CLASS="textsf">atom:title</SPAN>) que sea hijo del elemento actual (<SPAN  CLASS="textsf">./</SPAN>).
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION001070000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">7</SPAN> Generación de XML</A>
+</H1>
+
+<P>
+El soporte a <SPAN  CLASS="textsf">XML</SPAN> de Python no está limitado al análisis de documentos existentes. Puedes crear también documentos <SPAN  CLASS="textsf">XML</SPAN> desde cero.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import xml.etree.ElementTree as etree
+&#187;&gt; new_feed = etree.Element('http://www.w3.org/2005/Atomfeed',
+...     attrib='http://www.w3.org/XML/1998/namespacelang': 'en')
+&#187;&gt; print(etree.tostring(new_feed))
+&lt;ns0:feed xmlns:ns0='http://www.w3.org/2005/Atom' xml:lang='en'/&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> Para crear un elemento nuevo, se debe instanciar un objeto de la clase <SPAN  CLASS="textsf">Element</SPAN>. Se le pasa el nombre del elemento (espacio de nombres + nombre local) como primer parámetro. Esta sentencia crear un elemento <SPAN  CLASS="textsf">feed</SPAN> en el espacio de nombres Atom. Esta será nuestro elemento raíz del nuevo documento.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Para añadir atributos al elemento, se puede pasar un diccionario de nombres y valores de atributos en el parámetro <SPAN  CLASS="textsf">attrib</SPAN>. Observa que el nombre del atributo debe estar en el formato estándar de ElementTree, <SPAN  CLASS="textsf">{espacio_de_nombres}nombre_local</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> En cualquier momento puedes serializar cualquier elemento (y sus hijos) con la función <SPAN  CLASS="textsf">tostring()</SPAN> de ElementTree.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¿Te ha sorprendido el resultado de la serialización? La forma en la que ElementTree serializa los elementos con espacios de nombre <SPAN  CLASS="textsf">XML</SPAN> es técnicamente precisa pero no óptima. El documento <SPAN  CLASS="textsf">XML</SPAN> de ejemplo al comienzo del capítulo definió un <SPAN  CLASS="textsf">espacio de nombres por defecto</SPAN> (<SPAN  CLASS="textsf">xmlns='http://www.w3.org/2005/Atom'</SPAN>). La definición de un espacio de nombres por defecto es útil para documentos --como las fuentes Atom-- en los que todos, o la mayoría de, los elementos pertenecen al mismo espacio de nombres, porque puedes declarar el espacio de nombres una única vez y declarar cada elemento únicamente con su nombre local (<SPAN  CLASS="textsf">&lt;feed&gt;</SPAN>, <SPAN  CLASS="textsf">&lt;link&gt;</SPAN>, <SPAN  CLASS="textsf">&lt;entry&gt;</SPAN>). No hay necesidad de utilizar prefijos a menos que quieras declarar elementos de otro espacio de nombres.
+
+<P>
+Un analizador <SPAN  CLASS="textsf">XML</SPAN> no verá ninguna diferencia entre un documento <SPAN  CLASS="textsf">XML</SPAN> con un espacio de nombres por defecto y un documento <SPAN  CLASS="textsf">XML</SPAN> con un espacio de nombres con prefijo. El <SPAN  CLASS="textsf">DOM</SPAN> resultante de esta serialización:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;ns0:feed xmlns:ns0='http://www.w3.org/2005/Atom' xml:lang='en'/&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+Es idéntico al <SPAN  CLASS="textsf">DOM</SPAN> de esta otra:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'/&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+La única diferencia práctica es que la segunda serialización es varios caracteres más corta. Si tuviéramos que modificar nuestro ejemplo para añadirle el prefijo <SPAN  CLASS="textsf">ns0:</SPAN> en cada etiqueta de inicio y fin, serían 4 caracteres por cada etiqueta de inicio x 79 etiquetas + 4 caracteres por la propia declaración del espacio de nombres, en total son 320 caracteres más. En el caso de que asumamos una codificación de caracteres UTF-8 se trata de 320 bytes extras (después de comprimir la diferencia se reduce a 21 bytes). Puede que no te importe mucho, pero para una fuente Atom, que puede descargarse miles de veces cada vez que cambia, una diferencia de unos cuantos bytes por petición puede suponer una cierta diferencia.
+
+<P>
+La librería <SPAN  CLASS="textsf">ElementTree</SPAN> no ofrece un control fino sobre la serialización de los elementos con espacios de nombres, pero <SPAN  CLASS="textsf">lxml</SPAN> sí:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import lxml.etree
+&#187;&gt; NSMAP = None: 'http://www.w3.org/2005/Atom'
+&#187;&gt; new_feed = lxml.etree.Element('feed', nsmap=NSMAP)
+&#187;&gt; print(lxml.etree.tounicode(new_feed))
+&lt;feed xmlns='http://www.w3.org/2005/Atom'/&gt;
+&#187;&gt; new_feed.set('http://www.w3.org/XML/1998/namespacelang', 'en')
+&#187;&gt; print(lxml.etree.tounicode(new_feed))
+&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'/&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> Para comenzar, se define el mapeo de los espacios de nombre como un diccionario. Los valores del diccionario son espacios de nombres; las claves son el prefijo deseado. Utilizar <SPAN  CLASS="textsf">None</SPAN> como prefijo, sirve para declarar el espacio de nombres por defecto.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Ahora puedes pasar el parámetro <SPAN  CLASS="textsf">nsmap</SPAN>, que es específico de <SPAN  CLASS="textsf">lxml</SPAN>, cuando vayas a crear un elemento, y <SPAN  CLASS="textsf">lxml</SPAN> respectará los prefijos que hayas definido.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Como se esperaba, esta serialización define el espacio de nombres Atom como el espacio de nombres por defecto y declara el elemento <SPAN  CLASS="textsf">feed</SPAN> sin prefijo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> ¡Subir as! Olvidamos añadir el atributo <SPAN  CLASS="textsf">xml:lang</SPAN>. Siempre puedes añadir atributos a cualquier elemento con el método <SPAN  CLASS="textsf">set()</SPAN>. Toma dos parámetros, el nombre del atributo en formato estándar de <SPAN  CLASS="textsf">ElementTree</SPAN> y el valor del atributo. Este método no es específico de <SPAN  CLASS="textsf">lxml</SPAN>, lo único específico de <SPAN  CLASS="textsf">lxml</SPAN> en este ejemplo es la parte del parámetro <SPAN  CLASS="textsf">nsmap</SPAN> para controlar los prefijos de la salida serializada.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¿Están los documentos <SPAN  CLASS="textsf">XML</SPAN> limitados a un elemento por documento? Por supuesto que no. Puedes crear hijos de forma fácil.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; title = lxml.etree.SubElement(new_feed, 'title',
+...     attrib='type':'html')
+&#187;&gt; print(lxml.etree.tounicode(new_feed))
+&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'&gt;
+&lt;title type='html'/&gt;&lt;/feed&gt;
+&#187;&gt; title.text = 'dive into &amp;hellip;'
+&#187;&gt; print(lxml.etree.tounicode(new_feed))
+&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'&gt;
+&lt;title type='html'&gt;dive into &amp;amp;hellip;&lt;/title&gt;&lt;/feed&gt;
+&#187;&gt; print(lxml.etree.tounicode(new_feed, pretty_print=True))
+&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'&gt;
+&lt;title type='html'&gt;dive into&amp;amp;hellip;&lt;/title&gt;
+&lt;/feed&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Para crear elementos hijo de un elemento existente, instancia objetos de la clase <SPAN  CLASS="textsf">SubElement</SPAN>. Los parámetros necesarios son el elemento padre (<SPAN  CLASS="textsf">new_feed</SPAN> en este caso) y el nombre del nuevo elemento. Puesto que los elementos hijo heredan el espacio de nombres de sus padres, no hay necesidad de redeclarar el espacio de nombres o sus prefijos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> Puedes pasarle un diccionario de atributos. Las claves son los nombres de los atributos y los valores son los valores de los atributos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Como esperabas, el nuevo elemento <SPAN  CLASS="textsf">title</SPAN> se ha creado en el espacio de nombres Atom y fue insertado como hijo del elemento <SPAN  CLASS="textsf">feed</SPAN>. Puesto que el elemento <SPAN  CLASS="textsf">title</SPAN> no tiene contenido de texto y no tiene hijos por sí mismo, <SPAN  CLASS="textsf">lxml</SPAN> lo serializa como un elemento vacío (con <SPAN  CLASS="textsf">/&gt;</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> Para establecer el contenido de texto de un elemento basta con asignarle valor a la propiedad <SPAN  CLASS="textsf">.text</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 7:</SPAN> Ahora el elemento <SPAN  CLASS="textsf">title</SPAN> se serializa con su contenido de texto. Cualquier contenido de texto que contenga símbolos 'menor que' o ampersands necesitan 'escaparse' al serializarse. <SPAN  CLASS="textsf">lxml</SPAN> hace estas conversiones de forma automática.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 10:</SPAN> Puedes aplicar una impresión formateada a la serialización, lo que inserta los saltos de línea correspondientes al cambiar las etiquetas. En términos técnicos, <SPAN  CLASS="textsf">lxml</SPAN> añade espacios en blanco no significativos para hacer más legible la salida resultante.
+
+<P>
+</LI>
+</OL>
+<BLOCKQUOTE>
+Podrías querer echarle un vistazo a <SPAN  CLASS="textsf">xmlwitch</SPAN><A NAME="tex2html82"
+  HREF="footnode.html#foot13219"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A>, otra librería de terceros para generar <SPAN  CLASS="textsf">XML</SPAN>. Hace uso extensivo de la sentencia <SPAN  CLASS="textsf">with</SPAN> para hacer la generación de código <SPAN  CLASS="textsf">XML</SPAN> más legible.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H1><A NAME="SECTION001080000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">8</SPAN> Análisis de XML ``estropeado''</A>
+</H1>
+
+<P>
+La especificación <SPAN  CLASS="textsf">XML</SPAN> obliga a que todos los analizadores <SPAN  CLASS="textsf">XML</SPAN> empleen un manejo de errores ``draconiano''. Esto es, deben parar tan pronto como detecten cualquier clase de error de ``malformado'' del documento. Errores de mala formación del documento son: que las etiquetas de inicio y fin no se encuentren bien balanceadas, entidades sin definir, caracteres unicode ilegales y otro número de reglas esotéricas. Esto es un contraste importante con otros formatos habituales como <SPAN  CLASS="textsf">HTML</SPAN> --tu navegador no para de mostrar una página web si se te olvida cerrar una etiqueta <SPAN  CLASS="textsf">HTML</SPAN> o aparece un escape o ampersand en el valor de un atributo (Es un concepto erróneo bastante extendido que <SPAN  CLASS="textsf">HTML</SPAN> no tiene definida una forma de hacer manejo de errores. Sí que está bien definido, pero es significativamente más complejo que ``párate ante el primer error que encuentres''.
+
+<P>
+Algunas personas (yo mismo incluido) creen que fue un error para los inventores del <SPAN  CLASS="textsf">XML</SPAN> obligar a este manejo de errores ``draconianos''. No me malinterpretes; puedo comprender el encanto de la simplificación de las reglas de manejo de errores. Pero en la práctica, el concepto de ``bien formado'' es más complejo de lo que suena, especialmente para aquellos documentos <SPAN  CLASS="textsf">XML</SPAN> (como los documentos Atom) se publican en la web mediante un servidor <SPAN  CLASS="textsf">HTTP</SPAN>. A pesar de la madurez de <SPAN  CLASS="textsf">XML</SPAN>, cuyo manejo estandarizado de errores es de 1997, las encuestas muestran continuamente que una significativa fracción de fuentes Atom de la web están plagadas con errores de ``buena formación''.
+
+<P>
+Por eso, tengo razones teóricas y prácticas para analizar documentos <SPAN  CLASS="textsf">XML</SPAN> a ``cualquier precio'', esto es, para <SPAN  CLASS="textbf">no</SPAN> parar ante el primer error de formación. Si te encuentras tú mismo en esta situación, <SPAN  CLASS="textsf">lxml</SPAN> puede ayudar.
+
+<P>
+Aquí hay un fragmento de un documento <SPAN  CLASS="textsf">XML</SPAN> mal formado. El ampersand debería estar ``escapado''.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&lt;?xml version='1.0' encoding='utf-8'?&gt;
+&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'&gt;
+  &lt;title&gt;dive into &amp;hellip;&lt;/title&gt;
+...
+&lt;/feed&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+Eso es un error, porque la entidad <SPAN  CLASS="textsf">&amp;hellip;</SPAN> no está definida en <SPAN  CLASS="textsf">XML</SPAN> (está definida en <SPAN  CLASS="textsf">HTML</SPAN>). Si intentas analizar este documento XML con los valores por defecto, <SPAN  CLASS="textsf">lxml</SPAN> parará en la entidad sin definir.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import lxml.etree
+&#187;&gt; tree = lxml.etree.parse('examples/feed-broken.xml')
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "lxml.etree.pyx", line 2693, 
+       in lxml.etree.parse (src/lxml/lxml.etree.c:52591)
+  File "parser.pxi", line 1478, 
+       in lxml.etree._parseDocument (src/lxml/lxml.etree.c:75665)
+  File "parser.pxi", line 1507, 
+       in lxml.etree._parseDocumentFromURL (src/lxml/lxml.etree.c:75993)
+  File "parser.pxi", line 1407, 
+       in lxml.etree._parseDocFromFile (src/lxml/lxml.etree.c:75002)
+  File "parser.pxi", line 965, 
+       in lxml.etree._BaseParser._parseDocFromFile 
+       (src/lxml/lxml.etree.c:72023)
+  File "parser.pxi", line 539, 
+       in lxml.etree._ParserContext._handleParseResultDoc 
+       (src/lxml/lxml.etree.c:67830)
+  File "parser.pxi", line 625, 
+       in lxml.etree._handleParseResult (src/lxml/lxml.etree.c:68877)
+  File "parser.pxi", line 565, 
+       in lxml.etree._raiseParseError (src/lxml/lxml.etree.c:68125)
+lxml.etree.XMLSyntaxError: 
+       Entity 'hellip' not defined, line 3, column 28</pre></TD></TR>
+</TABLE>
+
+<P>
+Para analizar este documento, a pesar de su error de buena formación, necesitas crear un analizador <SPAN  CLASS="textsf">XML</SPAN> específico.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; parser = lxml.etree.XMLParser(recover=True)
+&#187;&gt; tree = lxml.etree.parse('examples/feed-broken.xml', parser)
+&#187;&gt; parser.error_log 
+examples/feed-broken.xml:3:28:FATAL:PARSER:ERR_UNDECLARED_ENTITY: 
+    Entity 'hellip' not defined
+&#187;&gt; tree.findall('http://www.w3.org/2005/Atomtitle')
+[&lt;Element http://www.w3.org/2005/Atomtitle at ead510&gt;]
+&#187;&gt; title = tree.findall('http://www.w3.org/2005/Atomtitle')[0]
+&#187;&gt; title.text
+'dive into '
+&#187;&gt; print(lxml.etree.tounicode(tree.getroot()))
+&lt;feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'&gt;
+  &lt;title&gt;dive into &lt;/title&gt;
+.
+. [resto de la serializaci<!-- MATH
+ $\textrm{\'{o}}$
+ --><SPAN CLASS="MATH">&#243;</SPAN>n suprimido por brevedad]
+.
+
+<P>
+</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Para crear un analizador específico, se debe instanciar la clase <SPAN  CLASS="textsf">lxml.etree.XMLParser</SPAN>. Puede recibir un número diferente de parámetros. Nos interesa ahora el parámetro <SPAN  CLASS="textsf">recover</SPAN>. Cuando se establece a <SPAN  CLASS="textsf">True</SPAN>, el analizador <SPAN  CLASS="textsf">XML</SPAN> intentará ``recuperarse'' de este tipo de errores.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> Para analizar un documento <SPAN  CLASS="textsf">XML</SPAN> con este analizador, basta con pasar este objeto <SPAN  CLASS="textsf">parser</SPAN> como segundo parámetro de la función <SPAN  CLASS="textsf">parse()</SPAN>. Observa que <SPAN  CLASS="textsf">lxml</SPAN> no eleva ninguna excepción sobre la entidad no definida <SPAN  CLASS="textsf">&amp;hellip;</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Aún así, el analizador mantiene un registro de los errores de formación que ha encontrado (Esto siempre es cierto independientemente de que esté activado para recuperarse de esos errores o no).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 9:</SPAN> Puesto que no supo que hacer con la entidad sin definir <SPAN  CLASS="textsf">&amp;hellip;</SPAN>, el analizador simplemente la descarta silenciosamente. El contenido de texto del elemento <SPAN  CLASS="textsf">title</SPAN> se convierte en <SPAN  CLASS="textsf">'dive into '</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 11:</SPAN> Como puedes ver en la serialización, la entidad <SPAN  CLASS="textsf">&amp;hellip;</SPAN> ha sido suprimida.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Es importante reiterar que <SPAN  CLASS="textbf">no existe garantía de interoperabilidad</SPAN> entre analizadores <SPAN  CLASS="textsf">XML</SPAN> que se recuperan de los errores. Una analizador diferente podría decidir que reconoce la entidad <SPAN  CLASS="textsf">&amp;hellip;</SPAN> de <SPAN  CLASS="textsf">HTML</SPAN> y reemplazarla por <SPAN  CLASS="textsf">&amp;amp;hellip;</SPAN> ¿Es esto mejor? Puede ser. ¿Es más correcto? No, ambas soluciones son igualmente erróneas. El comportamiento correcto (de acuerdo a la especificación <SPAN  CLASS="textsf">XML</SPAN>) es pararse y elevar el error. Si has decidido que no es lo que quieres hacer, lo haces bajo tu propia responsabilidad.
+
+<P>
+
+<H1><A NAME="SECTION001090000000000000000">
+<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">9</SPAN> Lecturas recomendadas</A>
+</H1>
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textsf">XML</SPAN> en la wikipedia.org: <BR>
+http://en.wikipedia.org/wiki/XMLhttp://en.wikipedia.org/wiki/XML
+
+<P>
+</LI>
+<LI>La <SPAN  CLASS="textsf">API</SPAN> de <SPAN  CLASS="textsf">ElementTree</SPAN>: <BR>
+
+
+<P>
+</LI>
+<LI>Elementos y árboles de elementos <BR>
+http://effbot.org/zone/element.htmhttp://effbot.org/zone/element.htm
+
+<P>
+</LI>
+<LI>Soporte de XPath en <SPAN  CLASS="textsf">ElementTree</SPAN> <BR>
+http://effbot.org/zone/element-xpath.htmhttp://effbot.org/zone/element-xpath.htm
+
+<P>
+</LI>
+<LI>La función <SPAN  CLASS="textsf">iterparse</SPAN> de <SPAN  CLASS="textsf">ElementTree</SPAN> <BR>
+http://effbot.org/zone/element-iterparse.htmhttp://effbot.org/zone/element-iterparse.htm
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textsf">lxml</SPAN> <BR>
+http://codespeak.net/lxml/http://codespeak.net/lxml/
+
+<P>
+</LI>
+<LI>Análisis de <SPAN  CLASS="textsf">XML</SPAN> y <SPAN  CLASS="textsf">HTML</SPAN> con <SPAN  CLASS="textsf">lxml</SPAN> <BR>
+http://codespeak.net/lxml/1.3/parsing.htmlhttp://codespeak.net/lxml/1.3/parsing.html
+
+<P>
+</LI>
+<LI>XPath y <SPAN  CLASS="textsf">XSLT</SPAN> con <SPAN  CLASS="textsf">lxml</SPAN> <BR>
+http://codespeak.net/lxml/1.3/xpathxslt.htmlhttp://codespeak.net/lxml/1.3/xpathxslt.html
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textsf">xmlwitch</SPAN> <BR>
+http://github.com/galvez/xmlwitch/tree/masterhttp://github.com/galvez/xmlwitch/tree/master
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html780"
+  HREF="node11.html">8. Serialización de Objetos</A>
+<B> Subir a:</B> <A NAME="tex2html778"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html772"
+  HREF="node9.html">6. Refactorizar</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>

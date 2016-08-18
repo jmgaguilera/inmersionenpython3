@@ -1,0 +1,1034 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>4. Cadenas de texto</TITLE>
+<META NAME="description" CONTENT="4. Cadenas de texto">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node8.html">
+<LINK REL="previous" HREF="node6.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node8.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html727"
+  HREF="node8.html">5. Clases e iteradores</A>
+<B> Subir a:</B> <A NAME="tex2html725"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html719"
+  HREF="node6.html">3. Comprensiones</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html728"
+  HREF="node7.html#SECTION00710000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Temas aburridos que debes conocer antes de la inmersión</A>
+<LI><A NAME="tex2html729"
+  HREF="node7.html#SECTION00720000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Unicode</A>
+<LI><A NAME="tex2html730"
+  HREF="node7.html#SECTION00730000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN> Inmersión</A>
+<LI><A NAME="tex2html731"
+  HREF="node7.html#SECTION00740000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN> Formatear cadenas</A>
+<UL>
+<LI><A NAME="tex2html732"
+  HREF="node7.html#SECTION00741000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Nombres de campos compuestos</A>
+<LI><A NAME="tex2html733"
+  HREF="node7.html#SECTION00742000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Especificaciones de formato</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html734"
+  HREF="node7.html#SECTION00750000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN> Otros métodos habituales de manipulación de cadenas</A>
+<UL>
+<LI><A NAME="tex2html735"
+  HREF="node7.html#SECTION00751000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> Troceado de cadenas</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html736"
+  HREF="node7.html#SECTION00760000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN> Cadenas de texto y Bytes</A>
+<LI><A NAME="tex2html737"
+  HREF="node7.html#SECTION00770000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN> Postdata: Codificación de  caracteres del código fuente de Python</A>
+<LI><A NAME="tex2html738"
+  HREF="node7.html#SECTION00780000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN> Lecturas recomendadas</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00700000000000000000"></A><A NAME="ch:cadenas"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>. Cadenas de texto
+</H1>
+
+<P>
+Nivel de dificultad:3 sobre 5
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``Te digo esto porque eres uno de mis amigos, 
+<BR>¡Mi vocabulario comienza donde el tuyo termina!'' 
+<BR>--Dr. Seuss, ¡On beyond Zebra!</I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION00710000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Temas aburridos que debes conocer antes de la inmersión</A>
+</H1>
+
+<P>
+¿Sabías que la gente de http://en.wikipedia.org/wiki/Bougainville_ProvinceBougainville tiene el alfabeto más pequeño del mundo? El alfabeto http://en.wikipedia.org/wiki/Rotokas_alphabetRotokas está compuesto únicamente por 12 letras: A, E, G, I, K, O, P, R, S, T, U y V. En el otro lado del espectro los lenguajes como el Chino, Japonés y Koreano tienen miles de caracteres. El inglés, desde luego, tiene 26 letras --52 si cuentas las mayúsculas y minúsculas de forma separada-- más un puñado de símbolos de puntuación <SPAN  CLASS="textit">!@#$%&amp;?</SPAN>.
+
+<P>
+Cuando las personas hablan sobre ``texto'' piensan en ``caracteres y símbolos en la pantalla del ordenador''. Pero los ordenadores no conocen ni símbolos ni caracteres, conocen bits y bytes. Cada elemento textual que ves en la pantalla está almacenado con una <SPAN  CLASS="textsf">codificación de caracteres</SPAN> particular. Explicándolo de manera informal, la codificación de caracteres proporciona una conversión entre lo que ves en la pantalla y lo que el ordenador realmente almacena en memoria o en disco. Existen muchas codificaciones de caracteres diferentes, algunas optimizadas para determinados lenguajes como el ruso, el chino o el inglés, y otras que se pueden utilizar para diferentes lenguajes.
+
+<P>
+En realidad es más complicado. Muchos caracteres son comunes a diferentes codificaciones, pero cada codificación puede utilizar una secuencia de bytes diferente para almacenar esos caracteres en memoria o disco. Puedes imaginarte que una codificación de caracteres es como una especia de clave de desencriptado. Cuando tengas una secuencia de bytes --un fichero, una página web o cualquier otra cosa-- y se considere que esos bytes representan ``texto'', necesitas conocer en qué codificación de caracteres se encuentra para poder decodificar los bytes y conocer a qué caracteres representan. Si tienes una clave de decodificación equivocada o no dispones de ninguna, la decodificación no será posible o será errónea (si se usa una decodificación equivocada), y el resultado será un texto sin sentido.
+
+<P>
+<blockquote>Todo lo que que pensabas que sabías sobre las cadenas de texto es erróneo.</blockquote>  
+
+<P>
+Seguramente  habrás visto a veces paginas web con extraños caracteres de interrogación o similar, en donde esperabas algún carácter como el apóstrofo o vocales acentuadas. Esto suele indicar que el autor de la página no declaró correctamente la codificación de caracteres que utilizó por lo que tu navegador la tiene que adivinar y el resultado es una mezcla de caracteres esperados e inesperados. En inglés esto es simplemente desconcertante, pero en otros lenguajes el resultado puede ser completamente ilegible.
+
+<P>
+Existen tablas de codificación de caracteres para cada uno de los lenguajes importantes del mundo. Puesto que cada lenguaje es diferente, y la memoria y el espacio en disco ha sido caro históricamente, cada tabla de codificación de caracteres está optimizada para un lenguaje en particular. Lo que quiero decir con esto es que cada una de las codificaciones usa los mismos números (0 - 255) para representar los caracteres de un lenguaje determinado. Por ejemplo, posiblemente estés familiarizado con la codificación <SPAN  CLASS="textsf">ASCII</SPAN>, que almacena los caracteres del inglés como números que van del 0 al 127 (65 es la ``A'', 97 es la ``a'', etc). El inglés es un alfabeto muy simple, por lo que puede expresarse con menos de 128 números. Para aquellos que sepan contar en base 2, eso significa 7 bits de los 8 de un byte.
+
+<P>
+Algunos lenguajes de Europa como el francés, español y alemán necesitan más letras que el inglés. O, para ser más precisos, tienen letras que se combinan con diversas marcas diacríticas, como el carácter <SPAN  CLASS="textsf">ñ</SPAN> del español. La tabla de codificación de caracteres más común para estos lenguajes es <SPAN  CLASS="textsf">CP-1252</SPAN>, que también es conocida como <SPAN  CLASS="textsf">windows-1252</SPAN> porque se utiliza ampliamente en el sistema operativo Microsoft Windows. La codificación <SPAN  CLASS="textsf">CP-1252</SPAN> comparte con <SPAN  CLASS="textsf">ASCII</SPAN> los primeros 128 caracteres (0-127), pero luego se extiende en el rango de 128 a 255 para los caracteres restantes (241 es la ``ñ'', 252 es la ``ü'', etc). Continúa siendo una tabla de codificación de un único byte. El valor mayor, 255, aún <SPAN  CLASS="textit">cabe</SPAN> en un byte.
+
+<P>
+Además existen lenguajes como el chino, japonés y coreano, que tienen tantos caracteres que requieren tablas de codificación de caracteres multibyte. Esto significa que cada ``carácter'' se representa como un número de dos bytes lo que abarca del 0 al 65535. Pero las codificaciones multibyte también tienen el mismo problema que las diferentes codificaciones de un único byte: cada una de ellas puede utilizar el mismo número para expresar un carácter diferente. La única diferencia entre ellas es que el rango de caracteres disponible es mayor en las codificaciones multibyte.
+
+<P>
+Esto no suponía demasiado problema en un mundo desconectado, en donde ``texto'' era algo que tecleabas para ti y ocasionalmente imprimías. No existía mucho ``texto plano''. El código fuente era <SPAN  CLASS="textsf">ASCII</SPAN> y todo el mundo usaba procesadores de textos que definían su propio formato que tenían en cuenta la información de codificación de caracteres junto con la información de estilo, etc. La gente leía estos documentos con el mismo programa procesador de texto que el autor original, por lo que todo funcionaba, más o menos.
+
+<P>
+Ahora piensa en la aparición de las redes globales y en el correo y la web. Mucho ``texto plano'' anda suelto por el mundo, se crea en un ordenador, se transmite a un segundo y se muestra en un tercero. Los ordenadores únicamente distinguen números, pero los números pueden significar cosas diferentes. ¡Oh no! ¿Qué hacer? Bien, los sistemas tuvieron que diseñarse para transportar la información de codificación junto con el ``texto plano''. Recuerda, se trata de las claves de descodificación que mapean los números entendidos por el ordenador a caracteres legibles por personas. Una clave de descodificación perdida da lugar a texto ilegible.
+
+<P>
+Ahora piensa en intentar almacenar diversos documentos de texto en el mismo lugar, como en una tabla de una misma base de datos que almacena todo el correo electrónico que hayas recibido. Aún necesitas almacenar la codificación de caracteres junto con cada correo electrónico para que se pueda leer apropiadamente. ¿Parece difícil? Prueba a buscar en tu base de datos de correos, eso significa convertir entre múltiples tablas de codificación de caracteres sobre la marcha. ¿No suena divertido?.
+
+<P>
+Piensa ahora en la posibilidad de documentos multilíngües, en donde aparecen caracteres en diferentes lenguajes<A NAME="tex2html68"
+  HREF="footnode.html#foot5929"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>. Y, por supuesto, querrás buscar el contenido de <SPAN  CLASS="textit">esos</SPAN> documentos.
+
+<P>
+Ahora llora un rato, porque todo lo que creías conocer sobre las cadenas de texto es erróneo, y no existe algo así como el ``texto plano''.
+
+<P>
+
+<H1><A NAME="SECTION00720000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Unicode</A>
+</H1>
+
+<P>
+<SPAN  CLASS="textit">Entra</SPAN> en Unicode.
+
+<P>
+Unicode es un sistema diseñado para representar <SPAN  CLASS="textit">todos</SPAN> los caracteres de <SPAN  CLASS="textit">todos</SPAN> los lenguajes. Representa cada letra, carácter o ideograma como un número de cuatro bytes. Cada número representa a un único carácter que se use en al menos uno de los lenguajes del mundo (No se usan todos los números, pero se usan más de 65535 por lo que no es suficiente utilizar dos bytes). Los caracteres que se utilizan en diferentes lenguajes tienen el mismo número generalmente, a menos que exista una buena razón etimológica para que no sea así. De todos modos hay exactamente un número por cada carácter y un carácter por número. De esta forma, cada número siempre significa una única cosa. No existen ``modos'' que rastrear, <SPAN  CLASS="textsf">U+0041</SPAN> siempre corresponde a <SPAN  CLASS="textsf">``A''</SPAN>, incluso si tu lenguaje no usa tal símbolo.
+
+<P>
+A primera vista parece una gran idea, una tabla de codificación de caracteres para gobernarlos a todos. Múltiples lenguajes por documento, no más ``cambios de modo'' para conmutar entre tablas de codificación en medio de un documento. Pero existe una pregunta obvia. ¿Cuatro bytes? ¿Para cada carácter? Parece un gasto inútil la mayor parte de las ocasiones, especialmente para idiomas como el inglés o el español, que necesitan menos de un byte (256 números) para expresar cada uno de los caracteres posibles. De hecho, es un desperdicio de espacio incluso para los lenguajes basados en ideogramas como el chino, que nunca necesitan más de dos caracteres para cada carácter.
+
+<P>
+Existe una tabla de codificación Unicode que utiliza cuatro bytes por cada carácter. Se denomina <SPAN  CLASS="textsf">UTF-32</SPAN> porque 32 bits es igual a 4 bytes. <SPAN  CLASS="textsf">UTF-32</SPAN> es una codificación directa; toma cada carácter Unicode (un número de 4 bytes) y representa al carácter con ese mismo número. Esto tiene varias ventajas siendo la más importante que puedes encontrar el ``enésimo'' carácter de una cadena en un tiempo constante ya que se encuentra en a partir del byte <SPAN CLASS="MATH">4*<I>n</I></SPAN>. También tiene varios inconvenientes, siendo el más obvio que necesita cuatro bytes para almacenar cada carácter.
+
+<P>
+Incluso aunque existen muchos caracteres Unicode, resulta que la mayoría de la gente nunca usará nada más allá de los primeros 65535. Por eso existe otra codificación Unicode denominada <SPAN  CLASS="textsf">UTF-16</SPAN> (16 bits son 2 bytes) que codifica cada uno de los caracteres de 0 a 65535 como dos bytes. Además utiliza algunos ``trucos sucios'' por si necesitas representar aquellos caracteres que se usan raramente y que están más allá del 65535. La ventaja más obvia es que esta tabla de codificación de caracteres es el doble de eficiente que la de <SPAN  CLASS="textsf">UTF-32</SPAN> puesto que cada carácter requiere únicamente dos bytes para almacenarse, en lugar de cuatro bytes. Aún se puede encontrar fácilmente el enésimo carácter de una cadena en un tiempo constante, siempre que se asuma que no existen caracteres especiales de los que están por encima de 65535. Lo que suele ser una buena asunción... ¡hasta el momento en que no lo es!
+
+<P>
+También existen algunos inconvenientes no tan obvios tanto en <SPAN  CLASS="textsf">UTF-32</SPAN> y <SPAN  CLASS="textsf">UTF-8</SPAN>. Los ordenadores de sistemas diferentes suelen almacenar los bytes de diferentes formas. Esto significa que el carácter <SPAN  CLASS="textsf">U+4E2D</SPAN> podría almacenarse en <SPAN  CLASS="textsf">UTF-16</SPAN> bien como <SPAN  CLASS="textsf">4E 2D</SPAN> o como <SPAN  CLASS="textsf">2D 4E</SPAN>, dependiendo de que el sistema sea ``big-endian'' o ``little-endian''<A NAME="tex2html69"
+  HREF="footnode.html#foot5497"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> (para UTF-32 existen más posibilidades de ordenación de los bytes). Mientras tus documentos no dejen tu ordenador estás seguro --las diferentes aplicaciones del mismo ordenador utilizarán la misma ordenación de bytes. Pero en el momento que transfieras los documentos entre sistemas, tal vez a través de Internet, vas a necesitar una forma de indicar el orden en el que se han almacenado los bytes. De otra forma el sistema que recibe los datos no tiene forma de saber si la secuencia de dos bytes <SPAN  CLASS="textsf">4E 2D</SPAN> significa <SPAN  CLASS="textsf">U+4E2D</SPAN> o <SPAN  CLASS="textsf">U+2D4E</SPAN>.
+
+<P>
+Para resolver <SPAN  CLASS="textit">este</SPAN> problema, las codificaciones multibyte de Unicode definen el ``Byte Orden Mark'' (BOM)<A NAME="tex2html70"
+  HREF="footnode.html#foot5502"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>, que es un carácter especial no imprimible que se puede incluir al comienzo de tu documento para indica qué ordenación de bytes tiene el documento. Para <SPAN  CLASS="textsf">UTF-16</SPAN> la marca de ordenación de bytes es <SPAN  CLASS="textsf">U+FEFF</SPAN>, por lo que si recibes un documento <SPAN  CLASS="textsf">UTF-16</SPAN> que comienza con los bytes <SPAN  CLASS="textsf">FF FE</SPAN>, ya sabes en qué forma vienen ordenados los bytes; si comienza con <SPAN  CLASS="textsf">FE FF</SPAN> sabes que el orden es el contrario.
+
+<P>
+Aún así, <SPAN  CLASS="textsf">UTF-16</SPAN> no es exactamente el ideal, especialmente si la mayor parte de los caracteres que utilizas son <SPAN  CLASS="textsf">ASCII</SPAN>. Si lo piensas, incluso una página web china contendrá muchos caracteres <SPAN  CLASS="textsf">ASCII</SPAN> --todos los elementos y atributos que rodean a los caracteres imprimibles chinos. Poder encontrar el ``enésimo'' carácter está bien, pero existe el problema de los caracteres que requieren más de dos bytes, lo que significa que no puedes <SPAN  CLASS="textit">garantizar</SPAN> que todos los caracteres ocupan exactamente dos bytes, por lo que en la práctica no puedes encontrar el carácter de la posición ``enésima'' en un tiempo constante a no ser que mantengas un índice separado. Y muchacho, te aseguro que hay mucho texto <SPAN  CLASS="textsf">ASCII</SPAN> por el mundo...
+
+<P>
+Otras personas valoraron estas preguntas y plantearon una solución:
+
+<P>
+<BIG CLASS="XHUGE">UTF-8
+</BIG>
+<P>
+
+
+<P>
+<SPAN  CLASS="textsf">UTF-8</SPAN> es un sistema de codificación de <SPAN  CLASS="textit">longitud variable</SPAN> para Unicode. Esto significa que los caracteres pueden utilizar diferente número de bytes. Para los caracteres <SPAN  CLASS="textsf">ASCII</SPAN> utiliza un único byte por carácter. De hecho, utiliza exactamente los mismos bytes que <SPAN  CLASS="textsf">ASCII</SPAN> por lo que los 128 primeros caracteres son indistinguibles. Los caracteres ``latinos extendidos'' como la ñ o la ö utilizan dos bytes<A NAME="tex2html71"
+  HREF="footnode.html#foot5930"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>. Los caracteres chinos utilizan tres bytes, y los caracteres más ``raros'' utilizan cuatro.
+
+<P>
+Desventajas: debido a que los caracteres pueden ocupar un número diferente de bytes, encontrar el carácter de la posición ``enésima'' es una operación de orden de complejidad <SPAN  CLASS="textsf">O(n)</SPAN> --lo que significa que cuanto más larga sea la cadena, más tiempo lleva encontrar un carácter específico. Asimismo, hay que andar codificando y decodificando entre bytes y caracteres.
+
+<P>
+Ventajas: se trata de una codificación supereficiente de los caracteres <SPAN  CLASS="textsf">ASCII</SPAN>. No es peor que <SPAN  CLASS="textsf">UTF-16</SPAN> para los caracteres latinos extendidos, y es mejor que <SPAN  CLASS="textsf">UTF-32</SPAN> para los caracteres chinos. También (aquí tendrás que confiar en mi, porque no te voy a mostrar la matemática involucrada), debido a la naturaleza exacta de la manipulación de los bits, no existen problemas de ordenación de bits. Un documento codificado en UTF-8 siempre contiene la misma cadena de bytes sea cual sea el ordenador y sistema operativo.
+
+<P>
+
+<H1><A NAME="SECTION00730000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN> Inmersión</A>
+</H1>
+
+<P>
+En Python 3 todas las cadenas de texto son secuencias de caracteres Unicode. En Python 3 no existen cadenas codificadas en <SPAN  CLASS="textsf">UTF-8</SPAN> o en <SPAN  CLASS="textsf">CP-1252</SPAN>. No es correcto decir ¿Es esta cadena una cadena codificada en <SPAN  CLASS="textsf">UTF-8</SPAN>?. <SPAN  CLASS="textsf">UTF-8</SPAN> es una forma de codificar caracteres en una secuencia de bytes. Si quieres convertir una cadena de caracteres en una secuencia de bytes en una codificación de caracteres particular, Python 3 puede ayudarte con ello. Si quieres tomar una secuencia de bytes y convertirla en una cadena de texto, también te puede ayudar Python 3. Los bytes no son caracteres, los bytes son bytes. Los caracteres son una abstracción. Una cadena es una secuencia de esas abstracciones.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; s = '快乐 Python'
+&#187;&gt; len(s)
+9
+&#187;&gt; s[0]
+'快'
+&#187;&gt; s + ' 3'
+'快乐 Python 3'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Para crear una cadena de texto debes utilizar las comillas para delimitarla. Se pueden utilizar comillas simples (<SPAN  CLASS="textsf">'</SPAN>) o dobles (<SPAN  CLASS="textsf">"</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> La función interna <SPAN  CLASS="textsf">len()</SPAN> devuelve la longitud de la cadena, el número de caracteres. Esta función es la misma que utilizas para conocer la longitud de una lista, tupla, conjunto o diccionario. Una cadena es como una tupla de caracteres.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> De la misma forma que puedes obtener elementos individuales de una lista, puedes obtener caracteres individuales de una cadena mediante la notación de índices.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Como con las listas y tuplas, puedes concatenar las cadenas utilizando el operador <SPAN  CLASS="textsf">+</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00740000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN> Formatear cadenas</A>
+</H1>
+
+<P>
+<blockquote>Las cadenas de texto se pueden definir utilizando comillas simples o dobles.</blockquote>  
+
+<P>
+Vamos a echarle otro vistazo a <SPAN  CLASS="textsf">parahumanos.py</SPAN>:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+# parahumanos.py
+
+<P>
+SUFIJOS = 1000: ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+           1024: ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 
+                  'YiB']
+
+<P>
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+    '''Convierte un tama<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>o de fichero en formato legible por personas
+
+<P>
+Argumentos/par<!-- MATH
+ $\textrm{\'{a}}$
+ --><SPAN CLASS="MATH">&#225;</SPAN>metros:
+    tamanyo - tama<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>o de fichero en bytes
+    un_kilobyte_es_1024_bytes - si True (por defecto), 
+                                 usa m<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>ltiplos de 1024
+                                 si False, usa m<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>ltiplos de 1000
+
+<P>
+retorna: string
+
+<P>
+'''
+    if tamanyo &lt; 0:
+        raise ValueError('el n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>mero debe ser no negativo')
+
+<P>
+multiplo = 1024 if un_kilobyte_es_1024_bytes else 1000
+    for sufijo in SUFIJOS[multiplo]:
+        tamanyo /= multiplo
+        if tamanyo &lt; multiplo:
+            return '0:.1f 1'.format(tamanyo, sufijo)
+
+<P>
+raise ValueError('n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>mero demasiado grande')
+
+<P>
+if __name__ == '__main__':
+    print(tamanyo_aproximado(1000000000000, False))
+    print(tamanyo_aproximado(1000000000000))
+
+<P>
+</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> <SPAN  CLASS="textsf">'KB', 'MB', 'GB', ...</SPAN> son cadenas.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Las cadenas de documentación (docstrings) son cadenas de texto. Como se expanden más allá de una línea se utilizan tres comillas al comienzo y al final para delimitarlas.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 18:</SPAN> Estas comillas triples finalizan la cadena de documentación de esta función.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 20:</SPAN> Otra cadena que se pasa como parámetro a la excepción con el fin de que sea legible por una persona.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 26:</SPAN> Esto es... ¡Uff! ¿Qué car.. es esto?
+
+<P>
+</LI>
+</OL>
+
+<P>
+Python 3 permite formatear valores en cadenas de texto. Aunque este sistema permite expresiones muy complejas, su uso más básico consiste en insertar un valor en una cadena de texto en el lugar definido por un ``marcador''.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; usuario = 'mark'
+&#187;&gt; clave = 'PapayaWhip'
+&#187;&gt; "La clave de 0 es 1".format(usuario, clave)
+"La clave de mark es PapayaWhip"</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Realmente mi clave no es <SPAN  CLASS="textsf">PapayaWhip</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Aquí hay mucho que contar. Primero, se observa una llamada a un método sobre una cadena de texto. <SPAN  CLASS="textit">Las cadenas de texto son objetos</SPAN>, y los objetos tienen métodos, como ya sabes. Segundo, la expresión completa se evalúa a una cadena. Tercero, <SPAN  CLASS="textsf">{0}</SPAN> y <SPAN  CLASS="textsf">{1}</SPAN> son <SPAN  CLASS="textit">campos de reemplazo</SPAN>, que se sustituyen con los parámetros que se pasen al método <SPAN  CLASS="textsf">format()</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00741000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Nombres de campos compuestos</A>
+</H2>
+
+<P>
+En el ejemplo anterior se muestra el ejemplo más simple, aquél en el que los campos de reemplazo son números enteros. Los campos de reemplazo enteros se tratan como índices posicionales en la lista de parámetros del método <SPAN  CLASS="textsf">format()</SPAN>. Eso significa que el <SPAN  CLASS="textsf">{0}</SPAN> se reemplaza por el primer parámetro (<SPAN  CLASS="textsf">usuario</SPAN> en este caso), <SPAN  CLASS="textsf">{1}</SPAN> se reemplaza por el segundo (<SPAN  CLASS="textsf">clave</SPAN> en este caso), etc. Puedes utilizar tantos campos de reemplazo posicional como parámetros se pasen en el método <SPAN  CLASS="textsf">format()</SPAN>. Pero los campos de reemplazo permiten mucha más funcionalidad.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import parahumanos
+&#187;&gt; mis_sufijos = parahumanos.SUFIJOS[1000]
+&#187;&gt; mis_sufijos
+['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+&#187;&gt; '10000[0] = 10[1]'.format(mis_sufijos)
+'1000KB = 1MB'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> En lugar de ejecutar una función del módulo <SPAN  CLASS="textsf">parahumanos</SPAN> únicamente estás capturando una de las estructuras de datos que define; la lista de sufijos que representan las potencias de 1000.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Esta línea parece complicada, pero no lo es. <SPAN  CLASS="textsf">{0}</SPAN> representa el primer parámetro del método <SPAN  CLASS="textsf">format()</SPAN>, <SPAN  CLASS="textsf">mis_sufijos</SPAN>. Por eso <SPAN  CLASS="textsf">{0[0]}</SPAN> se refiere al primer elemento de la lista que esté definida como el primer parámetro del método <SPAN  CLASS="textsf">format()</SPAN>: <SPAN  CLASS="textsf">'KB'</SPAN>. Mientras que <SPAN  CLASS="textsf">{0[1]}</SPAN> se refiere al segundo elemento de la misma lista: <SPAN  CLASS="textsf">'MB'</SPAN>. Todo lo que está fuera de las llaves --incluido el <SPAN  CLASS="textsf">1000</SPAN>, los signos de igual, y los espacios-- quedan sin tocar. El resultado final es: <SPAN  CLASS="textsf">'1000KB = 1MB'</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<blockquote>El <SPAN  CLASS="textsf">{0}</SPAN> se reemplaza por el primer parámetro, <SPAN  CLASS="textsf">{1}</SPAN> se reemplaza por el segundo.</blockquote>  
+
+<P>
+Lo que este ejemplo te enseña es que los <SPAN  CLASS="textit">especificadores de formato pueden utilizarse para acceder a los elementos y propiedades de las estructuras de datos utilizando (casi) sintaxis de Python</SPAN>. Esto se denomina <SPAN  CLASS="textit">nombres de campos compuestos</SPAN>. Estos son los nombres de campos que funcionan:
+
+<P>
+
+<UL>
+<LI>Pasar una lista y acceder a un elemento de la lista utilizando un índice (como en el ejemplo anterior).
+
+<P>
+</LI>
+<LI>Pasar un diccionario y acceder a los valores del mismo utilizando una clave.
+
+<P>
+</LI>
+<LI>Pasar un módulo y acceder a sus variables y funciones por nombre.
+
+<P>
+</LI>
+<LI>Pasar una instancia de clase y acceder a sus propiedades y métodos por nombre.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Cualquier combinación de las anteriores</SPAN>.
+
+<P>
+</LI>
+</UL>
+
+<P>
+Solamente para despejar tu cerebro te muestro aquí un ejemplo que combina todo lo anterior.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import parahumanos
+&#187;&gt; import sys
+&#187;&gt; '1MB = 10000.modules[parahumanos].SUFIJOS[1000][0]'.format(sys)
+'1MB = 1000KB'</pre></TD></TR>
+</TABLE>
+
+<P>
+Así es como funciona:
+
+<P>
+
+<UL>
+<LI>El módulo <SPAN  CLASS="textsf">sys</SPAN> almacena información sobre la instancia del lenguaje Python que se está ejecutando en ese momento. Puesto que lo has importado, puedes pasar el propio módulo <SPAN  CLASS="textsf">sys</SPAN> como parámetro del método <SPAN  CLASS="textsf">format()</SPAN>. Así que el campo de sustitución <SPAN  CLASS="textsf">{0}</SPAN> se refiere al módulo <SPAN  CLASS="textsf">sys</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textsf">sys.modules</SPAN> es un diccionario que almacena todos los módulos que se han importando en la instancia de Python que se está ejecutando. Las claves son los nombres de los módulos en formato cadena de texto; los valores son propios módulos (objetos módulo). Por ello <SPAN  CLASS="textsf">{0.modules}</SPAN> se refiere al diccionario que contiene todos módulos que se han importado en Python hasta este momento.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textsf">sys.modules['parahumanos']</SPAN> retorna el objeto <SPAN  CLASS="textsf">parahumanos</SPAN> que acabas de importar. El campo de reemplazo <SPAN  CLASS="textsf">sys.modules[parahumanos]</SPAN> se refiere al módulo <SPAN  CLASS="textsf">parahumanos</SPAN>. Observa que existe una ligera diferencia de sintaxis. En el código de Python, las claves del diccionario es de tipo cadena; para referirse a ellas, es necesario poner comillas alrededor del nombre del módulo (<SPAN  CLASS="textsf">'parahumanos'</SPAN>). Pero dentro de los campos de sustitución no se ponen las comillas alrededor del nombre de la clave del diccionario (<SPAN  CLASS="textsf">parahumanos</SPAN>). Según el http://www.python.org/dev/peps/pep-3101/PEP 3101: Formateo avanzado de cadenas: ``Las reglas para el parseo de la clave de un campo de sustitución son muy simples, si comienza por un dígito, se trata como numérica, en caso contrario se interpreta como una cadena''.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textsf">sys.modules['parahumanos'].SUFIJOS</SPAN> es el diccionario definido en el módulo <SPAN  CLASS="textsf">parahumanos</SPAN>. El campo de sustitución <SPAN  CLASS="textsf">sys.modules[parahumanos].SUFIJOS</SPAN> se refiere a este diccionario.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textsf">sys.modules['parahumanos'].SUFIJOS[1000]</SPAN> es la lista de sufijos múltiplos de 1000: <SPAN  CLASS="textsf">['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']</SPAN> Por lo que el campo de sustitución <SPAN  CLASS="textsf">sys.modules[parahumanos].SUFIJOS[1000]</SPAN> se refiere a esta lista.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textsf">sys.modules['parahumanos'].SUFIJOS[1000][0]</SPAN> es el primer elemento de la lista de sufijos: <SPAN  CLASS="textsf">['KB']</SPAN>. 
+
+<P>
+</LI>
+<LI>Por lo tanto el campo de sustitución <SPAN  CLASS="textsf">sys.modules[parahumanos].SUFIJOS[1000][0]</SPAN> se refiere a la cadena <SPAN  CLASS="textsf">'KB'</SPAN>.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00742000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Especificaciones de formato</A>
+</H2>
+
+<P>
+¡Pero espera! ¡Hay mas! Vamos a echar otro vistazo a la línea de código más extraña de <SPAN  CLASS="textsf">parahumanos.py</SPAN>:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+if tamanyo &lt; multiplo:
+    return '0:.1f 1'.format(tamanyo, sufijo)</pre></TD></TR>
+</TABLE>
+
+<P>
+Como ya sabemos, <SPAN  CLASS="textsf">{1}</SPAN> se sustituye por el segundo parámetro <SPAN  CLASS="textsf">sufijo</SPAN> del método <SPAN  CLASS="textsf">format()</SPAN>. Pero ¿qué es <SPAN  CLASS="textsf">{0:.1f}</SPAN>? Tiene dos partes, <SPAN  CLASS="textsf">{0}</SPAN> que ya conoces, y <SPAN  CLASS="textsf">:.f</SPAN> que no conoces. La segunda parte (desde los dos puntos hasta la letra f) define el especificador de forma que afina cómo debe sustituirse la variable al formatearla.
+
+<P>
+<BLOCKQUOTE>
+Los especificadores de formato te permiten indicar cómo se debe efectuar la sustitución del texto, como sucede con la función <SPAN  CLASS="textsf">printf()</SPAN> en el lenguaje <SPAN  CLASS="textsf">C</SPAN>. Puedes añadir ceros o espacios de relleno delante del número, alinear cadenas, controlar la precisión de decimales o convertir el número a hexadecimal.
+
+</BLOCKQUOTE>
+
+<P>
+Dentro del campo de sustitución se utiliza el símbolo de dos puntos (<SPAN  CLASS="textsf">:</SPAN>) para marcar el comienzo del especificador de formato. El especificador de formato <SPAN  CLASS="textsf">.1</SPAN> significa que se ``redondee a la décima más próxima'' (que se muestre únicamente un dígito después del punto decimal). El especificador <SPAN  CLASS="textsf">``f''</SPAN> indica que el número debe mostrarse en formato punto fijo (por oposición a la notación exponencial u otra representación de un número). Si la variable <SPAN  CLASS="textsf">tamanyo</SPAN> vale <SPAN  CLASS="textsf">698.24</SPAN> y la variable <SPAN  CLASS="textsf">sufijo</SPAN> vale <SPAN  CLASS="textsf">``GB''</SPAN> la cadena formateada resultante es <SPAN  CLASS="textsf">``698.2 GB''</SPAN>, porque <SPAN  CLASS="textsf">698.24</SPAN> se redondea con un solo dígito después del punto decimal.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; '0:.1f 1'.format(698.24, 'GB')
+'698.2 GB'</pre></TD></TR>
+</TABLE>
+
+<P>
+Para conocer los detalles exactos de los especificadores de formato puedes consultar el apartado http://docs.python.org/3.1/library/string.html#format-specification-mini-languageMini-lenguaje de especificación de formato<A NAME="tex2html72"
+  HREF="footnode.html#foot5932"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A> de la documentación oficial de Python 3.
+
+<P>
+
+<H1><A NAME="SECTION00750000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN> Otros métodos habituales de manipulación de cadenas</A>
+</H1>
+
+<P>
+Además de formatearlas, es posible hacer muchas otras cosas de utilidad con las cadenas de texto.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; s = '''Los archivos terminados son el re-
+... sultado de a<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>os de estudio cient<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>-
+... fico combinados con la 
+... experiencia de a<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>os.'''
+&#187;&gt; s.splitlines()
+['Los archivos terminados son el re-', 
+ 'sultado de a<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>os de estudio cient<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>-', 
+ 'fico combinados con la ', 
+ 'experiencia de a<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>os.']
+&#187;&gt; print(s.lower())
+los archivos terminados son el re-
+sultado de a<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>os de estudio cient<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>-
+fico combinados con la 
+experiencia de a<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>os.
+&#187;&gt; s.lower().count('l')
+4</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Puedes introducir cadenas multilínea en la consola interactiva de Python. Cuando inicias una cadena de texto multilínea debes pulsar la tecla <SPAN  CLASS="textsf">INTRO</SPAN> para continuar en la siguiente línea. Al teclear las triples comillas del final, se cierra la cadena de texto y el siguiente <SPAN  CLASS="textsf">INTRO</SPAN> que pulses ejecutará la sentencia (en este caso asignará la cadena a la variable <SPAN  CLASS="textsf">s</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> El método <SPAN  CLASS="textsf">splitlines()</SPAN> toma una cadena multilínea y devuelve una lista de cadenas de texto, una por cada línea que contuviese la cadena original. Observa que las líneas no incluyen los retornos de carro o finales de línea que tuviese la cadena original.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> El método <SPAN  CLASS="textsf">lower()</SPAN> convierte toda la cadena de texto a minúsculas (El método <SPAN  CLASS="textsf">upper()</SPAN> convertiría toda la cadena de texto a mayúsculas).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 15:</SPAN> El método <SPAN  CLASS="textsf">count()</SPAN> cuenta el número de veces que aparece una subcadena en la cadena de texto. ¡Sí! Hay 4 caracteres <SPAN  CLASS="textsf">``l''</SPAN> en la cadena.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Pongamos un caso muy común. Supón que tienes una cadena de texto en forma de parejas clave-valor, <SPAN  CLASS="textsf">clave1=valor1&amp;clave2=valor2</SPAN>, y quieres dividirla y crear un diccionario de la forma <SPAN  CLASS="textsf">{clave1: valor1, clave2: valor2}</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; consulta = 'usuario=pilgrim&amp;basededatos=master&amp;clave=PapayaWhip'
+&#187;&gt; una_lista = consulta.split('&amp;')
+&#187;&gt; una_lista
+['usuario=pilgrim', 'basededatos=master', 'clave=PapayaWhip']
+&#187;&gt; una_lista_de_listas = [v.split('=', 1) for v in una_lista]
+&#187;&gt; una_lista_de_listas
+[['usuario', 'pilgrim'], ['basededatos', 'master'],
+ ['clave', 'PapayaWhip']]
+&#187;&gt; a_dict = dict(una_lista_de_listas)
+&#187;&gt; a_dict
+'clave': 'PapayaWhip', 'usuario': 'pilgrim', 'basededatos': 'master'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> El método <SPAN  CLASS="textsf">split()</SPAN> toma un parámetro, un delimitador, y divide la cadena en una lista de cadenas basándose en el delimitador proporcionado. En este ejemplo, el delimitador es el carácter <SPAN  CLASS="textsf">&amp;</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Ahora tenemos una lista de cadenas, cada una de ellas con una clave seguida del símbolo <SPAN  CLASS="textsf">=</SPAN> y de un valor. Podemos utilizar las listas por comprensión para iterar sobre esta lista y dividir cada una de estas cadenas de texto en dos cadenas utilizando el método <SPAN  CLASS="textsf">split</SPAN> pasándole un segundo parámetro que indica que únicamente utilice la primera ocurrencia del carácter separador (En teoría una cadena podría tener más de un símbolo igual si el valor, a su vez, contiene también el símbolo igual, por ejemplo: <SPAN  CLASS="textsf">'clave=valor=cero'</SPAN>, con lo que <SPAN  CLASS="textsf">'clave=valor=cero'.split('=')</SPAN> daría como resultado <SPAN  CLASS="textsf">['clave', 'valor', 'cero']</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> Finalmente, Python puede convertir esa lista de listas en un diccionario con solo pasarla como parámetro a la función <SPAN  CLASS="textsf">dict()</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+El ejemplo anterior, explica un caso que se parece a lo que habría que hacer para reconocer los parámetros de una <SPAN  CLASS="textsf">URL</SPAN>. Pero en la vida real, el reconocimiento de los parámetros de una <SPAN  CLASS="textsf">URL</SPAN> es más complejo. Si vas a tener que reconocer los parámetros que recibes mediante una <SPAN  CLASS="textsf">URL</SPAN> utiliza la función de la librería <SPAN  CLASS="textsf">urlib.parse</SPAN> denominada <SPAN  CLASS="textsf">parse_qs()</SPAN><A NAME="tex2html73"
+  HREF="footnode.html#foot5933"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>, que reconoce los casos más complejos.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION00751000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> Troceado de cadenas</A>
+</H2>
+
+<P>
+Cuando ya has definido una cadena puedes recuperar cualquier parte de ella creando una nueva cadena de texto. A esto se denomina troceado/particionado de cadenas<A NAME="tex2html74"
+  HREF="footnode.html#foot5754"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A>. Esto funciona de forma idéntica a como funciona para las listas, lo que tiene sentido, porque las cadenas de texto no son más que cadenas de caracteres.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; una_cadena = 'Mi vocabulario comienza donde el tuyo termina'
+&#187;&gt; una_cadena[3:14]
+'vocabulario'
+&#187;&gt; una_cadena[3:-3]
+'vocabulario comienza donde el tuyo term'
+&#187;&gt; una_cadena[0:2]
+'Mi'
+&#187;&gt; una_cadena[:23]
+'Mi vocabulario comienza'
+&#187;&gt; una_cadena[23:]
+' donde el tuyo termina'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Puedes recuperar una parte de la cadena de texto, una parte de ella, especificando dos índices. El valor de retorno es una nueva cadena que comienza en el primer índice y termina en el elemento anterior al segundo índice.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Como sucede con las listas, puedes utilizar índices negativos para seleccionar.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Las cadenas también comienzan a contar en cero, por lo que <SPAN  CLASS="textsf">una_cadena[0:2]</SPAN> devuelve los dos primeros elementos de la cadena, comenzando en la posición <SPAN  CLASS="textsf">una_cadena[0]</SPAN> hasta la posición <SPAN  CLASS="textsf">una_cadena[2]</SPAN>, pero sin incluirla.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Si el índice de la parte izquierda vale <SPAN  CLASS="textsf">0</SPAN> puedes omitirlo. De este modo, <SPAN  CLASS="textsf">una_cadena[:23]</SPAN> es lo mismo que <SPAN  CLASS="textsf">una_cadena[0:18]</SPAN>. Ya que en ausencia del primer índice se asume el número <SPAN  CLASS="textsf">0</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> De forma similar, si el índice de la parte derecha de la cadena coincide con la longitud de la cadena, puedes omitirlo. Así que <SPAN  CLASS="textsf">una_cadena[23:]</SPAN> es lo mismo que <SPAN  CLASS="textsf">una_cadena[23:45]</SPAN> al medir esta cadena 45 caracteres. Como ves, existe una estupenda simetría en esto, en esta cadena de 45 caracteres <SPAN  CLASS="textsf">una_cadena[0:23]</SPAN> devuelve los primeros 23 caracteres, y <SPAN  CLASS="textsf">una_cadena[23:]</SPAN> devuelve todo lo demás, salvo los 23 caracteres iniciales. De hecho <SPAN  CLASS="textsf">una_cadena[:n]</SPAN> siempre retornará los primeros <SPAN  CLASS="textsf">n</SPAN> caracteres, y <SPAN  CLASS="textsf">una_cadena[n:]</SPAN> retornará el resto, independientemente de la longitud que tenga la cadena.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00760000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN> Cadenas de texto y Bytes</A>
+</H1>
+
+<P>
+Los bytes son bytes; los caracteres son una abstracción. A una secuencia inmutable de caracteres Unicode se le llama <SPAN  CLASS="textit">cadena de texto</SPAN>. Una secuencia inmutable de números entre el 0 y el 255 es un objeto que se denomina <SPAN  CLASS="textit">bytes</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; by = b'abcd65'
+&#187;&gt; by
+b'abcde'
+&#187;&gt; type(by)
+&lt;class 'bytes'&gt;
+&#187;&gt; len(by)
+5
+&#187;&gt; by += b''
+&#187;&gt; by
+b'abcde'
+&#187;&gt; len(by)
+6
+&#187;&gt; by[0]
+97
+&#187;&gt; by[0] = 102
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: 'bytes' object does not support item assignment</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Para definir un objeto <SPAN  CLASS="textsf">bytes</SPAN> se usa la sintaxis de ``literal de bytes'' que es <SPAN  CLASS="textsf">b''</SPAN>. Cada byte dentro del literal de bytes se interpreta como un carácter <SPAN  CLASS="textsf">ASCII</SPAN> o un carácter codificado en número hexadecimal desde <SPAN  CLASS="textsf">
+<BR>
+x00</SPAN> a <SPAN  CLASS="textsf">
+<BR>
+xFF</SPAN> (0-255).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> El tipo de un objeto <SPAN  CLASS="textsf">bytes</SPAN> es <SPAN  CLASS="textsf">bytes</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Como sucede con las listas y cadenas, puedes conocer la longitud de un objeto <SPAN  CLASS="textsf">bytes</SPAN> utilizando la función interna <SPAN  CLASS="textsf">len()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Como sucede con las listas y cadenas, puedes utilizar el operador <SPAN  CLASS="textsf">+</SPAN> para concatenar objetos <SPAN  CLASS="textsf">bytes</SPAN>. El resultado es un nuevo objeto <SPAN  CLASS="textsf">bytes</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> Concatenar un objeto <SPAN  CLASS="textsf">bytes</SPAN> de 5 bytes con uno de 1 byte da como resultado un objeto <SPAN  CLASS="textsf">bytes</SPAN> de 6 bytes.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> Como sucede con las listas y cadenas, puedes utilizar la notación de índices para obtener bytes individuales del objeto <SPAN  CLASS="textsf">bytes</SPAN>. Los elementos individuales de una cadena son de tipo cadena; los elementos individuales de un objeto <SPAN  CLASS="textsf">bytes</SPAN> son números enteros. Específicamente, enteros entre 0 y 255.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 15:</SPAN> Un objeto <SPAN  CLASS="textsf">bytes</SPAN> es inmutable; no puedes asignar bytes individuales. Si necesitas modificar bytes individuales de un objeto <SPAN  CLASS="textsf">bytes</SPAN>, es necesario particionar y concatenar para crear un nuevo objeto <SPAN  CLASS="textsf">bytes</SPAN> que contenga los elementos deseados. La alternativa es convertir el objeto <SPAN  CLASS="textsf">bytes</SPAN> en un <SPAN  CLASS="textsf">bytearray</SPAN> que sí permite modificación.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; by = b'abcd65'
+&#187;&gt; barr = bytearray(by)
+&#187;&gt; barr
+bytearray(b'abcde')
+&#187;&gt; len(barr)
+5
+&#187;&gt; barr[0] = 102
+&#187;&gt; barr
+bytearray(b'fbcde')</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Para convertir un objeto <SPAN  CLASS="textsf">bytes</SPAN> en un objeto modificable de tipo <SPAN  CLASS="textsf">bytearray</SPAN> puedes utilizar la función interna <SPAN  CLASS="textsf">bytearray()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Todos los métodos y operaciones que existen en el objeto <SPAN  CLASS="textsf">bytes</SPAN> también están disponibles en el objeto <SPAN  CLASS="textsf">bytearray</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Una de las diferencias es que al objeto <SPAN  CLASS="textsf">bytearray</SPAN> es posible modificarle bytes individuales utilizando la notación de índice. El valor que se puede asignar debe estar entre 0 y 255.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Algo que <SPAN  CLASS="textit">no se puede hacer</SPAN> es mezclar bytes y cadenas.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; by = b'd'
+&#187;&gt; s = 'abcde'
+&#187;&gt; by + s
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: can't concat bytes to str
+&#187;&gt; s.count(by)
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: Can't convert 'bytes' object to str implicitly
+&#187;&gt; s.count(by.decode('ascii'))
+1</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> No puedes concatenar bytes y cadenas. Son dos tipos de dato diferentes.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> No puedes contar las veces que aparece una secuencia de bytes en una cadena, porque no existen bytes en una cadena. Una cadena es una secuencia de caracteres. Tal vez lo que querías contar era las veces que aparece la cadena que obtendrías después de haber decodificado la secuencia de bytes interpretándola a partir de una tabla de codificación de caracteres particular. Si es así, debes decirlo explícitamente. Python 3 no convertirá implícitamente bytes en cadenas o cadenas en bytes.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> Por una sorprendente coincidencia esta línea de código dice ``cuenta las ocurrencias de la cadena que se obtiene después de decodificar la secuencia de bytes en esta tabla de caracteres particular (ASCII)''. 
+
+<P>
+</LI>
+</OL>
+
+<P>
+Y de este modo has llegado a la relación que existe entre las cadenas de texto y los bytes: los objetos <SPAN  CLASS="textsf">bytes</SPAN> tienen un método <SPAN  CLASS="textsf">decode()</SPAN> que toma como parámetro una tabla de codificación de caracteres y retorna una cadena. Y las cadenas de texto tienen un método denominado <SPAN  CLASS="textsf">encode()</SPAN> que toma una tabla de codificación de caracteres y retorna un objeto <SPAN  CLASS="textsf">bytes</SPAN>. En el ejemplo anterior, la decodificación fue relativamente directa --convertir una secuencia de bytes que estaba en la codificación de caracteres <SPAN  CLASS="textsf">ASCII</SPAN> en una cadena de texto. Pero el mismo proceso funciona con cualquier tabla de codificación de caracteres siempre que dicha tabla soporte los caracteres existentes en la cadena --incluso con codificaciones heredadas (previas a Unicode).
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; s = '快乐 Python'
+&#187;&gt; len(s)
+9
+&#187;&gt; by = s.encode('utf-8')
+&#187;&gt; by
+b'54990 Python'
+&#187;&gt; len(by)
+13
+&#187;&gt; by = s.encode('gb18030')
+&#187;&gt; by
+b'06 Python'
+&#187;&gt; len(by)
+11
+&#187;&gt; by = s.encode('utf-16')
+&#187;&gt; by
+b'_PN 00P00y00t00h00o00n00'
+&#187;&gt; len(by)
+20
+&#187;&gt; vuelta = by.decode('utf-16')
+'快乐 Python'
+&#187;&gt; vuelta == s
+True</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Esto es una cadena de texto, tiene 9 caracteres.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> El resultado de codificar la cadena en <SPAN  CLASS="textsf">UTF-8</SPAN> es un objeto <SPAN  CLASS="textsf">bytes</SPAN>. Tiene 13 bytes. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> El resultado de codificar la cadena en <SPAN  CLASS="textsf">GB18030</SPAN> es un objeto <SPAN  CLASS="textsf">bytes</SPAN> de 11 bytes.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 14:</SPAN> El resultado de codificar la cadena en <SPAN  CLASS="textsf">UTF-16</SPAN> es un objeto <SPAN  CLASS="textsf">bytes</SPAN> de 20 bytes.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 19:</SPAN> Al decodificar el objeto <SPAN  CLASS="textsf">bytes</SPAN> utilizando la codificación adecuada (la misma que se usó al codificarlo) se obtiene una cadena de texto. En este caso tiene 9 caracteres. Como se puede ver, es una cadena idéntica a la original.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00770000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN> Postdata: Codificación de  caracteres del código fuente de Python</A>
+</H1>
+
+<P>
+Python 3 asume que el código fuente --cada fichero <SPAN  CLASS="textsf">.py</SPAN>-- está codificado en <SPAN  CLASS="textsf">UTF-8</SPAN>.
+
+<P>
+<BLOCKQUOTE>
+En Python 2, la codificación de caracteres por defecto de los ficheros <SPAN  CLASS="textsf">.py</SPAN> era <SPAN  CLASS="textsf">ASCII</SPAN>. En Python 3, la codificación por defecto de los ficheros es <SPAN  CLASS="textsf">UTF-8</SPAN>
+
+</BLOCKQUOTE>
+
+<P>
+Si quisieras utilizar una codificación de caracteres diferente en el fichero con el código fuente, puedes incluir una declaración de codificación de caracteres en la primera línea cada fichero. La siguiente declaración define que el fichero se encuentra en una codificación <SPAN  CLASS="textsf">windows-1252</SPAN>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+# -*- coding: windows-1252 -*-</pre></TD></TR>
+</TABLE>
+
+<P>
+Técnicamente la indicación de la codificación de caracteres puede estar en la segunda línea si la primera línea es una declaración de lanzador de ejecución del estilo de <SPAN  CLASS="textsf">UNIX</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+#!/usr/bin/python3
+# -*- coding: windows-1252 -*-</pre></TD></TR>
+</TABLE>
+
+<P>
+Para disponer de más información consulta la propuesta de mejora de Python http://www.python.org/dev/peps/pep-0263/PEP 263<A NAME="tex2html75"
+  HREF="footnode.html#foot5934"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN></SUP></A>.
+
+<P>
+
+<H1><A NAME="SECTION00780000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN> Lecturas recomendadas</A>
+</H1>
+
+<P>
+Sobre Unicode en Python:
+
+<P>
+
+<UL>
+<LI>Unicode en Python - http://docs.python.org/3.0/howto/unicode.htmlhttp://docs.python.org/3.0/howto/unicode.html 
+
+<P>
+</LI>
+<LI>Qué hay nuevo en Python 3: Texto y datos en lugar de Unicode y 8-bits - http://docs.python.org/3.0/whatsnew/3.0.html#text-vs-data-instead-of-unicode-vs-8-bithttp://docs.python.org/3.0/whatsnew/3.0.html#text-vs-data-instead-of-unicode-vs-8-bit
+
+<P>
+</LI>
+</UL>
+
+<P>
+Sobre Unicode en general:
+
+<P>
+
+<UL>
+<LI>El mínimo absoluto que todo programador debe conocer positiva y absolutamente sobre Unicode y codificación de caracteres (¡Sin excusas!):
+<BR>
+http://www.joelonsoftware.com/articles/Unicode.htmlhttp://www.joelonsoftware.com/articles/Unicode.html
+
+<P>
+</LI>
+<LI>Sobre las bondades de Unicode:
+<BR>
+http://www.tbray.org/ongoing/When/200x/2003/04/06/Unicodehttp://www.tbray.org/ongoing/When/200x/2003/04/06/Unicode
+
+<P>
+</LI>
+<LI>Sobre cadenas de caracteres:
+<BR>
+http://www.tbray.org/ongoing/When/200x/2003/04/13/Stringshttp://www.tbray.org/ongoing/When/200x/2003/04/13/Strings
+
+<P>
+</LI>
+<LI>Caracteres y bytes:
+<BR>
+http://www.tbray.org/ongoing/When/200x/2003/04/26/UTFhttp://www.tbray.org/ongoing/When/200x/2003/04/26/UTF
+
+<P>
+</LI>
+</UL>
+
+<P>
+Sobre codificación de caracteres en otros formatos:
+
+<P>
+
+<UL>
+<LI>Codificación de caracteres en XML:
+<BR>
+http://feedparser.org/docs/character-encoding.htmlhttp://feedparser.org/docs/character-encoding.html
+
+<P>
+</LI>
+<LI>Codificación de caracteres en HTML:
+<BR>
+http://blog.whatwg.org/the-road-to-html-5-character-encodinghttp://blog.whatwg.org/the-road-to-html-5-character-encoding
+
+<P>
+</LI>
+</UL>
+
+<P>
+Sobre cadenas y formateo de cadenas:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textsf">string</SPAN>--Operaciones comunes sobre cadenas:
+<BR>
+http://docs.python.org/3.1/library/string.htmlhttp://docs.python.org/3.1/library/string.html
+
+<P>
+</LI>
+<LI>Sintaxis de formateo de cadenas de texto:
+<BR>
+http://docs.python.org/3.1/library/string.html#formatstringshttp://docs.python.org/3.1/library/string.html#formatstrings
+
+<P>
+</LI>
+<LI>Especificación del minilenguaje de formato:
+<BR>
+http://docs.python.org/3.1/library/string.html#format-specification-mini-languagehttp://docs.python.org/3.1/library/string.html#format-specification-mini-language
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textsf">PEP 3101:</SPAN> Formateo avanzado de cadenas:
+<BR>
+http://www.python.org/dev/peps/pep-3101/http://www.python.org/dev/peps/pep-3101/
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html727"
+  HREF="node8.html">5. Clases e iteradores</A>
+<B> Subir a:</B> <A NAME="tex2html725"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html719"
+  HREF="node6.html">3. Comprensiones</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>

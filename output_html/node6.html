@@ -1,0 +1,803 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>3. Comprensiones</TITLE>
+<META NAME="description" CONTENT="3. Comprensiones">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node7.html">
+<LINK REL="previous" HREF="node5.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node7.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html705"
+  HREF="node7.html">4. Cadenas de texto</A>
+<B> Subir a:</B> <A NAME="tex2html703"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html697"
+  HREF="node5.html">2. Tipos de dato</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html706"
+  HREF="node6.html#SECTION00610000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+<LI><A NAME="tex2html707"
+  HREF="node6.html#SECTION00620000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN> Trabajar con ficheros y directorios</A>
+<UL>
+<LI><A NAME="tex2html708"
+  HREF="node6.html#SECTION00621000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> El directorio de trabajo actual</A>
+<LI><A NAME="tex2html709"
+  HREF="node6.html#SECTION00622000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN> Trabajar con nombres de ficheros y directorios</A>
+<LI><A NAME="tex2html710"
+  HREF="node6.html#SECTION00623000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN> Listar directorios</A>
+<LI><A NAME="tex2html711"
+  HREF="node6.html#SECTION00624000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN> Obtener metadatos de ficheros</A>
+<LI><A NAME="tex2html712"
+  HREF="node6.html#SECTION00625000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN> Construcción de caminos absolutos</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html713"
+  HREF="node6.html#SECTION00630000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">3</SPAN> Listas por comprensión</A>
+<LI><A NAME="tex2html714"
+  HREF="node6.html#SECTION00640000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN> Diccionarios por comprensión</A>
+<UL>
+<LI><A NAME="tex2html715"
+  HREF="node6.html#SECTION00641000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Trucos que se pueden hacer</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html716"
+  HREF="node6.html#SECTION00650000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">5</SPAN> Conjuntos por comprensión</A>
+<LI><A NAME="tex2html717"
+  HREF="node6.html#SECTION00660000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">6</SPAN> Lecturas complementarias</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00600000000000000000"></A><A NAME="ch:comprensiones"></A>
+<BR>
+<SPAN CLASS="arabic">3</SPAN>. Comprensiones
+</H1>
+
+<P>
+Nivel de dificultad:2 sobre 5
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``Nuestra imaginación está desplegada a más no poder, 
+no como en la ficción, para imaginar las cosas que no están realmente ahí,
+<BR>
+sino para entender aquellas que sí lo están.''
+<BR>--http://en.wikiquote.org/wiki/Richard_FeynmanRychard Feynman</I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION00610000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+</H1>
+
+<P>
+Este capítulo te explicará las listas por comprensión, diccionarios por comprensión y conjuntos por comprensión: tres conceptos centrados alrededor de una técnica muy potente. Pero antes vamos a dar un pequeño paseo alrededor de dos módulos que te van a servir para navegar por tu sistema de ficheros.
+
+<P>
+
+<H1><A NAME="SECTION00620000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN> Trabajar con ficheros y directorios</A>
+</H1>
+
+<P>
+Python 3 posee un módulo denominado <SPAN  CLASS="textsf">os</SPAN> que es la contracción de ``operating system''<A NAME="tex2html66"
+  HREF="footnode.html#foot4729"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>. El módulo http://docs.python.org/3.1/library/os.html<SPAN  CLASS="textsf">os</SPAN> contiene un gran número de funciones para recuperar --y en algunos casos, modificar-- información sobre directorios, ficheros, procesos y variables del entorno local. Python hace un gran esfuerzo por ofrecer una <SPAN  CLASS="textsf">API</SPAN> unificada en todos los sistemas operativos que soporta, por lo que tus programas pueden funcionar en casi cualquier ordenador con el mínimo de código específico posible.
+
+<P>
+
+<H2><A NAME="SECTION00621000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> El directorio de trabajo actual</A>
+</H2>
+
+<P>
+Cuando te inicias en Python, pasas mucho tiempo en la consola interactiva. A lo largo del libro verás muchos ejemplos que siguen el siguiente patrón:
+
+<P>
+
+<OL>
+<LI>Se importa uno de los módulos de la carpeta de <SPAN  CLASS="textsf">ejemplos</SPAN>.
+
+<P>
+</LI>
+<LI>Se llama a una función del módulo.
+
+<P>
+</LI>
+<LI>Se explica el resultado.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Si no sabes cuál es el directorio actual de trabajo, el primer paso probablemente elevará la excepción <SPAN  CLASS="textsf">ImportError</SPAN>. ¿Por qué? Porque Python buscará el módulo en el camino de búsqueda actual (ver capítulo&nbsp;<A HREF="node4.html#sc:search_path">1.4</A>), pero no lo encontrará porque la carpeta <SPAN  CLASS="textsf">ejemplos</SPAN> no está incluida en él. Para superar este problema hay dos soluciones posibles:
+
+<P>
+
+<OL>
+<LI>Añadir el directorio de <SPAN  CLASS="textsf">ejemplos</SPAN> al camino de búsqueda de importación.
+
+<P>
+</LI>
+<LI>Cambiar el directorio de trabajo actual a la carpeta de <SPAN  CLASS="textsf">ejemplos</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+El directorio de trabajo actual es una propiedad invisible que Python mantiene en memoria. Siempre existe un directorio de trabajo actual: en la consola interactiva de Python; durante la ejecución de un programa desde la línea de comando, o durante la ejecución de un programa Python como un <SPAN  CLASS="textsf">CGI</SPAN> de algún servidor web.
+
+<P>
+El módulo <SPAN  CLASS="textsf">os</SPAN> contiene dos funciones que te permiten gestionar el directorio de trabajo actual.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import os
+&#187;&gt; print(os.getcwd())
+/home/jmgaguilera
+&#187;&gt; os.chdir('/home/jmgaguilera/inmersionenpython3/ejemplos')
+&#187;&gt; print(os.getcwd())
+/home/jmgaguilera/inmersionenpython3/ejemplos</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> El módulo <SPAN  CLASS="textsf">os</SPAN> viene instalado con Python. Puedes importarlo siempre que lo necesites.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Utiliza la función <SPAN  CLASS="textsf">os.getcwd()</SPAN> para recuperar el directorio de trabajo actual. Cuando ejecutas la consola interactiva, Python toma como directorio de trabajo actual aquél en el que te encontrases en el sistema operativo antes de entrar en la consola; si ejecutas la consola desde una opción de menú del sistema operativo, el directorio de trabajo será aquél en el que se encuentre el programa ejecutable de Python o tu directorio de trabajo por defecto<A NAME="tex2html67"
+  HREF="footnode.html#foot4756"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Utiliza la función <SPAN  CLASS="textsf">os.chdir()</SPAN> para cambiar de directorio. Conviene utilizar la convención de escribir los separadores en el estilo de Linux (con las barras inclinadas adelantadas) puesto que este sistema es universal y funciona también en Windows. Este es uno de los lugares en los que Python intenta ocultar las diferencias entre sistemas operativos.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00622000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN> Trabajar con nombres de ficheros y directorios</A>
+</H2>
+
+<P>
+Aprovechando que estamos viendo los directorios, quiero presentarte el módulo <SPAN  CLASS="textsf">os.path</SPAN>, que contiene funciones para manipular nombres de ficheros y directorios.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import os
+&#187;&gt; print(os.path.join('/home/jmgaguilera/inmersionenpython3/ejemplos/', 
+                       'parahumanos.py'))
+/home/jmgaguilera/inmersionenpython3/ejemplos/parahumanos.py
+&#187;&gt; print(os.path.join('/home/jmgaguilera/inmersionenpython3/ejemplos', 
+                       'parahumanos.py'))
+/home/jmgaguilera/inmersionenpython3/ejemplos/parahumanos.py
+&#187;&gt; print(os.path.expanduser('&nbsp;'))
+/home/jmgaguilera
+&#187;&gt; print(os.path.join(os.path.expanduser('&nbsp;'), 
+                       'inmersionenpython3', 'examples', 
+                       'humansize.py'))
+/home/jmgaguilera/inmersionenpython3/ejemplos.py</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> La función <SPAN  CLASS="textsf">os.path.join()</SPAN> construye un nombre completo de fichero o directorio (nombre de path) a partir de uno o más partes. En este caso únicamente tiene que concatenar las cadenas.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Este caso es menos trivial. La función añade una barra inclinada antes de concatenar. Dependiendo de que el ejemplo se construya en Windows o en una versión de Linux o Unix, la barra inclinada será invertida o no. Python será capaz de encontrar el fichero o directorio independientemente del sentido en el que aparezcan las barras inclinadas. En este caso, como el ejemplo lo construí en Linux, la barra inclinada es la típica de Linux.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> La función <SPAN  CLASS="textsf">os.path.expanduser()</SPAN> obtendrá un camino completo al directorio que se exprese y que incluye <SPAN  CLASS="textsf">&nbsp;</SPAN> como indicador el directorio raíz del usuario conectado. Esto funcionará en todos los sistemas operativos que tengan el concepto de ``directorio raíz del usuario'', lo que incluye OS X, Linux, Unix y Windows. El camino que se retorna no lleva la barra inclinada al final, pero, como hemos visto, a la función <SPAN  CLASS="textsf">os.path.join()</SPAN> no le afecta.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> Si combinamos estas técnicas podemos construir fácilmente caminos completos desde el directorio raíz del usuario. La función <SPAN  CLASS="textsf">os.path.join()</SPAN> puede recibir cualquier número de parámetros. Yo me alegré mucho al descubrir esto puesto que la función <SPAN  CLASS="textsf">anyadirBarra()</SPAN> es una de las típicas que siempre tengo que escribir cuando aprendo un lenguaje de programación nuevo. <SPAN  CLASS="textit">No escribas</SPAN> esta estúpida función en Python, personas inteligentes se ha ocupado de ello por ti.
+
+<P>
+</LI>
+</OL>
+
+<P>
+El módulo <SPAN  CLASS="textsf">os.path</SPAN> también contiene funciones para trocear caminos completos, nombres de directorios y nombres de fichero en sus partes constituyentes.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; nombrepath = '/home/jmgaguilera/inmersionenpython3/parahumanos.py'
+&#187;&gt; os.path.split(nombrepath)
+('/home/jmgaguilera/inmersionenpython3/ejemplos', 'parahumanos.py')
+&#187;&gt; (nombredir, nombrefich) = os.path.split(nombrepath)
+&#187;&gt; nombredir
+'/home/jmgaguilera/inmersionenpython3/ejemplos'
+&#187;&gt; nombrefich
+'parahumanos.py'
+&#187;&gt; (nombrecorto, extension) = os.path.splitext(nombrefich)
+&#187;&gt; nombrecorto
+'parahumanos'
+&#187;&gt; extension
+'.py'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> La función <SPAN  CLASS="textsf">split()</SPAN> divide un camino completo en dos partes que contienen el camino y el nombre de fichero. Los retorna en una tupla.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> ¿Recuerdas cuando dije que podías utilizar la asignación múltiple para devolver varios valores desde una función? <SPAN  CLASS="textsf">os.path.split()</SPAN> hace exactamente eso. Puedes asignar los valores de la tupla que retorna a dos variables. Cada variable recibe el valor que le corresponde al elemento de la tupla.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> La primera variable, <SPAN  CLASS="textsf">nombredir</SPAN>, recibe el valor del primer elemento de la tupla que retorna <SPAN  CLASS="textsf">os.path.split()</SPAN>, el camino al fichero.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> La segunda variable, <SPAN  CLASS="textsf">nombrefich</SPAN>, recibe el valor del segundo elemento de la tupla que retorna <SPAN  CLASS="textsf">os.path.split()</SPAN>, el nombre del fichero.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> <SPAN  CLASS="textsf">os.path</SPAN> también posee la función <SPAN  CLASS="textsf">os.path.splitext()</SPAN> que divide el nombre de un fichero en una tupla que contiene el nombre y la extensión separados en dos elementos. Puedes utilizar la misma técnica que antes para asignarlos a dos variables separadas.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00623000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN> Listar directorios</A>
+</H2>
+
+<P>
+El módulo <SPAN  CLASS="textsf">glob</SPAN> es otra herramienta incluida en la librería estándar de Python. Proporciona una forma sencilla de acceder al contenido de un directorio desde un programa. Utiliza los caracteres <SPAN  CLASS="textit">comodín</SPAN> que suelen usarse en una consola de línea de comandos.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; os.chdir('/home/jmgaguilera/inmersionenpython3/')
+&#187;&gt; import glob
+&#187;&gt; glob.glob('ejemplos/*.xml')
+['ejemplos
+<BR>
+feed-broken.xml',
+ 'ejemplos
+<BR>
+feed-ns0.xml',
+ 'ejemplos
+<BR>
+feed.xml']
+&#187;&gt; os.chdir('ejemplos/')
+&#187;&gt; glob.glob('*test*.py')
+['alphameticstest.py',
+ 'pluraltest1.py',
+ 'pluraltest2.py',
+ 'pluraltest3.py',
+ 'pluraltest4.py',
+ 'pluraltest5.py',
+ 'pluraltest6.py',
+ 'romantest1.py',
+ 'romantest10.py',
+ 'romantest2.py',
+ 'romantest3.py',
+ 'romantest4.py',
+ 'romantest5.py',
+ 'romantest6.py',
+ 'romantest7.py',
+ 'romantest8.py',
+ 'romantest9.py']</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> El módulo <SPAN  CLASS="textsf">glob</SPAN> utiliza comodines y devuelve el camino de todos los ficheros y directorios que coinciden con la búsqueda. En este ejemplo se busca un directorio que contenga ficheros terminados en ``*.xml'', lo que encontrará todos los ficheros xml que se encuentren en el directorio de ejemplos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Ahora cambio el directorio de trabajo al subdirectorio <SPAN  CLASS="textsf">ejemplos</SPAN>. La función <SPAN  CLASS="textsf">os.chdir()</SPAN> puede recibir como parámetro un camino relativo a la posición actual.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Puedes incluir varios comodines de búsqueda. El ejemplo encuentra todos los ficheros del directorio actual de trabajo que incluyan la palabra <SPAN  CLASS="textsf">test</SPAN> en alguna parte del nombre y que, además, terminen con la cadena <SPAN  CLASS="textsf">.py</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00624000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN> Obtener metadatos de ficheros</A>
+</H2>
+
+<P>
+Todo sistema de ficheros moderno almacena metadatos sobre cada fichero: fecha de creación, fecha de la última modificación, tamaño, etc. Python proporciona una <SPAN  CLASS="textsf">API</SPAN> unificada para acceder a estos metadatos. No necesitas abrir el fichero, únicamente necesitas su nombre.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import os
+&#187;&gt; print(os.getcwd())
+/home/jmgaguilera/inmersionenpython3/ejemplos
+&#187;&gt; metadata = os.stat('feed.xml')
+&#187;&gt; metadata.st_mtime
+1247520344.9537716
+&#187;&gt; import time
+&#187;&gt; time.localtime(metadata.st_mtime)
+time.struct_time(tm_year=2009, tm_mon=7, tm_mday=13, tm_hour=17,
+  tm_min=25, tm_sec=44, tm_wday=0, tm_yday=194, tm_isdst=1)</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> El directorio de trabajo actual es <SPAN  CLASS="textsf">ejemplos</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> <SPAN  CLASS="textsf">feed.xml</SPAN> es un fichero que se encuentra en el directorio <SPAN  CLASS="textsf">ejemplos</SPAN>. La función <SPAN  CLASS="textsf">os.stat()</SPAN> devuelve un objeto que contiene diversos metadatos sobre el fichero.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> <SPAN  CLASS="textsf">st_mtime</SPAN> contiene la fecha y hora de modificación, pero en un formato que no es muy útil (Técnicamente es el número de segundos desde el inicio de la Época, que está definida como el primer segundo del 1 de enero de 1970 ¡En serio!).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> El módulo <SPAN  CLASS="textsf">time</SPAN> forma parte de la librería estándar de Python. Contiene funciones para convertir entre diferentes representaciones del tiempo, formatear valores de tiempo en cadenas y manipular las referencias a los husos horarios.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> La función <SPAN  CLASS="textsf">time.localtime()</SPAN> convierte un valor de segundos desde el inicio de la época (que procede la propiedad anterior) en una estructura más útil que contiene año, mes, día, hora, minuto, segundo, etc. Este fichero se modificó por última vez el 13 de julio de 2009 a las 5:25 de la tarde.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+# continuaci<!-- MATH
+ $\textrm{\'{o}}$
+ --><SPAN CLASS="MATH">&#243;</SPAN>n del ejemplo anterior
+&#187;&gt; metadata.st_size
+3070
+&#187;&gt; import parahumanos
+&#187;&gt; parahumanos.tamnyo_aproximado(metadata.st_size)
+'3.0 KiB'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> La función <SPAN  CLASS="textsf">os.stat()</SPAN> también devuelve el tamaño de un fichero en la propiedad <SPAN  CLASS="textsf">st_size</SPAN>. El fichero <SPAN  CLASS="textsf">feed.xml</SPAN> ocupa <SPAN  CLASS="textsf">3070</SPAN> bytes.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Aprovecho la función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN> para verlo de forma más clara.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00625000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN> Construcción de caminos absolutos</A>
+</H2>
+
+<P>
+En el apartado anterior, se observó cómo la función <SPAN  CLASS="textsf">glob.glob()</SPAN> devolvía una lista de nombres relativa. El primer ejemplo mostraba caminos como <SPAN  CLASS="textsf">``ejemplos/feed.xml''</SPAN>, y el segundo ejemplo incluso tenía nombres más cortos como <SPAN  CLASS="textsf">``romantest1.py''</SPAN>. Mientras permanezcas en el mismo directorio de trabajo los path relativos funcionarán sin problemas para recuperar información de los ficheros. No obstante, si quieres construir un camino absoluto --Uno que contenga todos los directorios hasta el raíz del sistema de archivos-- lo que necesitas es la función <SPAN  CLASS="textsf">os.path.realpath()</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import os
+&#187;&gt; print(os.getcwd())
+/home/jmgaguilera/inmersionenpython3/ejemplos
+&#187;&gt; print(os.path.realpath('feed.xml'))
+/home/jmgaguilera/inmersionenpython3/ejemplos/feed.xml</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<H1><A NAME="SECTION00630000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">3</SPAN> Listas por comprensión</A>
+</H1>
+
+<P>
+La creación de listas por comprensión proporciona una forma compacta de crear una lista a partir de otra mediante la realización de una operación a cada uno de los elementos de la lista original.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; una_lista = [1, 9, 8, 4]
+&#187;&gt; [elem * 2 for elem in una_lista]
+[2, 18, 16, 8]
+&#187;&gt; una_lista
+[1, 9, 8, 4]
+&#187;&gt; una_lista = [elem * 2 for elem in una_lista]
+&#187;&gt; una_lista
+[2, 18, 16, 8]</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Para explicar esto es mejor leerlo de derecha a izquierda. <SPAN  CLASS="textsf">una_lista</SPAN> es la lista origen que se va a recorrer para generar la nueva lista. El intérprete de Python recorre cada uno de los elementos de <SPAN  CLASS="textsf">una_lista</SPAN>, asignando temporalmente el valor de cada elemento a la variable <SPAN  CLASS="textsf">elem</SPAN>. Después Python aplica la operación que se haya indicado, en este caso <SPAN  CLASS="textsf">elem * 2</SPAN>, y el resultado lo añade a la nueva lista.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Como se observa, la lista original no cambia.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> No pasa nada por asignar el resultado a la variable que tenía la lista original. Python primero construye la nueva lista en memoria y luego asigna el resultado a la variable.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Para crear una lista de esta forma, puedes utilizar cualquier expresión válida de Python, como por ejemplo las funciones del módulo <SPAN  CLASS="textsf">os</SPAN> para manipular ficheros y directorios.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import os, glob
+&#187;&gt; glob.glob('*.xml')
+['feed-broken.xml', 'feed-ns0.xml', 'feed.xml']
+&#187;&gt; [os.path.realpath(f) for f in glob.glob('*.xml')]
+['/home/jmgaguilera/inmersionenpython3/ejemplos/feed-broken.xml',
+ '/home/jmgaguilera/inmersionenpython3/ejemplos/feed-ns0.xml',
+ '/home/jmgaguilera/inmersionenpython3/ejemplos/feed.xml']</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Esta llamada retorna una lista con todos los ficheros terminados en <SPAN  CLASS="textsf">.xml</SPAN> del directorio de trabajo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Esta lista generada por comprensión toma la lista original y la transforma en una nueva lista con los nombres completos de ruta.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Las listas por comprensión también permiten filtrar elementos, generando una lista cuyo tamaño sea menor que el original.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import os, glob
+&#187;&gt; [f for f in glob.glob('*.py') if os.stat(f).st_size &gt; 6000]
+['pluraltest6.py',
+ 'romantest10.py',
+ 'romantest6.py',
+ 'romantest7.py',
+ 'romantest8.py',
+ 'romantest9.py']</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Para filtrar una lista puedes incluir la cláusula <SPAN  CLASS="textsf">if</SPAN> al final de la comprensión. Esta expresión se evalúa para cada elemento de la lista original. Si el resultado es verdadero, el elemento será calculado e incluido en el resultado. En este caso se seleccionan todos los ficheros que terminan en <SPAN  CLASS="textsf">.py</SPAN> que se encuentren en el directorio de trabajo, se comprueba si son de tamaño mayor a <SPAN  CLASS="textsf">6000</SPAN> bytes. Seis de ellos cumplen este requisito, por lo que son los que aparecen en el resultado final.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Hasta el momento, todos los ejemplos de generación de listas por comprensión han utilizado expresiones muy sencillas --multiplicar un número por una constante, llamada a una función o simplemente devolver el elemento original de la lista-- pero no existe límite en cuanto a la complejidad de la expresión.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import os, glob
+&#187;&gt; [(os.stat(f).st_size, os.path.realpath(f)) for 
+...                f in glob.glob('*.xml')]
+[(3074,
+  'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed-broken.xml'),
+ (3386,
+  'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed-ns0.xml'),
+ (3070, 'c:/home/jmgaguilera/inmersionenpython3/ejemplos/feed.xml')]
+&#187;&gt; import parahumanos
+&#187;&gt; [(parahumanos.tamanyo_aproximado(os.stat(f).st_size), f) 
+     for f in glob.glob('*.xml')]
+[('3.0 KiB', 'feed-broken.xml'),
+ ('3.3 KiB', 'feed-ns0.xml'),
+ ('3.0 KiB', 'feed.xml')]</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> En este caso se buscan los ficheros que finalizan en <SPAN  CLASS="textsf">.xml</SPAN> en el directorio de trabajo actual, se recupera su tamaño (mediante una llamada a la función <SPAN  CLASS="textsf">os.stat()</SPAN>) y se construye una tupla con el tamaño del fichero y su ruta completa (mediante una llamada a <SPAN  CLASS="textsf">os.path.realpath()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> En este caso se aprovecha la lista anterior para generar una nueva con el tamaño aproximado de cada fichero.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00640000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN> Diccionarios por comprensión</A>
+</H1>
+
+<P>
+Es similar al apartado anterior pero genera un diccionario en lugar de una lista.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import os, glob
+&#187;&gt; metadata = [(f, os.stat(f)) for f in glob.glob('*test*.py')]
+&#187;&gt; metadata[0]
+('alphameticstest.py', nt.stat_result(st_mode=33206, st_ino=0,
+  st_dev=0, st_nlink=0, st_uid=0, st_gid=0, st_size=2509,
+  st_atime=1247520344, st_mtime=1247520344, st_ctime=1247520344))
+&#187;&gt; metadata_dict = f:os.stat(f) for f in glob.glob('*test*.py')
+&#187;&gt; type(metadata_dict)
+&lt;class 'dict'&gt;
+&#187;&gt; list(metadata_dict.keys())
+['romantest8.py', 'pluraltest1.py', 'pluraltest2.py', 'pluraltest5.py',
+ 'pluraltest6.py', 'romantest7.py', 'romantest10.py', 'romantest4.py',
+ 'romantest9.py', 'pluraltest3.py', 'romantest1.py', 'romantest2.py',
+ 'romantest3.py', 'romantest5.py', 'romantest6.py',
+ 'alphameticstest.py', 'pluraltest4.py']
+&#187;&gt; metadata_dict['alphameticstest.py'].st_size
+2509</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Esto no genera un diccionario por comprensión, genera una lista por comprensión. Encuentra todos los ficheros terminados en <SPAN  CLASS="textsf">.py</SPAN> con el texto <SPAN  CLASS="textsf">test</SPAN> en el nombre y luego construye una tupla con el nombre y los metadatos del fichero (llamando a la función <SPAN  CLASS="textsf">os.stat()</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Cada elemento de la lista resultante es una tupla.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Esto sí es una generación de un diccionario por comprensión. La sintaxis es similar a la de la generación de listas, con dos diferencias: primero, se encierra entre llaves en lugar de corchetes; segundo, en lugar de una única expresión para cada elemento, contiene dos expresiones separadas por dos puntos. La expresión que va delante de los dos puntos es la clave del diccionario y la expresión que va detrás es el valor (<SPAN  CLASS="textsf">os.stat(f)</SPAN> en este ejemplo).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> El resultado es un diccionario.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> La claves de este caso particular son los nombres de los ficheros.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 16:</SPAN> El valor asociado a cada clave es el valor que retornó la función <SPAN  CLASS="textsf">os.stat()</SPAN>. Esto significa que podemos utilizar este diccionario para buscar los metadatos de un fichero a partir de su nombre. Uno de los elementos de estos metadatos es <SPAN  CLASS="textsf">st_size</SPAN>, el tamaño de fichero. Para el fichero <SPAN  CLASS="textsf">alphameticstest.py</SPAN> el valor es <SPAN  CLASS="textsf">2509</SPAN> bytes.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Como con las listas, puedes incluir la cláusula <SPAN  CLASS="textsf">if</SPAN> para filtrar los elementos de entrada mediante una expresión que se evalúa para cada uno de los elementos.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import os, glob, parahumanos
+&#187;&gt; dict = os.path.splitext(f)[0]:parahumanos.tamanyo_aproximado(
+            os.stat(f).st_size)      
+...         for f in glob.glob('*') if os.stat(f).st_size &gt; 6000
+&#187;&gt; list(dict.keys())
+['romantest9', 'romantest8', 'romantest7', 'romantest6', 
+ 'romantest10', 'pluraltest6']
+&#187;&gt; dict['romantest9']
+'6.5 KiB'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Este ejemplo construye una lista con todos los ficheros del directorio de trabajo actual (<SPAN  CLASS="textsf">glob.glob('*')</SPAN>), filtra la lista para incluir únicamente aquellos ficheros mayores de <SPAN  CLASS="textsf">6000</SPAN> bytes (<SPAN  CLASS="textsf">if os.stat(f).s_size <SPAN CLASS="MATH">&gt;</SPAN> 6000</SPAN>) y utiliza la lista filtrada para construir un diccionario cuyas claves son los nombres de fichero menos la extensión (<SPAN  CLASS="textsf">os.path.splitext(f)[0]</SPAN>) y los valores el tamaño de cada uno de ellos (<SPAN  CLASS="textsf">parahumanos.tamanyo_aproximado(os.stat(f).st_size)</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Como viste en el ejemplo anterior son seis ficheros, por lo que hay seis elementos en el diccionario.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> El valor de cada elemento es la cadena que retorna la función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00641000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Trucos que se pueden hacer</A>
+</H2>
+
+<P>
+Te presento un truco que puede serte de utilidad: intercambiar las claves y valores de un diccionario.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; dict = 'a': 1, 'b': 2, 'c': 3
+&#187;&gt; value:key for key, value in a_dict.items()
+1: 'a', 2: 'b', 3: 'c'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<H1><A NAME="SECTION00650000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">5</SPAN> Conjuntos por comprensión</A>
+</H1>
+
+<P>
+Por último mostraré la sintaxis para generar conjuntos por comprensión. Es muy similar a la de los diccionarios, con la única diferencia de que únicamente se incluyen valores en lugar de parejas clave-valor.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; conjunto = set(range(10))
+&#187;&gt; conjunto
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+&#187;&gt; x ** 2 for x in conjunto
+0, 1, 4, 81, 64, 9, 16, 49, 25, 36
+&#187;&gt; x for x in conjunto if x 
+0, 8, 2, 4, 6
+&#187;&gt; 2**x for x in range(10)
+32, 1, 2, 4, 8, 64, 128, 256, 16, 512</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Los conjuntos generados por comprensión pueden partir de otro conjunto en lugar de una lista. En este ejemplo se calcula el cuadrado de cada uno de los elementos (los números del 0 al 9).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Como en el caso de las listas y diccionarios, puedes incluir una cláusula <SPAN  CLASS="textsf">if</SPAN> para filtrar elementos antes de calcularlos e incluirlos en el resultado.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Los conjuntos por comprensión no necesitan tomar un conjunto como entrada, pueden partir de cualquier tipo de secuencia.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00660000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">6</SPAN> Lecturas complementarias</A>
+</H1>
+
+<P>
+
+<UL>
+<LI>http://docs.python.org/3.1/library/os.htmlmódulo <SPAN  CLASS="textsf">os</SPAN>
+
+<P>
+</LI>
+<LI>http://www.doughellmann.com/PyMOTW/os/<SPAN  CLASS="textsf">os</SPAN> -- Portabilidad en el acceso a características específicas del sistema operativo
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/library/os.path.htmlmódulo <SPAN  CLASS="textsf">os.path</SPAN>
+
+<P>
+</LI>
+<LI>http://www.doughellmann.com/PyMOTW/ospath/Manipulación de los nombres de fichero independiente de la plataforma -- <SPAN  CLASS="textsf">os.path</SPAN>
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/library/glob.htmlmódulo <SPAN  CLASS="textsf">glob</SPAN>
+
+<P>
+</LI>
+<LI>http://www.doughellmann.com/PyMOTW/glob/Patrones de búsqueda de ficheros -- <SPAN  CLASS="textsf">glob</SPAN>
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/library/time.htmlmódulo <SPAN  CLASS="textsf">time</SPAN>
+
+<P>
+</LI>
+<LI>http://www.doughellmann.com/PyMOTW/time/Funciones para manipulación de hora - <SPAN  CLASS="textsf">time</SPAN>
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/tutorial/datastructures.html#list-comprehensionsListas por comprensión
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/tutorial/datastructures.html#nested-list-comprehensionsComprensiones anidadas
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/tutorial/datastructures.html#looping-techniquesTécnicas para hacer bucles
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html705"
+  HREF="node7.html">4. Cadenas de texto</A>
+<B> Subir a:</B> <A NAME="tex2html703"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html697"
+  HREF="node5.html">2. Tipos de dato</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>

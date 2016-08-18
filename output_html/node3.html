@@ -1,0 +1,1122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>0. Instalación de Python</TITLE>
+<META NAME="description" CONTENT="0. Instalación de Python">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node4.html">
+<LINK REL="previous" HREF="node2.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node4.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html619"
+  HREF="node4.html">1. Tu primer programa</A>
+<B> Subir a:</B> <A NAME="tex2html617"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html611"
+  HREF="node2.html">-1. Novedades de ``Inmersión</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html620"
+  HREF="node3.html#SECTION00310000000000000000"><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+<LI><A NAME="tex2html621"
+  HREF="node3.html#SECTION00320000000000000000"><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">2</SPAN> ¿Cuál es la versión adecuada para ti?</A>
+<LI><A NAME="tex2html622"
+  HREF="node3.html#SECTION00330000000000000000"><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">3</SPAN> Instalación en Microsoft Windows</A>
+<LI><A NAME="tex2html623"
+  HREF="node3.html#SECTION00340000000000000000"><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">4</SPAN> Instalación en un Mac OS X</A>
+<LI><A NAME="tex2html624"
+  HREF="node3.html#SECTION00350000000000000000"><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">5</SPAN> Instalación en Ubuntu Linux</A>
+<LI><A NAME="tex2html625"
+  HREF="node3.html#SECTION00360000000000000000"><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">6</SPAN> Instalación en otras plataformas</A>
+<LI><A NAME="tex2html626"
+  HREF="node3.html#SECTION00370000000000000000"><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">7</SPAN> Uso de la consola interactiva de Python</A>
+<LI><A NAME="tex2html627"
+  HREF="node3.html#SECTION00380000000000000000"><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">8</SPAN> Editores de texto e IDEs para Python</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00300000000000000000"></A><A NAME="ch:instalacion"></A>
+<BR>
+<SPAN CLASS="arabic">0</SPAN>. Instalación de Python
+</H1>
+
+<P>
+Nivel de dificultad:1 sobre 5
+
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``Tempora mutantur nos et mutamur in illis''
+<BR>(Los tiempos cambian, y nosotros cambiamos con ellos)
+<BR>--antiguo proverbio romano</I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION00310000000000000000">
+<SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+</H1>
+
+<P>
+Bienvenido a Python 3. ¡Vamos a mojarnos! En este capítulo, vas a instalar la versión de Python adecuada para ti.
+
+<P>
+
+<H1><A NAME="SECTION00320000000000000000">
+<SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">2</SPAN> ¿Cuál es la versión adecuada para ti?</A>
+</H1>
+
+<P>
+Lo primero que necesitas hacer es instalar Python 3.
+
+<P>
+Si estás utilizando una sesión en un servidor remoto (posiblemente a través de Internet), el administrador del servidor puede que ya lo haya instalado por ti. Si estás utilizando Linux<A NAME="tex2html2"
+  HREF="footnode.html#foot435"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> en casa, puede que también lo tengas ya instalado, aunque actualmente<A NAME="tex2html3"
+  HREF="footnode.html#foot436"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> la mayor parte de las distribuciones de Linux vienen con Python 2 instalado (como verás en este capítulo, puedes tener simultáneamente más de una versión de Python en tu ordenador sin problemas). En los Mac OS X se incluye una versión de línea de comando de Python 2, pero no Python 3. Microsoft Windows no trae ninguna versión de Python. Pero ¡no te preocupes! Siempre puedes instalarlo tú mismo, tengas el sistema operativo que tengas.
+
+<P>
+La forma más sencilla para comprobar si tienes instalado Python 3 en tu sistema Linux o Mac OS X es abrir un terminal de línea de comandos. Para ello debes hacer lo siguiente:
+
+<P>
+
+<UL>
+<LI>Si estás en Linux, busca en el menú de <SPAN  CLASS="textsf">Aplicaciones</SPAN> un programa denominado <SPAN  CLASS="textsf">terminal</SPAN> (puede estar en un submenú, posiblemente <SPAN  CLASS="textsf">Accesorios</SPAN> o <SPAN  CLASS="textsf">Sistema</SPAN>).
+</LI>
+<LI>Si estás en Mac OS X, existe una aplicación que se llama <SPAN  CLASS="textsf">Terminal.app</SPAN> en la carpeta <SPAN  CLASS="textsf">/Aplicaciones/Utilidades/</SPAN>.
+</LI>
+</UL>
+
+<P>
+Una vez te encuentres en la línea de comando<A NAME="tex2html4"
+  HREF="footnode.html#foot445"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>, teclea <SPAN  CLASS="textsf">python3</SPAN> (en minúsculas y sin espacios) y observa lo que sucede. En mi sistema Linux, Python 3 ya está instalado, por lo que el resultado de ejecutar este comando hace que el terminal entre en la <SPAN  CLASS="textit">consola<A NAME="tex2html5"
+  HREF="footnode.html#foot447"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A> interactiva de Python</SPAN>.
+</SMALL>
+<UL>
+<LI><PRE>
+jmgaguilera@acerNetbook-jmga:~$ python3
+Python 3.0.1+ (r301:69556, Apr 15 2009, 15:59:22) 
+[GCC 4.3.3] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt;
+</PRE><SMALL CLASS="FOOTNOTESIZE">
+</LI>
+</UL>
+<P>
+(Para salir de la consola interactiva de Python escribe <SPAN  CLASS="textsf">exit()</SPAN> y pulsa la tecla <SPAN  CLASS="textsf">INTRO</SPAN>.)
+
+<P>
+Al ejecutar esta misma sentencia <SPAN  CLASS="textsf">python3</SPAN> en un ordenador Linux que no tenga instalado Python 3 el mensaje que se obtendrá será parecido al siguiente:
+
+<P>
+</SMALL>
+<UL>
+<LI><PRE>
+jmgaguilera@acerNetbook-jmga:~$ python3
+bash: python3: orden no encontrada
+jmgaguilera@acerNetbook-jmga:~$ python3
+</PRE><SMALL CLASS="FOOTNOTESIZE">
+</LI>
+</UL>
+<P>
+Bueno, volviendo ahora a la pregunta sobre cuál es la versión de Python 3 apropiada para ti, queda claro que es aquella que se ejecute en el ordenador que tengas.
+
+<P>
+Para conocer cómo instalar Python 3, continúa leyendo en el apartado que corresponda a tu sistema operativo.
+
+<P>
+
+<H1><A NAME="SECTION00330000000000000000">
+<SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">3</SPAN> Instalación en Microsoft Windows</A>
+</H1>
+
+<P>
+Windows se ejecuta actualmente en dos plataformas diferentes: 32 y 64 bits. Asimismo, existen diferentes <SPAN  CLASS="textit">versiones</SPAN> de Windows --XP, Vista, Windows 7-- y Python 3 funciona en todas ellas. Es más importante, con vistas a la instalación, la distinción que existe entre los dos tipos de arquitecturas. Si no sabes de qué tipo es la arquitectura de tu ordenador, lo más probable es que sea de 32 bits.
+
+<P>
+Visita http://python.org/download/python.org/download/ para descargar la aplicación de instalación de Python 3 que sea correcta para para la arquitectura de tu ordenador. Las posibilidades serán parecidas a:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textbf">Python 3.*.* x86 Windows installer</SPAN> (Windows binary -- does not include sources)
+</LI>
+<LI><SPAN  CLASS="textbf">Python 3.*.* AMD64 Windows installer</SPAN> (Windows AMD64 binary -- does not include sources)
+</LI>
+</UL>
+
+<P>
+La descarga exacta varía en función de las actualizaciones. Por eso he puesto asteriscos en lugar del número de versión. Deberías instalar siempre la última versión disponible de Python 3.x a menos que tengas alguna razón importante para no hacerlo.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig01"></A><A NAME="470"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+Advertencia al inicio</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="404" HEIGHT="309" ALIGN="BOTTOM" BORDER="0"
+ SRC="./winInstalacion1.png"
+ ALT="Image winInstalacion1">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Cuando la descarga finalice, pulsa (doble click) sobre el fichero <SPAN  CLASS="textsf">.msi</SPAN> que has descargado. Windows mostrará una alerta de seguridad (figura&nbsp;<A HREF="#fig01">1</A>) para avisarte de que estás intentando ejecutar un fichero que instalará cosas en tu ordenador. El fichero instalador de Python está firmado electrónicamente por la http://www.python.org/psf/<SPAN  CLASS="textit">Python Software Foundation</SPAN>, que es la organización sin ánimo de lucro que supervisa el desarrollo de Python. ¡No aceptes imitaciones!
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">Run</SPAN> o <SPAN  CLASS="textsf">Ejecutar</SPAN><A NAME="tex2html7"
+  HREF="footnode.html#foot480"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A> para que se inicie la ejecución del programa instalador de Python.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig02"></A><A NAME="484"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
+Tipo de instalación</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="499" HEIGHT="432" ALIGN="BOTTOM" BORDER="0"
+ SRC="./winInstalacion2.png"
+ ALT="Image winInstalacion2">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Lo primero que pide el programa instalador (figura&nbsp;<A HREF="#fig02">2</A>) es que le indiques si quieres instalar Python 3 para todos los usuarios del ordenadores o únicamente para ti. Por defecto aparece seleccionada la opción ``Instalar para todos los usuarios'', que es la mejor opción, a no ser que tengas una buena razón para no hacerlo<A NAME="tex2html9"
+  HREF="footnode.html#foot489"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>.
+
+<P>
+Cuando hayas seleccionado la opción deseada, pulsa el botón <SPAN  CLASS="textsf">Siguiente</SPAN> o <SPAN  CLASS="textsf">Siguiente</SPAN> para continuar con la instalación.
+
+<P>
+Lo siguiente que pedirá el instalador (figura&nbsp;<A HREF="#fig03">3</A>) es que le digas el directorio de instalación. El valor por defecto para todas las versiones de Python 3.1.x es <SPAN  CLASS="textsf">C:<!-- MATH
+ $\backslash$
+ --><SPAN CLASS="MATH">&#92;</SPAN>Python31<!-- MATH
+ $\backslash$
+ --><SPAN CLASS="MATH">&#92;</SPAN></SPAN>, que es un valor adecuado para la mayoría de los usuarios. Salvo que tengas una razón específica para cambiarlo, como por ejemplo, que mantengas una unidad separada para la instalación de aplicaciones, puedes usar este directorio para instalar Python.
+
+<P>
+Para cambiar el directorio de instalación, puedes utilizar las opciones de pantalla o, simplemente, teclear el directorio deseado (con el path completo) en la caja de texto.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig03"></A><A NAME="497"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+Directorio de instalación</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="499" HEIGHT="432" ALIGN="BOTTOM" BORDER="0"
+ SRC="./winInstalacion3.png"
+ ALT="Image winInstalacion3">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Puedes instalar Python en el disco duro en el lugar que desees.
+
+<P>
+Cuando hayas finalizado, pulsa el botón <SPAN  CLASS="textsf">Siguiente</SPAN> o <SPAN  CLASS="textsf">Siguiente</SPAN> para continuar.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig04"></A><A NAME="506"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
+Selección de elementos a instalar</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="499" HEIGHT="432" ALIGN="BOTTOM" BORDER="0"
+ SRC="./winInstalacion4.png"
+ ALT="Image winInstalacion4">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+La siguiente pantalla (figura&nbsp;<A HREF="#fig04">4</A>) parece más compleja, pero en realidad no lo es. Como pasa con otros muchos instaladores, te ofrece la opción de que selecciones qué cosas concretas quieres instalar. Puedes instalar todos los componentes de Python 3, y si el espacio en disco es justo, puedes excluir ciertos componentes.
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textbf">Registrar las extensiones</SPAN>. Si seleccionas esta opción, el instalador modificará la configuración de Windows para que te permita ejecutar los scripts<A NAME="tex2html12"
+  HREF="footnode.html#foot894"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A> de Python con solo hacer doble click sobre el fichero. Esta opción no necesita de espacio en disco, por lo que no tiene mucho sentido no marcarla.
+</LI>
+<LI><SPAN  CLASS="textbf">Tcl<!-- MATH
+ $\backslash$
+ --><SPAN CLASS="MATH">&#92;</SPAN>Tk</SPAN> es la librería gráfica que utiliza la consola de Python. La usaremos a lo largo de todo el libro, por lo que es muy recomendable que la mantengas entre los componentes a instalar.
+</LI>
+<LI><SPAN  CLASS="textbf">Documentación</SPAN> instala un fichero de ayuda que contiene gran parte de la información que se encuentra en http://docs.python.org/docs.python.org. Es recomendable instalar esta opción cuando es previsible que no dispongas de conexión permanente a Internet.
+</LI>
+<LI><SPAN  CLASS="textbf">Scripts de utilidades</SPAN>. Estos scripts incluyen diversas utilidades, entre ellas el script <SPAN  CLASS="textsf">2to3.py</SPAN> sobre el que hablaremos más adelante. Es necesaria si vas a migrar código de Python 2 a Python 3. Si no dispones de código para migrar puedes saltarte esta opción.
+</LI>
+<LI><SPAN  CLASS="textbf">Suite de pruebas.</SPAN> Es una colección de scripts que se utilizan para probar el buen funcionamiento del intérprete de Python. En este libro no lo vamos a usar, yo no lo he usado jamás en el largo tiempo que llevo programando en Python. Es totalmente opcional su instalación.
+</LI>
+</UL>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig05"></A><A NAME="525"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
+Espacio libre</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="499" HEIGHT="432" ALIGN="BOTTOM" BORDER="0"
+ SRC="./winInstalacion5.png"
+ ALT="Image winInstalacion5">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Si no estás seguro de cuando espacio en disco tienes libre, pulsa el botón <SPAN  CLASS="textsf">Disk Usage</SPAN>. El instalador te mostrará las unidades de disco (figura&nbsp;<A HREF="#fig05">5</A>) y el espacio libre disponible en cada una de ellas, así como el espacio que quedará después de la instalación.
+
+<P>
+Cuando termines la comprobación, pulsa el botón <SPAN  CLASS="textsf">OK</SPAN> para volver a la pantalla anterior.
+
+<P>
+Si decides excluir alguna opción (figura&nbsp;<A HREF="#fig06">6</A>), selecciona el botón desplegable que aparece a la izquierda del texto de la opción y selecciona <SPAN  CLASS="textsf">Entire feature will be unavailable</SPAN>. Por ejemplo, si excluyes la suite de pruebas ahorrarás 7908 KBytes de espacio en disco.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig06"></A><A NAME="537"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
+Excluir una opción</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="499" HEIGHT="432" ALIGN="BOTTOM" BORDER="0"
+ SRC="./winInstalacion6.png"
+ ALT="Image winInstalacion6">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">Siguiente</SPAN> para confirmar tu selección de opciones.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig07"></A><A NAME="545"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
+Instalación</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="499" HEIGHT="432" ALIGN="BOTTOM" BORDER="0"
+ SRC="./winInstalacion7.png"
+ ALT="Image winInstalacion7">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+El instalador copiará todos los ficheros (figura&nbsp;<A HREF="#fig07">7</A> al directorio de destino que hayas seleccionado (Suele ser tan rápido, que tuve que probarlo tres veces antes de conseguir sacar una ``foto'' de la pantalla mostrándolo).
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig08"></A><A NAME="553"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
+Instalación completada</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="499" HEIGHT="432" ALIGN="BOTTOM" BORDER="0"
+ SRC="./winInstalacion8.png"
+ ALT="Image winInstalacion8">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Por último, pulsa el botón <SPAN  CLASS="textsf">Finish</SPAN> para salir del instalador (figura&nbsp;<A HREF="#fig08">8</A>).
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig09"></A><A NAME="562"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
+Instalación completada</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="677" HEIGHT="715" ALIGN="BOTTOM" BORDER="0"
+ SRC="./winInstalacion9.png"
+ ALT="Image winInstalacion9">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Si ahora buscas en el menú de <SPAN  CLASS="textsf">Inicio</SPAN>, deberías encontrar un nuevo elemento denominado <SPAN  CLASS="textsf">Python 3.1</SPAN>. Dentro de esta nueva opción de menú encontrarás dos programas denominados <SPAN  CLASS="textsf">Python</SPAN> e <SPAN  CLASS="textsf">IDLE</SPAN>. Selecciona uno de estos dos elementos para ejecutar la consola interactiva de Python (figura&nbsp;<A HREF="#fig09">9</A>).
+
+<P>
+Continúa en el apartado&nbsp;<A HREF="#sec:shell">0.7</A>
+
+<P>
+
+<H1><A NAME="SECTION00340000000000000000">
+<SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">4</SPAN> Instalación en un Mac OS X</A>
+</H1>
+
+<P>
+Todos los ordenadores Apple Macintosh modernos utilizan procesadores de Intel<A NAME="tex2html18"
+  HREF="footnode.html#foot573"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">8</SPAN></SUP></A> Los Macintosh antiguos utilizaban procesadores Power PC. No es necesario que conozcas esta diferencia puesto que únicamente existe un instalador para todos los tipos de Macs.
+
+<P>
+Visita http://python.org/download/python.org/download/ para descargar la aplicación de instalación de Python 3 para Mac. Debes buscar un enlace cuyo nombre sea algo así como <SPAN  CLASS="textbf">Mac Installer Disk Image (3.*.*</SPAN>. El número de versión puede variar, pero asegúrate de descargar una versión de Python 3 y no de Python 2.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm00"></A><A NAME="580"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
+Finder: contenido de la imagen de disco</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="752" HEIGHT="438" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion0.png"
+ ALT="Image macInstalacion0">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Tu navegador debería montar de forma automática esta imagen de disco y abrir una ventana de <SPAN  CLASS="textsf">Finder</SPAN> para mostrarte el contenido de la imagen. Si no fuese así, deberás buscar la imagen de disco en el directorio de descargas y hacer doble click sobre ella para que se cargue. El nombre de la imagen de disco será algo así como <SPAN  CLASS="textsf">python-3-1.dmg</SPAN>. Una vez tengas visible en pantalla el contenido de la imagen de disco (figura&nbsp;<A HREF="#figm00">10</A>), podrás observar que contiene varios ficheros de texto <SPAN  CLASS="textsf">(Build.txt, License.txt, ReadMe.txt)</SPAN>, y el el fichero del paquete de instalación <SPAN  CLASS="textsf">Python.mpkg</SPAN>.
+
+<P>
+Haz doble click con el cursor sobre el fichero de instalación <SPAN  CLASS="textsf">Python.mpkg</SPAN> para iniciar el instalador de Python para Mac.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm01"></A><A NAME="593"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
+Bienvenida a la instalación</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="622" HEIGHT="442" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion1.png"
+ ALT="Image macInstalacion1">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+La primera página (figura&nbsp;<A HREF="#figm01">11</A>) que muestra el programa de instalación describe de forma concisa qué es Python, y remite al fichero <SPAN  CLASS="textsf">ReadMe.txt</SPAN> (que seguramente no te leíste ¿verdad?) por si deseas conocer más detalles.
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">Continue</SPAN> para avanzar en la instalación.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm02"></A><A NAME="603"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
+Información importante</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="622" HEIGHT="442" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion2.png"
+ ALT="Image macInstalacion2">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+La siguiente pantalla (figura&nbsp;<A HREF="#figm02">12</A>) muestra información importante: Python necesita que tengas instalado Mac OS X 10.3 o superior. Si estás ejecutando una versión de Mac OS X 10.2 o anterior, deberías actualizar tu ordenador a última versión. Una de las razones más convincentes, es que Apple ya no proporciona actualizaciones de seguridad para tu versión del sistema operativo, por lo que tu ordenadores está en riesgo cada vez que está conectado a Internet. Otra razón, no menos convincente, es que no puedes ejecutar Python 3.
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">Continue</SPAN> para avanzar en la instalación.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm03"></A><A NAME="612"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 13:</STRONG>
+Licencia</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="622" HEIGHT="442" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion3.png"
+ ALT="Image macInstalacion3">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Como todos los buenos instaladores, lo siguiente que el instalador de Python muestra es la pantalla de aceptación de la licencia (figura&nbsp;<A HREF="#figm03">13</A>). Python es Open Source (software de fuentes abiertas) cuya licencia cuenta con la aprobación de http://opensource.org/licenses/la iniciativa de Código Abierto. Python cuenta con un cierto número de propietarios y patrocinadores a lo largo de su historia, cada uno de los cuales ha dejado su marca en la licencia. Pero el resultado final es este: Python es Código Abierto, y puedes usarlo en cualquier plataforma, para lo que desees, sin necesidad de pagar ningún canon, ni obligación, ni nada a cambio.
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">Continue</SPAN> de nuevo para avanzar en la instalación.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm04"></A><A NAME="623"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 14:</STRONG>
+Aceptación de la Licencia</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="622" HEIGHT="442" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion4.png"
+ ALT="Image macInstalacion4">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Debido a las peculiaridades del proceso de instalación estándar de Apple, es necesario que aceptes la licencia (figura&nbsp;<A HREF="#figm04">14</A>) para que el instalador te permita continuar. Puesto que Python es Código Abierto, en realidad estás aceptando una licencia que te garantiza derechos adicionales, en lugar de quitártelos.
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">Agree</SPAN> para continuar.
+
+<P>
+La siguiente pantalla (figura&nbsp;<A HREF="#figm05">15</A>) te permite modificar la ubicación en la que se efectuará la instalación. <SPAN  CLASS="textbf">Debes</SPAN> instalar Python en el disco de arranque, pero debido a ciertas limitaciones en el instalador, éste no te obliga a ello, por lo que ¡ten cuidado!. En realidad, yo nunca he tenido la necesidad de cambiar la ubicación de instalación, por ello, salvo causa justificada, acepta la ubicación sugerida por el instalador.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm05"></A><A NAME="634"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 15:</STRONG>
+Selección de la ubicación</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="622" HEIGHT="442" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion5.png"
+ ALT="Image macInstalacion5">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Desde esta pantalla también puedes modificar la instalación con el fin de que no se instalen algunas funcionalidades. Si quieres hacer esto pulsa el botón <SPAN  CLASS="textsf">Customize</SPAN>, en caso contrario pulsa el botón <SPAN  CLASS="textsf">Instalar</SPAN>.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm06"></A><A NAME="643"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 16:</STRONG>
+Personalización de la instalación</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="622" HEIGHT="442" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion6.png"
+ ALT="Image macInstalacion6">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Si eliges una instalación personalizada (has pulsado el botón <SPAN  CLASS="textsf">Customize</SPAN>), el instalador te muestra (figura&nbsp;<A HREF="#figm06">16</A>) una pantalla con una lista de características:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textbf">Python Framework</SPAN>. Es el núcleo de Python, por lo que está seleccionado y deshabilitado con el fin de que no puedas cambiarlo.
+</LI>
+<LI><SPAN  CLASS="textbf">Aplicaciones GUI</SPAN> incluye <SPAN  CLASS="textsf">IDLE</SPAN>, la consola interactiva gráfica de Python que usaremos a lo largo de todo el libro. Te recomiendo encarecidamente que mantengas esta opción seleccionada.
+</LI>
+<LI><SPAN  CLASS="textbf">Herramientas de línea de comandos</SPAN>, que incluyen la aplicación <SPAN  CLASS="textsf">python3</SPAN>. También te recomiendo que mantengas esta opción seleccionada.
+</LI>
+<LI><SPAN  CLASS="textbf">Documentación de Python</SPAN>, que contiene mucha de la información disponible en http://docs.python.org/docs.python.org. Muy recomendables si tienes previsto estar desconectado de Internet.
+</LI>
+<LI><SPAN  CLASS="textbf">Actualizador del perfil de la consola</SPAN>, que controla si actualizas tu perfil de consola (utilizado por la aplicación <SPAN  CLASS="textsf">Terminal.app</SPAN>) con el fin de que la versión de Python que estás instalando se encuentre en el camino de búsqueda de la consola. Para los propósitos de este libro, esta opción no es necesario que la instales.
+</LI>
+<LI><SPAN  CLASS="textbf">Actualizar la versión de Python del sistema</SPAN>. Esta opción no debería modificarse. Le dice a tu ordenador Mac que utilice Python 3 como versión por defecto para todos los scripts, incluido aquellos que vienen con el sistema operativo. Seleccionar esta opción podría producir efectos muy negativos en tu sistema, puesto que la mayor parte de los scripts del sistema operativo están escritos para Python 2, y pueden fallar en Python 3.
+</LI>
+</UL>
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">Install</SPAN> para continuar.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm07"></A><A NAME="666"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 17:</STRONG>
+Solicitando derechos administrativos</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="622" HEIGHT="457" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion7.png"
+ ALT="Image macInstalacion7">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Debido a que el instalador copia archivos binarios en <SPAN  CLASS="textsf">/usr/local/bin/</SPAN>, antes de iniciar dicha copia se solicitan permisos de administrador mediante una pantalla (figura&nbsp;<A HREF="#figm07">17</A>) en la que hay que teclear la clave del administrador del sistema. No es posible instalar Python en Mac sin disponer de las credenciales de administrador.
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">OK</SPAN> para comenzar la instalación.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm08"></A><A NAME="676"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 18:</STRONG>
+Instalación</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="622" HEIGHT="442" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion8.png"
+ ALT="Image macInstalacion8">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+El instalador mostrará una barra de progreso (figura&nbsp;<A HREF="#figm08">18</A>) mientras se instalan las funcionalidades que hayas seleccionado.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm09"></A><A NAME="684"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 19:</STRONG>
+Fin de la instalación</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="622" HEIGHT="442" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion9.png"
+ ALT="Image macInstalacion9">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Si todo va bien, el instalador mostrará en pantalla (figura&nbsp;<A HREF="#figm09">19</A>) una marca verde para indicar que la instalación de ha completado satisfactoriamente.
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">Close</SPAN> para salir del instalador.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm010"></A><A NAME="693"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 20:</STRONG>
+Carpeta Python</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="488" HEIGHT="482" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion10.png"
+ ALT="Image macInstalacion10">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Si no has cambiado la ubicación de la instalación, <SPAN  CLASS="textsf">Python 3.1.*</SPAN> se habrá instalado en una carpeta denominada <SPAN  CLASS="textsf">Python 3.1</SPAN> (figura&nbsp;<A HREF="#figm010">20</A>) dentro de la carpeta <SPAN  CLASS="textsf">/Applications</SPAN>. El elemento más importante en ella es <SPAN  CLASS="textsf">IDLE</SPAN>, que es la consola gráfica interactiva de Python.
+
+<P>
+Haz doble click con el cursor sobre <SPAN  CLASS="textsf">IDLE</SPAN> para ejecutar la consola de Python.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figm011"></A><A NAME="706"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 21:</STRONG>
+Consola gráfica</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="522" HEIGHT="538" ALIGN="BOTTOM" BORDER="0"
+ SRC="./macInstalacion11.png"
+ ALT="Image macInstalacion11">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+La mayor parte del tiempo la pasarás explorando Python mediante el uso de esta consola (figura&nbsp;<A HREF="#figm011">21</A>). Los ejemplos de este libro asumen que eres capaz de ejecutar esta consola en todo momento.
+
+<P>
+Continúa en el apartado&nbsp;<A HREF="#sec:shell">0.7</A>
+
+<P>
+
+<H1><A NAME="SECTION00350000000000000000">
+<SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">5</SPAN> Instalación en Ubuntu Linux</A>
+</H1>
+
+<P>
+Las diferentes distribuciones existentes hoy día de Linux suelen disponer de vastos repositorios de aplicaciones listas para instalar de forma sencilla. Los detalles exactos varían en función de la distribución de Linux. En Ubuntu Linux, la forma más sencilla de instalar Python 3 consiste en usar la opción <SPAN  CLASS="textsf">Añadir y quitar...</SPAN> del menú de <SPAN  CLASS="textsf">Aplicaciones</SPAN> (figura&nbsp;<A HREF="#figu00">22</A>).
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu00"></A><A NAME="719"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 22:</STRONG>
+Añadir/Quitar aplicaciones</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="920" HEIGHT="473" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion0.png"
+ ALT="Image ubuInstalacion0">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Cuando ejecutas por primera vez el programa para <SPAN  CLASS="textsf">Añadir/Quitar</SPAN> aplicaciones, se muestra una lista de aplicaciones preseleccionadas en diferentes categorías. Algunas ya se encuentran instaladas en tu ordenador, pero la mayoría no. Puesto que este repositorio consta de más de 10.000 aplicaciones, encontrar la que se desea puede ser difícil, para facilitar la labor es posible aplicar diferentes filtros que limitan las aplicaciones que se muestran en la lista de pantalla. El filtro por defecto es ``aplicaciones mantenidas por Canonical'' que es el pequeño subconjunto formado por aquellas aplicaciones que se mantienen oficialmente por parte de Canonical, la compañía que distribuye y mantiene Ubuntu Linux.
+
+<P>
+Como Python 3 no está en este subconjunto de aplicaciones, el primer paso es desplegar los filtros (Mostrar:) y seleccionar <SPAN  CLASS="textsf">Todas las aplicaciones libres</SPAN> (figura&nbsp;<A HREF="#figu01">23</A>).
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu01"></A><A NAME="729"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 23:</STRONG>
+Todas las aplicaciones libres</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="920" HEIGHT="473" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion1.png"
+ ALT="Image ubuInstalacion1">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Después puedes filtrar aún más utilizando la caja de texto de búsqueda con el fin de buscar el texto <SPAN  CLASS="textsf">Python 3</SPAN> (figura&nbsp;<A HREF="#figu02">24</A>).
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu02"></A><A NAME="738"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 24:</STRONG>
+Búsqueda de aplicaciones relacionadas con Python 3</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="920" HEIGHT="473" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion2.png"
+ ALT="Image ubuInstalacion2">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Ahora la lista de aplicaciones que se muestran se limita a aquellas que, de algún modo, incluyen la cadena <SPAN  CLASS="textsf">Python 3</SPAN>. Ahora debes marcar dos paquetes. El primero es <SPAN  CLASS="textsf">Python (v3.0)</SPAN>. Que contiene el intérprete de Python 3.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu03"></A><A NAME="747"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 25:</STRONG>
+Selección del paquete Python 3</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="920" HEIGHT="473" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion3.png"
+ ALT="Image ubuInstalacion3">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+El segundo paquete que hay que marcar se encuentra inmediatamente delante, <SPAN  CLASS="textsf">IDLE (usando Python 3.0)</SPAN>, que es la consola gráfica que usaremos a lo largo de todo el libro (figura&nbsp;<A HREF="#figu04">26</A>).
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu04"></A><A NAME="756"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 26:</STRONG>
+Selección del paquete IDLE</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="920" HEIGHT="473" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion4.png"
+ ALT="Image ubuInstalacion4">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Una vez hayas seleccionado los dos paquetes, pulsa el botón <SPAN  CLASS="textsf">Aplicar cambios</SPAN> para continuar.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu05"></A><A NAME="764"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 27:</STRONG>
+Confirmación</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="635" HEIGHT="364" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion5.png"
+ ALT="Image ubuInstalacion5">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+El gestor de paquetes solicitará que confirmes que quieres instalar tanto <SPAN  CLASS="textsf">IDLE (usando Python 3.0)</SPAN> como <SPAN  CLASS="textsf">Python (3.0)</SPAN> (figura&nbsp;<A HREF="#figu05">27</A>).
+
+<P>
+Pulsa el botón <SPAN  CLASS="textsf">Aplicar</SPAN> para continuar.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu06"></A><A NAME="775"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 28:</STRONG>
+Descarga de paquetes</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="287" HEIGHT="211" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion6.png"
+ ALT="Image ubuInstalacion6">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+El gestor de paquetes te pedirá que te identifiques con la clave de usuario para acceder a los privilegios administrativos que permiten instalar aplicaciones. Una vez hecho esto, el gestor de paquetes mostrará una pantalla (figura&nbsp;<A HREF="#figu06">28</A>) con el grado de avance de la instalación mientras se descargan los paquetes seleccionados del repositorio de Internet de Ubuntu Linux.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu07"></A><A NAME="783"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 29:</STRONG>
+Descarga de paquetes</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="486" HEIGHT="258" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion7.png"
+ ALT="Image ubuInstalacion7">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Cuando los paquetes se hayan descargado, el instalador iniciará automáticamente el proceso de instalación en tu ordenador (figura&nbsp;<A HREF="#figu07">29</A>).
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu08"></A><A NAME="791"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 30:</STRONG>
+Instalación finalizada</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="591" HEIGHT="296" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion8.png"
+ ALT="Image ubuInstalacion8">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Si todo va bien, el gestor de paquetes confirmará que ambos paquetes se instalaron satisfactoriamente (figura&nbsp;<A HREF="#figu08">30</A>). Desde esta pantalla puedes ejecutar directamente <SPAN  CLASS="textsf">IDLE</SPAN> haciendo doble click sobre él. O puedes pulsar el botón <SPAN  CLASS="textsf">Cerrar</SPAN> para finalizar el gestor de paquetes.
+
+<P>
+En cualquier caso, puedes lanzar la consola gráfica de Python siempre que quieras seleccionando <SPAN  CLASS="textsf">IDLE</SPAN> en el submenú <SPAN  CLASS="textsf">Programación</SPAN> del menú de <SPAN  CLASS="textsf">Aplicaciones</SPAN>.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figu09"></A><A NAME="804"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 31:</STRONG>
+Consola de Python en Ubuntu Linux</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="679" HEIGHT="687" ALIGN="BOTTOM" BORDER="0"
+ SRC="./ubuInstalacion9.png"
+ ALT="Image ubuInstalacion9">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Es en la consola de Python (figura&nbsp;<A HREF="#figu09">31</A>) donde pasarás la mayor parte del tiempo explorando Python. Los ejemplos de este libro asumen que eres capaz de ejecutar la consola de Python siempre que sea necesario.
+
+<P>
+Continúa en el apartado&nbsp;<A HREF="#sec:shell">0.7</A>
+
+<P>
+
+<H1><A NAME="SECTION00360000000000000000">
+<SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">6</SPAN> Instalación en otras plataformas</A>
+</H1>
+
+<P>
+Python 3 está disponible en otras muchas plataformas. En particular, está disponible prácticamente en todas las distribuciones Linux, BSD y Sun Solaris. Por ejemplo, RedHat Linux utiliza el gestor de paquetes <SPAN  CLASS="textsf">yum</SPAN>; FreeBSD tiene su propia colección de http://www.freebsd.org/ports/paquetes, y Solaris tiene el gestor de paquetes <SPAN  CLASS="textsf">pkgadd</SPAN> y otros. Una rápida búsqueda en Internet de los términos Python 3 + <SPAN  CLASS="textit">tu sistema operativo</SPAN> te mostrará si existe un paquete de Python 3 disponible para tu sistema, y cómo instalarlo.
+
+<P>
+
+<H1><A NAME="SECTION00370000000000000000"></A><A NAME="sec:shell"></A>
+<BR>
+<SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">7</SPAN> Uso de la consola interactiva de Python
+</H1>
+
+<P>
+En la consola interactiva de Python puedes explorar la sintaxis del lenguaje, solicitar ayuda interactiva sobre las sentencias del lenguaje, y depurar programas cortos.
+
+<P>
+La consola gráfica (denominada <SPAN  CLASS="textsf">IDLE</SPAN>) también proporciona un editor de textos bastante decente que resalta mediante colores la sintaxis del lenguaje Python. Si no tienes aún un editor de textos de tu elección, puedes darle una oportunidad a <SPAN  CLASS="textsf">IDLE</SPAN>.
+
+<P>
+¡Vamos a comenzar! La shell de Python es un estupendo lugar para comenzar a <SPAN  CLASS="textit">jugar</SPAN> con el lenguaje Python de forma interactiva.  A lo largo de este libro verás un montón de ejemplos como este:
+
+<P>
+</SMALL>
+<UL>
+<LI><PRE>
+&gt;&gt;&gt; 1 + 1
+2
+</PRE><SMALL CLASS="FOOTNOTESIZE">
+</LI>
+</UL>
+<P>
+Los tres símbolos de <SPAN  CLASS="textit">mayor que</SPAN>, <SPAN  CLASS="textsf"><SPAN CLASS="MATH">&gt; &gt; &gt;</SPAN></SPAN>, representan el <SPAN  CLASS="textit">prompt</SPAN><A NAME="tex2html41"
+  HREF="footnode.html#foot896"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">9</SPAN></SUP></A> de Python. No teclees nunca estos tres caracteres. Se muestran para que sepas que este ejemplo se debe teclear en la consola de Python.
+
+<P>
+Lo que tienes que teclear es <SPAN  CLASS="textsf">1 + 1</SPAN>.  En la consola puedes teclear cualquier expresión o sentencia válida del lenguaje. ¡No seas tímido, no muerde! Lo peor que puede pasarte es que Python muestre un mensaje de error, si tecleas algo que no entiende. Las sentencias se ejecutan inmediatamente (después de que pulses la tecla <SPAN  CLASS="textsf">INTRO</SPAN>); las expresiones se calculan en el momento, y la consola imprime en pantalla el resultado.
+
+<P>
+<SPAN  CLASS="textsf">2</SPAN> es el resultado de la expresión. Como <SPAN  CLASS="textsf">1 + 1</SPAN> es una expresión válida en el lenguaje Python, al pulsar la tecla <SPAN  CLASS="textsf">INTRO</SPAN> Python evalúa la expresión e imprime el resultado, que en este caso es <SPAN  CLASS="textsf">2</SPAN>.
+
+<P>
+Vamos a probar otro ejemplo.
+
+<P>
+</SMALL>
+<UL>
+<LI><PRE>
+&gt;&gt;&gt; print('¡Hola mundo!')
+¡Hola mundo!
+</PRE><SMALL CLASS="FOOTNOTESIZE">
+</LI>
+</UL>
+<P>
+Muy sencillo, ¿no?
+
+<P>
+Pero hay muchas otras cosas que puedes hacer en la consola de Python. Si en algún momento te bloqueas --no recuerdas una sentencia, o no recuerdas los argumentos que debes pasar a una función determinada-- puedes obtener ayuda en la propia consola. Simplemente teclea <SPAN  CLASS="textsf">help</SPAN> y pulsa <SPAN  CLASS="textsf">INTRO</SPAN>.
+
+<P>
+</SMALL>
+<UL>
+<LI><PRE>
+&gt;&gt;&gt; help
+Type help() for interactive help, or help(object) for help about object.
+</PRE><SMALL CLASS="FOOTNOTESIZE">
+</LI>
+</UL>
+<P>
+Existen dos modos de ayuda:
+
+<UL>
+<LI>Puedes solicitar ayuda de un objeto concreto, lo que muestra la documentación del mismo y vuelve al <SPAN  CLASS="textsf">prompt</SPAN> de la consola de Python. 
+</LI>
+<LI>También puedes entrar en el <SPAN  CLASS="textit">modo ayuda</SPAN>, en el que en lugar de evaluar expresiones de Python, puedes teclear palabras reservadas del lenguaje o nombres de sentencias y la consola imprime lo que sepa sobre ellas.
+</LI>
+</UL>
+
+<P>
+Para entrar en el modo interactivo de ayuda teclea <SPAN  CLASS="textsf">help()</SPAN> y pulsa <SPAN  CLASS="textsf">INTRO</SPAN>.
+
+<P>
+</SMALL>
+<UL>
+<LI><PRE>
+&gt;&gt;&gt;help()
+
+Welcome to Python 3.0!  This is the online help utility.
+
+If this is your first time using Python, you should definitely check out
+the tutorial on the Internet at http://docs.python.org/tutorial/.
+
+Enter the name of any module, keyword, or topic to get help on writing
+Python programs and using Python modules.  To quit this help utility and
+return to the interpreter, just type "quit".
+
+To get a list of available modules, keywords, or topics, type "modules",
+"keywords", or "topics".  Each module also comes with a one-line summary
+of what it does; to list the modules whose summaries contain a given word
+such as "spam", type "modules spam".
+
+help&gt;
+</PRE><SMALL CLASS="FOOTNOTESIZE">
+</LI>
+</UL>
+<P>
+Observa que ahora el prompt cambia de <SPAN  CLASS="textsf"><SPAN CLASS="MATH">&gt; &gt; &gt;</SPAN></SPAN> a <SPAN  CLASS="textsf">help<SPAN CLASS="MATH">&gt;</SPAN></SPAN>. Este cambio sirve para recordarte que te encuentras en el modo de ayuda interactiva. Ahora puedes teclear cualquier palabra reservada, sentencia, nombre de módulo, nombre de función --casi cualquier cosa que Python entienda-- y leer la documentación que haya disponible sobre el tema tecleado.
+
+<P>
+</SMALL>
+<UL>
+<LI><PRE>
+help&gt; print
+
+Help on built-in function print in module builtins:
+
+print(...)
+    print(value, ..., sep=' ', end='\n', file=sys.stdout)
+    
+    Prints the values to a stream, or to sys.stdout by default.
+    Optional keyword arguments:
+    file: a file-like object (stream); defaults to the current sys.stdout.
+    sep:  string inserted between values, default a space.
+    end:  string appended after the last value, default a newline.
+help&gt; Papaya
+no Python documentation found for 'Papaya'
+</PRE><SMALL CLASS="FOOTNOTESIZE">
+</LI>
+</UL></SMALL>
+<UL>
+<LI><PRE>
+help&gt; quit
+
+You are now leaving help and returning to the Python interpreter.
+If you want to ask for help on a particular object directly from the
+interpreter, you can type "help(object)".  Executing "help('string')"
+has the same effect as typing a particular string at the help&gt; prompt.
+
+&gt;&gt;&gt;
+</PRE><SMALL CLASS="FOOTNOTESIZE">
+</LI>
+</UL>
+<P>
+En el ejemplo anterior se obtiene en primer lugar la documentación sobre la función print. Para ello se ha tecleado en el modo ayuda la palabra <SPAN  CLASS="textsf">print</SPAN> y luego se ha pulsado <SPAN  CLASS="textsf">INTRO</SPAN>. Como resultado se obtiene un texto en el que se muestra el nombre de la función, un breve resumen de la misma, los argumentos de la función y sus valores por defecto. Si la documentación te parece demasiado opaca, no te asustes. Aprenderás lo necesario sobre todos estos conceptos en los próximos capítulos de este libro.
+
+<P>
+Evidentemente el modo de ayuda no lo sabe todo. Si tecleas algo que no sea una sentencia, módulo, función u otra palabra reservada de Python,el modo de ayuda interactiva mostrará un mensaje indicando que no encuentra documentación alguna para el concepto que hayas tecleado.
+
+<P>
+Por último, para salir del modo de ayuda únicamente tienes que teclear <SPAN  CLASS="textsf">quit</SPAN> y pulsar <SPAN  CLASS="textsf">INTRO</SPAN>.
+
+<P>
+El prompt vuelve de nuevo a <SPAN  CLASS="textsf"><SPAN CLASS="MATH">&gt; &gt; &gt;</SPAN></SPAN> para indicar que has abandonado el modo de ayuda interactiva y que de nuevo te encuentras en la consola de Python.
+
+<P>
+<SPAN  CLASS="textsf">IDLE</SPAN>, además de servir como consola gráfica de Python, incluye también un editor de textos que conoce el lenguaje Python. Verás cómo usarlo en la sección siguiente.
+
+<P>
+
+<H1><A NAME="SECTION00380000000000000000">
+<SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">8</SPAN> Editores de texto e IDEs para Python</A>
+</H1>
+
+<P>
+<SPAN  CLASS="textsf">IDLE</SPAN> no es el único entorno existente para escribir programas en Python. Aunque es muy útil para comenzar a aprender el lenguaje, muchos desarrolladores prefieren utilizar otros editores de texto o <SPAN  CLASS="textit">Entornos Integrados de Desarrollo</SPAN><A NAME="tex2html42"
+  HREF="footnode.html#foot897"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">10</SPAN></SUP></A>. No los voy a abarcar aquí, únicamente comentaré que la comunidad de Python mantiene una lista de http://wiki.python.org/moin/PythonEditorseditores para el lenguaje Python sobre diversas plataformas y licencias de software.
+
+<P>
+También puede ser de interés para ti la lista de http://wiki.python.org/moin/IntegratedDevelopmentEnvironmentsEntornos Integrados de Desarrollo para Python, aunque aún son pocos los que sirven para Python 3. Uno de ellos es http://pydev.sourceforge.net/PyDev, un plugin para http://eclipse.org/Eclipse que convierte a Eclipse en un completo Entorno Integrado de Desarrollo para Python. Ambos, Eclipse y PyDev, son multiplataforma y de código abierto.
+
+<P>
+Por la parte comercial, existe un entorno de desarrollo denominado http://www.activestate.com/komodo/Komodo IDE. Tiene una licencia que se paga por cada usuario, pero también ofrece descuento para estudiantes, y una versión con licencia de prueba limitada.
+
+<P>
+Llevo programando en Python nueve años, yo, para editar los programas, utilizo http://www.gnu.org/software/emacs/GNU Emacs y los depuro en la shell de línea de comando<A NAME="tex2html43"
+  HREF="footnode.html#foot898"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">11</SPAN></SUP></A>. No existe un modo correcto de desarrollar en Python. ¡Encuentra lo que mejor se adapte a ti!
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html619"
+  HREF="node4.html">1. Tu primer programa</A>
+<B> Subir a:</B> <A NAME="tex2html617"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html611"
+  HREF="node2.html">-1. Novedades de ``Inmersión</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>

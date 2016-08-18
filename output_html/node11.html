@@ -1,0 +1,1263 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>8. Serialización de Objetos en Python</TITLE>
+<META NAME="description" CONTENT="8. Serialización de Objetos en Python">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node12.html">
+<LINK REL="previous" HREF="node10.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node12.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html801"
+  HREF="node12.html">9. Caso de estudio:</A>
+<B> Subir a:</B> <A NAME="tex2html799"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html793"
+  HREF="node10.html">7. XML</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html802"
+  HREF="node11.html#SECTION001110000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+<UL>
+<LI><A NAME="tex2html803"
+  HREF="node11.html#SECTION001111000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">1</SPAN> Una nota breve sobre los ejemplos de este capítulo</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html804"
+  HREF="node11.html#SECTION001120000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">2</SPAN> Almacenamiento de datos a un fichero ``pickle''</A>
+<LI><A NAME="tex2html805"
+  HREF="node11.html#SECTION001130000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">3</SPAN> Carga de datos de un fichero ``pickle''</A>
+<LI><A NAME="tex2html806"
+  HREF="node11.html#SECTION001140000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">4</SPAN> Serialización con ``pickle'' sin pasar por un fichero</A>
+<LI><A NAME="tex2html807"
+  HREF="node11.html#SECTION001150000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">5</SPAN> Los bytes y las cadenas de nuevo vuelven sus feas cabezas</A>
+<LI><A NAME="tex2html808"
+  HREF="node11.html#SECTION001160000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">6</SPAN> Depuración de ficheros ``pickle''</A>
+<LI><A NAME="tex2html809"
+  HREF="node11.html#SECTION001170000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">7</SPAN> Serialización de objetos Python para cargarlos en otros lenguajes</A>
+<LI><A NAME="tex2html810"
+  HREF="node11.html#SECTION001180000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">8</SPAN> Almacenamiento de datos en un fichero JSON</A>
+<LI><A NAME="tex2html811"
+  HREF="node11.html#SECTION001190000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">9</SPAN> Mapeo de los tipos de datos de Python a JSON</A>
+<LI><A NAME="tex2html812"
+  HREF="node11.html#SECTION0011100000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">10</SPAN> Serialización de tipos no soportados en JSON</A>
+<LI><A NAME="tex2html813"
+  HREF="node11.html#SECTION0011110000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">11</SPAN> Carga de datos desde un fichero JSON</A>
+<LI><A NAME="tex2html814"
+  HREF="node11.html#SECTION0011120000000000000000"><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">12</SPAN> Lecturas recomendadas</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION001100000000000000000"></A><A NAME="ch:serializacion"></A>
+<BR>
+<SPAN CLASS="arabic">8</SPAN>. Serialización de Objetos en Python
+</H1>
+
+<P>
+Nivel de dificultad:4 sobre 5
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``Desde que vivimos en este apartamento, cada sábado me he levantado a las 6:15, 
+<BR>
+me he preparado un tazón de cereales con leche, 
+<BR>
+me he sentado en este lado de este sofá, he puesto la BBC America, 
+y he visto Doctor Who.'' 
+<BR>--<SPAN  CLASS="textbf">Sheldon, La teoría del Big Bang.</SPAN><A NAME="tex2html83"
+  HREF="footnode.html#foot14659"><SUP><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A></I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION001110000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+</H1>
+
+<P>
+El concepto de la serialización es simple. Tienes una estructura de datos en memoria que quieres grabar, reutilizar o enviar a alguien. ¿Cómo lo haces? Bueno, eso depende de lo que quieras grabar, de cómo lo quieras reutilizar y a quién se lo envías. Muchos juegos te permiten grabar el avance cuando sales de ellos, y continuar en donde lo dejaste cuando los vuelves a cargar (En realidad, esto también lo hacen las aplicaciones que no son de juegos). En estos casos, se necesita almacenar en disco una estructura de datos que almacena ''tu grado de avance hasta el momento'', cuando los juegos se reinician, es necesario volver a cargar estas estructuras de datos. Los datos, en estos casos, sólo se utilizan por el mismo programa que los creó, no se envían por la red ni se leen por nadie más que por el programa que los creó. Por ello, los posibles problemas de interoperabilidad quedan reducidos a asegurar que versiones posteriores del mismo programa pueden leer los datos escritos por versiones previas.
+
+<P>
+Para casos como estos, el módulo <SPAN  CLASS="textsf">pickle</SPAN> es ideal. Forma parte de la librería estándar de Python, por lo que siempre está disponible. Es rápido, la mayor parte está escrito en C, como el propio intérprete de Python. Puede almacenar estructuras de datos de Python todo lo complejas que se necesite.
+
+<P>
+¿Qué puede almacenar el módulo <SPAN  CLASS="textsf">pickle</SPAN>?
+
+<P>
+
+<UL>
+<LI>Todos los <SPAN  CLASS="textbf">tipos de datos</SPAN> nativos que Python soporta: booleanos, enteros, números de coma flotante, números complejos, cadenas, objetos <SPAN  CLASS="textsf">bytes</SPAN>, arrays de byte y <SPAN  CLASS="textsf">None</SPAN>.
+
+<P>
+</LI>
+<LI>Listas, tuplas, diccionarios y conjuntos que contengan cualquier combinación de tipos de dato nativos.
+
+<P>
+</LI>
+<LI>Listas, tuplas, diccionarios y conjuntos de datos que contengan cualquier combinación de listas, tuplas, diccionarios y conjuntos conteniendo cualquier combinación de tipos de datos nativos (y así sucesivamente, hasta alcanzar un máximo nivel de anidamiento<A NAME="tex2html84"
+  HREF="footnode.html#foot14660"><SUP><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>).
+
+<P>
+</LI>
+<LI>Funciones, clases e instancias de clases (con ciertas limitaciones).
+
+<P>
+</LI>
+</UL>
+
+<P>
+Si no es suficiente para ti, el módulo <SPAN  CLASS="textsf">pickle</SPAN> se puede extender. Si estás interesado en la extensibilidad, revisa los enlaces de la sección de <SPAN  CLASS="textbf">Lecturas recomendadas</SPAN> al final de este capítulo.
+
+<P>
+
+<H2><A NAME="SECTION001111000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">1</SPAN> Una nota breve sobre los ejemplos de este capítulo</A>
+</H2>
+
+<P>
+Este capítulo cuenta una historia con dos consolas de Python. Todos los ejemplos de este capítulo son parte de una única historia. Se te pedirá que vayas pasando de una consola a otra de Python para demostrar el funcionamiento de los módulos <SPAN  CLASS="textsf">pickle</SPAN> y <SPAN  CLASS="textsf">json</SPAN>.
+
+<P>
+Para ayudarte a mantener las cosas claras, abre la consola de Python y define la siguiente variable:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell = 1</pre></TD></TR>
+</TABLE>
+
+<P>
+Mantén la ventana abierta. Ahora abre otra consola de Python y define la siguiente variable:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell = 2</pre></TD></TR>
+</TABLE>
+
+<P>
+A lo largo de este capítulo, utilizaré la variable <SPAN  CLASS="textsf">shell</SPAN> para indicar en qué consola de Python se ejecuta cada ejemplo.
+
+<P>
+
+<H1><A NAME="SECTION001120000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">2</SPAN> Almacenamiento de datos a un fichero ``pickle''</A>
+</H1>
+
+<P>
+El módulo <SPAN  CLASS="textsf">pickle</SPAN> funciona con estructuras de datos. Vamos a construir una.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; entry = 
+&#187;&gt; entry['title'] = 'Dive into history, 2009 edition'
+&#187;&gt; entry['article_link'] = 'http://diveintomark.org/' +          'archives/2009/03/27/dive-into-history-2009-edition'
+&#187;&gt; entry['comments_link'] = None
+&#187;&gt; entry['internal_id'] = b'548'
+&#187;&gt; entry['tags'] = ('diveintopython', 'docbook', 'html')
+&#187;&gt; entry['published'] = True
+&#187;&gt; import time
+&#187;&gt; entry['published_date'] =          time.strptime('Fri Mar 27 22:20:42 2009')
+&#187;&gt; entry['published_date']
+time.struct_time(tm_year=2009, tm_mon=3, tm_mday=27, 
+                 tm_hour=22, tm_min=20, tm_sec=42, 
+                 tm_wday=4, tm_yday=86, tm_isdst=-1)</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Tecléalo en la consola #1.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> La idea aquí es construir un diccionario de Python que pueda representar algo que sea útil, como una <SPAN  CLASS="textbf">entrada de una fuente Atom</SPAN>. Pero también quiero asegurarme de que contiene diferentes tipos de datos para mostrar el funcionamiento del módulo <SPAN  CLASS="textsf">pickle</SPAN>. No entres demasiado en los valores concretos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 13:</SPAN> El módulo <SPAN  CLASS="textsf">time</SPAN> contiene una estructura de datos (<SPAN  CLASS="textsf">time_struct</SPAN>) que representa un punto en el tiempo (con una precisión de milisegundo) y funciones que sirven para manipular estructuras de este tipo. La función <SPAN  CLASS="textsf">strptime()</SPAN> recibe una cadena formateada y la convierte en una estructura <SPAN  CLASS="textsf">time_struct</SPAN>. Esta cadena se encuentra en el formato por defecto, pero puedes controlarlo con los códigos de formato. Para más detalles consulta el módulo <SPAN  CLASS="textsf">time</SPAN><A NAME="tex2html85"
+  HREF="footnode.html#foot14661"><SUP><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Bueno, ya tenemos un estupendo diccionario de Python. Vamos a salvarlo en un fichero.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; import pickle
+&#187;&gt; with open('entry.pickle', 'wb') as f:
+...     pickle.dump(entry, f)
+... </pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Seguimos en la consola #1.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Utiliza la función <SPAN  CLASS="textsf">open()</SPAN> para abrir un fichero. El modo de apertura es <SPAN  CLASS="textsf">'wb'</SPAN>, de escritura y en binario. Lo envolvemos en una sentencia <SPAN  CLASS="textsf">with</SPAN> para asegurar que el fichero se cierra automáticamente al finalizar su uso.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 5:</SPAN> La función <SPAN  CLASS="textsf">dump()</SPAN> del módulo <SPAN  CLASS="textsf">pickle</SPAN> toma una estructura de datos serializable de Python y la serializa a un formato binario, específico de Python, y almacena el resultado en el fichero abierto.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Esa última sentencia era muy importante.
+
+<P>
+
+<UL>
+<LI>El módulo <SPAN  CLASS="textsf">pickle</SPAN> toma una estructura de datos Python y la salva a un fichero.
+
+<P>
+</LI>
+<LI>Para hacer esto, serializa la estructura de datos utilizando un formato de datos denominado ``el protocolo pickle''.
+
+<P>
+</LI>
+<LI>Este protocolo es específico de Python; no existe ninguna garantía de compatibilidad entre lenguajes de programación. Probablemente no puedas abrir el fichero <SPAN  CLASS="textsf">entry.pickle</SPAN> con Perl, PHP, Java u otro lenguaje.
+
+<P>
+</LI>
+<LI>No todas las estructuras de datos de Python se pueden serializar con el módulo <SPAN  CLASS="textsf">pickle</SPAN>. El protocolo pickle ha cambiado varias veces para acomodar nuevos tipos de datos que se han ido añadiendo a Python, pero aún tiene limitaciones.
+
+<P>
+</LI>
+<LI>Como resultado de estos cambios, no existe garantía de compatibilidad entre diferentes versiones de Python. Las versiones nuevas de Python soportan los formatos antiguos de serialización, pero las versiones viejas de Python no soportan los formatos nuevos (puesto que no soportan los tipos de datos nuevos).
+
+<P>
+</LI>
+<LI>A menos que especifiques otra cosa, las funciones del módulo <SPAN  CLASS="textsf">pickle</SPAN> utilizarán la última versión del protocolo pickle. Esto asegura que dispones de la máxima flexibilidad en los tipos de datos que puedes serializar, pero también significa que el fichero resultante no podrá leerse en versiones de Python más antiguas que no soporten la última versión del protocolo.
+
+<P>
+</LI>
+<LI>La última versión del protocolo pickle es un formato binario. Asegúrate de abrir el fichero en modo binario o los datos se corromperán durante la escritura.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION001130000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">3</SPAN> Carga de datos de un fichero ``pickle''</A>
+</H1>
+
+<P>
+Ahora cambia a la segunda consola de Python --la otra, la que no utilizaste para crear el diccionario <SPAN  CLASS="textsf">entry</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+2
+&#187;&gt; entry
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+NameError: name 'entry' is not defined
+&#187;&gt; import pickle
+&#187;&gt; with open('entry.pickle', 'rb') as f:
+...     entry = pickle.load(f)
+... 
+&#187;&gt; entry
+'comments_link': None,
+ 'internal_id': b'548',
+ 'title': 'Dive into history, 2009 edition',
+ 'tags': ('diveintopython', 'docbook', 'html'),
+ 'article_link':
+ 'http://diveintomark.org/archives/2009/03/27/
+  dive-into-history-2009-edition',
+ 'published_date': time.struct_time(tm_year=2009, tm_mon=3, 
+ tm_mday=27, tm_hour=22, tm_min=20, tm_sec=42, tm_wday=4, 
+ tm_yday=86, tm_isdst=-1),
+ 'published': True</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Consola #2.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> La variable <SPAN  CLASS="textsf">entry</SPAN> no está definida en esta consola. La definimos en la consola #1, que se trata de un entorno totalmente separado de éste y tiene su propio estado.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 8:</SPAN> Se abre el fichero <SPAN  CLASS="textsf">entry.pickle</SPAN> que creamos con la consola #1. El módulo <SPAN  CLASS="textsf">pickle</SPAN> utiliza un formato binario, por lo que siempre hay que abrir los ficheros de este tipo en modo binario.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 9:</SPAN> La función <SPAN  CLASS="textsf">pickle.load()</SPAN> toma un objeto <SPAN  CLASS="textsf">stream</SPAN>, lee los datos serializados del stream, crea un nuevo objeto Python, recrea los datos serializados en el nuevo objeto Python y devuelve el objeto.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 11:</SPAN> Ahora la variable <SPAN  CLASS="textsf">entry</SPAN> contiene un diccionario con las claves y valores que nos son familiares de la otra consola.
+
+<P>
+</LI>
+</OL>
+
+<P>
+El ciclo <SPAN  CLASS="textsf">pickle.dump() / pickle.load()</SPAN> da como resultado una estructura de datos nueva que es igual a la original.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; with open('entry.pickle', 'rb') as f:
+...     entry2 = pickle.load(f)
+... 
+&#187;&gt; entry2 == entry
+True
+&#187;&gt; entry2 is entry
+False
+&#187;&gt; entry2['tags']
+('diveintopython', 'docbook', 'html')
+&#187;&gt; entry2['internal_id']
+b'548'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Volvemos a la consola #1.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Abrimos el fichero <SPAN  CLASS="textsf">entry.pickle</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Cargamos los datos serializados en la nueva variable <SPAN  CLASS="textsf">entry2</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> Python confirma que los dos diccionarios, <SPAN  CLASS="textsf">entry</SPAN> y <SPAN  CLASS="textsf">entry2</SPAN>, son iguales. En esta consola, construimos el diccionario almacenado en <SPAN  CLASS="textsf">entry</SPAN> desde cero, creando un diccionario vacío y añadiéndole valores poco a poco. Serializamos el diccionario y lo almacenamos en el fichero <SPAN  CLASS="textsf">entry.pickle</SPAN>. Ahora hemos recuperado los datos serializados desde el fichero y hemos creado una réplica perfecta de la estructura de datos original.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 8:</SPAN> Igualdad no es lo mismo que identidad. Como he dicho, hemos creado una <SPAN  CLASS="textbf">réplica perfecta</SPAN> de los datos originales. Pero son una copia.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 10:</SPAN> Por razones que aclararé más tarde en el capítulo, he querido mostrar que el valor de la clave <SPAN  CLASS="textsf">'tags'</SPAN> es una tupla, y el valor de la clave <SPAN  CLASS="textsf">'internal_id'</SPAN> es un objeto <SPAN  CLASS="textsf">bytes</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION001140000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">4</SPAN> Serialización con ``pickle'' sin pasar por un fichero</A>
+</H1>
+
+<P>
+Los ejemplos de la sección anterior te mostraron cómo serializar un objeto Python directamente a un fichero en disco. Pero ¿qué sucede si no necesitas un fichero? Puedes serializar a un objeto <SPAN  CLASS="textsf">bytes</SPAN> en memoria.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; b = pickle.dumps(entry)
+&#187;&gt; type(b)               
+&lt;class 'bytes'&gt;
+&#187;&gt; entry3 = pickle.loads(b)
+&#187;&gt; entry3 == entry        
+True</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> La función <SPAN  CLASS="textsf">pickle.dumps()</SPAN> (observa la <SPAN  CLASS="textsf">'s'</SPAN> al final del nombre de la función) realiza la misma serialización que la función <SPAN  CLASS="textsf">pickle.dump()</SPAN>. Pero en lugar de tomar como parámetro un objeto stream y serializar sobre él, simplemente retorna los datos serializados.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Puesto que el protocolo pickle utiliza un formato de datos binario, la función <SPAN  CLASS="textsf">pickle.dumps()</SPAN> retorna un objeto <SPAN  CLASS="textsf">bytes</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> La función <SPAN  CLASS="textsf">pickle.loads()</SPAN> (de nuevo, observa la <SPAN  CLASS="textsf">'s'</SPAN> al final del nombre de la función) realiza la misma operación que la función <SPAN  CLASS="textsf">pickle.load()</SPAN>. Pero en lugar de tomar como parámetro un objeto stream y leer de él los datos, toma un objeto <SPAN  CLASS="textsf">bytes</SPAN> que contenga datos serializados.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 7:</SPAN> El resultado final es el mismo: una réplica perfecta del diccionario original.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION001150000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">5</SPAN> Los bytes y las cadenas de nuevo vuelven sus feas cabezas</A>
+</H1>
+
+<P>
+El protocolo pickle existe desde hace muchos años, y ha madurado a la par que lo ha hecho Python. Por ello, actualmente existen cuatro versiones diferentes del protocolo.
+
+<P>
+
+<UL>
+<LI>Python 1.x tenía dos protocolos, un formato basado en texto (``versión 0'') y un formato binario (``versión 1'').
+
+<P>
+</LI>
+<LI>Python 2.3 introdujo un protocolo nuevo (``versión 2'') para tener en cuenta la nueva funcionalidad de clases y objetos en Python. Es un formato binario.
+
+<P>
+</LI>
+<LI>Python 3.0 introdujo otro protocolo (``versión 3'') que soporta explícitamente los objetos <SPAN  CLASS="textsf">bytes</SPAN> y arrays de byte. Es un formato binario.
+
+<P>
+</LI>
+</UL>
+
+<P>
+Como puedes observar, la diferencia existente entre cadenas de texto y bytes vuelve a aparecer (si te sorprende es que no has estado poniendo atención). En la práctica, significa que mientras que Python 3 puede leer datos almacenados con el protocolo versión 2, Python 2 no puede leer datos almacenados con el protocolo versión 3.
+
+<P>
+
+<H1><A NAME="SECTION001160000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">6</SPAN> Depuración de ficheros ``pickle''</A>
+</H1>
+
+<P>
+¿A qué se parece el protocolo ``pickle''? Vamos a salir un momento de la consola de Python y echarle un vistazo al fichero <SPAN  CLASS="textsf">entry.pickle</SPAN> que hemos creado.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+you@localhost:&nbsp;/diveintopython3/examples<!-- MATH
+ $ls -l entry.pickle
+-rw-r- -r- - 1 you  you  358 Aug  3 13:34 entry.pickle
+you@localhost:~/diveintopython3/examples$
+ --><SPAN CLASS="MATH"><I>ls</I> - <I>lentry</I>.<I>pickle</I> - <I>rw</I> - <I>r</I> - - <I>r</I> - - 1<I>youyou</I>358<I>Aug</I>313 : 34<I>entry</I>.<I>pickleyou</I>@<I>localhost</I> :&nbsp;/<I>diveintopython</I>3/<I>examples</I></SPAN> cat entry.pickle
+comments_linkqNXtagsqXdiveintopythonqXdocbookqXhtmlq?qX publishedq?
+XlinkXJhttp://diveintomark.org/archives/2009/03/27/dive-into-history-
+2009-edition
+q   Xpublished_dateq
+ctime
+struct_time
+?qRqXtitleqXDive into history, 2009 editionqu.</pre></TD></TR>
+</TABLE>
+
+<P>
+No ha sido muy útil. Puedes ver las cadenas de texto, pero los otros tipos de dato salen como caracteres ilegibles. Los campos no están delimitados por tabuladores ni espacios. No se trata de un formato que quieras depurar por ti mismo.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; import pickletools
+&#187;&gt; with open('entry.pickle', 'rb') as f:
+...     pickletools.dis(f)
+    0: 80 PROTO      3
+    2:     EMPTY_DICT
+    3: q    BINPUT     0
+    5: (    MARK
+    6: X        BINUNICODE 'published_date'
+   25: q        BINPUT     1
+   27: c        GLOBAL     'time struct_time'
+   45: q        BINPUT     2
+   47: (        MARK
+   48: M            BININT2    2009
+   51: K            BININT1    3
+   53: K            BININT1    27
+   55: K            BININT1    22
+   57: K            BININT1    20
+   59: K            BININT1    42
+   61: K            BININT1    4
+   63: K            BININT1    86
+   65: J            BININT     -1
+   70: t            TUPLE      (MARK at 47)
+   71: q        BINPUT     3
+   73:         EMPTY_DICT
+   74: q        BINPUT     4
+   76: 86     TUPLE2
+   77: q        BINPUT     5
+   79: R        REDUCE
+   80: q        BINPUT     6
+   82: X        BINUNICODE 'comments_link'
+  100: q        BINPUT     7
+  102: N        NONE
+  103: X        BINUNICODE 'internal_id'
+  119: q        BINPUT     8
+  121: C        SHORT_BINBYTES 'xxxx'
+  127: q        BINPUT     9
+  129: X        BINUNICODE 'tags'
+  138: q        BINPUT     10
+  140: X        BINUNICODE 'diveintopython'
+  159: q        BINPUT     11
+  161: X        BINUNICODE 'docbook'
+  173: q        BINPUT     12
+  175: X        BINUNICODE 'html'
+  184: q        BINPUT     13
+  186: 87     TUPLE3
+  187: q        BINPUT     14
+  189: X        BINUNICODE 'title'
+  199: q        BINPUT     15
+  201: X        BINUNICODE 'Dive into history, 2009 edition'
+  237: q        BINPUT     16
+  239: X        BINUNICODE 'article_link'</pre></TD></TR>
+</TABLE>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+  256: q        BINPUT     17
+  258: X        BINUNICODE 'http://diveintomark.org/archives/2009/
+                            03/27/dive-into-history-2009-edition'
+  337: q        BINPUT     18
+  339: X        BINUNICODE 'published'
+  353: q        BINPUT     19
+  355: 88     NEWTRUE
+  356: u        SETITEMS   (MARK at 5)
+  357: .    STOP
+highest protocol among opcodes = 3</pre></TD></TR>
+</TABLE>
+
+<P>
+La información más interesante de este volcado es la que aparece en la última línea, ya que muestra la versión del protocolo de ``pickle'' con la que el fichero se grabó. No existe un marcador de versión explícito en el protocolo de ``pickle''. Para determinar la versión del protocolo, se observan los marcadores (códigos de operación - ``opcodes'') existentes en los datos almacenados y se utiliza el conocimiento expreso de qué códigos fueron introducidos en cada versión del protocolo ``pickle''. La función <SPAN  CLASS="textsf">pickle.dis()</SPAN> hace exactamente eso e imprime el resultado en la última línea del volcado de salida.
+
+<P>
+La siguiente es una función que simplemente devuelve el número de versión sin imprimir nada:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+import pickletools
+
+<P>
+def protocol_version(file_object):
+    maxproto = -1
+    for opcode, arg, pos in pickletools.genops(file_object):
+        maxproto = max(maxproto, opcode.proto)
+    return maxproto</pre></TD></TR>
+</TABLE>
+
+<P>
+Y aquí la vemos en acción:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import pickleversion
+&#187;&gt; with open('entry.pickle', 'rb') as f:
+...     v = pickleversion.protocol_version(f)
+&#187;&gt; v
+3</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<H1><A NAME="SECTION001170000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">7</SPAN> Serialización de objetos Python para cargarlos en otros lenguajes</A>
+</H1>
+
+<P>
+El formato utilizado por el módulo <SPAN  CLASS="textsf">pickle</SPAN> es específico de Python. No intenta ser compatible con otros lenguajes de programación. Si la compatibilidad entre lenguajes es un requisito, necesitas utilizar otros formatos de serialización. Uno de ellos es JSON<A NAME="tex2html86"
+  HREF="footnode.html#foot14662"><SUP><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>. ``JSON'' significa ``JavaScript Object Notation - Notación de Objetos JavaScript'', pero no dejes que el nombre te engañe --<SPAN  CLASS="textsf">JSON</SPAN> está diseñado explícitamente para permitir su uso en diferentes lenguajes de programación.
+
+<P>
+Python 3 incluye un módulo <SPAN  CLASS="textsf">json</SPAN> en su librería estándar. Como el módulo <SPAN  CLASS="textsf">pickle</SPAN>, el módulo <SPAN  CLASS="textsf">json</SPAN> dispone de funciones para la serialización de estructuras de datos, almacenamiento de los datos serializados en disco, carga de los mismos y deserialización en un nuevo objeto Python. Pero también tiene importantes diferencias. La primera es que <SPAN  CLASS="textsf">JSON</SPAN> es un formato de datos textual, no binario. La especificación <SPAN  CLASS="textsf">RFC 4627</SPAN><A NAME="tex2html87"
+  HREF="footnode.html#foot14663"><SUP><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A> define el formato y cómo se codifican los diferentes tipos de datos de forma textual. Por ejemplo, un valor booleano se almacena como la cadena texto de cinco caracteres <SPAN  CLASS="textsf">``false''</SPAN> o como la cadena de texto de cuatro caracteres <SPAN  CLASS="textsf">``true''</SPAN>. Todos los valores de <SPAN  CLASS="textsf">JSON</SPAN> tienen en cuenta las mayúsculas y minúsculas.
+
+<P>
+Segundo, como cualquier formato basado en texto, existe el problema de los espacios en blanco. <SPAN  CLASS="textsf">JSON</SPAN> permite el uso de un número arbitrario de espacios en blanco (espacios, tabuladores, retornos de carro y saltos de línea) entre los valores. Estos espacios en blanco son ``no significativos'', lo que significa que los codificadores de <SPAN  CLASS="textsf">JSON</SPAN> pueden añadir tantos como deseen, y los decodificadores de <SPAN  CLASS="textsf">JSON</SPAN> están obligados a ignorarlos siempre que se encuentren entre dos valores. Esto permite que los datos de un fichero <SPAN  CLASS="textsf">JSON</SPAN> se puedan imprimir bien formateados, anidando de forma clara los valores que se encuentran dentro de otros para que puedas verlos bien en un editor o visor de texto estándar. El módulo <SPAN  CLASS="textsf">json</SPAN> de Python dispone de opciones para codificar la salida con formato apropiado para la lectura.
+
+<P>
+Tercero, existe el problema perenne de la codificación de caracteres. Puesto que <SPAN  CLASS="textsf">JSON</SPAN> codifica los valores como texto plano, pero como ya sabes, no existe tal ``texto plano''. <SPAN  CLASS="textsf">JSON</SPAN> debe almacenarse con caracteres Unicode (UTF-32, UTF-16 o, por defecto, UTF-8), y la sección 3 de la RFC-4627<A NAME="tex2html88"
+  HREF="footnode.html#foot14664"><SUP><SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>, define cómo indicar qué codificación se está utilizando. 
+
+<P>
+
+<H1><A NAME="SECTION001180000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">8</SPAN> Almacenamiento de datos en un fichero JSON</A>
+</H1>
+
+<P>
+<SPAN  CLASS="textsf">JSON</SPAN> se parece mucho a una estructura de datos que pudieras definir en JavaScript. No es casualidad, en realidad, puedes utilizar la función <SPAN  CLASS="textsf">eval()</SPAN> de JavaScript para ``decodificar'' los datos serializados en JSON. Lo fundamental es conocer que <SPAN  CLASS="textsf">JSON</SPAN> forma parte del propio lenguaje JavaScript. Como tal, <SPAN  CLASS="textsf">JSON</SPAN> puede que ya te sea familiar.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; basic_entry = 
+&#187;&gt; basic_entry['id'] = 256
+&#187;&gt; basic_entry['title'] = 'Dive into history, 2009 edition'
+&#187;&gt; basic_entry['tags'] = ('diveintopython', 'docbook', 'html')
+&#187;&gt; basic_entry['published'] = True
+&#187;&gt; basic_entry['comments_link'] = None
+&#187;&gt; import json
+&#187;&gt; with open('basic.json', mode='w', encoding='utf-8') as f:
+...     json.dump(basic_entry, f)</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Vamos a crear una nueva estructura de datos, en lugar de reutilizar la estructura de datos <SPAN  CLASS="textsf">entry</SPAN> preexistente. Después veremos qué sucede cuando intentamos codificar en <SPAN  CLASS="textsf">JSON</SPAN> la otra estructura de datos más compleja.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 10:</SPAN> <SPAN  CLASS="textsf">JSON</SPAN> está basado en texto, lo que significa que es necesario abrir el fichero en modo texto y especificar una codificación de caracteres. Nunca te equivocarás utilizando <SPAN  CLASS="textsf">UTF-8</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 11:</SPAN> Como con el módulo <SPAN  CLASS="textsf">pickle</SPAN>, el módulo <SPAN  CLASS="textsf">json</SPAN> define la función <SPAN  CLASS="textsf">dump()</SPAN> que toma una estructura de datos Python y un objeto de flujo (stream) con permisos de escritura. La función <SPAN  CLASS="textsf">dump()</SPAN> serializa la estructura de datos de Python y escribe el resultado en el objeto de flujo. Al hacerlo dentro de una sentencia <SPAN  CLASS="textsf">with</SPAN> nos aseguramos de que el fichero quede cerrado correctamente cuando hayamos terminado.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¿Cómo queda el resultado serializado?
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+you@localhost:&nbsp;/diveintopython3/examples&gt; cat basic.json
+{"published": true, "tags": ["diveintopython", "docbook", "html"],
+"comments_link": null, "id": 256,
+"title": "Dive into history, 2009 edition"}</pre></TD></TR>
+</TABLE>
+Es más legible que el fichero en formato de <SPAN  CLASS="textsf">pickle</SPAN>. Pero como <SPAN  CLASS="textsf">JSON</SPAN> puede contener tantos espacios en blanco como se desee entre diferentes valores, y el módulo <SPAN  CLASS="textsf">json</SPAN> proporciona una forma sencilla de utilizar esta capacidad, podemos crear ficheros <SPAN  CLASS="textsf">JSON</SPAN> aún más legibles.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; with open('basic-pretty.json', mode='w', encoding='utf-8') as f:
+...     json.dump(basic_entry, f, indent=2) </pre></TD></TR>
+</TABLE>
+
+<P>
+Si se pasa el parámetro <SPAN  CLASS="textsf">indent</SPAN> a la función <SPAN  CLASS="textsf">json.dump()</SPAN> el fichero <SPAN  CLASS="textsf">JSON</SPAN> resultante será más legible aún. A costa de un fichero de tamaño mayor. El parámetro <SPAN  CLASS="textsf">indent</SPAN> es un valor entero en el que 0 significa ``pon cada valor en su propia línea'' y un número mayor que cero significa ``pon cada valor en su propia línea, y utiliza este número de espacios para indentar las estructuras de datos anidadas''.
+
+<P>
+Por lo que éste es el resultado:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+you@localhost:&nbsp;/diveintopython3/examples&gt; cat basic-pretty.json
+{
+  "published": true, 
+  "tags": [
+    "diveintopython", 
+    "docbook", 
+    "html"
+  ], 
+  "comments_link": null, 
+  "id": 256, 
+  "title": "Dive into history, 2009 edition"
+}</pre></TD></TR>
+</TABLE>
+<H1><A NAME="SECTION001190000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">9</SPAN> Mapeo de los tipos de datos de Python a JSON</A>
+</H1>
+
+<P>
+Puesto que <SPAN  CLASS="textsf">JSON</SPAN> no es específico de Python, existen algunas diferencias en su cobertura de los tipos de dato de Python. Algunas de ellas son simplemente de denominación, pero existen dos tipos de dato importantes de Python que no existen en JSON. Observa esta tabla a ver si los echas de menos:
+
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="CENTER">Notas</TD>
+<TD ALIGN="LEFT">JSON</TD>
+<TD ALIGN="LEFT">Python 3</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="LEFT">object</TD>
+<TD ALIGN="LEFT">dictionary</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="LEFT">array</TD>
+<TD ALIGN="LEFT">list</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="LEFT">string</TD>
+<TD ALIGN="LEFT">string</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="LEFT">integer</TD>
+<TD ALIGN="LEFT">integer</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="LEFT">real number</TD>
+<TD ALIGN="LEFT">float</TD>
+</TR>
+<TR><TD ALIGN="CENTER">*</TD>
+<TD ALIGN="LEFT">true</TD>
+<TD ALIGN="LEFT">True</TD>
+</TR>
+<TR><TD ALIGN="CENTER">*</TD>
+<TD ALIGN="LEFT">false</TD>
+<TD ALIGN="LEFT">False</TD>
+</TR>
+<TR><TD ALIGN="CENTER">*</TD>
+<TD ALIGN="LEFT">null</TD>
+<TD ALIGN="LEFT">None</TD>
+</TR>
+<TR><TD ALIGN="LEFT" COLSPAN=3><SPAN>* Las mayúsculas y minúsculas en los valores <SPAN  CLASS="textsf">JSON</SPAN> son significativas.</SPAN></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+¿Te has dado cuenta de lo que falta? ¡Tuplas y bytes! <SPAN  CLASS="textsf">JSON</SPAN> tiene un tipo de datos array, al que se mapean las listas de Python, pero no tiene un tipo de datos separado para los ``arrays congelados'' (tuplas). Y aunque <SPAN  CLASS="textsf">JSON</SPAN> soporta cadenas de texto, no tiene soporte para los objetos <SPAN  CLASS="textsf">bytes</SPAN> o arrays de bytes.
+
+<P>
+
+<H1><A NAME="SECTION0011100000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">10</SPAN> Serialización de tipos no soportados en JSON</A>
+</H1>
+
+<P>
+Incluso aunque <SPAN  CLASS="textsf">JSON</SPAN> no tiene soporte intrínseco de bytes, es posible serializar objetos <SPAN  CLASS="textsf">bytes</SPAN>. El módulo <SPAN  CLASS="textsf">json</SPAN> proporciona unos puntos de extensibilidad para codificar y decodificar tipos de dato desconocidos (Por desconocido se entiende en este contexto a aquellos tipos de datos que no están definidos en la especificación de <SPAN  CLASS="textsf">JSON</SPAN>). Si quieres codificar bytes u otros tipos de datos que <SPAN  CLASS="textsf">JSON</SPAN> no soporte de forma nativa, necesitas proporcionar codificadores de decodificadores a medida para esos tipos de dato.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; entry
+'comments_link': None,
+ 'internal_id': b'548',
+ 'title': 'Dive into history, 2009 edition',
+ 'tags': ('diveintopython', 'docbook', 'html'),
+ 'article_link': 'http://diveintomark.org/archives/2009/03
+                  /27/dive-into-history-2009-edition',
+ 'published_date': time.struct_time(tm_year=2009, tm_mon=3, 
+                   tm_mday=27, tm_hour=22, tm_min=20, tm_sec=42, 
+                   tm_wday=4, tm_yday=86, tm_isdst=-1),
+ 'published': True
+&#187;&gt; import json
+&#187;&gt; with open('entry.json', 'w', encoding='utf-8') as f:
+...     json.dump(entry, f)
+... 
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 5, in &lt;module&gt;
+  File "C:31__init__.py", line 178, in dump
+    for chunk in iterable:
+  File "C:31.py", line 408, in _iterencode
+    for chunk in _iterencode_dict(o, _current_indent_level):
+  File "C:31.py", line 382, in _iterencode_dict
+    for chunk in chunks:
+  File "C:31.py", line 416, in _iterencode
+    o = _default(o)
+  File "C:31.py", line 170, in default
+    raise TypeError(repr(o) + " is not JSON serializable")
+TypeError: b'548' is not JSON serializable</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Ok, es el momento de volver a la estructura de datos <SPAN  CLASS="textsf">entry</SPAN>. Tiene de todo: un valor booleano, un <SPAN  CLASS="textsf">None</SPAN>, una cadena de texto, una tupla de cadenas de texto, un objeto <SPAN  CLASS="textsf">bytes</SPAN> y una estructura <SPAN  CLASS="textsf">time</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 15:</SPAN> Sé lo que he dicho antes, pero vamos a repetirlo: <SPAN  CLASS="textsf">JSON</SPAN> es un formato de texto. Siempre se deben abrir los ficheros <SPAN  CLASS="textsf">JSON</SPAN> en modo texto con la codificación de caracteres <SPAN  CLASS="textsf">UTF-8</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 18:</SPAN> ¡Error! ¿Qué ha pasado?
+
+<P>
+</LI>
+</OL>
+
+<P>
+Lo que ha pasado es que la función <SPAN  CLASS="textsf">json.dump()</SPAN> intentó serializar el objeto <SPAN  CLASS="textsf">bytes</SPAN> pero falló porque <SPAN  CLASS="textsf">JSON</SPAN> no dispone de soporte de objetos <SPAN  CLASS="textsf">bytes</SPAN>. Sin embargo, si es importante almacenar bytes en este formato, puedes definir tu propio ``formato de serialización''.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+def to_json(python_object):            
+    if isinstance(python_object, bytes):
+        return '__class__': 'bytes',
+                '__value__': list(python_object)
+    raise TypeError(repr(python_object) + ' is not JSON serializable')</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 1:</SPAN> Para definir un formato de serialización para un tipo de datos que <SPAN  CLASS="textsf">JSON</SPAN> no soporte de forma nativa, simplemente define una función que tome un objeto Python como parámetro. Este objeto será el que la función <SPAN  CLASS="textsf">json.dump()</SPAN> sea incapaz de serializar de forma nativa --en este caso el objeto <SPAN  CLASS="textsf">bytes</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> La función debe validar el tipo de datos que recibe. No es estrictamente necesario pero así queda totalmente claro que casos cubre esta función, y hace más sencillo ampliarla más tarde.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> En este caso, he elegido convertir el objeto <SPAN  CLASS="textsf">bytes</SPAN> en un diccionario. La clave <SPAN  CLASS="textsf">__class__</SPAN> guardará el tipo de datos original (como una cadena, <SPAN  CLASS="textsf">``bytes''</SPAN>), y la clave <SPAN  CLASS="textsf">__value__</SPAN> guardará el valor real. Como hay que convertirlo a algo que pueda serializarse en JSON, no se puede guardar directamente el objeto <SPAN  CLASS="textsf">bytes</SPAN>. Como un objeto bytes es una secuencia de números enteros; con cada entero entre el 0 y el 255, podemos utilizar la función <SPAN  CLASS="textsf">list()</SPAN> para convertir el objeto <SPAN  CLASS="textsf">bytes</SPAN> en una lista de enteros. De forma que el objeto <SPAN  CLASS="textsf">b'<!-- MATH
+ $\backslash$
+ --><SPAN CLASS="MATH">&#92;</SPAN>xDE<!-- MATH
+ $\backslash$
+ --><SPAN CLASS="MATH">&#92;</SPAN>xD5<!-- MATH
+ $\backslash$
+ --><SPAN CLASS="MATH">&#92;</SPAN>x84<!-- MATH
+ $\backslash$
+ --><SPAN CLASS="MATH">&#92;</SPAN>xF8'</SPAN> se convierte en <SPAN  CLASS="textsf">[222, 213, 180, 248]</SPAN>. Por ejemplo, el byte <SPAN  CLASS="textsf"><!-- MATH
+ $\backslash$
+ --><SPAN CLASS="MATH">&#92;</SPAN>xDE</SPAN> en hexadecimal, se convierte en <SPAN  CLASS="textsf">222</SPAN> en decimal, <SPAN  CLASS="textsf"><!-- MATH
+ $\backslash$
+ --><SPAN CLASS="MATH">&#92;</SPAN>xD5</SPAN> es <SPAN  CLASS="textsf">213</SPAN> y así cada uno de ellos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 5:</SPAN> Esta línea es importante. La estructura de datos que estás serializando puede contener tipos de dato que ni el serializador interno del módulo de Python ni el tuyo puedan manejar. En este caso, tu serializador debe elevar una excepción <SPAN  CLASS="textsf">TypeError</SPAN> para que la función <SPAN  CLASS="textsf">json.dump()</SPAN> sepa que tu serializador no reconoció el tipo de dato del objeto.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Y eso es todo, no necesitas hacer nada más. En particular, esta función a medida retorna un <SPAN  CLASS="textbf">un diccionario de Python</SPAN>, no una cadena. No estás haciendo la serialización a <SPAN  CLASS="textsf">JSON</SPAN> completa por ti mismo; solamente la parte correspondiente a un tipo de datos que no está soportado de forma nativa. La función <SPAN  CLASS="textsf">json.dump()</SPAN> hará el resto.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; import customserializer
+&#187;&gt; with open('entry.json', 'w', encoding='utf-8') as f:
+...     json.dump(entry, f, default=customserializer.to_json)
+... 
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 9, in &lt;module&gt;
+    json.dump(entry, f, default=customserializer.to_json)
+  File "C:31__init__.py", line 178, in dump
+    for chunk in iterable:
+  File "C:31.py", line 408, in _iterencode
+    for chunk in _iterencode_dict(o, _current_indent_level):
+  File "C:31.py", line 382, in _iterencode_dict
+    for chunk in chunks:
+  File "C:31.py", line 416, in _iterencode
+    o = _default(o)
+  File "/Users/pilgrim/diveintopython3/examples/customserializer.py", 
+  line 12, in to_json
+    raise TypeError(repr(python_object) + ' is not JSON serializable')
+TypeError: time.struct_time(tm_year=2009, tm_mon=3, tm_mday=27, tm_hour=22,
+ tm_min=20, tm_sec=42, tm_wday=4, tm_yday=86, tm_isdst=-1) 
+ is not JSON serializable</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> El módulo <SPAN  CLASS="textsf">customserializer</SPAN> es el lugar en el que has definido la función <SPAN  CLASS="textsf">to_json()</SPAN> del ejemplo anterior.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> El modo texto, la codificación UTF-8, etc. ¡Lo olvidarás! ¡a veces lo olvidarás! Y todo funcionará hasta el momento en que falle, y cuando falle, lo hará de forma espectacular.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 5:</SPAN> Este es el trozo importante: asignar una función de conversión ad-hoc en la función <SPAN  CLASS="textsf">json.dump()</SPAN>, hay que pasar tu función a la función <SPAN  CLASS="textsf">json.dump()</SPAN> en el parámetro <SPAN  CLASS="textsf">default</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 20:</SPAN> Ok, realmente no ha funcionado. Pero observa la excepción. La función <SPAN  CLASS="textsf">json.dump()</SPAN> ya no se queja más sobre el objeto de tipo <SPAN  CLASS="textsf">bytes</SPAN>. Ahora se está quejando sobre un objeto totalmente diferente, el objeto <SPAN  CLASS="textsf">time.struct_time</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Aunque obtener una excepción diferente podría no parecer mucho progreso ¡lo es! Haremos una modificación más para superar este error:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+import time
+
+<P>
+def to_json(python_object):
+    if isinstance(python_object, time.struct_time):
+        return '__class__': 'time.asctime',
+                '__value__': time.asctime(python_object)
+    if isinstance(python_object, bytes):
+        return '__class__': 'bytes',
+                '__value__': list(python_object)
+    raise TypeError(repr(python_object) + ' is not JSON serializable')</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Añadimos código a nuestra función <SPAN  CLASS="textsf">customserializer.to_json()</SPAN>, necesitamos validar que el objeto Python sea <SPAN  CLASS="textsf">time.struct_time</SPAN> (aquél con el que la función <SPAN  CLASS="textsf">json.dump()</SPAN> está teniendo problemas).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 6:</SPAN> Haremos una conversión parecida a la que hicimos con el objeto <SPAN  CLASS="textsf">bytes</SPAN>: convertir el objeto <SPAN  CLASS="textsf">time.struct_time</SPAN> en un diccionario que solamente contenga valores serializables en <SPAN  CLASS="textsf">JSON</SPAN>. En este caso, la forma más sencilla de convertir una fecha/hora a <SPAN  CLASS="textsf">JSON</SPAN> es convertirlo en una cadena con la función <SPAN  CLASS="textsf">time.asctime()</SPAN>. La función <SPAN  CLASS="textsf">time.asctime()</SPAN> convertirá la estructura en la cadena <SPAN  CLASS="textsf">'Fri Mar 27 22:20:42 2009'</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Con estas dos conversiones a medida, la estructura completa de datos <SPAN  CLASS="textsf">entry</SPAN> debería serializarse a <SPAN  CLASS="textsf">JSON</SPAN> sin más problemas.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; with open('entry.json', 'w', encoding='utf-8') as f:
+...     json.dump(entry, f, default=customserializer.to_json)
+... </pre></TD></TR>
+</TABLE>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+you@localhost:&nbsp;/diveintopython3/examples<!-- MATH
+ $ls -l example.json
+-rw-r- -r- - 1 you  you  391 Aug  3 13:34 entry.json
+you@localhost:~/diveintopython3/examples$
+ --><SPAN CLASS="MATH"><I>ls</I> - <I>lexample</I>.<I>json</I> - <I>rw</I> - <I>r</I> - - <I>r</I> - - 1<I>youyou</I>391<I>Aug</I>313 : 34<I>entry</I>.<I>jsonyou</I>@<I>localhost</I> :&nbsp;/<I>diveintopython</I>3/<I>examples</I></SPAN> cat example.json
+"published_date": "__class__": "time.asctime", 
+"__value__": "Fri Mar 27 22:20:42 2009",
+"comments_link": null, "internal_id": "__class__": "bytes", 
+"__value__": [222, 213, 180, 248],
+"tags": ["diveintopython", "docbook", "html"], 
+"title": "Dive into history, 2009 edition",
+"article_link": "http://diveintomark.org/archives/
+2009/03/27/dive-into-history-2009-edition",
+"published": true</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<H1><A NAME="SECTION0011110000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">11</SPAN> Carga de datos desde un fichero JSON</A>
+</H1>
+
+<P>
+Como el módulo <SPAN  CLASS="textsf">pickle</SPAN>, el módulo <SPAN  CLASS="textsf">json</SPAN> tiene una función <SPAN  CLASS="textsf">load()</SPAN> que toma un objeto de flujo de datos y lee la información formateada en <SPAN  CLASS="textsf">JSON</SPAN> y crea un objeto Python que es idéntico a la estructura de datos <SPAN  CLASS="textsf">JSON</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+2
+&#187;&gt; del entry 
+&#187;&gt; entry
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+NameError: name 'entry' is not defined
+&#187;&gt; import json
+&#187;&gt; with open('entry.json', 'r', encoding='utf-8') as f:
+...     entry = json.load(f)
+... 
+&#187;&gt; entry                  
+'comments_link': None,
+ 'internal_id': '__class__': 'bytes', 
+ '__value__': [222, 213, 180, 248],
+ 'title': 'Dive into history, 2009 edition',
+ 'tags': ['diveintopython', 'docbook', 'html'],
+ 'article_link': 'http://diveintomark.org/archives/
+2009/03/27/dive-into-history-2009-edition',
+ 'published_date': '__class__': 'time.asctime', 
+'__value__': 'Fri Mar 27 22:20:42 2009',
+ 'published': True</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Con fines demostrativos, pasamos a la consola #2 y borramos la estructura de datos <SPAN  CLASS="textsf">entry</SPAN> que habíamos creado antes con el módulo <SPAN  CLASS="textsf">pickle</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 10:</SPAN> En el caso más simple, la función <SPAN  CLASS="textsf">json.load()</SPAN> funciona de la misma forma que la función <SPAN  CLASS="textsf">pickle.load()</SPAN>. Le pasamos un flujo de datos y devuelve un objeto Python nuevo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 12:</SPAN> Tengo buenas y malas noticias. Las buenas primero: la función <SPAN  CLASS="textsf">json.load()</SPAN> carga satisfactoriamente el fichero<SPAN  CLASS="textsf">entry.json</SPAN> que has creado en la consola #1 y crea un nuevo objeto Python que contiene la información. Ahora las malas noticias: No recrea la estructura de datos <SPAN  CLASS="textsf">entry</SPAN> original. Los dos valores <SPAN  CLASS="textsf">'internal_id'</SPAN> y <SPAN  CLASS="textsf">'published_date'</SPAN> se han recreado como diccionarios --específicamente, los diccionarios con valores compatibles <SPAN  CLASS="textsf">JSON</SPAN> que creamos en la función de conversión <SPAN  CLASS="textsf">to_json()</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+La función <SPAN  CLASS="textsf">json.load()</SPAN> no sabe nada sobre ninguna función de conversión que puedas haber pasado a la función <SPAN  CLASS="textsf">json.dump()</SPAN>. Lo que se necesita es la función opuesta a <SPAN  CLASS="textsf">to_json()</SPAN> --una función que tomará un objeto <SPAN  CLASS="textsf">JSON</SPAN> convertido a medida y convertirá de nuevo a Python el tipo de datos original.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+# add this to customserializer.py
+def from_json(json_object):
+    if '__class__' in json_object:
+        if json_object['__class__'] == 'time.asctime':
+            return time.strptime(json_object['__value__'])
+        if json_object['__class__'] == 'bytes':
+            return bytes(json_object['__value__'])
+    return json_object</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> Esta función de conversión también toma un parámetro y devuelve un valor. Pero el parámetro que toma no es una cadena, es un objeto Python --el resultado de deserializar la cadena <SPAN  CLASS="textsf">JSON</SPAN> en un objeto Python.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 3:</SPAN> Lo único que hay que hacer es validar si el objeto contiene la clave <SPAN  CLASS="textsf">'__class__'</SPAN> que creó la función <SPAN  CLASS="textsf">to_json()</SPAN>. Si es así, el valor de la clave <SPAN  CLASS="textsf">'__class__'</SPAN> te dirá cómo decodificar el valor en su tipo de datos original de Python.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 5:</SPAN> Para decodificar la cadena de texto que que devolvió la función <SPAN  CLASS="textsf">time.asctime()</SPAN>, utilizamos la función <SPAN  CLASS="textsf">time.strptime()</SPAN>. Esta función toma una cadena de texto con formato de fecha y hora (en un formato que se puede adaptar, pero que tiene el formato por defecto de la función <SPAN  CLASS="textsf">time.asctime()</SPAN>) y devuelve un objeto <SPAN  CLASS="textsf">time.struct_time</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 7:</SPAN> Para convertir de nuevo la lista de enteros a un objeto <SPAN  CLASS="textsf">bytes</SPAN> puedes utilizar la función <SPAN  CLASS="textsf">bytes()</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Eso es todo. Solamente se manejaban dos tipos de dato en la función <SPAN  CLASS="textsf">to_json()</SPAN>, y ahora son esos dos tipos de dato los que se manejan en la función <SPAN  CLASS="textsf">from_json()</SPAN>. Este es el resultado:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+2
+&#187;&gt; import customserializer
+&#187;&gt; with open('entry.json', 'r', encoding='utf-8') as f:
+...     entry = json.load(f, object_hook=customserializer.from_json)
+... 
+&#187;&gt; entry                              
+'comments_link': None,
+ 'internal_id': b'548',
+ 'title': 'Dive into history, 2009 edition',
+ 'tags': ['diveintopython', 'docbook', 'html'],
+ 'article_link': 'http://diveintomark.org/archives/
+2009/03/27/dive-into-history-2009-edition',
+ 'published_date': time.struct_time(tm_year=2009, tm_mon=3, 
+tm_mday=27, tm_hour=22, tm_min=20, tm_sec=42, tm_wday=4,
+tm_yday=86, tm_isdst=-1),
+ 'published': True</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 5:</SPAN> Para utilizar la función <SPAN  CLASS="textsf">from_json()</SPAN> durante el proceso de deserialización, hay que pasarla en el parámetro <SPAN  CLASS="textsf">object_hook</SPAN> a la función <SPAN  CLASS="textsf">json.load()</SPAN>. Una función que toma como parámetro a otra función ¡es muy útil!
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 7:</SPAN> La estructura de datos <SPAN  CLASS="textsf">entry</SPAN> ahora contiene una clave <SPAN  CLASS="textsf">'internal_id'</SPAN> que tiene como valor a un objeto <SPAN  CLASS="textsf">bytes</SPAN>. Y también contiene una clave <SPAN  CLASS="textsf">'published_date'</SPAN> cuyo valor es un objeto <SPAN  CLASS="textsf">time.struct_time</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Sin embargo, aún queda un pequeño tema por tratar.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; shell
+1
+&#187;&gt; import customserializer
+&#187;&gt; with open('entry.json', 'r', encoding='utf-8') as f:
+...     entry2 = json.load(f, object_hook=customserializer.from_json)
+... 
+&#187;&gt; entry2 == entry
+False
+&#187;&gt; entry['tags']  
+('diveintopython', 'docbook', 'html')
+&#187;&gt; entry2['tags']
+['diveintopython', 'docbook', 'html']</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Línea 7:</SPAN> Incluso después de utilizar la función <SPAN  CLASS="textsf">to_json()</SPAN> en la serialización y la función <SPAN  CLASS="textsf">from_json()</SPAN> en la deserialización, aún no hemos recreado la réplica perfecta de la estructura original ¿porqué no?
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 9:</SPAN> En la estructura de datos original el valor de la clave <SPAN  CLASS="textsf">'tags'</SPAN> era una tupla de tres cadenas.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Línea 11:</SPAN> Pero en la estructura <SPAN  CLASS="textsf">entry2</SPAN> el valor de la clave <SPAN  CLASS="textsf">'tags'</SPAN> es una <SPAN  CLASS="textbf">lista</SPAN> de tres cadenas. <SPAN  CLASS="textsf">JSON</SPAN> no distingue entre tuplas y listas; solamente tiene un tipo de datos parecido a la lista, el array, y el módulo <SPAN  CLASS="textsf">json</SPAN> de Python convierte calladamente ambos tipos, listas y tuplas, en arrays de <SPAN  CLASS="textsf">JSON</SPAN> durante la serialización. Para la mayoría de usos, es posible ignorar esta diferencia, pero conviene saberlo cuando se utiliza este módulo <SPAN  CLASS="textsf">json</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION0011120000000000000000">
+<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">12</SPAN> Lecturas recomendadas</A>
+</H1>
+
+<P>
+Muchos artículos del módulo <SPAN  CLASS="textsf">pickle</SPAN> hacen referencia a <SPAN  CLASS="textsf">cPickle</SPAN>. En Python 2 existen dos implementaciones del módulo <SPAN  CLASS="textsf">pickle</SPAN>, uno escrito en Python puro y otro escrito en C (pero que se puede llamar desde Python). En Python 3 se han consolidado ambos módulos, por lo que siempre deberías utilizar <SPAN  CLASS="textsf">import pickle</SPAN>. 
+
+<P>
+Sobre el módulo <SPAN  CLASS="textsf">pickle</SPAN>:
+
+<P>
+
+<UL>
+<LI>el módulo <SPAN  CLASS="textsf">pickle</SPAN>: <BR>
+http://docs.python.org/3.1/library/pickle.htmlhttp://docs.python.org/3.1/library/pickle.html
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textsf">pickle</SPAN> y <SPAN  CLASS="textsf">cPickle</SPAN> --serialización de objetos en Python: <BR>
+http://www.doughellmann.com/PyMOTW/pickle/http://www.doughellmann.com/PyMOTW/pickle/
+
+<P>
+</LI>
+<LI>Utilización de <SPAN  CLASS="textsf">pickle</SPAN>: <BR>
+http://wiki.python.org/moin/UsingPicklehttp://wiki.python.org/moin/UsingPickle
+
+<P>
+</LI>
+<LI>Gestión de la persistencia en Python: <BR>
+http://www.ibm.com/developerworks/library/l-pypers.htmlhttp://www.ibm.com/developerworks/library/l-pypers.html
+
+<P>
+</LI>
+</UL>
+
+<P>
+Sobre el módulo <SPAN  CLASS="textsf">json</SPAN>:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textsf">json</SPAN> -- Serializador de la notación de objetos de JavaScript: <BR>
+http://www.doughellmann.com/PyMOTW/json/http://www.doughellmann.com/PyMOTW/json/
+
+<P>
+</LI>
+<LI>Codificación y decodificación JSON en Python utilizando objetos a medida: <BR>
+http://blog.quaternio.net/2009/07/16/json-encoding-and-decoding-with-custom-objects-in-python/http://blog.quaternio.net/2009/07/16/json-encoding-and-decoding-with-custom-objects-in-python/
+
+<P>
+</LI>
+</UL>
+
+<P>
+Sobre la extensibilidad de pickle:
+
+<UL>
+<LI>Sobre el almacenamiento de instancias de clase: <BR>
+http://docs.python.org/3.1/library/pickle.html#pickling-class-instanceshttp://docs.python.org/3.1/library/pickle.html#pickling-class-instances
+
+<P>
+</LI>
+<LI>Persistencia de objetos externos: <BR>
+http://docs.python.org/3.1/library/pickle.html#persistence-of-external-objectshttp://docs.python.org/3.1/library/pickle.html#persistence-of-external-objects
+
+<P>
+</LI>
+<LI>Manejo de objetos con estado: <BR>
+http://docs.python.org/3.1/library/pickle.html#handling-stateful-objectshttp://docs.python.org/3.1/library/pickle.html#handling-stateful-objects
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html801"
+  HREF="node12.html">9. Caso de estudio:</A>
+<B> Subir a:</B> <A NAME="tex2html799"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html793"
+  HREF="node10.html">7. XML</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>

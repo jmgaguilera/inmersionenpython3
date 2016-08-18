@@ -1,0 +1,50 @@
+No implementation found for style `graphicx'
+No implementation found for style `textpos'
+No implementation found for style `eso-pic'
+No implementation found for style `xcolor'
+No implementation found for style `fontspec'
+No implementation found for style `mathabx'
+No implementation found for style `polyglossia'
+No implementation found for style `listings'
+No implementation found for style `hyperref'
+No implementation found for style `soul'
+No implementation found for style `xeCJK'
+No implementation found for style `placeins'
+No implementation found for style `pbox'
+No implementation found for style `tikz'
+No implementation found for style `pgfornament'
+
+*** wrap_cmd_difl not defined, cannot wrap \difl 
+
+*** wrap_cmd_cajaTexto not defined, cannot wrap \cajaTexto 
+
+*** wrap_cmd_difll not defined, cannot wrap \difll 
+
+*** wrap_cmd_cajaTextoAncho not defined, cannot wrap \cajaTextoAncho 
+
+*** wrap_cmd_diflll not defined, cannot wrap \diflll 
+
+*** wrap_cmd_difllll not defined, cannot wrap \difllll 
+
+*** wrap_cmd_diflllll not defined, cannot wrap \diflllll 
+
+? brace missing for \
+
+Substitution of arg to newlabelxx delayed.
+
+redefining command \ 
+
+? brace missing for \oldcontentsline
+
+? brace missing for \oldnewlabel
+
+\setcounter{chapter}{-2} ignored, cannot reduce from 0
+
+? brace missing for \roman
+
+counter  not defined
+
+? brace missing for \index
+couldn't convert character pdot into available encodings
+
+ ...set $ACCENT_IMAGES  to get an image 

@@ -1,0 +1,2174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>2. Tipos de dato nativos</TITLE>
+<META NAME="description" CONTENT="2. Tipos de dato nativos">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node6.html">
+<LINK REL="previous" HREF="node4.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node6.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html662"
+  HREF="node6.html">3. Comprensiones</A>
+<B> Subir a:</B> <A NAME="tex2html660"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html654"
+  HREF="node4.html">1. Tu primer programa</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html663"
+  HREF="node5.html#SECTION00510000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+<LI><A NAME="tex2html664"
+  HREF="node5.html#SECTION00520000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN> Booleanos</A>
+<LI><A NAME="tex2html665"
+  HREF="node5.html#SECTION00530000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN> Números</A>
+<UL>
+<LI><A NAME="tex2html666"
+  HREF="node5.html#SECTION00531000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN> Convertir enteros en flotantes y viceversa</A>
+<LI><A NAME="tex2html667"
+  HREF="node5.html#SECTION00532000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN> Operaciones numéricas habituales</A>
+<LI><A NAME="tex2html668"
+  HREF="node5.html#SECTION00533000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">3</SPAN> Fracciones</A>
+<LI><A NAME="tex2html669"
+  HREF="node5.html#SECTION00534000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN> Trigonometría</A>
+<LI><A NAME="tex2html670"
+  HREF="node5.html#SECTION00535000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">5</SPAN> Números en un contexto booleano</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html671"
+  HREF="node5.html#SECTION00540000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN> Listas</A>
+<UL>
+<LI><A NAME="tex2html672"
+  HREF="node5.html#SECTION00541000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Crear una lista</A>
+<LI><A NAME="tex2html673"
+  HREF="node5.html#SECTION00542000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Partición de listas</A>
+<LI><A NAME="tex2html674"
+  HREF="node5.html#SECTION00543000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN> Añadir elementos a una lista</A>
+<LI><A NAME="tex2html675"
+  HREF="node5.html#SECTION00544000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN> Búsqueda de valores en una lista</A>
+<LI><A NAME="tex2html676"
+  HREF="node5.html#SECTION00545000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN> Eliminar elementos de una lista</A>
+<LI><A NAME="tex2html677"
+  HREF="node5.html#SECTION00546000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN> Eliminar elementos de una lista: ronda extra</A>
+<LI><A NAME="tex2html678"
+  HREF="node5.html#SECTION00547000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN> Listas en contextos booleanos</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html679"
+  HREF="node5.html#SECTION00550000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN> Tuplas</A>
+<UL>
+<LI><A NAME="tex2html680"
+  HREF="node5.html#SECTION00551000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> Tuplas en un contexto booleano</A>
+<LI><A NAME="tex2html681"
+  HREF="node5.html#SECTION00552000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">2</SPAN> Asignar varios valores a la vez</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html682"
+  HREF="node5.html#SECTION00560000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN> Conjuntos</A>
+<UL>
+<LI><A NAME="tex2html683"
+  HREF="node5.html#SECTION00561000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN> Creación de conjuntos</A>
+<LI><A NAME="tex2html684"
+  HREF="node5.html#SECTION00562000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">2</SPAN> Modificación de conjuntos</A>
+<LI><A NAME="tex2html685"
+  HREF="node5.html#SECTION00563000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">3</SPAN> Eliminar elementos de un conjunto</A>
+<LI><A NAME="tex2html686"
+  HREF="node5.html#SECTION00564000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">4</SPAN> Operaciones típicas de conjuntos</A>
+<LI><A NAME="tex2html687"
+  HREF="node5.html#SECTION00565000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">5</SPAN> Los conjuntos en contextos booleanos</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html688"
+  HREF="node5.html#SECTION00570000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN> Diccionarios</A>
+<UL>
+<LI><A NAME="tex2html689"
+  HREF="node5.html#SECTION00571000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN> Creación de diccionarios</A>
+<LI><A NAME="tex2html690"
+  HREF="node5.html#SECTION00572000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN> Modificación de un diccionario</A>
+<LI><A NAME="tex2html691"
+  HREF="node5.html#SECTION00573000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN> Diccionarios con valores mixtos</A>
+<LI><A NAME="tex2html692"
+  HREF="node5.html#SECTION00574000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN> Diccionarios en un contexto booleano</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html693"
+  HREF="node5.html#SECTION00580000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">8</SPAN> <SPAN  CLASS="textsf">None</SPAN></A>
+<UL>
+<LI><A NAME="tex2html694"
+  HREF="node5.html#SECTION00581000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">1</SPAN> <SPAN  CLASS="textsf">None</SPAN> en un contexto booleano</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html695"
+  HREF="node5.html#SECTION00590000000000000000"><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">9</SPAN> Lecturas complementarias</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00500000000000000000"></A><A NAME="ch:tiposdedato"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN>. Tipos de dato nativos
+</H1>
+
+<P>
+Nivel de dificultad:2 sobre 5
+
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``La curiosidad es la base de toda la filosofía, 
+<BR>
+las preguntas alimentan su progreso, 
+<BR>
+la ignorancia su fin.''
+<BR>--Michel de Montaigne</I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION00510000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+</H1>
+
+<P>
+Aparta tu primer programa en Python durante unos minutos, y vamos a hablar sobre tipos de dato. En Python cada valor que exista, tiene un tipo de dato, pero no es necesario declarar el tipo de las variables. ¿Como funciona? Basado en cada asignación a la variable, Python deduce el tipo que es y lo conserva internamente.
+
+<P>
+Python proporciona muchos tipos de dato nativos. A continuación se muestran los más importantes:
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Booleanos:</SPAN> Su valor es <SPAN  CLASS="textsf">True</SPAN> o <SPAN  CLASS="textsf">False</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Números:</SPAN> Pueden ser enteros (1, 2, 3,...), flotantes (1.1, 1.2, 1.3,...)<A NAME="tex2html54"
+  HREF="footnode.html#foot3397"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>, fracciones (1/2, 1/3, 2/3,...), o incluso números complejos (<!-- MATH
+ $i = sqrt(-1)$
+ --><SPAN CLASS="MATH"><I>i</I> = <I>sqrt</I>(- 1)</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Cadenas:</SPAN> Son secuencias de caracteres Unicode, por ejemplo, un documento HTML.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Bytes y arrays de bytes:</SPAN> por ejemplo, un fichero de imágenes JPEG.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Listas:</SPAN> Son secuencias ordenadas de valores.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Tuplas:</SPAN> Son secuencias ordenadas e inmutables de valores.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Conjuntos:</SPAN> Son ``bolsas'' de valores sin ordenar.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Diccionarios:</SPAN> Son ``bolsas'' de sin ordenar de parejas clave-valor. Es posible buscar directamente por clave.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Aparte de estos, hay bastantes más tipos. Todo es un objeto en Python, por lo que existen tipos <SPAN  CLASS="textit">module, function, class, method, file</SPAN>, e incluso <SPAN  CLASS="textit">compiled code</SPAN><A NAME="tex2html55"
+  HREF="footnode.html#foot2545"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>. Ya has visto alguno de ellos en el capítulo anterior. En el capítulo&nbsp;<A HREF="node8.html#ch:clases">7</A> aprenderás las clases, y en el capítulo&nbsp;<A HREF="#ch:ficheros">11</A> los ficheros (también llamados archivos).
+
+<P>
+Las cadenas y bytes son suficientemente importantes --y complejas-- como para merecer un capítulo aparte. Vamos a ver los otros tipos de dato en primer lugar.
+
+<P>
+
+<H1><A NAME="SECTION00520000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN> Booleanos</A>
+</H1>
+
+<P>
+<blockquote>En la práctica, puedes utilizar casi cualquier expresión en un contexto booleano.</blockquote>  
+
+<P>
+El tipo de datos booleano solamente tiene dos valores posibles: verdadero o falso. Python dispone de dos constantes denominadas <SPAN  CLASS="textsf">True</SPAN> y <SPAN  CLASS="textsf">False</SPAN>, que se pueden utilizar para asignar valores booleanos directamente. Las expresiones también se pueden evaluar a un valor booleano. En algunos lugares (como las sentencias <SPAN  CLASS="textsf">if</SPAN>, Python espera una expresión que se pueda evaluar a un valor booleano. Estos sitios se denominan <SPAN  CLASS="textit">contextos booleanos</SPAN>. Puedes utilizar casi cualquier expresión en un contexto booleano, Python intentará determinar si el resultado puede ser verdadero o falso. Cada tipo de datos tiene sus propias reglas para identificar qué valores equivalen a verdadero y falso en un contexto booleano (Esto comenzará a tener un sentido más claro para ti cuando veas algunos ejemplos concretos).
+
+<P>
+Por ejemplo:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+    if tamanyo &lt; 0:
+        raise ValueError('el n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>mero debe ser no negativo')</pre></TD></TR>
+</TABLE>
+
+<P>
+La variable <SPAN  CLASS="textsf">tamanyo</SPAN> contiene un valor entero, <SPAN  CLASS="textsf">0</SPAN> es un entero, y <SPAN  CLASS="textsf">&lt;</SPAN> es un operador numérico. El resultado de la expresión es siempre un valor de tipo booleano. Puedes comprobarlo en la consola interactiva de Python:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; tamanyo = 1
+&#187;&gt; tamanyo &lt; 0
+False
+&#187;&gt; tamanyo = 0
+&#187;&gt; tamanyo &lt; 0
+False
+&#187;&gt; tamanyo = -1
+&#187;&gt; tamanyo &lt; 0
+True</pre></TD></TR>
+</TABLE>
+
+<P>
+Debido a la herencia que se conserva de Python 2, los booleanos se pueden tratar como si fuesen números. <SPAN  CLASS="textsf">True</SPAN> es <SPAN  CLASS="textsf">1</SPAN> y <SPAN  CLASS="textsf">False</SPAN> es <SPAN  CLASS="textsf">0</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; True + True
+2
+&#187;&gt; True - False
+1
+&#187;&gt; True * False
+0
+&#187;&gt; True / False
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+ZeroDivisionError: int division or modulo by zero</pre></TD></TR>
+</TABLE>
+
+<P>
+Aún así, no hagas esto. ¡Olvida incluso que lo he mencionado!<A NAME="tex2html56"
+  HREF="footnode.html#foot2577"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>
+<P>
+
+<H1><A NAME="SECTION00530000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN> Números</A>
+</H1>
+
+<P>
+Los números son maravillosos. Tienes un montón donde elegir. Python proporciona enteros y números de coma flotante, pero no existen declaraciones de tipo para distinguirlos. Python los distingue por la existencia o no del punto decimal<A NAME="tex2html57"
+  HREF="footnode.html#foot2579"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; type(1)
+&lt;class 'int'&gt;
+&#187;&gt; isinstance(1, int)
+True
+&#187;&gt; 1 + 1
+2
+&#187;&gt; 1 + 1.0
+2.0
+&#187;&gt; type(2.0)
+&lt;class 'float'&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> la función <SPAN  CLASS="textsf">type()</SPAN> permite consultar el tipo de cualquier valor o variable. Como era de esperar <SPAN  CLASS="textsf">1</SPAN> es un valor de tipo <SPAN  CLASS="textsf">int</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> la función <SPAN  CLASS="textsf">isinstance()</SPAN> permite chequear si un valor o variable es de un tipo determinado.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> La suma de dos valores de tipo <SPAN  CLASS="textsf">int</SPAN> da como resultado otro valor de tipo <SPAN  CLASS="textsf">int</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> La suma de un valor <SPAN  CLASS="textsf">int</SPAN> con otro de tipo <SPAN  CLASS="textsf">float</SPAN> da como resultado un valor de tipo <SPAN  CLASS="textsf">float</SPAN>. Python transforma el valor entero en un valor de tipo <SPAN  CLASS="textsf">float</SPAN> antes de hacer la suma. El valor que se devuelve es de tipo <SPAN  CLASS="textsf">float</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00531000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN> Convertir enteros en flotantes y viceversa</A>
+</H2>
+
+<P>
+Como acabas de ver, algunos operadores (como la suma) convierten los números enteros en flotantes si es necesario. También puedes convertirlos tú mismo.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; float(2)
+2.0
+&#187;&gt; int(2.0)
+2
+&#187;&gt; int(2.5)
+2
+&#187;&gt; int(-2.5)
+-2
+&#187;&gt; 1.12345678901234567890
+1.1234567890123457
+&#187;&gt; type(1000000000000000)
+&lt;class 'int'&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Utilizando la función <SPAN  CLASS="textsf">float()</SPAN> puedes convertir explícitamente un valor de tipo <SPAN  CLASS="textsf">int</SPAN> en <SPAN  CLASS="textsf">float</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Como era de prever, la conversión inversa se hace utilizando la función <SPAN  CLASS="textsf">int()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> La función <SPAN  CLASS="textsf">int()</SPAN> trunca el valor flotante, no lo redondea.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> La función <SPAN  CLASS="textsf">int()</SPAN> trunca los valores negativos hacia el <SPAN  CLASS="textsf">0</SPAN>. Es una verdadera función de truncado, no es una función de suelo<A NAME="tex2html58"
+  HREF="footnode.html#foot3398"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> En Python, la precisión de los números de punto flotante alcanza 15 posiciones decimales.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> En Python, la longitud de los números enteros no está limitada. Pueden tener tantos dígitos como se requieran.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+Python 2 tenía dos tipos separados <SPAN  CLASS="textsf">int</SPAN> y <SPAN  CLASS="textsf">long</SPAN>. El tipo <SPAN  CLASS="textsf">int</SPAN> estaba limitado por el sistema <SPAN  CLASS="textsf">sys.maxint</SPAN>, siendo diferente según la plataforma, pero usualmente era <!-- MATH
+ $2^{32} - 1$
+ --><SPAN CLASS="MATH">2<SUP>32</SUP> - 1</SPAN>. Python 3 tiene un único tipo entero que, en su mayor parte, equivale al tipo <SPAN  CLASS="textsf">long</SPAN> de Python 2. Para conocer más detalles consulta http://www.python.org/dev/peps/pep-0237PEP 237.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION00532000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN> Operaciones numéricas habituales</A>
+</H2>
+
+<P>
+Puedes hacer muchos tipos de cálculos con números.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; 11 / 2
+5.5
+&#187;&gt; 11 // 2
+5
+&#187;&gt; -11 // 2
+-6
+&#187;&gt; 11.0 // 2
+5.0
+&#187;&gt; 11 ** 2
+121
+&#187;&gt; 11 
+1</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> El operador <SPAN  CLASS="textsf">/</SPAN> efectúa una división en punto flotante. El resultado siempre es de tipo <SPAN  CLASS="textsf">float</SPAN>, incluso aunque ambos operadores (dividendo y divisor) sean <SPAN  CLASS="textsf">int</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> El operador <SPAN  CLASS="textsf">//</SPAN> efectúa una división entera algo extraña. Cuando el resultado es positivo, el resultado es <SPAN  CLASS="textsf">int</SPAN> truncado sin decimales (no redondeado).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Cuando el operador <SPAN  CLASS="textsf">//</SPAN> se usa para dividir un número negativo el resultado se redondea hacia abajo al entero más próximo (en este caso el resultado de la división sería <SPAN  CLASS="textsf">-5.5</SPAN>, que redondeado es <SPAN  CLASS="textsf">-5</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> El operador <SPAN  CLASS="textsf">**</SPAN> significa ``elevado a la potencia de''. <SPAN CLASS="MATH">11<SUP>2</SUP></SPAN> es <SPAN  CLASS="textsf">121</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> El operador <SPAN  CLASS="textsf">%</SPAN> devuelve el resto de la división entera. <SPAN  CLASS="textsf">11</SPAN> dividido entre <SPAN  CLASS="textsf">2</SPAN> es <SPAN  CLASS="textsf">5</SPAN> con un resto de <SPAN  CLASS="textsf">1</SPAN>, por lo que el resultado en este caso es <SPAN  CLASS="textsf">1</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+En Python 2, el operador <SPAN  CLASS="textsf">/</SPAN> se usaba para representar a la división entera, aunque mediante una directiva de Python 2, podías hacer que se comportase como una división de punto flotante. En Python 3, el operador <SPAN  CLASS="textsf">/</SPAN> siempre es una división de punto flotante. Para consultar más detalles puedes mirar http://www.python.org/dev/peps/pep-0238/PEP 238.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION00533000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">3</SPAN> Fracciones</A>
+</H2>
+
+<P>
+Python no está limitado a números enteros y de punto flotante. También puede aplicar toda esa matemática que aprendiste en el instituto y que luego rápidamente olvidaste.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import fractions
+&#187;&gt; x = fractions.Fraction(1, 3)
+&#187;&gt; x
+Fraction(1, 3)
+&#187;&gt; x * 2
+Fraction(2, 3)
+&#187;&gt; fractions.Fraction(6, 4)
+Fraction(3, 2)
+&#187;&gt; fractions.Fraction(0, 0)
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "fractions.py", line 96, in __new__
+    raise ZeroDivisionError('Fraction(
+ZeroDivisionError: Fraction(0, 0)</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Para comenzar a utilizar fracciones hay que importar el módulo <SPAN  CLASS="textsf">fractions</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Para definir una fracción crea un objeto <SPAN  CLASS="textsf">Fraction</SPAN> y pásale el numerador y denominador.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Con las fracciones puedes efectuar los cálculos matemáticos habituales. Estas operaciones devuelven un objeto <SPAN  CLASS="textsf">Fraction</SPAN>, <SPAN  CLASS="textsf">2*(1/2)=(2/3)</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> El objeto <SPAN  CLASS="textsf">Fraction</SPAN> reduce automáticamente las fracciones: <SPAN  CLASS="textsf">(6/4) = (3/2)</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> Python tiene el buen sentido de no crear una fracción con el denominador a cero.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00534000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN> Trigonometría</A>
+</H2>
+
+<P>
+También puedes hacer cálculos trigonométricos en Python.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import math
+&#187;&gt; math.pi
+3.1415926535897931
+&#187;&gt; math.sin(math.pi / 2)
+1.0
+&#187;&gt; math.tan(math.pi / 4)
+0.99999999999999989</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> El módulo <SPAN  CLASS="textsf">math</SPAN> tiene definida una constante que almacena el valor del número <SPAN CLASS="MATH"><I>&#960;</I></SPAN>, la razón de la circunferencia de un círculo respecto de su diámetro.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> En el módulo <SPAN  CLASS="textsf">math</SPAN> se encuentran todas las funciones trigonométricas básicas, incluidas <SPAN  CLASS="textsf">sin(), cos(), tan()</SPAN> y variantes como <SPAN  CLASS="textsf">asin()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> De todos modos ten en cuenta que Python no tiene precisión infinita, <SPAN  CLASS="textsf">tan(<SPAN CLASS="MATH"><I>&#960;</I></SPAN>/4)</SPAN> debería devolver <SPAN  CLASS="textsf">1.0</SPAN>, no <SPAN  CLASS="textsf">0.99999999999999989</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00535000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">5</SPAN> Números en un contexto booleano</A>
+</H2>
+
+<P>
+<blockquote>El valor cero es equivalente a falso y los valores distintos de cero son equivalentes a verdadero.</blockquote>  
+
+<P>
+Los números se pueden utilizar en contextos booleanos, como en la sentencia <SPAN  CLASS="textsf">if</SPAN>. El valor cero es equivalente a falso y los valores distintos de cero son equivalentes a verdadero.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; def es_true(anything):
+...   if anything:
+...     print("s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true")
+...   else:
+...     print("no, es false")
+...
+&#187;&gt; es_true(1)
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true
+&#187;&gt; es_true(-1)
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true
+&#187;&gt; es_true(0)
+no, es false
+&#187;&gt; es_true(0.1)
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true
+&#187;&gt; es_true(0.0)
+no, es false
+&#187;&gt; import fractions
+&#187;&gt; es_true(fractions.Fraction(1, 2))
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true
+&#187;&gt; es_true(fractions.Fraction(0, 1))
+no, es false</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> ¿Sabías que puedes definir tus propias funciones en la consola interactiva de Python? Simplemente pulsa <SPAN  CLASS="textsf">INTRO</SPAN> al final de cada línea, y termina pulsando un último <SPAN  CLASS="textsf">INTRO</SPAN> en una línea en planco para finalizar la definición de la función.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> En un contexto booleano, como el de la sentencia <SPAN  CLASS="textsf">if</SPAN>, los números enteros distintos de cero se evalúan a <SPAN  CLASS="textsf">True</SPAN>; el número cero se evalúa a <SPAN  CLASS="textsf">False</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> Los números en punto flotante distintos de cero son <SPAN  CLASS="textsf">True</SPAN>; <SPAN  CLASS="textsf">0.0</SPAN> se evalúa a <SPAN  CLASS="textsf">False</SPAN>. ¡Ten cuidado con este caso! Al más mínimo fallo de redondeo (que no es imposible, como has visto en el apartado anterior) Python se encontraría comprobando el número <SPAN  CLASS="textsf">0.0000000000001</SPAN> en lugar del <SPAN  CLASS="textsf">0</SPAN> y retornaría <SPAN  CLASS="textsf">True</SPAN>. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 18:</SPAN> Las fracciones también se pueden utilizar en un contexto booleano. <SPAN  CLASS="textsf">Fraction(0, n)</SPAN> se evalúa a <SPAN  CLASS="textsf">False</SPAN> para cualquier valor de <SPAN  CLASS="textsf">n</SPAN>. Todas las otras fracciones se evalúan a <SPAN  CLASS="textsf">True</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00540000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN> Listas</A>
+</H1>
+
+<P>
+El tipo de datos <SPAN  CLASS="textsf">List</SPAN> es el más utilizado en Python. Cuando digo ``lista'', puede que pienses en un ``array<A NAME="tex2html59"
+  HREF="footnode.html#foot2744"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>, cuyo tamaño he declarado anteriormente a su uso, que únicamente puede contener elementos del mismo tipo''. No pienses eso, las listas son mucho más <SPAN  CLASS="textit">guays</SPAN>.
+
+<P>
+<BLOCKQUOTE>
+Una lista de Python es como un array de Perl 5. En Perl 5 las variables que almacenan arrays siempre comienzan con el carácter <SPAN  CLASS="textsf">@</SPAN>. En Python las variables se pueden nombrar como se quiera, ya que Python mantiene el tipo de datos internamente.
+
+</BLOCKQUOTE>
+
+<P>
+<BLOCKQUOTE>
+Una lista de Python es mucho más que un array de Java (aunque puede utilizarse como si lo fuese si eso es lo que quieres). Una analogía mejor sería pensar en la clase <SPAN  CLASS="textsf">ArrayList</SPAN> de Java, que puede almacenar un número arbitrario de objetos y expandir su tamaño dinámicamente al añadir nuevos elementos.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION00541000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Crear una lista</A>
+</H2>
+
+<P>
+Crear una lista es fácil: utiliza unos corchetes para para delimitar una lista de valores separados por coma.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; lista = ['a', 'b', 'jmgaguilera', 'z', 'ejemplo']
+&#187;&gt; lista
+['a', 'b', 'jmgaguilera', 'z', 'ejemplo']
+&#187;&gt; lista[0]
+'a'
+&#187;&gt; lista[4]
+'ejemplo'
+&#187;&gt; lista[-1]
+'ejemplo'
+&#187;&gt; lista[-3]
+'jmgaguilera'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Líneas 1 a 3:</SPAN> Primero definimos una lista de cinco elementos. Observa que mantiene el orden original. No es por casualidad. Una lista es un conjunto ordenado de elementos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Se puede acceder a los elementos de la lista como en el caso de los arrays de Java, teniendo en cuenta que el primer elemento se numera como cero. El primer elemento de cualquier lista no vacía es <SPAN  CLASS="textsf">lista[0]</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> El último elemento de esta lista de cinco elementos es <SPAN  CLASS="textsf">lista[4]</SPAN>, puesto que los elementos se indexan contando desde cero.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Si se usan índices con valor negativo se accede a los elementos de la lista contando desde el final. El último elemento de una lista siempre se puede indexar utilizando <SPAN  CLASS="textsf">lista[-1]</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> Si los números negativos en los índices te resultan confusos, puedes pensar de esta forma: <SPAN  CLASS="textsf">lista[-n] == lista[len(lista)-n]</SPAN>.
+<BR>
+Por eso: <SPAN  CLASS="textsf">lista[-3] == lista[5 - 3] == lista[2]</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00542000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Partición de listas</A>
+</H2>
+
+<P>
+<blockquote>lista[0] es el primer elemento de la lista.</blockquote>  
+
+<P>
+Una vez has definido una lista, puedes obtener cualquier parte de ella como una nueva lista. A esto se le llama <SPAN  CLASS="textit">particionado</SPAN><A NAME="tex2html60"
+  HREF="footnode.html#foot2773"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A> de la lista.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; lista
+['a', 'b', 'jmgaguilera', 'z', 'ejemplo']
+&#187;&gt; lista[1:3]
+['b', 'jmgaguilera']
+&#187;&gt; lista[1:-1]
+['b', 'jmgaguilera', 'z']
+&#187;&gt; lista[0:3]
+['a', 'b', 'jmgaguilera']
+&#187;&gt; lista[:3]
+['a', 'b', 'jmgaguilera']
+&#187;&gt; lista[3:]
+['z', 'ejemplo']
+&#187;&gt; lista[:]
+['a', 'b', 'jmgaguilera', 'z', 'ejemplo']</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Puedes obtener una parte de una lista especificando dos índices. El valor de retorno es una nueva lista que contiene los elementos de la lista original, en orden, comenzando en el elemento que estaba en la posición del primer índice (en este caso <SPAN  CLASS="textsf">lista[1]</SPAN>), hasta el elemento anterior al indicado por el segundo índice (en este caso <SPAN  CLASS="textsf">lista[3]</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN>  El particionado de listas también funciona si uno o ambos índices son negativos. Si te sirve de ayuda puedes imaginártelo así: leyendo la lista de izquierda a derecha, el primer índice siempre especifica el primer elemento que quieres obtener y el segundo índice el primer elemento que no quieres obtener. El valor de retorno es una lista con todos los elementos que están entre ambos índices.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Los índices de las listas comienzan a contar en cero, por eso un particionado de <SPAN  CLASS="textsf">lista[0:3]</SPAN> devuelve los primeros tres elementos de la lista, comenzando en <SPAN  CLASS="textsf">lista[0]</SPAN>, pero sin incluir <SPAN  CLASS="textsf">lista[3]</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> Si el primer índice es cero, puedes omitirlo. Python lo deducirá. Por eso <SPAN  CLASS="textsf">lista[:3]</SPAN> es lo mismo que <SPAN  CLASS="textsf">lista[0:3]</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> De igual forma, si el segundo índice es la longitud de la cadena, puedes omitirlo. Por eso, en este caso, <SPAN  CLASS="textsf">lista[3:]</SPAN> es lo mismo que <SPAN  CLASS="textsf">lista[3:5]</SPAN>, al tener esta lista cinco elementos. Existe una elegante simetría aquí. En esta lista de cinco elementos <SPAN  CLASS="textsf">lista[:3]</SPAN> devuelve los 3 primeros elementos y <SPAN  CLASS="textsf">lista[3:]</SPAN> devuelve una lista con los restantes. De hecho, <SPAN  CLASS="textsf">lista[:n]</SPAN> siempre retornará los <SPAN  CLASS="textsf">n</SPAN> primeros elementos y <SPAN  CLASS="textsf">lista[n:]</SPAN> los restantes, sea cual sea el tamaño de la lista.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> Si se omiten ambos índices, se obtiene una nueva lista con todos los elementos de la lista original. Es una forma rápida de hacer una copia de una lista.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00543000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN> Añadir elementos a una lista</A>
+</H2>
+
+<P>
+Existen cuatro maneras de añadir elementos a una lista.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; lista = ['a']
+&#187;&gt; lista = lista + [2.0, 3]
+&#187;&gt; lista
+['a', 2.0, 3]
+&#187;&gt; lista.append(True)
+&#187;&gt; lista
+['a', 2.0, 3, True]
+&#187;&gt; lista.extend(['cuatro', 'omega'])
+&#187;&gt; lista
+['a', 2.0, 3, True, 'cuatro', 'omega']
+&#187;&gt; lista.insert(0, 'omega')
+&#187;&gt; lista
+['omega', 'a', 2.0, 3, True, 'cuatro', 'omega']</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> El operador <SPAN  CLASS="textsf">+</SPAN> crea una nueva lista a partir de la concatenación de otras dos. Una lista puede contener cualquier número de elementos, no hay límite de tamaño (salvo el que imponga la memoria disponible). Si embargo, si la memoria es importante, debes tener en cuenta que la concatenación de listas crea una tercera lista en memoria. En este caso, la nueva lista se asigna inmediatamente a la variable <SPAN  CLASS="textsf">lista</SPAN>. Por eso, esta línea de código se efectúa en dos pasos --concatenación y luego asignación-- que puede (temporalmente) consumir mucha memoria cuando las listas son largas.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Una lista puede contener elementos de cualquier tipo, y cada elemento puede ser de un tipo diferente. Aquí tenemos una lista que contiene una cadena de texto, un número en punto flotante y un número entero.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> El método <SPAN  CLASS="textsf">append()</SPAN> añade un nuevo elemento, único, al final de la lista (¡Ahora ya tenemos <SPAN  CLASS="textit">cuatro</SPAN> tipos de dato diferentes en la lista!).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Las listas son clases. ``Crear'' una lista realmente consiste en instanciar una clase. Por eso las listas tienen métodos que sirven para operar con ellas. El método <SPAN  CLASS="textsf">extend()</SPAN> toma un parámetro, una lista, y añade cada uno de sus elementos a la lista original.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> El método <SPAN  CLASS="textsf">insert()</SPAN> inserta un único elemento a la lista original. El primer parámetro es el índice del primer elemento de la lista original que se desplazará de su posición para añadir los nuevos. Los elementos no tienen que ser únicos; por ejemplo, ahora hay dos elementos separados en la lista cuyo valor es ``omega'': el primer elemento <SPAN  CLASS="textsf">lista[0]</SPAN> y el último elemento <SPAN  CLASS="textsf">lista[6]</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+La llamada al método <SPAN  CLASS="textsf">lista.insert(0,valor)</SPAN> es equivalente a la función <SPAN  CLASS="textsf">unshift()</SPAN> de Perl. Añade un elemento al comienzo de la lista, y los restantes elementos se desplazan para hacer sitio.
+
+</BLOCKQUOTE>
+
+<P>
+Vamos a ver más de cerca la diferencia entre <SPAN  CLASS="textsf">append()</SPAN> y <SPAN  CLASS="textsf">extend()</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; lista = ['a', 'b', 'c']
+&#187;&gt; lista.extend(['d', 'e', 'f'])
+&#187;&gt; lista
+['a', 'b', 'c', 'd', 'e', 'f']
+&#187;&gt; len(lista)
+6
+&#187;&gt; lista[-1]
+'f'
+&#187;&gt; lista.append(['g', 'h', 'i'])
+&#187;&gt; lista
+['a', 'b', 'c', 'd', 'e', 'f', ['g', 'h', 'i']]
+&#187;&gt; len(lista)
+7
+&#187;&gt; lista[-1]
+['g', 'h', 'i']</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> El método <SPAN  CLASS="textsf">extend()</SPAN> recibe un único parámetro, que siempre es una lista, y añade cada uno de sus elementos al final de la lista original <SPAN  CLASS="textsf">lista</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Si una lista de tres elementos se extiende con una lista de otros tres elementos, la lista resultante tiene seis elementos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> Por otra parte, el método <SPAN  CLASS="textsf">append()</SPAN> recibe un único parámetro, que puede ser de cualquier tipo. En este caso estamos ejecutando el método pasándole una lista de tres elementos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 12:</SPAN> Si partes de una lista de seis elementos y añades otra lista a ella, finalizas con una lista de... Siete elementos. ¿Porqué siete? Porque el último elemento (que acabas de añadir) <SPAN  CLASS="textit">es en sí mismo una lista</SPAN>. Una lista puede contener datos de cualquier tipo, incluidas otras listas. Puede que sea lo que quieras o puede que no. Pero es lo que le has pedido a Python al ejecutar <SPAN  CLASS="textsf">append()</SPAN> con una lista como parámetro. 
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00544000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN> Búsqueda de valores en una lista</A>
+</H2>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; lista = ['a', 'b', 'nuevo', 'mpilgrim', 'nuevo']
+&#187;&gt; lista.count('nuevo')
+2
+&#187;&gt; 'nuevo' in lista
+True
+&#187;&gt; 'c' in lista
+False
+&#187;&gt; lista.index('mpilgrim')
+3
+&#187;&gt; lista.index('nuevo')
+2
+&#187;&gt; lista.index('c')
+Traceback (innermost last):
+  File "&lt;interactive input&gt;", line 1, in ?
+ValueError: list.index(x): x not in list</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Como te puedes imaginar, el método <SPAN  CLASS="textsf">count()</SPAN> devuelve el número de veces que aparece un valor específico --el parámetro-- en la lista.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Si lo único que quieres saber es si un valor se encuentra o no en la lista, el operador <SPAN  CLASS="textsf">in</SPAN> es ligeramente más rápido que el método <SPAN  CLASS="textsf">count()</SPAN>. El operador <SPAN  CLASS="textsf">in</SPAN> devuelve <SPAN  CLASS="textsf">True</SPAN> o <SPAN  CLASS="textsf">False</SPAN>, no indica en qué lugar de la lista se encuentra el elemento, ni el número de veces que aparece.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Si necesitas conocer el lugar exacto en el que se encuentra un valor dentro de la lista debes utilizar el método <SPAN  CLASS="textsf">index()</SPAN>. Por defecto, este método buscará en toda la lista, aunque es posible especificar un segundo parámetro para indicar el lugar de comienzo (0 es el primer índice), e incluso, un tercer elemento para indicar el índice en el que parar la búsqueda.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> El método <SPAN  CLASS="textsf">index()</SPAN> encuentra la <SPAN  CLASS="textit">primera</SPAN> ocurrencia del valor en la lista. En este caso el valor ``nuevo'' aparece dos veces, en la posición 2 y en la 4, el método devuelve la posición de la primera ocurrencia: 2.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 12:</SPAN> Puede que no esperases, pero el método <SPAN  CLASS="textsf">index()</SPAN> eleva una excepción <SPAN  CLASS="textsf">ValueError</SPAN> cuando no es capaz de encontrar el elemento en la lista.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¡Espera un momento! ¿Qué significa eso? Pues lo que he dicho: el método <SPAN  CLASS="textsf">index()</SPAN> eleva una excepción si no es capaz de encontrar el valor en la lista. Esto es diferente de la mayoría de los lenguajes de programación que suelen devolver algún índice no válido, como por ejemplo, -1. Aunque al principio te pueda parecer algo desconcertante, creo que con el tiempo llegarás a apreciarlo. Significa que tu programa fallará en la fuente del problema, en lugar de fallar más tarde en algún otro lugar por no haber contemplado la posibilidad de que un elemento no se encontrara en la lista. Recuerda que <SPAN  CLASS="textsf">-1 es un valor de índice válido</SPAN>. Si el método <SPAN  CLASS="textsf">index()</SPAN> devolviera <SPAN  CLASS="textsf">-1</SPAN>... ¡las sesiones de depuración serían bastante complicadas!
+
+<P>
+
+<H2><A NAME="SECTION00545000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN> Eliminar elementos de una lista</A>
+</H2>
+
+<P>
+<blockquote>Las listas nunca tienen huecos</blockquote>  
+
+<P>
+Las listas se expanden y contraen de forma automática. Ya has visto como expandirlas. Existen varios modos de eliminar elementos de una lista.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; lista = ['a', 'b', 'nuevo', 'mpilgrim', 'nuevo']
+&#187;&gt; lista[1]
+'b'
+&#187;&gt; del lista[1]
+&#187;&gt; lista
+['a', 'nuevo', 'mpilgrim', 'nuevo']
+&#187;&gt; lista[1]
+'nuevo'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Para eliminar un elemento de una lista puedes utilizar la sentencia <SPAN  CLASS="textsf">del</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Si intentas acceder al elemento en la posición <SPAN  CLASS="textsf">1</SPAN> después de borrar el índice <SPAN  CLASS="textsf">1</SPAN> <SPAN  CLASS="textit">no</SPAN> da error. Después de borrar un elemento, todos los elementos que iban detrás de él se desplazan a la izquierda para ``rellenar el vacío'' que dejó el elemento eliminado.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¿Y si no conoces la posición del elemento? No hay problema, en vez de la posición, puedes utilizar el valor del elemento para eliminarlo.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; lista.remove('nuevo')
+&#187;&gt; lista
+['a', 'mpilgrim', 'nuevo']
+&#187;&gt; lista.remove('nuevo')
+&#187;&gt; lista
+['a', 'mpilgrim']
+&#187;&gt; lista.remove('nuevo')
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+ValueError: list.remove(x): x not in list</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Puedes eliminar un elemento de una lista utilizando el método <SPAN  CLASS="textsf">remove()</SPAN>. Este método recibe como parámetro un valor y elimina la primera ocurrencia de ese valor en la lista. Como antes, todos los elementos a la derecha del eliminado, se desplazan a la izquierda para ``rellenar el vacío'', puesto que las listas nunca tienen huecos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Puedes llamar al método <SPAN  CLASS="textsf">remove()</SPAN> tantas veces como sea necesario. Pero si se intenta eliminar un valor que no se encuentre en la lista, el método elevará una excepción <SPAN  CLASS="textsf">ValueError</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00546000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN> Eliminar elementos de una lista: ronda extra</A>
+</H2>
+
+<P>
+Otro método de interés que tiene las listas es <SPAN  CLASS="textsf">pop()</SPAN>, que permite eliminar elementos de una lista de un modo especial.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; lista = ['a', 'b', 'nuevo', 'mpilgrim']
+&#187;&gt; lista.pop()
+'mpilgrim'
+&#187;&gt; lista
+['a', 'b', 'nuevo']
+&#187;&gt; lista.pop(1)
+'b'
+&#187;&gt; lista
+['a', 'nuevo']
+&#187;&gt; lista.pop()
+'nuevo'
+&#187;&gt; lista.pop()
+'a'
+&#187;&gt; lista.pop()
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+IndexError: pop from empty list</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Cuando se llama sin parámetros, el método <SPAN  CLASS="textsf">pop()</SPAN> elimina el último valor de la lista y <SPAN  CLASS="textit">devuelve el valor eliminado</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Es posible extraer cualquier elemento de una lista. Para ello hay que pasar el índice deseado al método <SPAN  CLASS="textsf">pop()</SPAN>. Se eliminará el elemento indicado, los siguientes se moverán a la izquierda ``rellenar el vacío'' y se devuelve el valor recién eliminado.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 14:</SPAN> Si llamas al método <SPAN  CLASS="textsf">pop()</SPAN> con una lista vacía se eleva una excepción.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+El método <SPAN  CLASS="textsf">pop()</SPAN> sin argumentos se comporta igual que la función <SPAN  CLASS="textsf">pop()</SPAN> de Perl. Elimina el último valor de la lista y lo devuelve. Perl dispone de otra función, <SPAN  CLASS="textsf">shift()</SPAN>, que eliminar el primer elemento y devuelve su valor; en Python es equivalente a <SPAN  CLASS="textsf">lista.pop(0)</SPAN>.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION00547000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN> Listas en contextos booleanos</A>
+</H2>
+
+<P>
+<blockquote>Las listas vacías equivalen a falso, todas las demás a verdadero.</blockquote>  
+
+<P>
+Puedes utilizar las listas en contextos booleanos, como en la sentencia <SPAN  CLASS="textsf">if</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; def es_true(anything):
+...   if anything:
+...     print("s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true")
+...   else:
+...     print("no, es false")
+...
+&#187;&gt; es_true([])
+no, es false
+&#187;&gt; es_true(['a'])
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true
+&#187;&gt; es_true([False])
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> En un contexto booleano una lista vacía vale <SPAN  CLASS="textsf">False</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> Cualquier lista con al menos un elemento vale <SPAN  CLASS="textsf">True</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> Cualquier lista con al menos un elemento vale <SPAN  CLASS="textsf">True</SPAN>. El valor de los elementos de la lista es irrelevante.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00550000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN> Tuplas</A>
+</H1>
+
+<P>
+Una tupla es una lista inmutable. Una tupla no se puede modificar después de haberla creado.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; tupla = ("a", "b", "mpilgrim", "z", "ejemplo")
+&#187;&gt; tupla
+('a', 'b', 'mpilgrim', 'z', 'ejemplo')
+&#187;&gt; tupla[0]
+'a'
+&#187;&gt; tupla[-1]
+'ejemplo'
+&#187;&gt; tupla[1:3]
+('b', 'mpilgrim')</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Las tuplas se definen de la misma forma que las listas. La única diferencia es que los elementos se cierran entre paréntesis en lugar de corchetes.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Los elementos de una tupla están ordenados como los de una lista. Los índices también comienzan a contar en cero, por lo que el primer elemento de una tupla siempre es <SPAN  CLASS="textsf">tupla[0]</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Los índices negativos cuentan desde el final de la tupla como en las listas.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> El particionado también funciona como en las listas. Una partición de una tupla es una nueva tupla con los elementos seleccionados.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Lo que diferencia a las tuplas de las listas es que las primeras no se pueden modificar. En términos técnicos se dice que son inmutables. En términos prácticos esto significa que no tienen métodos que te permitan modificarlas. Las listas tienen métodos como <SPAN  CLASS="textsf">append(), extend(), insert(), remove()</SPAN> y <SPAN  CLASS="textsf">pop()</SPAN>. Las tuplas no tienen ninguno de estos métodos. Puedes particionar una tupla porque en realidad se crea una nueva tupla, y puedes consultar si contienen un valor determinado, y... Eso es todo.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+# continuaci<!-- MATH
+ $\textrm{\'{o}}$
+ --><SPAN CLASS="MATH">&#243;</SPAN>n del ejemplo anterior
+&#187;&gt; tupla
+('a', 'b', 'mpilgrim', 'z', 'ejemplo')
+&#187;&gt; tupla.append("nuevo")
+Traceback (innermost last):
+  File "&lt;interactive input&gt;", line 1, in ?
+AttributeError: 'tupla' object has no attribute 'append'
+&#187;&gt; tupla.remove("z")
+Traceback (innermost last):
+  File "&lt;interactive input&gt;", line 1, in ?
+AttributeError: 'tupla' object has no attribute 'remove'
+&#187;&gt; tupla.index("ejemplo")
+4
+&#187;&gt; "z" in tupla
+True</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> No puedes añadir elementos a una tupla. No existen los métodos <SPAN  CLASS="textsf">append()</SPAN> o <SPAN  CLASS="textsf">extend()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> No puedes eliminar elementos de una tupla. No existen los métodos <SPAN  CLASS="textsf">remove()</SPAN> o <SPAN  CLASS="textsf">pop()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 12:</SPAN> Sí puedes buscar elementos en una tupla puesto que consultar no cambia la tupla.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 14:</SPAN> También puedes utilizar el operador <SPAN  CLASS="textsf">in</SPAN> para chequear si existe un elemento en la tupla.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¿Para qué valen las tuplas?
+
+<P>
+
+<UL>
+<LI>Las tuplas son más rápidas que las listas. Si lo que defines es un conjunto estático de valores y todo lo que vas a hacer es iterar a través de ellos, lo mejor es que uses una tupla en lugar de una lista.
+
+<P>
+</LI>
+<LI>Es más seguro, puesto que proteges contra escritura los datos que no necesitas modificar.
+
+<P>
+</LI>
+<LI>Algunas tuplas se pueden utilizar como claves de diccionarios como veremos más adelante en el capítulo. Las listas nunca se pueden utilizar como claves de diccionarios.
+
+<P>
+</LI>
+</UL>
+
+<P>
+<BLOCKQUOTE>
+Las tuplas se pueden convertir en listas y viceversa. La función interna <SPAN  CLASS="textsf">tuple()</SPAN> puede recibir como parámetro una lista y devuelve una tupla con los mismos elementos que tenga la lista, y la función <SPAN  CLASS="textsf">list()</SPAN> toma como parámetro una tupla y retorna una lista. En la práctica la función <SPAN  CLASS="textsf">tuple()</SPAN> ``congela'' una lista, y la función <SPAN  CLASS="textsf">list()</SPAN> ``descongela'' una tupla.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION00551000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> Tuplas en un contexto booleano</A>
+</H2>
+Las tuplas también se pueden utilizar en un contexto booleano:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; def es_true(anything):
+...   if anything:
+...     print("s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true")
+...   else:
+...     print("no, es false")
+...
+&#187;&gt; es_true(())
+no, es false
+&#187;&gt; es_true(('a', 'b'))
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true
+&#187;&gt; es_true((False,))
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true
+&#187;&gt; type((False))
+&lt;class 'bool'&gt;
+&#187;&gt; type((False,))
+&lt;class 'tuple'&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Una tupla vacía siempre vale false en un contexto booleano.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> Una tupla con al menos un valor vale true.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> Una tupla con al menos un valor vale true. El valor de los elementos es irrelevante. Pero ¿qué hace esa coma ahí?
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> Para crear una tupla con un único elemento, necesitas poner una coma después del valor. Sin la coma Python asume que lo que estás haciendo es poner un par de paréntesis a una expresión, por lo que no se crea una tupla.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00552000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">2</SPAN> Asignar varios valores a la vez</A>
+</H2>
+
+<P>
+A continuación se observa una forma muy interesante de programar múltiples asignaciones en Python. Para ello utilizamos las tuplas:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; v = ('a', 2, True)
+&#187;&gt; (x, y, z) = v
+&#187;&gt; x
+'a'
+&#187;&gt; y
+2
+&#187;&gt; z
+True</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> <SPAN  CLASS="textsf">v</SPAN> es una tupla con tres elementos y <SPAN  CLASS="textsf">(x, y, z)</SPAN> es una tupla con tres variables. Al asignar una tupla a la otra, lo que sucede es que cada una de las variables recoge el valor del elemento de la otra tupla que corresponde con su posición.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Esto tiene toda clase de usos. Supón que quieres asignar nombres a un rango de valores, puedes combinar la función <SPAN  CLASS="textsf">range()</SPAN> con la asignación múltiple para hacerlo de una forma rápida:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; (LUNES, MARTES, MIERCOLES, JUEVES,
+... VIERNES, SABADO, DOMINGO) = range(7)
+&#187;&gt; LUNES
+0
+&#187;&gt; MARTES
+1
+&#187;&gt; DOMINGO
+6</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> La función interna <SPAN  CLASS="textsf">range()</SPAN> genera una secuencia de números enteros<A NAME="tex2html61"
+  HREF="footnode.html#foot3399"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">8</SPAN></SUP></A>. Las variables que vas a definir son <SPAN  CLASS="textsf">LUNES, MARTES</SPAN>, etc)<A NAME="tex2html62"
+  HREF="footnode.html#foot3400"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">9</SPAN></SUP></A>. El módulo <SPAN  CLASS="textsf">calendar</SPAN> define unas constantes enteras para cada día de la semana).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Ahora cada variable tiene un valor: <SPAN  CLASS="textsf">LUNES</SPAN> vale <SPAN  CLASS="textsf">0</SPAN>, <SPAN  CLASS="textsf">MARTES</SPAN> vale <SPAN  CLASS="textsf">1</SPAN>, etc.
+
+<P>
+</LI>
+</OL>
+
+<P>
+También puedes utilizar la asignación múltiple para construir funciones que devuelvan varios valores a la vez. Simplemente devolviendo una tupla con los valores. Desde el código que llama a la función se puede tratar el valor de retorno como una tupla o se puede asignar los valores individuales a unas variables. Muchas librerías estándares de Python hacen esto, incluido el módulo <SPAN  CLASS="textsf">os</SPAN>, que utilizaremos en el siguiente capítulo.
+
+<P>
+
+<H1><A NAME="SECTION00560000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN> Conjuntos</A>
+</H1>
+
+<P>
+Un conjunto es una ``bolsa'' sin ordenar de valores únicos. Un conjunto puede contener simultáneamente valores de cualquier tipo de datos. Con dos conjuntos se pueden efectuar las típicas operaciones de unión, intersección y diferencia de conjuntos.
+
+<P>
+
+<H2><A NAME="SECTION00561000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN> Creación de conjuntos</A>
+</H2>
+
+<P>
+Comencemos por el principio, crear un conjunto es fácil.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_conjunto = 1
+&#187;&gt; un_conjunto
+1
+&#187;&gt; type(un_conjunto)
+&lt;class 'set'&gt;
+&#187;&gt; un_conjunto = 1, 2
+&#187;&gt; un_conjunto
+1, 2</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Para crear un conjunto con un valor basta con poner el valor entre llaves (<SPAN  CLASS="textsf"></SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Los conjuntos son clases, pero no te preocupes por ahora de esto.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Para crear un conjunto con varios elementos basta con separarlos con comas y encerrarlos entre llaves.
+
+<P>
+</LI>
+</OL>
+
+<P>
+También es posible crear un conjunto a partir de una lista:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; una_lista = ['a', 'b', 'mpilgrim', True, False, 42]
+&#187;&gt; un_conjunto = set(una_lista)
+&#187;&gt; un_conjunto
+'a', False, 'b', True, 'mpilgrim', 42
+&#187;&gt; una_lista 
+['a', 'b', 'mpilgrim', True, False, 42]</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Para crear un conjunto de una lista utiliza la función <SPAN  CLASS="textsf">set()</SPAN><A NAME="tex2html63"
+  HREF="footnode.html#foot3402"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">10</SPAN></SUP></A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Como comenté anteriormente, un conjunto puede contener valores de cualquier tipo y está <SPAN  CLASS="textit">desordenado</SPAN>. En este ejemplo, el conjunto no recuerda el orden en el que estaba la lista que sirvió para crearlo. Si añadieras algún elemento nuevo no recordaría el orden en el que lo añadiste.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> La lista original no se ha modificado.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¿Tienes un conjunto vacío? Sin problemas. Puedes crearlo y más tarde añadir elementos.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_conjunto = set()
+&#187;&gt; un_conjunto
+set()
+&#187;&gt; type(un_conjunto)
+&lt;class 'set'&gt;
+&#187;&gt; len(un_conjunto)
+0
+&#187;&gt; no_seguro = 
+&#187;&gt; type(no_seguro)
+&lt;class 'dict'&gt;</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Para crear un conjunto vacío debes utilizar la función <SPAN  CLASS="textsf">set()</SPAN> sin parámetros.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> La representación impresa de un conjunto vacío parece algo extraña. ¿Tal vez estabas esperando <SPAN  CLASS="textsf">{}</SPAN>? Esa expresión se utiliza para representar un diccionario vacío, no un conjunto vacío. Aprenderás a usar los diccionarios más adelante en este capítulo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> A pesar de la extraña representación impresa se trata de un conjunto.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> ...y este conjunto no tiene elementos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Debido a razones históricas procedentes de Python 2. No puedes utilizar las llaves para crear un conjunto vacío, puesto que lo que se crea es un diccionario vacío, no un conjunto vacío.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00562000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">2</SPAN> Modificación de conjuntos</A>
+</H2>
+
+<P>
+Hay dos maneras de añadir valores a un conjunto: el método <SPAN  CLASS="textsf">add()</SPAN> y el método <SPAN  CLASS="textsf">update()</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_conjunto = 1, 2
+&#187;&gt; un_conjunto.add(4)
+&#187;&gt; un_conjunto
+1, 2, 4
+&#187;&gt; len(un_conjunto)
+3
+&#187;&gt; un_conjunto.add(1)
+&#187;&gt; un_conjunto
+1, 2, 4
+&#187;&gt; len(un_conjunto)
+3</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> El método <SPAN  CLASS="textsf">add()</SPAN> recibe un parámetro, que puede ser de cualquier tipo, cuyo resultado es añadir el parámetro al conjunto.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Este conjunto tiene ahora cuatro elementos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Los conjuntos son ``bolsas'' de valores <SPAN  CLASS="textit">únicos</SPAN>. Por eso, si intentas añadir un valor que ya exista en el conjunto no hará nada. Tampoco elevará un error. Simplemente no se hace nada.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> Por eso, el conjunto <SPAN  CLASS="textit">aún</SPAN> tiene tres elementos.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_conjunto = 1, 2, 3
+&#187;&gt; un_conjunto
+1, 2, 3
+&#187;&gt; un_conjunto.update(2, 4, 6)
+&#187;&gt; un_conjunto
+1, 2, 3, 4, 6
+&#187;&gt; un_conjunto.update(3, 6, 9, 1, 2, 3, 5, 8, 13)
+&#187;&gt; un_conjunto
+1, 2, 3, 4, 5, 6, 8, 9, 13
+&#187;&gt; un_conjunto.update([10, 20, 30])
+&#187;&gt; un_conjunto
+1, 2, 3, 4, 5, 6, 8, 9, 10, 13, 20, 30</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> El método <SPAN  CLASS="textsf">update()</SPAN> toma un parámetro, un conjunto, y añade todos sus elementos al conjunto original. Funciona como si llamaras al método <SPAN  CLASS="textsf">add()</SPAN> con cada uno de los elementos del conjunto que pasas como parámetro.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Los elementos duplicados se ignoran puesto que los conjuntos no pueden contener duplicados.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Puedes llamar al método <SPAN  CLASS="textsf">update()</SPAN> con cualquier número de parámetros. Cuando lo llamas con dos conjuntos, el método añade todos los elementos de cada conjunto al conjunto original (sin incluir duplicados).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> El método <SPAN  CLASS="textsf">update()</SPAN> puede recibir como parámetro elementos de diferentes tipos de dato, incluidas las listas. Cuando se llama pasándole una lista, el método <SPAN  CLASS="textsf">update()</SPAN> añade todos los elementos de la lista al conjunto original.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00563000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">3</SPAN> Eliminar elementos de un conjunto</A>
+</H2>
+
+<P>
+Existen tres formas de eliminar elementos individuales de un conjunto: Las dos primeras <SPAN  CLASS="textsf">discard()</SPAN> y <SPAN  CLASS="textsf">remove()</SPAN>, se diferencian de forma sutil:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_conjunto = 1, 3, 6, 10, 15, 21, 28, 36, 45
+&#187;&gt; un_conjunto
+1, 3, 36, 6, 10, 45, 15, 21, 28
+&#187;&gt; un_conjunto.discard(10)
+&#187;&gt; un_conjunto
+1, 3, 36, 6, 45, 15, 21, 28
+&#187;&gt; un_conjunto.discard(10)
+&#187;&gt; un_conjunto
+1, 3, 36, 6, 45, 15, 21, 28
+&#187;&gt; un_conjunto.remove(21)
+&#187;&gt; un_conjunto
+1, 3, 36, 6, 45, 15, 28
+&#187;&gt; un_conjunto.remove(21)
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+KeyError: 21</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> El método <SPAN  CLASS="textsf">discard()</SPAN> toma un único parámetro y elimina el elemento del conjunto.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Si llamas al método <SPAN  CLASS="textsf">discard()</SPAN> con un valor que no exista en el conjunto no se produce ningún error. Simplemente no se hace nada.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> El método <SPAN  CLASS="textsf">remove()</SPAN> también recibe un único parámetro y también elimina el elemento del conjunto.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> Aquí esta la diferencia: si el valor no existe en el conjunto, el método <SPAN  CLASS="textsf">remove()</SPAN> eleva la excepción <SPAN  CLASS="textsf">KeyError</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Como pasa con las listas, los conjuntos también tienen el método <SPAN  CLASS="textsf">pop()</SPAN>:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_conjunto = 1, 3, 6, 10, 15, 21, 28, 36, 45
+&#187;&gt; un_conjunto.pop()
+1
+&#187;&gt; un_conjunto.pop()
+3
+&#187;&gt; un_conjunto.pop()
+36
+&#187;&gt; un_conjunto
+6, 10, 45, 15, 21, 28
+&#187;&gt; un_conjunto.clear()
+&#187;&gt; un_conjunto
+set()
+&#187;&gt; un_conjunto.pop()
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+KeyError: 'pop from an empty set'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> El método <SPAN  CLASS="textsf">pop()</SPAN> elimina un único valor del conjunto y retorna el valor. Sin embargo, como los conjuntos no están ordenados, no hay un ``último'' elemento, por lo que no hay forma de controlar qué elemento es el que se extrae. Es aleatorio.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> El método <SPAN  CLASS="textsf">clear()</SPAN> elimina todos los valores del conjunto dejándolo vacío. Es equivalente a <SPAN  CLASS="textsf">un_conjunto = set()</SPAN>, que crearía un nuevo conjunto vacío y lo asignaría a la variable, eliminando el conjunto anterior.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> Si se intenta extraer un valor de un conjunto vacío se eleva la excepción <SPAN  CLASS="textsf">KeyError</SPAN>. 
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00564000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">4</SPAN> Operaciones típicas de conjuntos</A>
+</H2>
+
+<P>
+Los conjuntos de Python permiten las operaciones habituales de este tipo de datos:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_conjunto = 2, 4, 5, 9, 12, 21, 30, 51, 76, 127, 195
+&#187;&gt; 30 in un_conjunto
+True
+&#187;&gt; 31 in un_conjunto
+False
+&#187;&gt; otro_conjunto = 1, 2, 3, 5, 6, 8, 9, 12, 15, 17, 18, 21
+&#187;&gt; un_conjunto.union(otro_conjunto)
+1, 2, 195, 4, 5, 6, 8, 12, 76, 15, 17, 18, 3, 21, 30, 51, 9, 127
+&#187;&gt; un_conjunto.intersection(otro_conjunto)
+9, 2, 12, 5, 21
+&#187;&gt; un_conjunto.difference(otro_conjunto)
+195, 4, 76, 51, 30, 127
+&#187;&gt; un_conjunto.symmetric_difference(otro_conjunto)
+1, 3, 4, 6, 8, 76, 15, 17, 18, 195, 127, 30, 51</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Para comprobar si un valor está contenido en un conjunto se puede utilizar el operador <SPAN  CLASS="textsf">in</SPAN>. Funciona igual que en las listas.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> El método <SPAN  CLASS="textsf">union()</SPAN> retorna un nuevo conjunto que contiene todos los elementos que están en <SPAN  CLASS="textit">alguno</SPAN> de los conjuntos originales.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> El método <SPAN  CLASS="textsf">intersection()</SPAN> retorna un nuevo conjunto con los elementos que están en <SPAN  CLASS="textit">ambos</SPAN> conjuntos originales.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> El método <SPAN  CLASS="textsf">difference()</SPAN> retorna un nuevo conjunto que contiene los elementos que están en <SPAN  CLASS="textsf">un_conjunto</SPAN> pero no en <SPAN  CLASS="textsf">otro_conjunto</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> El método <SPAN  CLASS="textsf">symmetric_difference()</SPAN> retorna un nuevo conjunto que contiene todos los elementos que están únicamente en uno de los conjuntos originales.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Tres de estos métodos son simétricos:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+# continuaci<!-- MATH
+ $\textrm{\'{o}}$
+ --><SPAN CLASS="MATH">&#243;</SPAN>n del ejemplo anterior
+&#187;&gt; otro_conjunto.symmetric_difference(un_conjunto)
+3, 1, 195, 4, 6, 8, 76, 15, 17, 18, 51, 30, 127
+&#187;&gt; otro_conjunto.symmetric_difference(un_conjunto) ==  ... un_conjunto.symmetric_difference(otro_conjunto)
+True
+&#187;&gt; otro_conjunto.union(un_conjunto) ==  ... un_conjunto.union(otro_conjunto)
+True
+&#187;&gt; otro_conjunto.intersection(un_conjunto) ==  ... un_conjunto.intersection(otro_conjunto)
+True
+&#187;&gt; otro_conjunto.difference(un_conjunto) ==  ... un_conjunto.difference(otro_conjunto)
+False</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Aunque el resultado de la diferencia simétrica de <SPAN  CLASS="textsf">un_conjunto</SPAN> y <SPAN  CLASS="textsf">otro_conjunto</SPAN> parezca diferente de la diferencia simétrica de <SPAN  CLASS="textsf">otro_conjunto</SPAN> y <SPAN  CLASS="textsf">un_conjunto</SPAN>, recuerda que los conjuntos están desordenados. Dos conjuntos con los mismos valores se consideran iguales.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Y eso es lo que sucede aquí. No te despistes por la representación impresa de los conjuntos. Como contienen los mismos valores, son iguales.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> La unión de dos conjuntos también es simétrica. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> La intersección de dos conjuntos también es simétrica.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> La diferencia de dos conjuntos no es simétrica, lo que tiene sentido, es análogo a la resta de dos números; importa el orden de los operandos.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Finalmente veamos algunas consultas que se pueden hacer a los conjuntos:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_conjunto = 1, 2, 3
+&#187;&gt; otro_conjunto = 1, 2, 3, 4
+&#187;&gt; un_conjunto.issubset(otro_conjunto)
+True
+&#187;&gt; otro_conjunto.issuperset(un_conjunto)
+True
+&#187;&gt; un_conjunto.add(5)
+&#187;&gt; un_conjunto.issubset(otro_conjunto)
+False
+&#187;&gt; otro_conjunto.issuperset(un_conjunto)
+False</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> <SPAN  CLASS="textsf">un_conjunto</SPAN> es un subconjunto de <SPAN  CLASS="textsf">otro_conjunto</SPAN> --Todos los miembros de <SPAN  CLASS="textsf">un_conjunto</SPAN> forman parte de <SPAN  CLASS="textsf">otro_conjunto</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Pregunta lo mismo pero al revés. <SPAN  CLASS="textsf">otro_conjunto</SPAN> es un superconjunto de <SPAN  CLASS="textsf">un_conjunto</SPAN> --Todos los miembros de <SPAN  CLASS="textsf">un_conjunto</SPAN> forman parte de <SPAN  CLASS="textsf">otro_conjunto</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Tan pronto como añadas un valor a <SPAN  CLASS="textsf">un_conjunto</SPAN> que no se encuentre en <SPAN  CLASS="textsf">otro_conjunto</SPAN> ambas consultas devuelven <SPAN  CLASS="textsf">False</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00565000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">5</SPAN> Los conjuntos en contextos booleanos</A>
+</H2>
+
+<P>
+Puedes utilizar conjuntos en contextos booleanos, como en una sentencia <SPAN  CLASS="textsf">if</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; def es_true(algo):
+...   if algo:
+...     print("s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true")
+...   else:
+...     print("no, es false")
+...
+&#187;&gt; es_true(set())
+no, es false
+&#187;&gt; es_true('a')
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true
+&#187;&gt; es_true(False)
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> En un contexto booleano los conjuntos vacíos valen <SPAN  CLASS="textsf">False</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> Cualquier conjunto con al menos un elemento vale <SPAN  CLASS="textsf">True</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> Cualquier conjunto con al menos un elemento vale <SPAN  CLASS="textsf">True</SPAN>. El valor de los elementos es irrelevante.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00570000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN> Diccionarios</A>
+</H1>
+
+<P>
+Un diccionario es un conjunto desordenado de parejas clave-valor. Cuando añades una clave a un diccionario, tienes que añadir también un valor para esa clave<A NAME="tex2html64"
+  HREF="footnode.html#foot3249"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">11</SPAN></SUP></A>. Los diccionarios de Python están optimizados para recuperar fácilmente el valor cuando conoces la clave, no al revés<A NAME="tex2html65"
+  HREF="footnode.html#foot3250"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">12</SPAN></SUP></A>.
+
+<P>
+<BLOCKQUOTE>
+Un diccionario de Python, es como un hash de Perl 5. En Perl 5 las variables que almacenan ``hashes'' siempre comienzan por el carácter <SPAN  CLASS="textsf">%</SPAN>. En Python, las variables pueden tener el nombre que se quiera porque el tipo de datos se mantiene internamente.
+</BLOCKQUOTE>
+<P>
+
+<P>
+
+<H2><A NAME="SECTION00571000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN> Creación de diccionarios</A>
+</H2>
+
+<P>
+Crear diccionarios es sencillo. La sintaxis es similar a la de los conjuntos, pero en lugar de valores, tienes que poner parejas clave-valor. Una vez has creado el diccionario, puedes buscar los valores mediante el uso de su clave.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_dic = 'servidor': 'db.diveintopython3.org',
+              'basedatos': 'mysql'
+&#187;&gt; un_dic
+'servidor': 'db.diveintopython3.org', 'basedatos': 'mysql'
+&#187;&gt; un_dic['servidor']
+'db.diveintopython3.org'
+&#187;&gt; un_dic['basedatos']
+'mysql'
+&#187;&gt; un_dic['db.diveintopython3.org']
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+KeyError: 'db.diveintopython3.org'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> En el ejemplo creamos primero un diccionario con dos elementos y lo asignamos a la variable <SPAN  CLASS="textsf">un_dic</SPAN>. Cada elemento es una pareja clave-valor. El conjunto completo de elementos se encierra entre llaves.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> <SPAN  CLASS="textsf">``servidor''</SPAN> es una clave, y su valor asociado se obtiene mediante la referencia <SPAN  CLASS="textsf">un_dic[``servidor'']</SPAN> cuyo valor es ``db.diveintopython3.org''.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> <SPAN  CLASS="textsf">``basedatos''</SPAN> es una clave y su valor asociado se obtiene mediante la referencia <SPAN  CLASS="textsf">un_dic[``basedatos'']</SPAN> cuyo valor es ``mysql''.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> Puedes recuperar los valores mediante la clave, pero no puedes recuperar las claves mediante el uso de su valor. Por eso <SPAN  CLASS="textsf">un_dic[``servidor'']</SPAN> vale <SPAN  CLASS="textsf">``db.diveintopython3.org''</SPAN> pero <SPAN  CLASS="textsf">un_dic[``db.diveintopython3.org'']</SPAN> eleva una excepción de tipo <SPAN  CLASS="textsf">KeyError</SPAN> al no ser una clave del diccionario.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00572000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN> Modificación de un diccionario</A>
+</H2>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_dic
+'servidor': 'db.diveintopython3.org', 'basedatos': 'mysql'
+&#187;&gt; un_dic['basedatos'] = 'blog'
+&#187;&gt; un_dic
+'servidor': 'db.diveintopython3.org', 'basedatos': 'blog'
+&#187;&gt; un_dic['usuario'] = 'mark'
+&#187;&gt; un_dic
+'servidor': 'db.diveintopython3.org', 'usuario': 'mark', 
+ 'basedatos': 'blog'
+&#187;&gt; un_dic['usuario'] = 'dora'
+&#187;&gt; un_dic
+'servidor': 'db.diveintopython3.org', 'usuario': 'dora', 
+ 'basedatos': 'blog'
+&#187;&gt; un_dic['Usuario'] = 'mark'
+&#187;&gt; un_dic
+'Usuario': 'mark', 'servidor': 'db.diveintopython3.org', 
+ 'usuario': 'dora', 'basedatos': 'blog'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> No puedes tener claves duplicadas en un diccionario. Al asignar un valor a una clave existente el valor anterior se pierde.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Puedes añadir nuevas parejas clave-valor en cualquier momento. La sintaxis es idéntica a la que se utiliza para modificar valores.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> El elemento nuevo del diccionario (clave <SPAN  CLASS="textsf">``usuario''</SPAN>, valor <SPAN  CLASS="textsf">``mark''</SPAN>) aparece en la mitad. Esto es una mera coincidencia, los elementos de un diccionario no están ordenados.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> Al asignar un valor a una clave existente, simplemente se sustituye el valor anterior por el nuevo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 14:</SPAN> Esta sentencia ¿cambia el valor de la clave <SPAN  CLASS="textsf">``usuario''</SPAN> para volverle asignar <SPAN  CLASS="textsf">``mark''</SPAN>? ¡No! Si lo observas atentamente verás que la <SPAN  CLASS="textsf">``U''</SPAN> está en mayúsculas. Las claves de los diccionarios distinguen las mayúsculas y minúsculas, por eso esta sentencia crea una nueva pareja clave-valor, no sobreescribe la anterior. Puede parecerte casi lo mismo, pero en lo que a Python respecta, es totalmente diferente.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00573000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN> Diccionarios con valores mixtos</A>
+</H2>
+
+<P>
+Los diccionarios no se usan únicamente con cadenas de texto. Los valores de un diccionario pueden ser de cualquier tipo, incluidos enteros, booleanos, cualquier objeto o incluso otros diccionarios. Y en un mismo diccionario, no es necesario que todos los valores sean del mismo tipo, puedes mezclarlos según lo necesites. Los tipos de datos que pueden ser claves de un diccionario están más limitados, pero pueden ser cadenas de texto, enteros, y algunos tipos más. También es factible mezclar diferentes tipos de clave en un mismo diccionario.
+
+<P>
+De hecho, ya hemos visto un diccionario con valores diferentes a cadenas de texto.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+SUFIJOS = 1000: ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    1024: ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']</pre></TD></TR>
+</TABLE>
+
+<P>
+Vamos a descomponerlo en la consola interactiva de Python.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; SUFIJOS = 1000: ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+...     1024: ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+&#187;&gt; len(SUFIJOS)
+2
+&#187;&gt; 1000 in SUFIJOS
+True
+&#187;&gt; SUFIJOS[1000]
+['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+&#187;&gt; SUFIJOS[1024]
+['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+&#187;&gt; SUFIJOS[1000][3]
+'TB'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Como sucede con las listas y conjuntos, la función <SPAN  CLASS="textsf">len()</SPAN> devuelve el número de claves que tiene un diccionario.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> También como pasa con las listas y conjuntos puedes utilizar el operador <SPAN  CLASS="textsf">in</SPAN> para comprobar si una clave determinada está en el diccionario.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> <SPAN  CLASS="textsf">1000</SPAN> es una clave del diccionario <SPAN  CLASS="textsf">SUFIJOS</SPAN>; su valor es una lista de ocho elementos (ocho cadenas de texto, por ser más precisos).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> De igual manera, <SPAN  CLASS="textsf">1024</SPAN> es una clave del diccionario <SPAN  CLASS="textsf">SUFIJOS</SPAN>; su valor también es una lista de ocho elementos.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> Puesto que <SPAN  CLASS="textsf">SUFIJOS[1000]</SPAN> es una lista, puedes utilizar los corchetes para acceder a los elementos individuales. Recuerda que los índices en Python comienzan a contar en cero.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00574000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN> Diccionarios en un contexto booleano</A>
+</H2>
+
+<P>
+También puedes utilizar un diccionario en un contexto booleano, como en la sentencia <SPAN  CLASS="textsf">if</SPAN>.
+
+<P>
+<blockquote>Todo diccionario vacío equivale a False y todos los demás equivalen a True.</blockquote>  
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; def es_true(algo):
+...   if algo:
+...     print("s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true")
+...   else:
+...     print("no, es false")
+...
+&#187;&gt; es_true()
+no, es false
+&#187;&gt; es_true('a' : 1)
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> En un contexto booleano un diccionario vacío equivale a <SPAN  CLASS="textsf">False</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> Cualquier diccionario con, al menos, una pareja clave-valor equivale a <SPAN  CLASS="textsf">True</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00580000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">8</SPAN> <SPAN  CLASS="textsf">None</SPAN></A>
+</H1>
+
+<P>
+<SPAN  CLASS="textsf">None</SPAN> es una constante especial de Python. Representa al valor nulo. <SPAN  CLASS="textsf">None</SPAN> no es lo mismo que <SPAN  CLASS="textsf">False</SPAN>. <SPAN  CLASS="textsf">None</SPAN> tampoco es <SPAN  CLASS="textsf">0</SPAN>. <SPAN  CLASS="textsf">None</SPAN> tampoco es la cadena vacía. Cualquier comparación de <SPAN  CLASS="textsf">None</SPAN> con otra cosa diferente de él mismo se evalúa al valor <SPAN  CLASS="textsf">False</SPAN>.
+
+<P>
+<SPAN  CLASS="textsf">None</SPAN> es el único valor nulo. Tiene su propio tipo de dato (<SPAN  CLASS="textsf">NoneType</SPAN>). Puedes asignar <SPAN  CLASS="textsf">None</SPAN> a cualquier variable, pero no puedes crear nuevos objetos del tipo <SPAN  CLASS="textsf">NoneType</SPAN>. Todas las variables cuyo valor es <SPAN  CLASS="textsf">None</SPAN> son iguales entre sí.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; type(None)
+&lt;class 'NoneType'&gt;
+&#187;&gt; None == False
+False
+&#187;&gt; None == 0
+False
+&#187;&gt; None == ''
+False
+&#187;&gt; None == None
+True
+&#187;&gt; x = None
+&#187;&gt; x == None
+True
+&#187;&gt; y = None
+&#187;&gt; x == y
+True</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<H2><A NAME="SECTION00581000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">1</SPAN> <SPAN  CLASS="textsf">None</SPAN> en un contexto booleano</A>
+</H2>
+
+<P>
+En un contexto booleano <SPAN  CLASS="textsf">None</SPAN> vale <SPAN  CLASS="textsf">False</SPAN> y <SPAN  CLASS="textsf">not None</SPAN> vale <SPAN  CLASS="textsf">True</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+
+<P>
+&#187;&gt; def es_true(algo):
+...   if algo:
+...     print("s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true")
+...   else:
+...     print("no, es false")
+...
+&#187;&gt; es_true(None)
+no, es false
+&#187;&gt; es_true(not None)
+s<!-- MATH
+ $\textrm{\'{i}}$
+ --><SPAN CLASS="MATH">&#237;</SPAN>, es true</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<H1><A NAME="SECTION00590000000000000000">
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">9</SPAN> Lecturas complementarias</A>
+</H1>
+
+<P>
+
+<UL>
+<LI>http://docs.python.org/3.1/library/stdtypes.html#boolean-operations-and-or-notOperaciones booleanas
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/library/stdtypes.html#numeric-types-int-float-long-complexTipos numéricos
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/library/stdtypes.html#sequence-types-str-unicode-list-tuple-buffer-xrangeTipos secuencia
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/library/stdtypes.html#set-types-set-frozensetTipos conjunto
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/library/stdtypes.html#mapping-types-dictTipos mapa
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/library/fractions.htmlmódulo <SPAN  CLASS="textsf">fractions</SPAN>
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/library/math.htmlmódulo <SPAN  CLASS="textsf">math</SPAN>
+
+<P>
+</LI>
+<LI>http://www.python.org/dev/peps/pep-0237/PEP 237: Unificación de enteros largos y enteros
+
+<P>
+</LI>
+<LI>http://www.python.org/dev/peps/pep-0238/PEP 238: Modificación del operador de división
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html662"
+  HREF="node6.html">3. Comprensiones</A>
+<B> Subir a:</B> <A NAME="tex2html660"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html654"
+  HREF="node4.html">1. Tu primer programa</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>-1. Novedades de ``Inmersión en Python 3''</TITLE>
+<META NAME="description" CONTENT="-1. Novedades de ``Inmersión en Python 3''">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node3.html">
+<LINK REL="previous" HREF="node1.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node3.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html608"
+  HREF="node3.html">0. Instalación de Python</A>
+<B> Subir a:</B> <A NAME="tex2html606"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html600"
+  HREF="node1.html">Tabla de contenido</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html609"
+  HREF="node2.html#SECTION00210000000000000000"><SPAN CLASS="arabic">-1</SPAN>.<SPAN CLASS="arabic">1</SPAN> Alias ``Bajo el nivel del mar''</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00200000000000000000"></A><A NAME="ch:novedades"></A>
+<BR>
+<SPAN CLASS="arabic">-1</SPAN>. Novedades de ``Inmersión en Python 3''
+</H1>
+
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``¿No es de aquí de donde venimos?''
+<BR>--Pink Floyd, The Wall</I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION00210000000000000000">
+<SPAN CLASS="arabic">-1</SPAN>.<SPAN CLASS="arabic">1</SPAN> Alias ``Bajo el nivel del mar''</A>
+</H1>
+
+<P>
+Posiblemente hayas leído el libro original <SPAN  CLASS="textit">Dive into Python</SPAN> y puede que hasta lo hayas comprado. (Si es el caso: ¡gracias!) Ya conoces bastante el lenguaje Python. Estás preparado para dar el salto a Python 3. ...Si lo dicho es cierto, sigue leyendo. (Si no es así, tal vez sea mejor que comiences desde el principio en el capítulo&nbsp;<A HREF="node3.html#ch:instalacion"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+Python 3 viene con un script denominado <SPAN  CLASS="textsf">2to3</SPAN>. Aprende a usarlo y a quererlo. El apéndice&nbsp;<A HREF="node14.html#ch:migcod">A</A> es una referencia sobre las cosas que la herramienta <SPAN  CLASS="textsf">2to3</SPAN> puede arreglar automáticamente en la conversión del código de la versión 2 a la 3 de python. Puesto que muchas cosas son cambios de sintaxis, una buena forma de comenzar es aprender estas diferencias. Por ejemplo: <SPAN  CLASS="textsf">print</SPAN> ahora es una función...
+
+<P>
+El caso de estudio del capítulo&nbsp;<A HREF="node12.html#ch:chardet">15</A> documenta mi esfuerzo (¡al fin cumplido con éxito!) de convertir una librería real de Python 2 a Python 3. Puede servirte o no. Es un ejemplo complejo de entender puesto que en primer lugar tienes que comprender algo el funcionamiento de la librería, de forma que puedas entender lo que deja de funcionar y como lo arreglé.  Mucho de lo que se rompió al pasar a la versión 3 de Python fue por causa de las cadenas.  Por cierto, hablando de cadenas...
+
+<P>
+Cadenas. ¡Uff!. Por dónde podría empezar. Python 2 tenía ``cadenas'' y ``cadenas unicode''. Python 3 tiene ``bytes'' y ``cadenas''. Lo que significa que todas las cadenas ahora son unicode, y si quieres trabajar con un puñado de bytes tienes que usar el tipo <SPAN  CLASS="textsf">bytes</SPAN>.
+
+<P>
+Python 3 nunca convertirá implícitamente entre cadenas y bytes, por lo que si no estas seguro de lo que contiene una variable en un momento dado, el código seguro que fallará en algún momento. Lee el capítulo&nbsp;<A HREF="node7.html#ch:cadenas">4</A> sobre cadenas para conocer los detalles.
+
+<P>
+La división entre ``bytes'' y ``cadenas'' surgirá en diversas partes del libro:
+
+<P>
+
+<OL>
+<LI>En el capítulo&nbsp;<A HREF="#ch:ficheros">11</A> dedicado a los ficheros, aprenderás la diferencia entre leer ficheros en modo <SPAN  CLASS="textit">binario</SPAN> o en modo <SPAN  CLASS="textit">texto</SPAN>. La lectura (y escritura) de ficheros en modo <SPAN  CLASS="textit">texto</SPAN> requiere que se utilice el parámetro <SPAN  CLASS="textsf">encoding</SPAN>. Existen métodos que cuentan los caracteres de un fichero y métodos que cuentan bytes. Si el código asume que un carácter es igual a un byte, no funcionará cuando el fichero contenga caracteres multibyte<A NAME="tex2html1"
+  HREF="footnode.html#foot351"><SUP><SPAN CLASS="arabic">-1</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
+
+<P>
+</LI>
+<LI>En el capítulo&nbsp;<A HREF="#ch:servicios_web">14</A> dedicado a los servicios web http, se muestra el módulo <SPAN  CLASS="textsf">httplib2</SPAN> que lee cabeceras y datos de <SPAN  CLASS="textsf">HTTP</SPAN>. Las cabeceras se obtienen como cadenas, pero el contenido del cuerpo se obtiene como bytes.
+
+<P>
+</LI>
+<LI>En el capítulo&nbsp;<A HREF="node11.html#ch:serializacion">13</A> aprenderás el motivo por el que el módulo <SPAN  CLASS="textsf">pickle</SPAN> de Python 3 define un formato de datos nuevo que es incompatible con Python 2 (Pista: Se debe a los bytes y cadenas). También afecta al módulo <SPAN  CLASS="textsf">JSON</SPAN>, que no es capaz de manejar el tipo <SPAN  CLASS="textsf">bytes</SPAN>. Te enseñaré como salvar este escollo.
+
+<P>
+</LI>
+<LI>En el capítulo&nbsp;<A HREF="node12.html#ch:chardet">15</A> sobre la conversión de la librería <SPAN  CLASS="textsf">chardet</SPAN> a Python 3 se verá que la mayor parte de los problemas de conversión provienen de los bytes y cadenas.
+</LI>
+</OL>
+
+<P>
+Incluso aunque no tengas interés en Unicode, ¡que tendrás!, querrás leer sobre el formateo de cadenas en Python 3 en el capítulo&nbsp;<A HREF="node7.html#ch:cadenas">4</A>, que es completamente diferente a Python 2.
+
+<P>
+Los iteradores están en todas partes en Python 3, y ahora los entiendo mucho mejor que hace cinco años cuando escribí ``Inmersión en Python''. Debes comprenderlos tú también, puesto que muchas funciones que anteriormente retornaban listas ahora, en Python 3, devuelven iteradores. Como mínimo, deberías leer la segunda parte del capítulo&nbsp;<A HREF="node8.html#ch:clases">7</A> dedicado a los iteradores y la segunda parte del capítulo&nbsp;<A HREF="#ch:iteravan">8</A> sobre el uso avanzado de los iteradores.
+
+<P>
+Por petición popular, he añadido el apéndice&nbsp;<A HREF="node15.html#ch:metesp">B</A> sobre nombres de método especiales que guarda cierta similitud con el apartado similar de la http://www.python.org/doc/3.1/reference/datamodel.html#special-method-namesdocumentación oficial de Python 3 pero con cierta ironía.
+
+<P>
+Cuando estaba escribiendo ``Inmersión en Python'' todas las librerías de XML disponibles eran bastante malas. Entonces Fedrik Lundh escribió http://effbot.org/zone/element-index.htmElementTree, que es todo lo contrario a lo existente anteriormente. Los dioses de Python, actuando inteligentemente, http://docs.python.org/3.1/library/xml.etree.elementtree.htmlincorporaron ElementTree a la librería estándar. Ahora esta librería es el fundamento del capítulo&nbsp;<A HREF="node10.html#ch:xml">12</A> sobre XML. Los viejos métodos para recorrer XML están aún disponibles, pero deberías evitarlos, ¡apestan!
+
+<P>
+Algo que es también nuevo --no en el lenguaje, pero sí en la comunidad-- es la creación de repositorios de código como http://pypi.python.org/el índice de paquetes de python (PyPI). Python dispone de utilidades para empaquetar el código en formatos estándares y distribuirlos en PyPI. Lee el capítulo&nbsp;<A HREF="node13.html#ch:emplib">16</A> sobre  cómo empaquetar librerías en Python.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html608"
+  HREF="node3.html">0. Instalación de Python</A>
+<B> Subir a:</B> <A NAME="tex2html606"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html600"
+  HREF="node1.html">Tabla de contenido</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,798 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>6. Refactorizar</TITLE>
+<META NAME="description" CONTENT="6. Refactorizar">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node10.html">
+<LINK REL="previous" HREF="node8.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node10.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html766"
+  HREF="node10.html">7. XML</A>
+<B> Subir a:</B> <A NAME="tex2html764"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html758"
+  HREF="node8.html">5. Clases e iteradores</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html767"
+  HREF="node9.html#SECTION00910000000000000000"><SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+<LI><A NAME="tex2html768"
+  HREF="node9.html#SECTION00920000000000000000"><SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">2</SPAN> Gestionar requisitos cambiantes</A>
+<LI><A NAME="tex2html769"
+  HREF="node9.html#SECTION00930000000000000000"><SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">3</SPAN> Refactorización</A>
+<LI><A NAME="tex2html770"
+  HREF="node9.html#SECTION00940000000000000000"><SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">4</SPAN> Sumario</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00900000000000000000"></A><A NAME="ch:refactorizar"></A>
+<BR>
+<SPAN CLASS="arabic">6</SPAN>. Refactorizar
+</H1>
+
+<P>
+Nivel de dificultad:4 sobre 5
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``Después de haber tocado una vasta cantidad de notas y más notas. 
+<BR>
+es la simplicidad la que emerge como la recompensa coronada del arte.'' 
+<BR>--http://en.wikiquote.org/wiki/Frédéric_ChopinFrédéric Chopin</I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION00910000000000000000">
+<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+</H1>
+
+<P>
+A pesar tus mejores esfuerzos para escribir un conjunto amplio de pruebas unitarias, tendrás errores (bugs). ¿Qué significa que haya un error? Que nos falta un caso de prueba por escribir.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import roman7
+&#187;&gt; roman7.from_roman('')
+0</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Esto es un error. Una cadena vacía debería elevar la excepción <SPAN  CLASS="textsf">InvalidRomanNumeralError</SPAN>, como cualquier otra secuencia de caracteres que no represente a un número romano válido.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Después de reproducir el error, y antes de arreglarlo, deberías escribir un caso de prueba que falle para ilustrar el error.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class FromRomanBadInput(unittest.TestCase):  
+    .
+    .
+    .
+    def testBlank(self):
+        '''from_roman should fail with blank string'''
+        self.assertRaises(roman6.InvalidRomanNumeralError, 
+            roman6.from_roman, '') </pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Es muy simple. La llamada a <SPAN  CLASS="textsf">from_roman()</SPAN> con una cadena vacía debe asegurar que eleva la excepción <SPAN  CLASS="textsf">InvalidRomanNumeralError</SPAN>. La parte más difícil fue encontrar el error; ahora que lo conoces, crear una prueba que lo refleje es lo fácil.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Puesto que el código tiene un fallo, y dispones de un caso de prueba que comprueba que existe, el caso de prueba fallará:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+you@localhost:&nbsp;/diveintopython3/examples<SPAN CLASS="MATH">$</SPAN> python3 romantest8.py -v
+from_roman should fail with blank string ... FAIL
+from_roman should fail with malformed antecedents ... ok
+from_roman should fail with repeated pairs of numerals ... ok
+from_roman should fail with too many repeated numerals ... ok
+from_roman should give known result with known input ... ok
+to_roman should give known result with known input ... ok
+from_roman(to_roman(n))==n for all n ... ok
+to_roman should fail with negative input ... ok
+to_roman should fail with non-integer input ... ok
+to_roman should fail with large input ... ok
+to_roman should fail with 0 input ... ok
+
+<P>
+======================================================================
+FAIL: from_roman should fail with blank string
+-----------------------------------
+Traceback (most recent call last):
+  File "romantest8.py", line 117, in test_blank
+    self.assertRaises(roman8.InvalidRomanNumeralError,
+                      roman8.from_roman, '')
+AssertionError: InvalidRomanNumeralError not raised by from_roman
+
+<P>
+-----------------------------------
+Ran 11 tests in 0.171s
+
+<P>
+FAILED (failures=1)
+Now you can fix the bug.
+
+<P>
+skip over this code listing
+
+<P>
+[hide] [open in new window]</pre></TD></TR>
+</TABLE>
+
+<P>
+Ahora puedes arreglar el fallo.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+def from_roman(s):
+    '''convert Roman numeral to integer'''
+    if not s:
+        raise InvalidRomanNumeralError('Input can not be blank')
+    if not re.search(romanNumeralPattern, s):
+        raise InvalidRomanNumeralError(
+                'Invalid Roman numeral: '.format(s))
+
+<P>
+result = 0
+    index = 0
+    for numeral, integer in romanNumeralMap:
+        while s[index:index+len(numeral)] == numeral:
+            result += integer
+            index += len(numeral)
+    return result</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Solamente se necesitan dos líneas de código: una comprobación explícita por la cadena de texto vacía y la sentencia <SPAN  CLASS="textsf">raise</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Creo que no lo he mencionado en ninguna otra parte del libro, por lo que te puede servir como tu última lección en formateo de cadenas de texto. Desde Python 3.1 puedes dejar de poner los valores numéricos cuando utilizas índices posicionales en el especificador de formatos. En lugar de utilizar el especificador de formato <SPAN  CLASS="textsf">{0}</SPAN> para indicar el primer parámetro del método <SPAN  CLASS="textsf">format()</SPAN>, puedes utilizar directamente <SPAN  CLASS="textsf">{}</SPAN> y Python lo sustituirá por el índice posicional apropiado. Esto funciona para cualquier número de parámetros; el primer <SPAN  CLASS="textsf">{}</SPAN> equivale a <SPAN  CLASS="textsf">{0}</SPAN>, el segundo <SPAN  CLASS="textsf">{}</SPAN> a <SPAN  CLASS="textsf">{1}</SPAN> y así sucesivamente.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+you@localhost:&nbsp;/diveintopython3/examples<SPAN CLASS="MATH">$</SPAN> python3 romantest8.py -v
+from_roman should fail with blank string ... ok
+from_roman should fail with malformed antecedents ... ok
+from_roman should fail with repeated pairs of numerals ... ok
+from_roman should fail with too many repeated numerals ... ok
+from_roman should give known result with known input ... ok
+to_roman should give known result with known input ... ok
+from_roman(to_roman(n))==n for all n ... ok
+to_roman should fail with negative input ... ok
+to_roman should fail with non-integer input ... ok
+to_roman should fail with large input ... ok
+to_roman should fail with 0 input ... ok
+
+<P>
+-----------------------------------
+Ran 11 tests in 0.156s
+
+<P>
+OK</pre></TD></TR>
+</TABLE>
+
+<P>
+Ahora la prueba de la cadena vacía pasa sin problemas, por lo que el error está arreglado.
+Además, todas las demás pruebas siguen funcionando, lo que significa que la reparación del error no rompe nada de lo que ya funcionaba, para lo que disponemos de pruebas previas. Se ha acabado el trabajo.
+
+<P>
+Codificar de esta forma no hace que sea más sencillo arreglar los errores. Los errores sencillos (como este caso) requieren casos de prueba sencillos: los errores complejos requerirán casos de prueba complejos. A primera vista, puede parecer que llevará más tiempo reparar un error en un entorno de desarrollo orientado a pruebas, puesto que necesitas expresar en código aquello que refleja el error (para poder escribir el caso de prueba) y luego arreglar el error propiamente dicho. Lo luego si el caso de prueba no pasa satisfactoriamente necesitas arreglar lo que sea que esté roto o sea erróneo o, incluso, que el caso de prueba tenga un error en sí mismo. Sin embargo, a largo plazo, esta forma de trabajar entre el código y la prueba resulta rentable, porque hace más probable que los errores sean arreglados correctamente sin romper otra cosa. Una caso de prueba escrito hoy, es una prueba de regresión para el día de mañana.
+
+<P>
+
+<H1><A NAME="SECTION00920000000000000000">
+<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">2</SPAN> Gestionar requisitos cambiantes</A>
+</H1>
+
+<P>
+A pesar de tus mayores esfuerzos para ``clavar'' a la tierra a tus clientes e identificar los requisitos exactos a fuerza de hacerles cosas horribles con tijeras y cera caliente, los requisitos cambiarán. La mayoría de los clientes no saben lo que quieren hasta que lo ven, e incluso aunque lo supieran, no es fácil para ellos articular de forma precisa lo que quieren de forma que nos sea útil a los desarrolladores. E incluso en ese caso, querrán más cosas para la siguiente versión del proyecto. Por eso, prepárate para actualizar los casos de prueba según van cambiando los requisitos.
+
+<P>
+Imagina, por ejemplo, que querías ampliar el rango de las funciones de conversión de números romanos. Normalmente, ningún carácter de un número romano se puede repetir más de tres veces seguidas. Pero los romano estaban deseando hacer una excepción a a la regla para poder reflejar el número <SPAN  CLASS="textsf">4000</SPAN> con cuatro <SPAN  CLASS="textsf">M</SPAN> seguidas. Si haces este cambio, será posible ampliar el rango de valores válidos en romano del <SPAN  CLASS="textsf">1..3999</SPAN> al <SPAN  CLASS="textsf">1..4999</SPAN>. Pero primero, necesitas modificar los casos de prueba.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class KnownValues(unittest.TestCase):
+    known_values = ( (1, 'I'),
+                      .
+                      .
+                      .
+                     (3999, 'MMMCMXCIX'),
+                     (4000, 'MMMM'),
+                     (4500, 'MMMMD'),
+                     (4888, 'MMMMDCCCLXXXVIII'),
+                     (4999, 'MMMMCMXCIX') )
+
+<P>
+class ToRomanBadInput(unittest.TestCase):
+    def test_too_large(self):
+        '''to_roman should fail with large input'''
+        self.assertRaises(roman8.OutOfRangeError, roman8.to_roman, 5000)
+
+<P>
+.
+    .
+    .
+
+<P>
+class FromRomanBadInput(unittest.TestCase):
+    def test_too_many_repeated_numerals(self):
+        '''from_roman should fail with too many repeated numerals'''
+        for s in ('MMMMM', 'DD', 'CCCC', 'LL', 'XXXX', 'VV', 'IIII'):
+            self.assertRaises(roman8.InvalidRomanNumeralError, 
+                              roman8.from_roman, s)
+
+<P>
+.
+    .
+    .
+
+<P>
+class RoundtripCheck(unittest.TestCase):
+    def test_roundtrip(self):
+        '''from_roman(to_roman(n))==n for all n'''
+        for integer in range(1, 5000):
+            numeral = roman8.to_roman(integer)
+            result = roman8.from_roman(numeral)
+            self.assertEqual(integer, result)</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Los valores existentes no cambian (aún son valores razonables para probar), pero necesitas añadir unos cuantos en el rango de <SPAN  CLASS="textsf">4000</SPAN>. He incluido el <SPAN  CLASS="textsf">4000</SPAN> (el más corto), <SPAN  CLASS="textsf">4500</SPAN> (el segundo más corto), <SPAN  CLASS="textsf">4888</SPAN> (el más largo) y el <SPAN  CLASS="textsf">4999</SPAN> (el mayor).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 15:</SPAN> La definición de la ``entrada mayor'' ha cambiado. Esta prueba se usaba para probar la función <SPAN  CLASS="textsf">to_roman()</SPAN> con el número <SPAN  CLASS="textsf">4000</SPAN> y esperar un error; ahora que los números del rango <SPAN  CLASS="textsf">4000-4999</SPAN> son válidos, necesitamos subir el valor de la prueba al <SPAN  CLASS="textsf">5000</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 24:</SPAN> La definición de ``demasiados caracteres repetidos'' también ha cambiado. Esta prueba llamaba a la función <SPAN  CLASS="textsf">from_roman()</SPAN> con la cadena <SPAN  CLASS="textsf">``M''</SPAN> y esperaba un error; ahora que <SPAN  CLASS="textsf">MMMM</SPAN> se considera un número romano válido, necesitamos elevar el valor a <SPAN  CLASS="textsf">``MMMMM''</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 35:</SPAN> El ciclo de prueba a través del rango completo de valores del número <SPAN  CLASS="textsf">1</SPAN> al <SPAN  CLASS="textsf">3999</SPAN> también hay que cambiarlo. Puesto que el rango se ha expandido es necesario actualizar el bucle para que llegue hasta el <SPAN  CLASS="textsf">4999</SPAN>. 
+
+<P>
+</LI>
+</OL>
+
+<P>
+Ahora los casos de prueba están actualizados con los nuevos requisitos; pero el código no lo está, por lo que hay que esperar que los casos de prueba fallen.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+you@localhost:&nbsp;/diveintopython3/examples<SPAN CLASS="MATH">$</SPAN> python3 romantest9.py -v
+from_roman should fail with blank string ... ok
+from_roman should fail with malformed antecedents ... ok
+from_roman should fail with non-string input ... ok
+from_roman should fail with repeated pairs of numerals ... ok
+from_roman should fail with too many repeated numerals ... ok
+from_roman should give known result with known input ... ERROR
+to_roman should give known result with known input ... ERROR
+from_roman(to_roman(n))==n for all n ... ERROR
+to_roman should fail with negative input ... ok
+to_roman should fail with non-integer input ... ok
+to_roman should fail with large input ... ok
+to_roman should fail with 0 input ... ok
+
+<P>
+======================================================================
+ERROR: from_roman should give known result with known input
+-----------------------------------
+Traceback (most recent call last):
+  File "romantest9.py", line 82, in test_from_roman_known_values
+    result = roman9.from_roman(numeral)
+  File "C:3<SPAN CLASS="roman">0</SPAN>9.py", line 60, in from_roman
+    raise InvalidRomanNumeralError('Invalid Roman numeral: 0'.format(s))
+roman9.InvalidRomanNumeralError: Invalid Roman numeral: MMMM
+
+<P>
+======================================================================
+ERROR: to_roman should give known result with known input
+-----------------------------------
+Traceback (most recent call last):
+  File "romantest9.py", line 76, in test_to_roman_known_values
+    result = roman9.to_roman(integer)
+  File "C:3<SPAN CLASS="roman">0</SPAN>9.py", line 42, in to_roman
+    raise OutOfRangeError('number out of range (must be 0..3999)')
+roman9.OutOfRangeError: number out of range (must be 0..3999)
+
+<P>
+======================================================================
+ERROR: from_roman(to_roman(n))==n for all n
+-----------------------------------
+Traceback (most recent call last):
+  File "romantest9.py", line 131, in testSanity
+    numeral = roman9.to_roman(integer)
+  File "C:3<SPAN CLASS="roman">0</SPAN>9.py", line 42, in to_roman
+    raise OutOfRangeError('number out of range (must be 0..3999)')
+roman9.OutOfRangeError: number out of range (must be 0..3999)
+
+<P>
+-----------------------------------
+Ran 12 tests in 0.171s
+
+<P>
+FAILED (errors=3)</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> La prueba de <SPAN  CLASS="textsf">from_roman()</SPAN> sobre valores conocidos falla en cuanto encuentra <SPAN  CLASS="textsf">MMMM</SPAN>, puesto que <SPAN  CLASS="textsf">from_roman()</SPAN> aún cree que este número no es válido.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> La prueba de valores conocidos de <SPAN  CLASS="textsf">to_roman()</SPAN> falla en cuanto encuentra <SPAN  CLASS="textsf">4000</SPAN>, puesto que <SPAN  CLASS="textsf">to_roman()</SPAN> aún piensa que este valor está fuera de rango.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN>  La prueba completa de ``ida y vuelta'' también fallará en cuanto encuentre el valor <SPAN  CLASS="textsf">4000</SPAN>, porque <SPAN  CLASS="textsf">to_roman()</SPAN> aún piensa que está fuera de rango.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Ahora que tienes casos de prueba que fallan debido a los nuevos requisitos, puedes abordar la modificación del código para incorporar los mismos de forma que se superen los casos de prueba (Cuando comienzas a trabajar de forma orientada a pruebas, puede parecer extraño al principio que el código que se va a probar nunca va ``por delante'' de los casos de prueba. Mientras está ``por detrás'' te queda trabajo por hacer, en cuanto el código alcanza a los casos de prueba, has terminado de codificar. Una vez te acostumbres, de preguntarás cómo es posible que hayas estado programando en el pasado sin pruebas).
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+roman_numeral_pattern = re.compile('''
+    ^                   # beginning of string
+    M0,4              # thousands - 0 to 4 Ms
+    (CM|CD|D?C0,3)    # hundreds - 900 (CM), 400 (CD), 0-300 (0 to 3 Cs),
+                        #            or 500-800 (D, followed by 0 to 3 Cs)
+    (XC|XL|L?X0,3)    # tens - 90 (XC), 40 (XL), 0-30 (0 to 3 Xs),
+                        #        or 50-80 (L, followed by 0 to 3 Xs)
+    (IX|IV|V?I0,3)    # ones - 9 (IX), 4 (IV), 0-3 (0 to 3 Is),
+                        #        or 5-8 (V, followed by 0 to 3 Is)
+    <SPAN CLASS="MATH">$</SPAN> # end of string
+    ''', re.VERBOSE)
+
+<P>
+def to_roman(n):
+    '''convert integer to Roman numeral'''
+    if not (0 &lt; n &lt; 5000):
+        raise OutOfRangeError('number out of range (must be 1..4999)')
+    if not isinstance(n, int):
+        raise NotIntegerError('non-integers can not be converted')
+
+<P>
+result = ''
+    for numeral, integer in roman_numeral_map:
+        while n &gt;= integer:
+            result += numeral
+            n -= integer
+    return result
+
+<P>
+def from_roman(s):
+    .
+    .
+    .</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> No necesitas hacer ningún cambio a la función <SPAN  CLASS="textsf">from_roman()</SPAN>. Lo único que hay que modificar es <SPAN  CLASS="textsf">roman_numeral_pattern</SPAN>. Si observas detenidamente, lo primero que notarás es que he cambiado el valor máximo de caracteres <SPAN  CLASS="textsf">M</SPAN> opcionales, para poner <SPAN  CLASS="textsf">4</SPAN> donde antes había <SPAN  CLASS="textsf">3</SPAN>. Esto permitirá la existencia de valores romanos de <SPAN  CLASS="textsf">4999</SPAN>. La función <SPAN  CLASS="textsf">from_roman()</SPAN> es totalmente genérica. Simplemente busca caracteres romanos y los va acumulando, sin preocuparse sobre las veces que se repite. La única razón por la que no permitía <SPAN  CLASS="textsf">MMMM</SPAN> es que lo impedíamos expresamente en la comprobación contra la expresión regular.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 15:</SPAN> La función <SPAN  CLASS="textsf">to_roman()</SPAN> solamente necesita un pequeño cambio en el rango de validación. Donde se comprobaba que el valor se encontrase en <SPAN  CLASS="textsf">0 &lt; n &lt; 4000</SPAN>, ahora se comprueba que se cumpla <SPAN  CLASS="textsf">0 &lt; n &lt; 5000</SPAN>. Y se modifica el mensaje de error que se eleva para reflejar el nuevo rango (<SPAN  CLASS="textsf">1...4999</SPAN> en lugar de <SPAN  CLASS="textsf">1...3999</SPAN>). No necesitas realizar más cambios a la función (Es capaz de añadir una <SPAN  CLASS="textsf">M</SPAN> por cada millar que encuentra. La única razón por la que antes no funcionaba con <SPAN  CLASS="textsf">4000</SPAN> es que la validación del rango de valores válidos lo impedía explícitamente).
+
+<P>
+</LI>
+</OL>
+
+<P>
+Puede ser que estés algo escéptico sobre que estos dos pequeños cambios sean todo lo que necesitas. Vale, no me creas, obsérvalo por ti mismo.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+you@localhost:&nbsp;/diveintopython3/examples<SPAN CLASS="MATH">$</SPAN> python3 romantest9.py -v
+from_roman should fail with blank string ... ok
+from_roman should fail with malformed antecedents ... ok
+from_roman should fail with non-string input ... ok
+from_roman should fail with repeated pairs of numerals ... ok
+from_roman should fail with too many repeated numerals ... ok
+from_roman should give known result with known input ... ok
+to_roman should give known result with known input ... ok
+from_roman(to_roman(n))==n for all n ... ok
+to_roman should fail with negative input ... ok
+to_roman should fail with non-integer input ... ok
+to_roman should fail with large input ... ok
+to_roman should fail with 0 input ... ok
+
+<P>
+-----------------------------------
+Ran 12 tests in 0.203s
+
+<P>
+OK</pre></TD></TR>
+</TABLE>
+
+<P>
+Pasan todas las pruebas, paramos de codificar.
+
+<P>
+Un conjunto amplio y exhaustivo de pruebas significa que nunca tienes que depender de un programador que dice ``Confía en mi''.
+
+<P>
+
+<H1><A NAME="SECTION00930000000000000000">
+<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">3</SPAN> Refactorización</A>
+</H1>
+
+<P>
+Lo mejor de disponer de un conjunto de pruebas exhaustivo no es la sensación agradable que se obtiene cuando todas las pruebas pasan satisfactoriamente,ni la sensación de éxito cuando alguien te culpa de romper su código y <SPAN  CLASS="textit">pruebas</SPAN> que no has sido tú. Lo mejor de las pruebas unitarias es que te dan la libertad de refactorizar el código sin ``piedad''.
+
+<P>
+La refactorización es el proceso por el que se toma código que funciona correctamente y se le hace funcionar mejor. Normalmente ``mejor'' significa ``más rápido'', aunque también puede significar ``usando menos memoria'' o ``usando menos disco'' o simplemente ``de forma más elegante''. Independientemente de lo que signifique para ti en tu entorno, refactorizar es importante para la salud a largo plazo de un programa.
+
+<P>
+Aquí ``mejor'' significa dos cosas a la vez: ``más rápido'' y ``más fácil de mantener''. Específicamente, la función <SPAN  CLASS="textsf">from_roman()</SPAN> es más lenta y compleja de lo que me gustaría debido a la fea expresión regular que se utiliza para validar los números romanos. Podrías pensar ``de acuerdo, la expresión regular es grande y compleja, pero cómo si no voy a validar que una cadena arbitraria es un número romano válido.
+
+<P>
+Respuesta, únicamente existen <SPAN  CLASS="textsf">5000</SPAN>, ¿porqué no construir una tabla de búsqueda? Esta idea se hace cada vez más evidente cuando se observa que así no hay que utilizar expresiones regulares. Según se construye una tabla de búsqueda de números romanos para convertir enteros en romanos, se puede construir una tabla inversa para convertir de romanos a enteros. Así, cuando tengas que comprobar si una cadena de texto es un número romano válido ya dispondrás de los números válidos y ``validar'' queda reducido a mirar en un diccionario de búsqueda.
+
+<P>
+Y lo mejor de todo es que ya dispones de un buen conjunto de pruebas unitarias. Puedes modificar la mitad del código del módulo, pero las pruebas seguirán siendo las mismas. Esto significa que puedes comprobar --a ti mismo y a los demás-- que el nuevo código funciona tan bien como el original.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class OutOfRangeError(ValueError): pass
+class NotIntegerError(ValueError): pass
+class InvalidRomanNumeralError(ValueError): pass
+
+<P>
+roman_numeral_map = (('M',  1000),
+                     ('CM', 900),
+                     ('D',  500),
+                     ('CD', 400),
+                     ('C',  100),
+                     ('XC', 90),
+                     ('L',  50),
+                     ('XL', 40),
+                     ('X',  10),
+                     ('IX', 9),
+                     ('V',  5),
+                     ('IV', 4),
+                     ('I',  1))
+
+<P>
+to_roman_table = [ None ]
+from_roman_table = 
+
+<P>
+def to_roman(n):
+    '''convert integer to Roman numeral'''
+    if not (0 &lt; n &lt; 5000):
+        raise OutOfRangeError('number out of range (must be 1..4999)')
+    if int(n) != n:
+        raise NotIntegerError('non-integers can not be converted')
+    return to_roman_table[n]
+
+<P>
+def from_roman(s):
+    '''convert Roman numeral to integer'''
+    if not isinstance(s, str):
+        raise InvalidRomanNumeralError('Input must be a string')
+    if not s:
+        raise InvalidRomanNumeralError('Input can not be blank')
+    if s not in from_roman_table:
+        raise InvalidRomanNumeralError(
+                    'Invalid Roman numeral: 0'.format(s))
+    return from_roman_table[s]
+
+<P>
+def build_lookup_tables():
+    def to_roman(n):
+        result = ''
+        for numeral, integer in roman_numeral_map:
+            if n &gt;= integer:
+                result = numeral
+                n -= integer
+                break
+        if n &gt; 0:
+            result += to_roman_table[n]
+        return result
+
+<P>
+for integer in range(1, 5000):
+        roman_numeral = to_roman(integer)
+        to_roman_table.append(roman_numeral)
+        from_roman_table[roman_numeral] = integer
+
+<P>
+build_lookup_tables()</pre></TD></TR>
+</TABLE>
+
+<P>
+Vamos a trocear el código anterior en partes fáciles de digerir. La línea más importante es la última.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+build_lookup_tables()</pre></TD></TR>
+</TABLE>
+
+<P>
+Se trata de una llamada a función pero no está rodeada de una sentencia <SPAN  CLASS="textsf">if</SPAN>. No es un bloque <SPAN  CLASS="textsf">if __name__ == ``__main__''</SPAN>, esta función se llama cuando el módulo se importa (Es importante conocer que los módulos únicamente se importan una vez, cuando se cargan en memoria la primera vez que se usan. Si importas de nuevo un módulo ya cargado, Python no hace nada. Por eso esta función únicamente se ejecuta la primera vez que importas este módulo.
+
+<P>
+¿Qué es lo que hace la función <SPAN  CLASS="textsf">build_lookup_tables()</SPAN>? Me alegro de que me lo preguntes.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+to_roman_table = [ None ]
+from_roman_table = 
+.
+.
+.
+def build_lookup_tables():
+    def to_roman(n):
+        result = ''
+        for numeral, integer in roman_numeral_map:
+            if n &gt;= integer:
+                result = numeral
+                n -= integer
+                break
+        if n &gt; 0:
+            result += to_roman_table[n]
+        return result
+
+<P>
+for integer in range(1, 5000):
+        roman_numeral = to_roman(integer)
+        to_roman_table.append(roman_numeral)
+        from_roman_table[roman_numeral] = integer</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Este es un trozo muy inteligente de programa, tal vez demasiado. La función <SPAN  CLASS="textsf">to_roman()</SPAN> se define en primer lugar; busca valores en la tabla de búsqueda y las retorna. Pero la función <SPAN  CLASS="textsf">build_lookup_tables()</SPAN> redefine la función para que haga algo (como en el ejemplo anterior, antes de que añadieras una tabla de búsqueda). Dentro de la función <SPAN  CLASS="textsf">build_lookup_tables()</SPAN> se llama a la función <SPAN  CLASS="textsf">to_roman(9</SPAN> redefinida en la función. Una vez la función <SPAN  CLASS="textsf">build_lookup_tables()</SPAN> finaliza, la versión redefinida desaparece --solamente se define en el ámbito local de la función <SPAN  CLASS="textsf">build_lookup_tables()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 19:</SPAN> Esta línea de código llamará a la función <SPAN  CLASS="textsf">to_roman()</SPAN> redefinida, la que realmente calcula el número romano.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 20:</SPAN> Una vez dispones del resultado (de la función <SPAN  CLASS="textsf">to_roman()</SPAN> redefinida), añades el valor entero y su equivalente romano a las dos tablas de búsqueda.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Una vez construidas ambas tablas, el resto del código es simple y rápido.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+def to_roman(n):
+    '''convert integer to Roman numeral'''
+    if not (0 &lt; n &lt; 5000):
+        raise OutOfRangeError('number out of range (must be 1..4999)')
+    if int(n) != n:
+        raise NotIntegerError('non-integers can not be converted')
+    return to_roman_table[n]
+
+<P>
+def from_roman(s):
+    '''convert Roman numeral to integer'''
+    if not isinstance(s, str):
+        raise InvalidRomanNumeralError('Input must be a string')
+    if not s:
+        raise InvalidRomanNumeralError('Input can not be blank')
+    if s not in from_roman_table:
+        raise InvalidRomanNumeralError(
+                'Invalid Roman numeral: 0'.format(s))
+    return from_roman_table[s]</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Después de efectuar las validaciones de rango, la función <SPAN  CLASS="textsf">to_roman()</SPAN> únicamente tiene que encontrar el valor apropiado en la tabla de búsqueda y devolverlo.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 17:</SPAN> De forma similar, la función <SPAN  CLASS="textsf">from_roman()</SPAN> queda reducida a algunas validaciones de límites y una línea de código. No hay expresiones regulares. No hay bucles. Solamente la conversión desde y hacia números romanos.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Pero ¿funciona?, sí, sí, funciona. Y puedo probarlo.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+you@localhost:&nbsp;/diveintopython3/examples<SPAN CLASS="MATH">$</SPAN> python3 romantest10.py -v
+from_roman should fail with blank string ... ok
+from_roman should fail with malformed antecedents ... ok
+from_roman should fail with non-string input ... ok
+from_roman should fail with repeated pairs of numerals ... ok
+from_roman should fail with too many repeated numerals ... ok
+from_roman should give known result with known input ... ok
+to_roman should give known result with known input ... ok
+from_roman(to_roman(n))==n for all n ... ok
+to_roman should fail with negative input ... ok
+to_roman should fail with non-integer input ... ok
+to_roman should fail with large input ... ok
+to_roman should fail with 0 input ... ok
+
+<P>
+-----------------------------------
+Ran 12 tests in 0.031s
+
+<P>
+OK</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 16:</SPAN> Sé que no lo has preguntado pero, ¡también es rápido! Como diez veces más que antes. Por supuesto, no es una comparación totalmente justa, puesto que esta versión tarda más en importarse (cuando construye las tablas de búsqueda). Pero como el <SPAN  CLASS="textsf">import</SPAN> se realiza una única vez, el coste de inicio se amortiza en las llamadas a las funciones <SPAN  CLASS="textsf">from_roman()</SPAN> y <SPAN  CLASS="textsf">to_roman()</SPAN>. Puesto que las pruebas hacen varios miles de llamadas a las funciones (la prueba de ciclo hace diez mil) se compensa enseguida.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¿La moraleja del cuento?
+
+<P>
+
+<UL>
+<LI>La simplicidad es una virtud.
+
+<P>
+</LI>
+<LI>Especialmente cuando se trata de expresiones regulares.
+
+<P>
+</LI>
+<LI>Las pruebas unitarias te dan la suficiente confianza como para hacer modificaciones a gran escala en el código.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00940000000000000000">
+<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">4</SPAN> Sumario</A>
+</H1>
+
+<P>
+La prueba unitaria es un concepto muy valioso que, si se implementa de forma adecuada, puede reducir los costes de mantenimiento e incrementar la flexibilidad a largo plazo de cualquier proyecto. También es importante comprender que las pruebas unitarias no son la panacea, ni un solucionador mágico de problemas, ni un bala de plata. Escribir casos de prueba útiles es una tarea dura y mantenerlos actualizados requiere disciplina (especialmente cuando los clientes están reclamando las correcciones de fallos críticos). Las pruebas unitarias no sustituyen otras formas de prueba, incluídas las pruebas funcionales, de integración y de aceptación por parte del usuario. Pero son prácticas y funcionan y, una vez las hayas utilizado, te preguntarás cómo has podido trabajar alguna vez sin ellas.
+
+<P>
+Estos pocos capítulos han cubierto muchos aspectos, gran parte de ellos ni siquiera son específicos de Python. Existen marcos de trabajo para pruebas unitarias en muchos lenguajes de programación; todos requieren que comprendas los mismos conceptos básicos:
+
+<P>
+
+<UL>
+<LI>Diseño de casos de prueba que sean específicos, automatizados e independientes entre sí.
+
+<P>
+</LI>
+<LI>Escribir los casos de prueba <SPAN  CLASS="textit">antes</SPAN> del código que se está probando.
+
+<P>
+</LI>
+<LI>Escribir casos de prueba que tengan entradas válidas y comprobar que se produce el resultado esperado.
+
+<P>
+</LI>
+<LI>Escribir casos de prueba con entradas erróneas y comprobar que se produce el fallo esperado.
+
+<P>
+</LI>
+<LI>Escribir y actualizar los casos de prueba para reflejar nuevos requisitos.
+
+<P>
+</LI>
+<LI>Refactorizar ``sin piedad'' para mejorar el rendimiento, escalabilidad, legibilidad, mantenibilidad o cualquier otra ``bilidad'' que eches de menos.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html766"
+  HREF="node10.html">7. XML</A>
+<B> Subir a:</B> <A NAME="tex2html764"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html758"
+  HREF="node8.html">5. Clases e iteradores</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>

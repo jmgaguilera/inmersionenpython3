@@ -1,0 +1,876 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>1. Tu primer programa en Python</TITLE>
+<META NAME="description" CONTENT="1. Tu primer programa en Python">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node5.html">
+<LINK REL="previous" HREF="node3.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node5.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html637"
+  HREF="node5.html">2. Tipos de dato</A>
+<B> Subir a:</B> <A NAME="tex2html635"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html629"
+  HREF="node3.html">0. Instalación de Python</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html638"
+  HREF="node4.html#SECTION00410000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+<LI><A NAME="tex2html639"
+  HREF="node4.html#SECTION00420000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">2</SPAN> Declaración de funciones</A>
+<UL>
+<LI><A NAME="tex2html640"
+  HREF="node4.html#SECTION00421000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> Parámetros opcionales y con nombre</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html641"
+  HREF="node4.html#SECTION00430000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">3</SPAN> Cómo escribir código legible</A>
+<UL>
+<LI><A NAME="tex2html642"
+  HREF="node4.html#SECTION00431000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN> Cadenas de texto de documentación</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html643"
+  HREF="node4.html#SECTION00440000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">4</SPAN> El camino de búsqueda para <SPAN  CLASS="textsf">import</SPAN></A>
+<LI><A NAME="tex2html644"
+  HREF="node4.html#SECTION00450000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">5</SPAN> En Python todo es un Objeto</A>
+<UL>
+<LI><A NAME="tex2html645"
+  HREF="node4.html#SECTION00451000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> ¿Qué es un objeto?</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html646"
+  HREF="node4.html#SECTION00460000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">6</SPAN> Indentar código</A>
+<LI><A NAME="tex2html647"
+  HREF="node4.html#SECTION00470000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">7</SPAN> Excepciones</A>
+<UL>
+<LI><A NAME="tex2html648"
+  HREF="node4.html#SECTION00471000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN> Capturar errores al importar</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html649"
+  HREF="node4.html#SECTION00480000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">8</SPAN> Variables sin declarar</A>
+<LI><A NAME="tex2html650"
+  HREF="node4.html#SECTION00490000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">9</SPAN> Mayúsculas y minúsculas</A>
+<LI><A NAME="tex2html651"
+  HREF="node4.html#SECTION004100000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">10</SPAN> Ejecución de scripts</A>
+<LI><A NAME="tex2html652"
+  HREF="node4.html#SECTION004110000000000000000"><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">11</SPAN> Lecturas complementarias</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00400000000000000000"></A><A NAME="ch:primerprograma"></A>
+<BR>
+<SPAN CLASS="arabic">1</SPAN>. Tu primer programa en Python
+</H1>
+
+<P>
+Nivel de dificultad:1 sobre 5
+
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``No entierres tu carga en un santo silencio.
+<BR>¿Tienes un problema? Estupendo. Alégrate, 
+<BR>
+sumérgete en él e investiga.''
+<BR>--http://en.wikiquote.org/wiki/BuddhismVen. Henepola Gunarata</I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION00410000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+</H1>
+
+<P>
+Los libros sobre programación suelen comenzar con varios capítulos sobre los fundamentos y van, poco a poco, avanzando hasta llegar a hacer programas útiles. Vamos a saltarnos todo eso. Lo primero que vamos a ver es un programa Python completo. Probablemente no tenga ningún sentido para ti. No te preocupes por eso, vamos a diseccionarlo línea por línea. Primero léelo y trata de interpretarlo.
+
+<P>
+<pre>
+# parahumanos.py
+
+<P>
+SUFIJOS = 1000: ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+           1024: ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 
+                  'YiB']
+
+<P>
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+    '''Convierte un tama<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>o de fichero en formato legible por personas
+
+<P>
+Argumentos/par<!-- MATH
+ $\textrm{\'{a}}$
+ --><SPAN CLASS="MATH">&#225;</SPAN>metros:
+    tamanyo - tama<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>o de fichero en bytes
+    un_kilobyte_es_1024_bytes - si True (por defecto), 
+                                 usa m<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>ltiplos de 1024
+                                 si False, usa m<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>ltiplos de 1000
+
+<P>
+retorna: string
+
+<P>
+'''
+    if tamanyo &lt; 0:
+        raise ValueError('el n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>mero debe ser no negativo')
+
+<P>
+multiplo = 1024 if un_kilobyte_es_1024_bytes else 1000
+    for sufijo in SUFIJOS[multiplo]:
+        tamanyo /= multiplo
+        if tamanyo &lt; multiplo:
+            return '0:.1f 1'.format(tamanyo, sufijo)
+
+<P>
+raise ValueError('n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>mero demasiado grande')
+
+<P>
+if __name__ == '__main__':
+    print(tamanyo_aproximado(1000000000000, False))
+    print(tamanyo_aproximado(1000000000000))
+
+<P>
+</pre> 
+<P>
+Antes de analizarlo paso a paso vamos a ejecutar el programa en la línea de comandos. En Linux o en Mac debes teclear: <SPAN  CLASS="textsf">python3 parahumanos.py</SPAN><A NAME="tex2html44"
+  HREF="footnode.html#foot1851"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>. El resultado será parecido a lo siguiente:
+
+<P>
+<pre>
+tu_usuario@tu_ordenador:&nbsp;/inmersionEnPython3<SPAN CLASS="MATH">$</SPAN> python3 parahumanos.py
+1.0 TB
+931.3 GiB</pre> 
+<P>
+En Windows debes teclear lo mismo: <SPAN  CLASS="textsf">python3 parahumanos.py</SPAN>, únicamente varía la forma del prompt de la consola. El resultado será parecido a:
+
+<P>
+<pre>
+C:
+<BR>
+inmersionenpython3:&gt; python3 parahumanos.py
+1.0 TB
+931.3 GiB</pre> 
+<P>
+¿Qué ha pasado? Acabas de ejecutar tu primer programa Python. Has ejecutado el intérprete de Python en la línea de comandos (<SPAN  CLASS="textsf">python3</SPAN>), y le has pasado como parámetro el nombre del fichero de script (<SPAN  CLASS="textsf">parahumanos.py</SPAN>) que querías ejecutar. 
+
+<P>
+El fichero de script, a su vez, define una única función de python, la función <SPAN  CLASS="textsf">tamnyo_aproximado</SPAN>, que toma como parámetros un tamaño de fichero con una precisión de bytes y calcula el tamaño en una unidad mayor en la que el valor quede más <SPAN  CLASS="textit">bonito</SPAN>, a cambio, el resultado es aproximado. (El funcionamiento del Explorador de Windows; del Finder de Mac OS X, o de Nautilus, Dolphin o Thunar de Linux es muy parecido. Si muestras en cualquiera de ellos una carpeta de documentos en modo detalle, de forma que se vean en diferentes columnas, el icono del documento, nombre, tamaño, tipo, fecha de última modificación, etc. Observarás que si un documento determinado ocupa 1093 bytes, en la columna de tamaño no dirá eso, sino que dirá algo así como 1 KB. Esto es lo que hace la función <SPAN  CLASS="textsf">tamanyo_aproximado</SPAN>)
+
+<P>
+Las líneas de código <SPAN  CLASS="textsf">print(tamanyo_aproximado(<SPAN  CLASS="textit">argumentos</SPAN>))</SPAN> del final del script, líneas 31 y 32, son dos llamadas a funciones --primero se llama a la función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN> pasándole unos parámetros (también llamados argumentos), esta función se ejecuta y devuelve un resultado que, posteriormente, se pasa como parámetro a la función <SPAN  CLASS="textsf">print()</SPAN>. Todo ello en la misma línea.
+
+<P>
+La función <SPAN  CLASS="textsf">print()</SPAN> es interna del lenguaje Python<A NAME="tex2html45"
+  HREF="footnode.html#foot1853"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>; nunca verás una declaración explícita de ella. La puedes usar cuando quieras, en cualquier parte de un programa Python<A NAME="tex2html46"
+  HREF="footnode.html#foot1854"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>.
+
+<P>
+¿Porqué la ejecución del script en la línea de comandos retorna siempre la misma respuesta? Lo veremos más adelante. Primero vamos a ver el funcionamiento de la función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN>.
+
+<P>
+
+<H1><A NAME="SECTION00420000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">2</SPAN> Declaración de funciones</A>
+</H1>
+
+<P>
+Python dispone de funciones como la mayoría de los lenguajes, pero no tiene ficheros de cabecera como <SPAN  CLASS="textsf">c++</SPAN> o secciones de <SPAN  CLASS="textsf">interface/implementation</SPAN> como en Pascal. En Python únicamente hay que declarar la función, como en el siguiente ejemplo:
+
+<P>
+<pre>
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):</pre> 
+<P>
+La palabra reservada <SPAN  CLASS="textsf">def</SPAN> inicia la declaración de la función, seguida del nombre que le quieres dar a la misma, seguida de los parámetros de la función entre paréntesis. Separándolos por comas en caso de que sean varios parámetros.
+
+<P>
+<blockquote>En Python cuando necesitas una función, solamente tienes que declararla.</blockquote>  
+
+<P>
+Observa también que, en Python, las funciones no definen un tipo de datos de retorno. No se especifica el tipo de datos del valor que retornan las funciones. Es más, ni siquiera se especifica si se retorna o no un valor. 
+
+<P>
+En realidad, todas las funciones de Python tienen un valor de retorno; si dentro del código de la función se ejecuta una sentencia <SPAN  CLASS="textsf">return</SPAN>, el valor que acompaña a la sentencia será el valor de retorno, en caso contrario se retorna el valor <SPAN  CLASS="textsf">None</SPAN>, que es la forma de expresar el vacío (<SPAN  CLASS="textsf">null</SPAN>) en Python.
+
+<P>
+<BLOCKQUOTE>
+En algunos lenguajes, las funciones que retornan un valor se declaran con la palabra <SPAN  CLASS="textsf">function</SPAN>, y las subrutinas que no retornan un valor con la palabra <SPAN  CLASS="textsf">sub</SPAN>. En Python no existen las subrutinas. Todas son funciones, todas las funciones devuelven un valor (<SPAN  CLASS="textsf">None</SPAN> si tú no devuelves algo expresamente con la palabra reservada <SPAN  CLASS="textsf">return</SPAN>) y todas las funciones comienzan con la palabra <SPAN  CLASS="textsf">def</SPAN>.
+
+</BLOCKQUOTE>
+
+<P>
+La función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN> recibe dos parámetros o argumentos, --<SPAN  CLASS="textsf">tamanyo</SPAN> y <SPAN  CLASS="textsf">un_kilobyte_es_1024_bytes</SPAN>-- pero ninguno de ellos especifica un tipo de datos. En Python, las variables nunca se tipifican explícitamente, Python deduce y  mantiene el tipo de datos de la variable de forma interna según el valor que tenga asignado la misma.
+
+<P>
+<BLOCKQUOTE>
+En Java y otros lenguajes con tipificación estática, debes especificar el tipo de datos de los parámetros y valor de retorno de cada función. En Python nunca especificas el tipo de datos de nada de forma explícita. Python mantiene el rastro de los tipos de datos de forma interna basándose en los valores que asignes a las variables.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION00421000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> Parámetros opcionales y con nombre</A>
+</H2>
+
+<P>
+Python permite que los parámetros de una función tengan valores por defecto; si la función se llama (para ejecutarla) si indicar el parámetro Python usará el valor por defecto para asignarlo al parámetro que no se ha especificado en la llamada a la función. Asimismo, los parámetros se pueden pasar en la llamada en cualquier orden si se utilizan parámetros con nombre.
+
+<P>
+Veamos de nuevo la declaración de la función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN>.
+
+<P>
+<pre>
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):</pre> 
+<P>
+El segundo parámetro <SPAN  CLASS="textsf">un_kilobyte_es_1024_bytes</SPAN>, especifica un valor por defecto igual a <SPAN  CLASS="textsf">True</SPAN>. Como consecuencia, este parámetro pasa a ser <SPAN  CLASS="textit">opcional</SPAN>; puedes llamar a la función sin pasarlo en los paréntesis. Python se comportará como si lo hubieras llamado con el valor <SPAN  CLASS="textsf">True</SPAN> como segundo parámetro.
+
+<P>
+Veamos el final del script<A NAME="tex2html47"
+  HREF="footnode.html#foot1855"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>:
+
+<P>
+<pre>
+if __name__ == '__main__':
+    print(tamanyo_aproximado(1000000000000, False))
+    print(tamanyo_aproximado(1000000000000))</pre> 
+<P>
+
+<OL>
+<LI>La primera llamada a la función (línea 2) utiliza dos parámetros. Durante la ejecución de la función <SPAN  CLASS="textsf">tamanyo_aproximado</SPAN> <SPAN  CLASS="textsf">un_kilobyte_es_1024_bytes</SPAN> tendrá el valor <SPAN  CLASS="textsf">False</SPAN>, que es lo que se pasa como segundo parámetro en la llamada a la función.
+
+<P>
+</LI>
+<LI>La segunda llamada a la función (línea 3) utiliza un único parámetro. Pero Python no se queja ya que el segundo es opcional. Como no se especifica, el segundo parámetro utiliza su valor por defecto <SPAN  CLASS="textsf">True</SPAN>, de acuerdo a lo que se definió en la declaración de la función.
+</LI>
+</OL>
+
+<P>
+También puedes pasar los valores a una función utilizando nombres. Prueba lo siguiente en la consola:
+
+<P>
+<pre>
+&#187;&gt; from parahumanos import tamanyo_aproximado
+&#187;&gt; tamanyo_aproximado(4000, un_kilobyte_es_1024_bytes=False)
+'4.0 KB'
+&#187;&gt; tamanyo_aproximado(tamanyo=4000, un_kilobyte_es_1024_bytes=False)
+'4.0 KB'
+&#187;&gt; tamanyo_aproximado(un_kilobyte_es_1024_bytes=False, tamanyo=4000)
+'4.0 KB'
+&#187;&gt; tamanyo_aproximado(un_kilobyte_es_1024_bytes=False, 4000)
+SyntaxError: non-keyword arg after keyword arg (&lt;pyshell#4&gt;, line 1)
+&#187;&gt; tamanyo_aproximado(tamanyo=4000, False)
+SyntaxError: non-keyword arg after keyword arg (&lt;pyshell#5&gt;, line 1)
+&#187;&gt; </pre> 
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Llama a la función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN> pasándole <SPAN  CLASS="textsf">4000</SPAN> al primer parámetro (<SPAN  CLASS="textsf">tamanyo</SPAN>) y el valor <SPAN  CLASS="textsf">False</SPAN> en el denominado <SPAN  CLASS="textsf">un_kilobyte_es_1204_bytes</SPAN> (En este caso coincide que el parámetro con nombre se está pasando en la segunda posición y también está declarado en la función como segundo parámetro, pero esto es simplemente una coincidencia).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Llama a la función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN> pasándole <SPAN  CLASS="textsf">4000</SPAN> al parámetro denominado <SPAN  CLASS="textsf">tamanyo</SPAN> y <SPAN  CLASS="textsf">False</SPAN> al parámetro denominado <SPAN  CLASS="textsf">un_kilobyte_es_1024_bytes</SPAN> (Estos parámetros coinciden en orden con los de la declaración de la función, pero vuelve a ser una simple coincidencia).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Llama a a la función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN> pasándole <SPAN  CLASS="textsf">False</SPAN> al parámetro denominado <SPAN  CLASS="textsf">un_kilobyte_es_1024_bytes</SPAN> y <SPAN  CLASS="textsf">4000</SPAN> al parámetro denominado <SPAN  CLASS="textsf">tamanyo</SPAN> (Esta es la utilidad de usar nombres en las llamadas a una función, poder pasarlos en cualquier orden, e incluso no pasar alguno de los existentes para que tomen valores por defecto mientras sí que pasas uno de los últimos parámetros de la función).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Esta llamada a la función falla porque se usa un parámetro con nombre seguido de uno sin nombre (por posición). Esta forma de llamar a la función siempre falla. Python lee la lista de parámetros de izquierda a derecha, en cuanto aparece un parámetro con nombre, el resto de parámetros debe también proporcionarse por nombre. Los primeros pueden ser por posición.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> Esta llamada también falla por la misma razón que la anterior. ¿Te sorprende? Después de todo, el primer parámetro se ha denominado <SPAN  CLASS="textsf">tamanyo</SPAN> y recibe el valor <SPAN  CLASS="textsf">4000</SPAN>, es <SPAN  CLASS="textit">obvio</SPAN> que el valor <SPAN  CLASS="textsf">False</SPAN> debería asignarse al parámetro <SPAN  CLASS="textsf">un_kilobyte_es_1024_bytes</SPAN>. Pero Python no funciona de esa forma. Tan pronto como lee un parámetro con nombre, todos los parámetros siguientes (a la derecha) tienen que llevar el nombre del parámetro.
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00430000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">3</SPAN> Cómo escribir código legible</A>
+</H1>
+
+<P>
+No te voy a aburrir con una larga charla sobre la importancia de documentar el código. Solamente decir que el código se escribe una vez pero se lee muchas veces, y que quien más lo va a leer eres tú, seis meses después de haberlo escrito (por ejemplo: cuando ya no te acuerdes de nada pero necesites corregir o añadir algo). Python hace fácil escribir código legible, aprovéchate de ello. Me lo agradecerás dentro de seis meses.
+
+<P>
+
+<H2><A NAME="SECTION00431000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN> Cadenas de texto de documentación</A>
+</H2>
+
+<P>
+Puedes documentar una función proporcionándole una cadena de documentación (abreviando se suele hablar de <SPAN  CLASS="textsf">docstring</SPAN>). En este programa, la función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN> tiene una cadena de documentación (<SPAN  CLASS="textsf">docstring</SPAN>):
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+    '''Convierte un tama<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>o de fichero en formato legible por personas
+
+<P>
+Argumentos/par<!-- MATH
+ $\textrm{\'{a}}$
+ --><SPAN CLASS="MATH">&#225;</SPAN>metros:
+    tamanyo - tama<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>o de fichero en bytes
+    un_kilobyte_es_1024_bytes - si True (por defecto), 
+                                 usa m<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>ltiplos de 1024
+                                 si False, usa m<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>ltiplos de 1000
+
+<P>
+retorna: string
+
+<P>
+'''</pre></TD></TR>
+</TABLE>
+
+<P>
+La comillas triples sirven para escribir cadenas de texto que ocupen más de una línea. Todo lo que se escribe entre las comillas triples forma parte de una única cadena de texto, incluidos los espacios en blanco, retornos de carro, saltos de línea y otras comillas <SPAN  CLASS="textit">sueltas</SPAN>. Este tipo de cadenas de texto lo puedes utilizar donde quieras dentro del código Python, pero normalmente se utilizan para definir <SPAN  CLASS="textsf">docstring</SPAN> (cadenas de texto de documentación).
+
+<P>
+<BLOCKQUOTE>
+Las comillas triples son la manera más simple de escribir cadenas de texto que incluyan, a su vez, comillas simples y/o dobles, como cuando en Perl 5 se utiliza <SPAN  CLASS="textsf">q/.../</SPAN>
+
+</BLOCKQUOTE>
+
+<P>
+<blockquote>Todas las funciones se merecen un <SPAN  CLASS="textit">docstring</SPAN> que las explique</blockquote>  
+
+<P>
+En este ejemplo, todo lo que se encuentra entre las comillas triples es el <SPAN  CLASS="textsf">docstring</SPAN> de la función, que sirve para documentar lo que hace la función. Un <SPAN  CLASS="textsf">docstring</SPAN>, si existe, debe ser lo primero que aparece definido en una función (es decir, se debe encontrar en la primera línea que aparece después de la declaración de la función). Técnicamente no necesitas escribir un <SPAN  CLASS="textsf">docstring</SPAN> para cada función, pero deberías. Sé que lo has escuchado en las clases que programación a las que hayas asistido, pero Python te da un incentivo mayor para que lo hagas: los <SPAN  CLASS="textsf">docstring</SPAN> están disponibles en tiempo de ejecución como un atributo de la función.
+
+<P>
+<BLOCKQUOTE>
+Muchos entornos integrados de programación (<SPAN  CLASS="textsf">IDEs</SPAN>) utilizan los <SPAN  CLASS="textsf">docstring</SPAN> para proporcionar ayuda y documentación sensible al contexto, de forma que cuando teclees el nombre de una función, aparece su <SPAN  CLASS="textsf">docstring</SPAN> como pista sobre el significado de la función y de sus parámetros. Esto puede ser muy útil, tan útil como explicativos sean los <SPAN  CLASS="textsf">docstring</SPAN> que escribas.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H1><A NAME="SECTION00440000000000000000"></A><A NAME="sc:search_path"></A>
+<BR>
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">4</SPAN> El camino de búsqueda para <SPAN  CLASS="textsf">import</SPAN>
+</H1>
+
+<P>
+Antes de continuar, quiero mencionar brevemente el camino<A NAME="tex2html48"
+  HREF="footnode.html#foot1858"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A> de búsqueda de las librerías. Cuando importas un módulo, Python busca en varios lugares hasta encontrarlo. En concreto, busca en todos los directorios que se encuentren definidos en la variable <SPAN  CLASS="textsf">sys.path</SPAN>. Como se trata de una <SPAN  CLASS="textsf">lista</SPAN>, puedes verla fácilmente o modificarla con los métodos estándares de manipulación de listas. (Aprenderás a trabajar con listas en el capítulo&nbsp;<A HREF="node5.html#ch:tiposdedato">2</A> sobre Tipos de Dato Nativos).
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD><pre>
+&#187;&gt; import sys
+&#187;&gt; sys.path
+['', 
+ '/usr/lib/python3.0',  
+ '/usr/lib/python3.0/plat-linux2',
+ '/usr/lib/python3.0/lib-dynload',
+ '/usr/lib/python3.0/dist-packages',
+ '/usr/local/lib/python3.0/dist-packages']
+&#187;&gt; sys
+&lt;module 'sys' (built-in)&gt;
+&#187;&gt; sys.path.insert(0, '/home/jmgaguilera/inmersionenpython3/ejemplos')
+&#187;&gt; sys.path
+['/home/jmgaguilera/inmersionenpython3/ejemplos',
+ '',
+ '/usr/lib/python3.0',
+ '/usr/lib/python3.0/plat-linux2',
+ '/usr/lib/python3.0/lib-dynload',
+ '/usr/lib/python3.0/dist-packages',
+ '/usr/local/lib/python3.0/dist-packages']
+&#187;&gt; 
+
+<P>
+</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Al importar el paquete <SPAN  CLASS="textsf">sys</SPAN> de esta forma, todas sus funciones y atributos quedan a disposición del programador para su uso.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Líneas 2-8:</SPAN> <SPAN  CLASS="textsf">sys.path</SPAN> es una variable (<SPAN  CLASS="textsf">path</SPAN>) del paquete <SPAN  CLASS="textsf">sys</SPAN> que contiene una lista de los directorios que constituyen el camino de búsqueda (El tuyo será diferente, ya que depende del sistema operativo, de la versión de Python que tengas instalada, y del lugar en el que está instalada). Siempre que se haga un <SPAN  CLASS="textsf">import</SPAN> en el código, Python buscará en estos directorios (por orden), hasta encontrar un fichero cuyo nombre coincida con el valor que se usa en la sentencia <SPAN  CLASS="textsf">import</SPAN> más la extensión <SPAN  CLASS="textsf">.py</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Líneas 9-10:</SPAN> En realidad te he mentido un poco, la realidad es un poco más compleja, no todos los módulos se almacenan en ficheros con extensión <SPAN  CLASS="textsf">.py</SPAN>. Algunos de ellos, como el módulo <SPAN  CLASS="textsf">sys</SPAN> son módulos internos (<SPAN  CLASS="textsf">built-in</SPAN>); no existen en ficheros, están construidos internamente en el propio lenguaje. En la práctica funcionan exactamente igual que los módulos que están en ficheros, la única diferencia es que no existe el código fuente, ¡Porque no están escritos en Python! (El módulo <SPAN  CLASS="textsf">sys</SPAN> está escrito en lenguaje <SPAN  CLASS="textsf">c</SPAN>).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 11:</SPAN> En <SPAN  CLASS="textit">tiempo de ejecución</SPAN> puedes añadir un nuevo directorio al camino de búsqueda de Python añadiendo un directorio a la variable <SPAN  CLASS="textsf">sys.path</SPAN>, así Python también buscará en él cada vez que intentes importar un módulo. El efecto de este cambio dura mientras se mantenga en ejecución Python. Al finalizar, y volver a entrar en Python, el camino (la variable <SPAN  CLASS="textsf">sys.path</SPAN>) volverá a tener los valores iniciales.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Líneas 12-19</SPAN>: Al ejecutar <SPAN  CLASS="textsf">sys.path.insert(0, path)</SPAN> se nsertó un nuevo directorio en la primera posición (en Python la primera posición se numera con el cero) de la lista de <SPAN  CLASS="textsf">sys.path</SPAN>. Casi siempre, será esto lo que quieras hacer. En casos en los que exista algún conflicto de nombres (por ejemplo, si Python tiene su propia versión de una librería y es de la versión 2, pero quieres utilizar otra que sea de la versión 3), así te aseguras que tus módulos se encuentran antes y ejecutan en lugar de los originales.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00450000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">5</SPAN> En Python todo es un Objeto</A>
+</H1>
+
+<P>
+En caso de te lo hayas perdido, acabo de decir que las funciones de Python tienen atributos, y que esos atributos están disponibles en tiempo de ejecución. Una función, como todo lo demás en Python, es un objeto.
+
+<P>
+Abre la consola interactiva de Python y ejecuta lo siguiente:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import parahumanos
+&#187;&gt; print(parahumanos.tamanyo_aproximado(4096, True))
+4.0 KiB
+&#187;&gt; print(parahumanos.tamanyo_aproximado.__doc__)
+Convierte un tama<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>o de fichero en un formato legible por personas
+
+<P>
+Argumentos/par<!-- MATH
+ $\textrm{\'{a}}$
+ --><SPAN CLASS="MATH">&#225;</SPAN>metros:
+    tamanyo - tama<!-- MATH
+ $\textrm{\~{n}}$
+ --><SPAN CLASS="MATH">&#241;</SPAN>o de fichero en bytes
+    un_kilobyte_es_1024_bytes - si True (por defecto), 
+                                 usa m<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>ltiplos de 1024
+                                 si False, usa m<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>ltiplos de 1000
+
+<P>
+retorna: string
+
+<P>
+&#187;&gt; </pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Importa (carga en memoria) el programa <SPAN  CLASS="textsf">parahumanos</SPAN> como un módulo --un trozo de código que puedes utilizar de forma interactiva o desde un programa Python mayor. Una vez se ha importado el módulo, puedes utilizar (referenciar) cualquiera de sus funciones públicas, clases o atributos. Si desde un módulo se desea utilizar la funcionalidad de otro, basta con hacer exactamente lo mismo que en esta línea de la consola interactiva.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Cuando quieres utilizar las funciones que estén definidas en los módulos importados, tienes que añadir el nombre del módulo. No es posible utilizar simplemente <SPAN  CLASS="textsf">tamanyo_aproximado</SPAN>, debes utilizar <SPAN  CLASS="textsf">parahumanos.tamanyo_aproximado</SPAN>. Si has utilizado Java, esta forma de utilizar una función debería sonarte.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> En este caso, en lugar de llamar a la función como podrías esperar, se consulta uno de los atributos de la función, <SPAN  CLASS="textsf">__doc__</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+En Python <SPAN  CLASS="textsf">import</SPAN> es equivalente al <SPAN  CLASS="textsf">require</SPAN> de Perl.
+Cuando importas (<SPAN  CLASS="textsf">import</SPAN>) un módulo de Python puedes acceder a todas sus funciones con la sintaxis <SPAN  CLASS="textsf">módulo.función</SPAN>. En Perl, cuando se requiere (<SPAN  CLASS="textsf">require</SPAN>) un módulo puedes acceder a todas sus funciones con la sintaxis <SPAN  CLASS="textsf">módulo::función</SPAN>
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION00451000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> ¿Qué es un objeto?</A>
+</H2>
+
+<P>
+En Python todo es un objeto, y todos los objetos pueden tener atributos y métodos. Todas las funciones son objetos, y tienen el atributo <SPAN  CLASS="textsf">__doc__</SPAN>, que retorna el <SPAN  CLASS="textsf">docstring</SPAN> que se haya definido en el código fuente. El módulo <SPAN  CLASS="textsf">sys</SPAN> es también un objeto que tiene (entre otras cosas) un atributo denominado <SPAN  CLASS="textsf">path</SPAN>. Como se ha dicho: todo lo que se defina en Python es un objeto y puede tener atributos y métodos.
+
+<P>
+Sin embargo, no hemos contestado aún a la pregunta fundamental: ¿Qué es un objeto? Los diferentes lenguajes de programación definen <SPAN  CLASS="textit">objeto</SPAN> de diferente forma. En algunos, significa que <SPAN  CLASS="textit">todos</SPAN> los objetos <SPAN  CLASS="textit">deben</SPAN> tener atributos y métodos; en otros, significa que todos los objetos pueden tener subclases. En Python la definición es más <SPAN  CLASS="textit">relajada</SPAN>. Algunos objetos no tienen ni atributos ni métodos, <SPAN  CLASS="textit">pero podrían</SPAN>. No todos los objetos pueden tener subclases. Pero todo es un objeto en el sentido de que pueden asignarse a variables y pasarse como parámetro de una función.
+
+<P>
+Puede que hayas oído en otro contexto de programación el término <SPAN  CLASS="textit">objeto de primera clase</SPAN>. En Python, las funciones son <SPAN  CLASS="textit">objetos de primera clase</SPAN>. Puedes pasar una función como parámetro de otra función. Los módulos también son <SPAN  CLASS="textit">objetos de primera clase</SPAN>. Puedes pasar un módulo completo como parámetro de una función. Las clases son <SPAN  CLASS="textit">objetos de primera clase</SPAN>, y las instancias de las clases también lo son.
+
+<P>
+Esto es importante, por lo que lo voy a repetir en caso de que se te escapara las primeras veces: <SPAN  CLASS="textit">en Python, todo es un objeto</SPAN>. Las cadenas son objetos, las listas son objetos. Las funciones son objetos. Las clases son objetos. Las instancias de las clases son objetos. E incluso los módulos son objetos.
+
+<P>
+
+<H1><A NAME="SECTION00460000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">6</SPAN> Indentar código</A>
+</H1>
+
+<P>
+Las funciones de Python no tienen <SPAN  CLASS="textsf">begin</SPAN> o <SPAN  CLASS="textsf">end</SPAN>, y tampoco existen llaves que marquen donde comienza y acaba el código de una función. El único delimitador es el símbolo de los dos puntos (<SPAN  CLASS="textsf">:</SPAN>) y el propio indentado del código.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+def tamanyo_aproximado(tamanyo, un_kilobyte_es_1024_bytes=True):
+    if tamanyo &lt; 0:
+        raise ValueError('El n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>mero debe ser no negativo')
+
+<P>
+multiplo = 1024 if un_kilobyte_es_1024_bytes else 1000
+    for sufijo in SUFIJO[multiplo]:
+        tamanyo /= multiplo
+        if tamanyo &lt; multiplo:
+            return '0:.1f 1'.format(tamanyo, sufijo)
+
+<P>
+raise ValueError('n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>mero demasiado grande')</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Los bloques de código se definen por su indentado. Por ``bloque de código'' se entiende lo siguiente: funciones, sentencias <SPAN  CLASS="textsf">if</SPAN>, bucles <SPAN  CLASS="textsf">for</SPAN>, bucles while y similar. Al indentar se inicia el bloque y al desindentar se finaliza. No existen llaves, corchetes o palabras clave para iniciar y finalizar un bloque de forma explícita. Esto implica que los espacios en blanco son significativos, y deben ser consistentes. En este ejemplo, el código de la función está indentado con cuatro espacios. No es necesario que sean cuatro, pero sí que sea consistente y siempre sean los mismos. La primera línea que no esté indentada delimita el final de la función.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> En Python, la sentencia <SPAN  CLASS="textsf">if</SPAN> debe contener un bloque de código. Si la expresión que sigue al <SPAN  CLASS="textsf">if</SPAN> es verdadera<A NAME="tex2html49"
+  HREF="footnode.html#foot1859"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A> se ejecuta el bloque indentado que contiene el <SPAN  CLASS="textsf">if</SPAN>, en caso contrario lo que se ejecuta es el bloque contenido en el <SPAN  CLASS="textsf">else</SPAN> (si existe). Observa la ausencia de paréntesis alrededor de la expresión.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Esta línea se encuentra <SPAN  CLASS="textit">dentro</SPAN> del bloque de código del <SPAN  CLASS="textsf">if</SPAN>. La sentencia <SPAN  CLASS="textsf">raise</SPAN> elevará una excepción (del tipo <SPAN  CLASS="textsf">ValueError</SPAN>, pero únicamente si <SPAN  CLASS="textsf">tamanyo &lt; 0</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Esta línea <SPAN  CLASS="textit">no</SPAN> marca el final de la función. Las líneas que están completamente en blanco no cuentan. Únicamente sirven para hacer más legible el código, pero no cuentan como delimitadores de código. La función continúa en la línea siguiente.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> El bucle <SPAN  CLASS="textsf">for</SPAN> también marca el comienzo de un bloque de código. Los bloques pueden contener múltiples líneas, siempre que estén indentadas con el mismo número de espacios. Este bucle <SPAN  CLASS="textsf">for</SPAN> contiene tres líneas de código en él. No existe ninguna otra sintaxis especial para los bloques de varias líneas. Basta con indentar y... ¡seguir adelante con el trabajo!
+
+<P>
+</LI>
+</OL>
+
+<P>
+<blockquote>Python utiliza los saltos de línea para separar las sentencias y los dos puntos y la indentación para separar los bloques de código. C++ y Java utilizan puntos y coma para separar sentencias y llaves para separar los bloques de código.</blockquote>  
+
+<P>
+Después de algunas protestas iniciales e insidiosas analogías con Fortran, seguro que harás las paces con esta forma de marcar los bloques de código y comenzarás a apreciar sus beneficios. Uno de los mayores beneficios es que todos los programas Python tienen un formato similar, al ser la indentación un requisito del lenguaje y no un elemento de estilo. La consecuencia inmediata es que los programas Python son más fáciles de leer y comprender por parte de una persona diferente de su programador<A NAME="tex2html50"
+  HREF="footnode.html#foot1717"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A>.
+
+<P>
+
+<H1><A NAME="SECTION00470000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">7</SPAN> Excepciones</A>
+</H1>
+
+<P>
+Las excepciones están en todas partes en Python. Prácticamente todos los módulos de la librería estándar las utilizan, y el propio lenguaje las lanza en muchas circunstancias. Las verás una y otra vez a lo largo del libro.
+
+<P>
+¿Qué es una excepción? Normalmente es un error, una indicación de que algo fue mal (No todas las excepciones son errores, pero no te preocupes por eso ahora). Algunos lenguajes de programación fomentan que se retornen códigos de error en las funciones, que los programadores tendrán que <SPAN  CLASS="textit">chequear</SPAN>. Python fomenta el uso de las excepciones, que los programadores tienen que <SPAN  CLASS="textit">capturar</SPAN> y <SPAN  CLASS="textit">manejar</SPAN>.
+
+<P>
+<blockquote>Al contrario que Java, las funciones de Python no declaran las excepciones que podrían elevar. Te corresponde a ti determinar las excepciones que pueden suceder y necesitas capturar.</blockquote>  
+
+<P>
+Cuando sucede un error se muestra en la consola de Python algunos detalles de la excepción y cómo se produjo. A esto se le llama <SPAN  CLASS="textit">excepción sin capturar</SPAN>. Cuando la excepción se generó, Python no encontró un trozo de código que estuviera previsto que la capturase y respondiera en consecuencia, por eso la excepción se fue <SPAN  CLASS="textit">elevando</SPAN> hasta llegar al nivel más alto en la consola, la cual muestra alguna información útil para la depuración del código y finaliza. Si esto sucede en la consola no es excesivamente preocupante, pero si le sucede a tu programa en plena ejecución, el programa finalizaría de forma incontrolada y no se capturase la excepción. Puede que sea lo que quieras, pero puede que no.
+
+<P>
+<blockquote>Python utiliza bloques <SPAN  CLASS="textsf">try...except</SPAN> para manejar excepciones, y la sentencia <SPAN  CLASS="textsf">raise</SPAN> para generarlas. Java y C++ utilizan bloques <SPAN  CLASS="textsf">try...catch</SPAN> para manejarlas y la sentencia <SPAN  CLASS="textsf">throw</SPAN> para generarlas.</blockquote>  
+
+<P>
+El hecho de que suceda una excepción no implica necesariamente que el programa tenga que fallar. Las excepciones se pueden <SPAN  CLASS="textit">manejar</SPAN>. Algunas veces una excepción sucede porque tienes un error en el código (como por ejemplo, acceder al valor de una variable que no existe), pero en otras ocasiones puedes anticiparlo. Si vas a abrir un fichero, puede que no exista. Si vas a importar un módulo, puede que no esté instalado. Si te vas a conectar a una base de datos, puede que no esté disponible, o puede que no tengas las credenciales necesarias para acceder a ella. Si sabes que una línea de código puede <SPAN  CLASS="textit">elevar</SPAN> una excepción, deberías <SPAN  CLASS="textit">manejar</SPAN> la excepción utilizando el bloque <SPAN  CLASS="textsf">try...except</SPAN>.
+
+<P>
+La función <SPAN  CLASS="textsf">tamanyo_aproximado()</SPAN> eleva excepciones por dos causas: el tamaño que se pasa es mayor que el previsto, o si es menor que cero.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+    if tamanyo &lt; 0:
+        raise ValueError('El n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>mero debe ser no negativo')</pre></TD></TR>
+</TABLE>
+
+<P>
+La sintaxis para elevar una excepción es muy simple. Utiliza la sentencia <SPAN  CLASS="textsf">raise</SPAN>, seguida del nombre de la excepción y, opcionalmente, se le pasa como parámetro una cadena de texto que sirve para propósitos de depuración. La sintaxis es parecida a la de llamar a una función <A NAME="tex2html51"
+  HREF="footnode.html#foot1861"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">8</SPAN></SUP></A>.
+
+<P>
+<BLOCKQUOTE>
+No necesitas manejar las excepciones en la función que las eleva. Si no se manejan en la función que las eleva, las excepciones pasan a la función que la llamó, luego a la que llamó a esa, y así sucesivamente a través de toda la ``pila de llamadas''. Si una excepción no se manejase en ninguna función, el programa fallará y finalizará, Python imprimirá una <SPAN  CLASS="textit">traza</SPAN> del error, y punto. Puede que fuese lo que querías o no, depende de lo que pretendieras, ¡que para eso eres el programador!
+
+</BLOCKQUOTE>
+
+<P>
+
+<H2><A NAME="SECTION00471000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN> Capturar errores al importar</A>
+</H2>
+
+<P>
+Una de las excepciones internas de Python es <SPAN  CLASS="textsf">ImportError</SPAN>, que se eleva cuando intentas importar un módulo y falla. Esto puede suceder por diversas causas, pero la más simple es que el módulo no exista en tu camino de búsqueda. Puedes utilizar esta excepción para incluir características opcionales a tu programa. Por ejemplo, la librería <SPAN  CLASS="textsf">chardet</SPAN> que aparece en el capítulo&nbsp;<A HREF="node12.html#ch:chardet">15</A> autodetecta la codificación de caracteres. Posiblemente tu programa quiera utilizar esta librería si está instalada, pero continuar funcionando si no lo está. Para ello puedes utilizar un bloque <SPAN  CLASS="textsf">try...except</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+    try:
+        import chardet
+    except ImportError:
+        chardet = None</pre></TD></TR>
+</TABLE>
+
+<P>
+Posteriormente, en el código, puedes consultar la presencia de la librería con una simple sentencia <SPAN  CLASS="textsf">if</SPAN>:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+    if chardet:
+        # hacer algo
+    else:
+        # seguir de todos modos</pre></TD></TR>
+</TABLE>
+
+<P>
+Otro uso habitual de la excepción <SPAN  CLASS="textsf">ImportError</SPAN> es cuando dos módulos implementan una <SPAN  CLASS="textsf">API</SPAN><A NAME="tex2html52"
+  HREF="footnode.html#foot1766"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">9</SPAN></SUP></A> común, pero existe preferencia por uno de ellos por alguna causa (tal vez sea más rápida, o use menos memoria). Puedes probar a importar un módulo y si falla cargar el otro. Por ejemplo, en el capítulo&nbsp;<A HREF="node10.html#ch:xml">12</A> sobre XML se habla de dos módulos que implementan una <SPAN  CLASS="textsf">API</SPAN> común, denominada <SPAN  CLASS="textsf">ElementTree API</SPAN>. El primero <SPAN  CLASS="textsf">lxml.etree</SPAN>, es un módulo desarrollado por terceros que requiere descargarlo e instalarlo tú mismo. El segundo, <SPAN  CLASS="textsf">xml.etree.ElementTree</SPAN>, es más lento pero forma parte de la librería estándar de Python 3.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+    try:
+        from lxml import etree
+    except ImportError:
+        import xml.etree.ElementTree as etree</pre></TD></TR>
+</TABLE>
+
+<P>
+Al final de este bloque <SPAN  CLASS="textsf">try...except</SPAN>, has importando <SPAN  CLASS="textit">algún</SPAN> modulo y lo has llamado <SPAN  CLASS="textsf">etree</SPAN>. Puesto que ambos módulos implementan una <SPAN  CLASS="textsf">API</SPAN> común, el resto del código no se tiene que preocupar de qué módulo se ha cargado<A NAME="tex2html53"
+  HREF="footnode.html#foot1862"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">10</SPAN></SUP></A>. Asimismo, como el módulo que se haya importado termina llamándose <SPAN  CLASS="textsf">etree</SPAN>, el resto del código no tiene que estar repleto de sentencias <SPAN  CLASS="textsf">if</SPAN> para llamar a diferentes módulos con diferente nombre.
+
+<P>
+
+<H1><A NAME="SECTION00480000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">8</SPAN> Variables sin declarar</A>
+</H1>
+
+<P>
+Échale otro vistazo a la siguiente línea de código de la función <SPAN  CLASS="textsf">tamanyo_aproximado</SPAN>:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+    multiplo = 1024 if un_kilobyte_es_1024_bytes else 1000</pre></TD></TR>
+</TABLE>
+
+<P>
+La variable <SPAN  CLASS="textsf">multiplo</SPAN> no se ha declarado en ningún sitio, simplemente se le asigna un valor. En Python es correcto. Lo que no te dejará hacer nunca Python es referenciar a una variable a la que nunca le has asignado un valor. Si intentas hacerlo se elevará la excepción <SPAN  CLASS="textsf">NameError</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; x
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+NameError: name 'x' is not defined
+&#187;&gt; x = 1
+&#187;&gt; x
+1</pre></TD></TR>
+</TABLE>
+
+<P>
+¡Le darás las gracias frecuentemente a Python por avisarte!
+
+<P>
+
+<H1><A NAME="SECTION00490000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">9</SPAN> Mayúsculas y minúsculas</A>
+</H1>
+
+<P>
+En Python, todos los nombres distinguen mayúsculas y minúsculas: los nombres de variables, de funciones, de módulos, de excepciones. De forma que no es el mismo nombre si cambia alguna letra de mayúscula a minúscula o viceversa.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; un_entero = 1
+&#187;&gt; un_entero
+1
+&#187;&gt; UN_ENTERO
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+NameError: name 'UN_ENTERO' is not defined
+&#187;&gt; Un_Entero
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+NameError: name 'Un_Entero' is not defined
+&#187;&gt; un_enteRo
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+NameError: name 'un_enteRo' is not defined</pre></TD></TR>
+</TABLE>
+
+<P>
+Y así siempre si pruebas todas las combinaciones posibles.
+
+<P>
+
+<H1><A NAME="SECTION004100000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">10</SPAN> Ejecución de scripts</A>
+</H1>
+
+<P>
+<blockquote>Todo lo que existe en Python es un Objeto</blockquote>  
+
+<P>
+Los módulos de Python son objetos, por lo que tienen propiedades muy útiles. Puedes utilizar alguna de ellas para probar tus módulos de una forma sencilla. Para ello puedes incluir un bloque de código especial que se ejecute cuando arrancas el fichero desde la línea de comando. Observa las últimas líneas de <SPAN  CLASS="textsf">parahumanos.py</SPAN>:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+if __name__ == '__main__':
+    print(tamanyo_aproximado(1000000000000, False))
+    print(tamanyo_aproximado(1000000000000))</pre></TD></TR>
+</TABLE>
+
+<P>
+<BLOCKQUOTE>
+Como en C, Python utiliza <SPAN  CLASS="textsf">==</SPAN> para las comparaciones y <SPAN  CLASS="textsf">=</SPAN> para las asignaciones. Al contrario que C, Python no permite la asignación ``en línea'', por lo que no es posible asignar un valor por accidente cuando tu intención fuese comparar.
+
+</BLOCKQUOTE>
+
+<P>
+¿Qué es lo que hace este <SPAN  CLASS="textsf">if</SPAN> tan especial? Como los módulos son objetos, tienen propiedades, y una de las propiedades de los módulos es <SPAN  CLASS="textsf">__name__</SPAN>. El valor de la propiedad <SPAN  CLASS="textsf">__name__ </SPAN> depende de la forma en la que estés utilizando el módulo. Si importas el módulo con la sentencia <SPAN  CLASS="textsf">import</SPAN> el valor que contiene <SPAN  CLASS="textsf">__name__</SPAN> es el nombre del fichero del módulo sin la extensión.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import parahumanos
+&#187;&gt; parahumanos.__name__
+'parahumanos'</pre></TD></TR>
+</TABLE>
+
+<P>
+Pero también puedes ejecutar directamente el módulo como un programa autónomo, en cuyo caso <SPAN  CLASS="textsf">__name__</SPAN> contiene el valor especial <SPAN  CLASS="textsf">__main__</SPAN>. En el ejemplo, Python evaluará la sentencia <SPAN  CLASS="textsf">if</SPAN>, la expresión será verdadera y ejecutará el bloque de código contenido en el <SPAN  CLASS="textsf">if</SPAN>. En este caso, imprimir dos valores:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+jmgaguilera@acerNetbook:&nbsp;/inmersionEnPython3/src<SPAN CLASS="MATH">$</SPAN> python3 parahumanos.py
+1.0 TB
+931.3 GiB</pre></TD></TR>
+</TABLE>
+
+<P>
+¡Y así queda explicado tu primer programa Python!
+
+<P>
+
+<H1><A NAME="SECTION004110000000000000000">
+<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">11</SPAN> Lecturas complementarias</A>
+</H1>
+
+<P>
+
+<UL>
+<LI>http://www.python.org/dev/peps/pep-0257/PEP 257: Docstring Conventions ``Convenciones para escribir docstring''. Explica lo que distingue un buen <SPAN  CLASS="textsf">docstring</SPAN> de un gran <SPAN  CLASS="textsf">docstring</SPAN>.
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/tutorial/controlflow.html#documentation-stringsTutorial de Python: Cadenas de texto para documentación también aborda la materia.
+
+<P>
+</LI>
+<LI>http://www.python.org/dev/peps/pep-0008/PEP 8: Guía de estilo para codificación en Python comenta cual es el estilo recomendado de indentación.
+
+<P>
+</LI>
+<LI>http://docs.python.org/3.1/reference/Manual de referencia de Python explica lo que significa decir que http://docs.python.org/3.1/reference/datamodel.html#objects-values-and-typestodo en Python es un objeto, porque algunas personas son algo pedantes y les gusta discutir largo y tendido sobre ese tipo de cosas.
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html637"
+  HREF="node5.html">2. Tipos de dato</A>
+<B> Subir a:</B> <A NAME="tex2html635"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html629"
+  HREF="node3.html">0. Instalación de Python</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>

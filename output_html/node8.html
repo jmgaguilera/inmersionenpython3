@@ -1,0 +1,827 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//ES">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>5. Clases e iteradores</TITLE>
+<META NAME="description" CONTENT="5. Clases e iteradores">
+<META NAME="keywords" CONTENT="inmersionEnPython">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="inmersionEnPython.css">
+
+<LINK REL="next" HREF="node9.html">
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="inmersionEnPython.html">
+<LINK REL="next" HREF="node9.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html748"
+  HREF="node9.html">6. Refactorizar</A>
+<B> Subir a:</B> <A NAME="tex2html746"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html740"
+  HREF="node7.html">4. Cadenas de texto</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html749"
+  HREF="node8.html#SECTION00810000000000000000"><SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+<LI><A NAME="tex2html750"
+  HREF="node8.html#SECTION00820000000000000000"><SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">2</SPAN> Cómo se definen clases</A>
+<UL>
+<LI><A NAME="tex2html751"
+  HREF="node8.html#SECTION00821000000000000000"><SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> El método <SPAN  CLASS="textsf">__init__()</SPAN></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html752"
+  HREF="node8.html#SECTION00830000000000000000"><SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">3</SPAN> Instanciar clases</A>
+<LI><A NAME="tex2html753"
+  HREF="node8.html#SECTION00840000000000000000"><SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">4</SPAN> Variables de las instancias</A>
+<LI><A NAME="tex2html754"
+  HREF="node8.html#SECTION00850000000000000000"><SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">5</SPAN> Un iterador para la serie de Fibonacci</A>
+<LI><A NAME="tex2html755"
+  HREF="node8.html#SECTION00860000000000000000"><SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">6</SPAN> Un iterador para reglas de formación de plurales</A>
+<LI><A NAME="tex2html756"
+  HREF="node8.html#SECTION00870000000000000000"><SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">7</SPAN> Lecturas recomendadas</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00800000000000000000"></A><A NAME="ch:clases"></A>
+<BR>
+<SPAN CLASS="arabic">5</SPAN>. Clases e iteradores
+</H1>
+
+<P>
+Nivel de dificultad:3 sobre 5
+<P>
+<DIV ALIGN="RIGHT">
+</DIV>
+<DIV ALIGN="RIGHT"><I>``El Este está al Este y el Oeste al Oeste, 
+<BR>
+y nunca ambos se encontrarán.''
+<BR>--http://en.wikiquote.org/wiki/Rudyard_KiplingRuyard Kipling</I>
+</DIV>
+<P>
+
+<H1><A NAME="SECTION00810000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
+</H1>
+
+<P>
+Los generadores son únicamente un caso especial de iteradores. Una función que entrega valores es una forma buena de crear un iterador sin llegar a crearlo. Déjame enseñarte lo que quiero decir.
+
+<P>
+¿Recuerdas el generador de la serie de Fibonacci? Aquí lo tienes construido como un iterador:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class Fib:
+    '''iterador que genera los n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>meros de la secuencia de Fibonacci'''
+
+<P>
+def __init__(self, max):
+        self.max = max
+
+<P>
+def __iter__(self):
+        self.a = 0
+        self.b = 1
+        return self
+
+<P>
+def __next__(self):
+        fib = self.a
+        if fib &gt; self.max:
+            raise StopIteration
+        self.a, self.b = self.b, self.a + self.b
+        return fib</pre></TD></TR>
+</TABLE>
+
+<P>
+Vamos a ver una línea cada vez.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class Fib:</pre></TD></TR>
+</TABLE>
+
+<P>
+¿<SPAN  CLASS="textsf">class</SPAN>? ¿Qué es una clase?
+
+<P>
+
+<H1><A NAME="SECTION00820000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">2</SPAN> Cómo se definen clases</A>
+</H1>
+
+<P>
+Python es un lenguaje orientado a objetos: Puedes definir tus propias clases de objetos, heredar de tus clases o de las preexistentes y crear instancias de las clases que has definido.
+
+<P>
+Es sencillo definir una clase en Python. Como con las funciones no existe una definición del interface separada. Simplemente define la clase y el código. Una clase en Python comienza con la palabra reservada <SPAN  CLASS="textsf">class</SPAN>, seguida del nombre de la clase. Técnicamente es todo lo que se necesita puesto que no necesita heredar de ninguna otra.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class PapayaWhip:
+    pass</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> El nombre de esta clase es <SPAN  CLASS="textsf">PapayaWhip</SPAN> y no hereda de ninguna otra. Los nombres de las clases se suelen escribir con el primer carácter en mayúsculas, <SPAN  CLASS="textsf">CadaPalabraDeEstaForma</SPAN> pero esto es únicamente por convención, no es un requisito obligatorio.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Probablemente lo hasta adivinado, pero el contenido de la clase está siempre indentado, como pasa con el código de una función, una sentencia <SPAN  CLASS="textsf">if</SPAN>, un bucle <SPAN  CLASS="textsf">for</SPAN> o cualquier otro bloque de código. La primera línea no indentada indica el final de la clase y se encuentra fuera de la misma.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Esta clase <SPAN  CLASS="textsf">PapayaWhip</SPAN> no define ningún método o atributos, pero es correcta sintácticamente. Como necesita que exista algo en el contenido de la clase se escribe la sentencia <SPAN  CLASS="textsf">pass</SPAN>. Esta palabra reservada de Python significa únicamente ``sigue adelante, no hay nada que hacer aquí''. Es una palabra reservada que no hace nada y, por ello, una buena forma de marcar un sitio cuando tienes funciones o clases a medio escribir.
+
+<P>
+<BLOCKQUOTE>
+La sentencia <SPAN  CLASS="textsf">pass</SPAN> de Python es como una pareja vacía de llaves (<SPAN  CLASS="textsf">{}</SPAN>) en Java o C.
+
+</BLOCKQUOTE>
+
+<P>
+Muchas clases heredan de otras, pero esta no. Muchas clases definen métodos, pero esta no. No hay nada que tenga que tener obligatoriamente una clase de Python, salvo el nombre. En particular, los programadores de C++ pueden encontrar extraño que las clases de Python no tengan que tener constructores y destructores explícitos. Aunque no es obligatorio, las clases de Python pueden tener algo parecido a un constructor: el método <SPAN  CLASS="textsf">__init__()</SPAN>.
+
+<P>
+
+<H2><A NAME="SECTION00821000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> El método <SPAN  CLASS="textsf">__init__()</SPAN></A>
+</H2>
+
+<P>
+Este ejemplo muestra la inicialización de la clase <SPAN  CLASS="textsf">Fib</SPAN> utilizando el método <SPAN  CLASS="textsf">__init__()</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class Fib:
+    '''iterador que genera los n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>meros de la secuencia de Fibonacci'''
+
+<P>
+def __init__(self, max):</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Las clases pueden (y deberían) tener <SPAN  CLASS="textsf">docstrings</SPAN>, tal y como sucede con los módulos y funciones.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> El método <SPAN  CLASS="textsf">__init__()</SPAN> se llama de forma automática por Python inmediatamente después de que se haya creado una instancia de la clase. Es tentador --pero técnicamente incorrecto-- llamar a este método el ``constructor'' de la clase. Es tentador, porque recuerda a los constructores de C++ (por convención, el método <SPAN  CLASS="textsf">__init__()</SPAN> se suele poner como el primer método de la clase), e incluso suena como uno. Es incorrecto, porque cuando se llama a este método en Python, el objeto ya ha sido construido y ya dispones de una referencia a una instancia válida de la clase (<SPAN  CLASS="textsf">self</SPAN>).
+
+<P>
+</LI>
+</OL>
+
+<P>
+El primer parámetro de todo método de una clase, incluyendo el método <SPAN  CLASS="textsf">__init__()</SPAN>, siempre es una referencia al objeto actual, a la instancia actual de la clase. Por convención, este parámetro se suele llamar <SPAN  CLASS="textsf">self</SPAN>. Este parámetro ocupa el rol de la palabra reservada <SPAN  CLASS="textsf">this</SPAN> de C++ o Java, pero <SPAN  CLASS="textsf">self</SPAN> no es una palabra reservada en Python, es simplemente una convención en para el nombre del primer parámetro de los métodos de una clase. En cualquier caso, por favor no lo llames de otra forma que no sea <SPAN  CLASS="textsf">self</SPAN>; esta convención es muy fuerte y todo el mundo la usa.
+
+<P>
+En el método <SPAN  CLASS="textsf">__init__()</SPAN>, <SPAN  CLASS="textsf">self</SPAN> se refiere al objeto recién creado; en otros métodos de la clase se refiere a la instancia cuyo método se llamó. Aunque necesitas especificar <SPAN  CLASS="textsf">self</SPAN> explícitamente cuando defines el método, no lo especificas cuando se llama. Python lo hace por ti automáticamente.
+
+<P>
+
+<H1><A NAME="SECTION00830000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">3</SPAN> Instanciar clases</A>
+</H1>
+
+<P>
+Instanciar clases en Python es inmediato. Para crear un objeto de la clase, simplemente llama a la clase como si fuese una función, pasándole los parámetros que requiera el método <SPAN  CLASS="textsf">__init__()</SPAN>. El valor de retorno será el nuevo objeto.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import fibonacci2 
+&#187;&gt; fib = fibonacci2.Fib(100)
+&#187;&gt; fib
+&lt;fibonacci2.Fib object at 0x00DB8810&gt;
+&#187;&gt; fib.__class__
+&lt;class 'fibonacci2.Fib'&gt;
+&#187;&gt; fib.__doc__
+'''iterador que genera los n<!-- MATH
+ $\textrm{\'{u}}$
+ --><SPAN CLASS="MATH">&#250;</SPAN>meros de la secuencia de Fibonacci'''</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Se crea una instancia de la clase <SPAN  CLASS="textsf">Fib</SPAN> (definida en el módulo <SPAN  CLASS="textsf">fibonacci2</SPAN>) y se asigna la instancia creada a la variable <SPAN  CLASS="textsf">fib</SPAN>. Se pasa un parámetro que será el parámetro <SPAN  CLASS="textsf">max</SPAN> del método <SPAN  CLASS="textsf">__init__()</SPAN> de la clase <SPAN  CLASS="textsf">Fib</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> La variable <SPAN  CLASS="textsf">fib</SPAN> se refiere ahora a un objeto que es instancia de la clase <SPAN  CLASS="textsf">Fib</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Toda instancia de una clase tiene el atributo interno <SPAN  CLASS="textsf">__class__</SPAN> que es la clase del objeto. Muchos programadores java estarán familiarizados con la clase <SPAN  CLASS="textsf">Class</SPAN>, que contiene métodos como <SPAN  CLASS="textsf">getName()</SPAN> y <SPAN  CLASS="textsf">getSuperClass()</SPAN> para conseguir información de metadatos del objeto. En Python, esta clase de metadatos está disponible mediante el uso de atributos, pero la idea es la misma.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Puedes acceder al <SPAN  CLASS="textsf">docstring</SPAN> de la instancia como se hace con cualquier otro módulo o función. Todos los objetos que son instancia de una misma clase comparten el mismo <SPAN  CLASS="textsf">docstring</SPAN>
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+En Python, basta con llamar a una clase como si fuese una función para crear un nuevo objeto de la clase. No existe ningún operador <SPAN  CLASS="textsf">new</SPAN> como sucede en C++ o Java.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H1><A NAME="SECTION00840000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">4</SPAN> Variables de las instancias</A>
+</H1>
+
+<P>
+En el siguiente código:
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class Fib:
+    def __init__(self, max):
+        self.max = max</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> ¿Qué es <SPAN  CLASS="textsf">self.max</SPAN>? Es una variable de la instancia. Completamente diferente al parámetro <SPAN  CLASS="textsf">max</SPAN>, que se pasa como parámetro del método. <SPAN  CLASS="textsf">self.max</SPAN> es una variable del objeto creado. Lo que significa que puedes acceder a ella desde otros métodos.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class Fib:
+    def __init__(self, max):
+        self.max = max
+    .
+    .
+    .
+    def __next__(self):
+        fib = self.a
+        if fib &gt; self.max:</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> <SPAN  CLASS="textsf">self.max</SPAN> se crea en el método <SPAN  CLASS="textsf">__init__()</SPAN>, por ser el primero que se llama.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 9:</SPAN> ...y se utiliza en el método <SPAN  CLASS="textsf">__next__()</SPAN>. 
+
+<P>
+</LI>
+</OL>
+
+<P>
+Las variables de instancia son específicas de cada objeto de la clase. Por ejemplo, si creas dos objetos <SPAN  CLASS="textsf">Fib</SPAN> con diferentes valores máximos cada uno de ellos recordará sus propios valores.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import fibonacci2
+&#187;&gt; fib1 = fibonacci2.Fib(100)
+&#187;&gt; fib2 = fibonacci2.Fib(200)
+&#187;&gt; fib1.max
+100
+&#187;&gt; fib2.max
+200</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<H1><A NAME="SECTION00850000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">5</SPAN> Un iterador para la serie de Fibonacci</A>
+</H1>
+
+<P>
+Ahora estás preparado para aprender cómo construir un iterador. Un iterador es una clase que define el método <SPAN  CLASS="textsf">__iter__()</SPAN>.
+
+<P>
+<blockquote>Los tres métodos de clase, <SPAN  CLASS="textsf">__init__</SPAN>, <SPAN  CLASS="textsf">__iter__</SPAN> y <SPAN  CLASS="textsf">__next__</SPAN>, comienzan y terminan con un par de guiones bajos (<SPAN  CLASS="textsf">_</SPAN>). ¿Por qué? No es nada mágico, pero habitualmente significa que son métodos ``especiales''. Lo único que tienen en ``especial'' estos métodos especiales es que no se llaman directamente; Python los llama cuando utilizas otra sintaxis en la clase o en una instancia de la clase.</blockquote>  
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class Fib:                 
+    def __init__(self, max):
+        self.max = max
+
+<P>
+def __iter__(self):   
+        self.a = 0
+        self.b = 1
+        return self
+
+<P>
+def __next__(self):  
+        fib = self.a
+        if fib &gt; self.max:
+            raise StopIteration
+        self.a, self.b = self.b, self.a + self.b
+        return fib            </pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> Para poder construir un iterador desde cero <SPAN  CLASS="textsf">fib</SPAN> necesita ser una clase, no una función.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Al llamar a <SPAN  CLASS="textsf">Fib(max)</SPAN> se está creando un objeto que es instancia de esta clase y llamándose a su método <SPAN  CLASS="textsf">__init__()</SPAN> con el parámetro <SPAN  CLASS="textsf">max</SPAN>. El método <SPAN  CLASS="textsf">__init__()</SPAN> guarda el valor máximo como una variable del objeto de forma que los otros métodos de la instancia puedan utilizarlo más tarde.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> El método <SPAN  CLASS="textsf">__iter__()</SPAN> se llama siempre que alguien llama a <SPAN  CLASS="textsf">iter(fib)</SPAN> (Como verás en un minuto, el bucle <SPAN  CLASS="textsf">for</SPAN> llamará a este método automáticamente, pero tú también puedes llamarlo manualmente). Después de efectuar la inicialización necesaria de comienzo de la iteración (en este caso inicializar <SPAN  CLASS="textsf">self.a</SPAN> y <SPAN  CLASS="textsf">self.b</SPAN>) el método <SPAN  CLASS="textsf">__iter__()</SPAN> puede retornar cualquier objeto que implemente el método <SPAN  CLASS="textsf">__next__()</SPAN>. En este caso (y en la mayoría), <SPAN  CLASS="textsf">__iter__()</SPAN> se limita a devolver <SPAN  CLASS="textsf">self</SPAN>, puesto que la propia clase implementa el método <SPAN  CLASS="textsf">__next__()</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 10:</SPAN> El método <SPAN  CLASS="textsf">__next__()</SPAN> se llama siempre que alguien llame al método <SPAN  CLASS="textsf">next()</SPAN> sobre un iterador de una instancia de una clase. Esto adquirirá todo su sentido en un minuto.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> Cuando el método <SPAN  CLASS="textsf">__next__()</SPAN> lanza la excepción <SPAN  CLASS="textsf">StopIteration</SPAN> le está indicando a quién lo haya llamado que el iterador se ha agotado. Al contrario que la mayoría de las excepciones, no se trata de un error. es una condición normal que simplemente significa que no quedan más valores que generar. Si el llamante es un bucle <SPAN  CLASS="textsf">for</SPAN> se dará cuenta de que se ha elevado esta excepción y finalizará el bucle sin que se produzca ningún error (En otras palabras, se tragará la excepción). Esta pequeña magia es el secreto clave del uso de iteradores en los bucles <SPAN  CLASS="textsf">for</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 15:</SPAN> Para devolver el siguiente valor del iterador, el método <SPAN  CLASS="textsf">__next__()</SPAN> simplemente utiliza <SPAN  CLASS="textsf">return</SPAN> para devolver el valor. No se utiliza <SPAN  CLASS="textsf">yield</SPAN>, que únicamente se utiliza para los generadores. Cuando se está creando un iterador desde cero, se utiliza <SPAN  CLASS="textsf">return</SPAN> en el método <SPAN  CLASS="textsf">__next__()</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+¿Estás ya totalmente confundido? Excelente. Veamos cómo utilizar el iterador.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; from fibonacci2 import Fib
+&#187;&gt; for n in Fib(1000):
+...     print(n, end=' ')
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987</pre></TD></TR>
+</TABLE>
+
+<P>
+¡Exactamente igual que en el ejemplo del generador! Es idéntico a como usabas el generador. Pero... ¿cómo?.
+
+<P>
+Existe algo de trabajo ejecutándose en los bucles <SPAN  CLASS="textsf">for</SPAN>.
+
+<P>
+
+<UL>
+<LI>El bucle <SPAN  CLASS="textsf">for</SPAN> llama a <SPAN  CLASS="textsf">Fib(1000)</SPAN>, que retorna un objeto que es instancia de la clase <SPAN  CLASS="textsf">Fib</SPAN>. Llamémoslo <SPAN  CLASS="textsf">fib_inst</SPAN>. 
+
+<P>
+</LI>
+<LI>En secreto, pero de forma inteligente, el bucle <SPAN  CLASS="textsf">for</SPAN> llama a <SPAN  CLASS="textsf">iter(fib_inst)</SPAN>, que retorna un objeto iterador. Vamos a llamar a este objeto <SPAN  CLASS="textsf">fib_iter</SPAN>. En este caso, <SPAN  CLASS="textsf">fib_iter == fib_inst</SPAN>, porque el método <SPAN  CLASS="textsf">fib_inst.__iter__()</SPAN> retorna <SPAN  CLASS="textsf">self</SPAN>, pero el bucle <SPAN  CLASS="textsf">for</SPAN> no lo sabe, ni le importa.
+
+<P>
+</LI>
+<LI>Para recorrer el bucle a través del iterador, el bucle <SPAN  CLASS="textsf">for</SPAN> llama a <SPAN  CLASS="textsf">next(fib_iter)</SPAN>, que, a su vez, llama a <SPAN  CLASS="textsf">fib_iter.__next__()</SPAN>, el método <SPAN  CLASS="textsf">__next__()</SPAN> del objeto <SPAN  CLASS="textsf">fib_iter</SPAN>, que realiza los cálculos necesarios y devuelve el siguiente elemento de la serie de fibonacci. El bucle <SPAN  CLASS="textsf">for</SPAN> toma este valor y lo asigna a <SPAN  CLASS="textsf">n</SPAN>, luego ejecuta el cuerpo del bucle para ese valor de <SPAN  CLASS="textsf">n</SPAN>.
+
+<P>
+</LI>
+<LI>¿Cómo sabe el bucle <SPAN  CLASS="textsf">for</SPAN> cuando parar? ¡Me alegro de que lo preguntes! Cuando <SPAN  CLASS="textsf">next(fib_iter)</SPAN> eleva la excepción <SPAN  CLASS="textsf">StopIteration</SPAN> el bucle for la captura finaliza sin error (Cualquier otra excepción se elevaría normalmente). ¿Y dónde has visto que se lanze esta excepción <SPAN  CLASS="textsf">StopIteration</SPAN>? En el método <SPAN  CLASS="textsf">__next__()</SPAN> ¡Por supuesto!
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00860000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">6</SPAN> Un iterador para reglas de formación de plurales</A>
+</H1>
+
+<P>
+Ahora es el final. Vamos a reescribir el generador de reglas de formación de plural como un iterador.
+
+<P>
+<blockquote><SPAN  CLASS="textsf">iter(f)</SPAN> llama a <SPAN  CLASS="textsf">f.__iter__()</SPAN>. <SPAN  CLASS="textsf">next(f)</SPAN> llama a <SPAN  CLASS="textsf">f.__next__()</SPAN>.</blockquote>  
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class LazyRules:
+    rules_filename = 'plural6-rules.txt'
+
+<P>
+def __init__(self):
+        self.pattern_file = open(self.rules_filename, encoding='utf-8')
+        self.cache = []
+
+<P>
+def __iter__(self):
+        self.cache_index = 0
+        return self
+
+<P>
+def __next__(self):
+        self.cache_index += 1
+        if len(self.cache) &gt;= self.cache_index:
+            return self.cache[self.cache_index - 1]
+
+<P>
+if self.pattern_file.closed:
+            raise StopIteration
+
+<P>
+line = self.pattern_file.readline()
+        if not line:
+            self.pattern_file.close()
+            raise StopIteration
+
+<P>
+pattern, search, replace = line.split(None, 3)
+        funcs = build_match_and_apply_functions(
+            pattern, search, replace)
+        self.cache.append(funcs)
+        return funcs
+
+<P>
+rules = LazyRules()</pre></TD></TR>
+</TABLE>
+
+<P>
+Como esta clase implementa los métodos <SPAN  CLASS="textsf">__iter__()</SPAN> y <SPAN  CLASS="textsf">__next__()</SPAN> puede utilizarse como un iterador. Al final del código se crea una instancia de la clase y se asigna a la variable <SPAN  CLASS="textsf">rules</SPAN>.
+
+<P>
+Vamos a ver la clase poco a poco.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+class LazyRules:
+    rules_filename = 'plural6-rules.txt'
+
+<P>
+def __init__(self):
+        self.pattern_file = open(self.rules_filename, encoding='utf-8')
+        self.cache = []</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Cuando instanciamos la clase <SPAN  CLASS="textsf">LazyRules</SPAN>, se abre el fichero de patrones pero no se lee nada de él (Eso se hace más tarde).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Después de abrir el fichero de patrones se inicializa la caché. Utilizarás la caché más tarde (en el método <SPAN  CLASS="textsf">__next__()</SPAN>) según se lean las filas del fichero de patrones.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Antes de continuar vamos a echarle un vistazo a <SPAN  CLASS="textsf">rules_filename</SPAN>. No está definida en el método <SPAN  CLASS="textsf">__iter__()</SPAN>. De hecho no está definida dentro de <SPAN  CLASS="textit">ningún</SPAN> método. Está definida al nivel de la clase. Es una <SPAN  CLASS="textit">variable de clase</SPAN> y, aunque puedes acceder a ella igual que a cualquier variable de instancia (<SPAN  CLASS="textsf">self.rules_filename</SPAN>), es compartida en todas las instancias de la clase <SPAN  CLASS="textsf">LazyRules</SPAN>.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+&#187;&gt; import plural6 
+&#187;&gt; r1 = plural6.LazyRules() 
+&#187;&gt; r2 = plural6.LazyRules() 
+&#187;&gt; r1.rules_filename
+'plural6-rules.txt'
+&#187;&gt; r2.rules_filename 
+'plural6-rules.txt' 
+&#187;&gt; r2.rules_filename = 'r2-override.txt'
+&#187;&gt; r2.rules_filename 
+'r2-override.txt'
+&#187;&gt; r1.rules_filename 
+'plural6-rules.txt' 
+&#187;&gt; r2.__class__.rules_filename
+'plural6-rules.txt'
+&#187;&gt; r2.__class__.rules_filename = 'papayawhip.txt'
+&#187;&gt; r1.rules_filename 
+'papayawhip.txt' 
+&#187;&gt; r2.rules_filename
+'r2-overridetxt'</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> Cada instancia de la clase hereda el atributo <SPAN  CLASS="textsf">rules_filename</SPAN> con el valor definido para la clase.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> La modificación del valor de la variable en una instancia no afecta al valor de las otras instancias...
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 13:</SPAN> ...ni cambia el atributo de la clase. Puedes acceder al atributo de la clase (por oposición al atributo de la instancia individual) mediante el uso del atributo especial <SPAN  CLASS="textsf">__class__</SPAN> que accede a la clase.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 15:</SPAN> Si modificas el atributo de la clase, todas las instancias que heredan ese atributo (como <SPAN  CLASS="textsf">r1</SPAN> en este ejemplo) se verán afectadas.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 18:</SPAN> Todas las instancias que han modificado ese atributo, sustituyendo su valor (como <SPAN  CLASS="textsf">r2</SPAN> aquí) no se verán afectadas.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Y ahora volvamos a nuestro espectáculo.
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+  def __iter__(self):
+        self.cache_index = 0
+        return self</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> El método <SPAN  CLASS="textsf">__iter__()</SPAN> se llamará cada vez que alguien --digamos un bucle <SPAN  CLASS="textsf">for</SPAN>-- llame a <SPAN  CLASS="textsf">iter(rules)</SPAN>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 3:</SPAN> Todo método <SPAN  CLASS="textsf">__iter__()</SPAN> debe devolver un iterador. En este caso devuelve <SPAN  CLASS="textsf">self</SPAN> puesto que esta clase define un método <SPAN  CLASS="textsf">__next__()</SPAN> que será responsable de devolver los diferentes valores durante las iteraciones.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+   def __next__(self):
+        .
+        .
+        .
+        pattern, search, replace = line.split(None, 3)
+        funcs = build_match_and_apply_functions(
+            pattern, search, replace)
+        self.cache.append(funcs)
+        return funcs</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 1:</SPAN> El método <SPAN  CLASS="textsf">__next__()</SPAN> se llama cuando alguien --digamos que un bucle <SPAN  CLASS="textsf">for</SPAN>-- llama a <SPAN  CLASS="textsf">next(rules)</SPAN>. La mejor forma de explicar este método es comenzando del final hacia atrás. Por lo que vamos a hacer eso.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> La última parte de esta función debería serte familiar. La función <SPAN  CLASS="textsf">build_match_and_apply_functions()</SPAN> no ha cambiado; es igual que siempre.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> La única diferencia es que, antes de retornar el valor (que se almacena en la tupla <SPAN  CLASS="textsf">funcs</SPAN>), vamos a salvarlas en <SPAN  CLASS="textsf">self.cache</SPAN>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Sigamos viendo la parte anterior...
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+    def __next__(self):
+        .
+        .
+        .
+        line = self.pattern_file.readline()
+        if not line:
+            self.pattern_file.close()
+            raise StopIteration
+        .
+        .
+        .</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 5:</SPAN> Veamos una técnica avanzada de acceso a ficheros. El método <SPAN  CLASS="textsf">readline()</SPAN> (nota: singular, no el plural <SPAN  CLASS="textsf">readlines()</SPAN>) que lee exactamente una línea de un fichero abierto. Específicamente, la siguiente línea (Los objetos <SPAN  CLASS="textit">fichero</SPAN> también son iteradores...).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 6:</SPAN> Si el método <SPAN  CLASS="textsf">readline()</SPAN> lee algo (quedaban líneas por leer en el fichero), la variable <SPAN  CLASS="textsf">line</SPAN> no será vacía. Incluso si la línea fuese vacía, la variable contendría una cadena de un carácter <SPAN  CLASS="textsf">'
+<BR>
+n'</SPAN> (el retorno de carro). Si la variable <SPAN  CLASS="textsf">line</SPAN> es realmente una cadena vacía significará que no quedan líneas por leer en el fichero.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 8:</SPAN> Cuando alcanzamos el final del fichero deberíamos cerrarlo y elevar la excepción mágica <SPAN  CLASS="textsf">StopIteration</SPAN>. Recuerda que llegamos a esta parte de la función porque necesitamos encontrar una función de búsqueda y otra de sustitución para la siguiente regla. La siguiente regla tiene que venir en la siguiente línea del fichero... ¡pero si no hay línea siguiente! Entonces, no tenemos que retornar ningún valor. Las iteraciones han terminado (Se acabó la fiesta...).
+
+<P>
+</LI>
+</OL>
+
+<P>
+Si seguimos moviéndonos hacia el comienzo del método <SPAN  CLASS="textsf">__next__()</SPAN>...
+
+<P>
+<TABLE  WIDTH="100%">
+<TR><TD>
+<pre>
+    def __next__(self):
+        self.cache_index += 1
+        if len(self.cache) &gt;= self.cache_index:
+            return self.cache[self.cache_index - 1]
+
+<P>
+if self.pattern_file.closed:
+            raise StopIteration
+        .
+        .
+        .</pre></TD></TR>
+</TABLE>
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textit">Línea 4:</SPAN> <SPAN  CLASS="textsf">self.cache</SPAN> contendrá una lista con las funciones que necesitamos para buscar y aplicar las diferentes reglas (¡Al menos esto te debería resultar familiar!). <SPAN  CLASS="textsf">self.cache_index</SPAN> mantiene el índice del elemento de la caché que se debe retornar. Si no hemos consumido toda la caché (si la longitud de <SPAN  CLASS="textsf">self.cache</SPAN> es mayor que <SPAN  CLASS="textsf">self.cache_index</SPAN>), ¡tenemos un elemento en la caché para retornar! Podemos devolver las funciones de búsqueda y sustitución de la caché en lugar de construirlas desde cero.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">Línea 7:</SPAN> Por otra parte, si no obtenemos un elemento de la caché <SPAN  CLASS="textit">y</SPAN> el fichero se ha cerrado (lo que podrá haber sucedido en la parte de más abajo del método, como se vio anteriormente) entonces ya no hay nada más que hacer. Si el fichero se ha cerrado, significa que lo hemos leído completamente --ya hemos recorrido todas las líneas del fichero de patrones y hemos construido y cacheado las funciones de búsqueda y sustitución de cada patrón. El fichero se ha agotado y la caché también, ¡Uff! ¡yo también estoy agotado! Espera un momento, casi hemos terminado.
+
+<P>
+</LI>
+</OL>
+
+<P>
+Si lo ponemos todo junto esto es lo que sucede cuando:
+
+<P>
+
+<UL>
+<LI>Cuando el módulo es importado crea una única instancia de la clase <SPAN  CLASS="textsf">LazyRules</SPAN>, que denominamos <SPAN  CLASS="textsf">rules</SPAN>, que abre el fichero de patrones pero no lo lee.
+
+<P>
+</LI>
+<LI>Cuando pedimos la primera pareja de funciones de búsqueda y sustitución, busca en la caché pero está vacía. Por lo que lee una línea del fichero de patrones, construye la pareja de funciones de búsqueda y sustitución para ellas y las guarda en la caché (además de retornarlas).
+
+<P>
+</LI>
+<LI>Digamos, por simplicidad, que la primera regla coincidió con la búsqueda. Si es así no se busca nada más y no se lee nada más del fichero de patrones.
+
+<P>
+</LI>
+<LI>Además, por continuar con el argumento, supón que el programa que está usando este objeto llama a la función <SPAN  CLASS="textsf">plural()</SPAN> de nuevo para pasar al plural una palabra diferente. El bucle <SPAN  CLASS="textsf">for</SPAN> de la función <SPAN  CLASS="textsf">plural()</SPAN> llamará a la función <SPAN  CLASS="textsf">iter(rules)</SPAN>, que resetea el índice de la caché pero no resetea el fichero abierto.
+
+<P>
+</LI>
+<LI>La primera vez en esta nueva iteración, el bucle <SPAN  CLASS="textsf">for</SPAN> pedirá el valor de <SPAN  CLASS="textsf">rules</SPAN>, que llama al método <SPAN  CLASS="textsf">__next__()</SPAN>. Esta vez, sin embargo, la caché tiene ya una pareja de funciones de búsqueda y sustitución, la correspondiente a los patrones de la primera línea del fichero de patrones, puesto que fueron construidas y cacheadas al generar el plural de la palabra anterior y por eso están en la caché. El índice de la caché se incrementa y no se toca el fichero abierto.
+
+<P>
+</LI>
+<LI>Vamos a decir, en aras de continuar el argumento, que esta vez la primera regla no coincide, por lo que el bucle <SPAN  CLASS="textsf">for</SPAN> da otra vuelta y pide otro valor de la variable <SPAN  CLASS="textsf">rules</SPAN>. Por lo que se invoca por segunda vez al método <SPAN  CLASS="textsf">__next__()</SPAN>. Esta vez la caché está agotada --solamente contenía un elemento, y estamos solicitando un segundo-- por lo que el método <SPAN  CLASS="textsf">__next__()</SPAN> continúa. Se lee otra línea del fichero abierto, se construyen las funciones de búsqueda y sustitución de los patrones y se introducen en la caché.
+
+<P>
+</LI>
+<LI>Este proceso de lectura, construcción y caché continua mientras las reglas del fichero no coincidan con la palabra que estamos intentando poner en plural. Si se llega a encontrar una coincidencia antes del final del fichero, se utiliza y termina, con el fichero aún abierto. El puntero del fichero permanecerá dondequiera que se parase la lectura, a la espera de la siguiente sentencia <SPAN  CLASS="textsf">readline()</SPAN>. Mientras tanto, la caché ha ido ocupándose con más elementos y si se volviera a intentar poner en plural a otra palabra, se probará primero con los elementos de la caché antes de intentar leer la siguiente línea del fichero de patrones.
+
+<P>
+</LI>
+</UL>
+
+<P>
+Hemos alcanzado el nirvana de la generación de plurales.
+
+<P>
+
+<OL>
+<LI><SPAN  CLASS="textbf">Coste de inicio mínimo.</SPAN> Lo único que se hace al realizar el <SPAN  CLASS="textsf">import</SPAN> es instanciar un objeto de una clase y abrir un fichero (pero sin leer de él).
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Máximo rendimiento.</SPAN> El ejemplo anterior leería el fichero cada vez que hubiera que poner en plural una palabra. Esta versión cachea las funciones según se van construyendo y, en el peor caso, solamente leerá del fichero de patrones una única vez, no importa cuantas palabras pongas en plural.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Separación de código y datos.</SPAN> Todos los patrones se almacenan en un fichero separado. El código es código y los datos son datos y nunca se deberán de encontrar.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<BLOCKQUOTE>
+¿Es realmente el nirvana? Bueno, sí y no. Hay algo que hay que tener en cuenta con el ejemplo de <SPAN  CLASS="textsf">LazyRules</SPAN>: El fichero de patrones se abre en el método <SPAN  CLASS="textsf">__init__()</SPAN> y permanece abierto hasta que se alcanza la regla final. Python cerrará el fichero cuando se acabe la ejecución, o después de que la última instancia de la clase <SPAN  CLASS="textsf">LazyRules</SPAN> sea destruida, pero eso puede ser <SPAN  CLASS="textit">mucho</SPAN> tiempo. Si esta clase es parte de un proceso de larga duración, el intérprete de Python puede que no acabe nunca y el objeto <SPAN  CLASS="textsf">LazyRules</SPAN> puede que nunca sea destruido.
+
+</BLOCKQUOTE>
+
+<P>
+Hay formas de evitar esto. En lugar de abrir el fichero durante el método <SPAN  CLASS="textsf">__init__()</SPAN> y dejarlo abierto mientras lees las reglas una línea cada vez, podrías abrir el fichero, leer todas las reglas y cerrarlo inmediatamente. O podrías abrir el fichero, leer una regla, guardar la posición del fichero con el método <SPAN  CLASS="textsf">tell()</SPAN>, cerrar el fichero y, más tarde, reabrirlo y utilizar el método <SPAN  CLASS="textsf">seek()</SPAN> para continuar leyendo donde lo dejaste. O podrías no preocuparte de dejar el fichero abierto, como pasa en este ejemplo. Programar es diseñar, y diseñar es siempre una continua elección entre decisiones que presentan ventajas e inconvenientes. Dejar un fichero abierto demasiado tiempo puede suponer un problema; hacer el código demasiado complejo podría ser un problema. Cuál es el problema mayor depende del equipo de desarrollo, la aplicación y tu entorno de ejecución. 
+
+<P>
+
+<H1><A NAME="SECTION00870000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">7</SPAN> Lecturas recomendadas</A>
+</H1>
+
+<P>
+
+<UL>
+<LI>Tipos de iteradores: http://docs.python.org/3.1/library/stdtypes.html#iterator-typeshttp://docs.python.org/3.1/library/stdtypes.html#iterator-types
+
+<P>
+</LI>
+<LI>PEP 234: Iteradores: http://www.python.org/dev/peps/pep-0234/http://www.python.org/dev/peps/pep-0234/
+
+<P>
+</LI>
+<LI>PEP 255: Generadores simples: http://www.python.org/dev/peps/pep-0255/http://www.python.org/dev/peps/pep-0255/
+
+<P>
+</LI>
+<LI>Técnicas de generadores para programadores de sistemas:
+<BR>
+http://www.dabeaz.com/generators/http://www.dabeaz.com/generators/
+
+<P>
+</LI>
+</UL>
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<B> Siguiente:</B> <A NAME="tex2html748"
+  HREF="node9.html">6. Refactorizar</A>
+<B> Subir a:</B> <A NAME="tex2html746"
+  HREF="inmersionEnPython.html">Inmersión en Python 3</A>
+<B> Anterior:</B> <A NAME="tex2html740"
+  HREF="node7.html">4. Cadenas de texto</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+José Miguel González Aguilera
+2016-08-18
+</ADDRESS>
+</BODY>
+</HTML>
