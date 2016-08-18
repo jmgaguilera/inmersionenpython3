@@ -28,11 +28,11 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<B> Siguiente:</B> <A NAME="tex2html780"
+<B> Siguiente:</B> <A NAME="tex2html983"
   HREF="node11.html">8. Serialización de Objetos</A>
-<B> Subir a:</B> <A NAME="tex2html778"
+<B> Subir a:</B> <A NAME="tex2html981"
   HREF="inmersionEnPython.html">Inmersión en Python 3</A>
-<B> Anterior:</B> <A NAME="tex2html772"
+<B> Anterior:</B> <A NAME="tex2html975"
   HREF="node9.html">6. Refactorizar</A>
 <BR>
 <BR></DIV>
@@ -41,30 +41,30 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html781"
+<LI><A NAME="tex2html984"
   HREF="node10.html#SECTION001010000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
-<LI><A NAME="tex2html782"
+<LI><A NAME="tex2html985"
   HREF="node10.html#SECTION001020000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN> Curso rápido de 5 minutos sobre XML</A>
-<LI><A NAME="tex2html783"
+<LI><A NAME="tex2html986"
   HREF="node10.html#SECTION001030000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN> La estructura de una fuente de información Atom</A>
-<LI><A NAME="tex2html784"
+<LI><A NAME="tex2html987"
   HREF="node10.html#SECTION001040000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN> Análisis de XML</A>
 <UL>
-<LI><A NAME="tex2html785"
+<LI><A NAME="tex2html988"
   HREF="node10.html#SECTION001041000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Los elementos son listas</A>
-<LI><A NAME="tex2html786"
+<LI><A NAME="tex2html989"
   HREF="node10.html#SECTION001042000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Los atributos son diccionarios</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html787"
+<LI><A NAME="tex2html990"
   HREF="node10.html#SECTION001050000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">5</SPAN> Búsqueda de nodos en un documento XML</A>
-<LI><A NAME="tex2html788"
+<LI><A NAME="tex2html991"
   HREF="node10.html#SECTION001060000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">6</SPAN> Ir más allá con LXML</A>
-<LI><A NAME="tex2html789"
+<LI><A NAME="tex2html992"
   HREF="node10.html#SECTION001070000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">7</SPAN> Generación de XML</A>
-<LI><A NAME="tex2html790"
+<LI><A NAME="tex2html993"
   HREF="node10.html#SECTION001080000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">8</SPAN> Análisis de XML ``estropeado''</A>
-<LI><A NAME="tex2html791"
+<LI><A NAME="tex2html994"
   HREF="node10.html#SECTION001090000000000000000"><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">9</SPAN> Lecturas recomendadas</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -336,7 +336,8 @@ Como pasa con las funciones de Python que se pueden declarar en diferentes <SPAN
 En lo que concierne al analizador de <SPAN  CLASS="textsf">XML</SPAN>, los dos documentos anteriores son <SPAN  CLASS="textbf">idénticos</SPAN>. Espacio de nombres + nombre de elemento = identidad en <SPAN  CLASS="textsf">XML</SPAN>. Los prefijos existen únicamente para referirse a los espacios de nombres, por lo que el prefijo utilizado en la práctica (<SPAN  CLASS="textsf">atom:</SPAN>) es irrelevante. Los espacios de nombre coinciden, los nombres de elemento coinciden, los atributos (o falta de ellos) coinciden y cada contenido de texto coincide, por lo que estos dos documentos <SPAN  CLASS="textsf">XML</SPAN> son el idénticos a efectos prácticos.
 
 <P>
-Finalmente, los documentos <SPAN  CLASS="textsf">XML</SPAN> pueden contener en la primera línea información sobre la codificación de caracteres, antes del elemento raíz. Si tienes curiosidad sobre cómo un documento puede contener información que necesita conocerse antes de que el documento pueda analizarse consulta la Sección F de la especificación XML (http://www.w3.org/TR/REC-xml/#sec-guessing-no-ext-infohttp://www.w3.org/TR/REC-xml/#sec-guessing-no-ext-info) para ver los detalles sobre cómo resolver este problema.
+Finalmente, los documentos <SPAN  CLASS="textsf">XML</SPAN> pueden contener en la primera línea información sobre la codificación de caracteres, antes del elemento raíz. Si tienes curiosidad sobre cómo un documento puede contener información que necesita conocerse antes de que el documento pueda analizarse consulta la Sección F de la especificación XML (<A NAME="tex2html155"
+  HREF="http://www.w3.org/TR/REC-xml/#sec-guessing-no-ext-info">http://www.w3.org/TR/REC-xml/#sec-guessing-no-ext-info</A>) para ver los detalles sobre cómo resolver este problema.
 
 <P>
 <TABLE  WIDTH="100%">
@@ -411,8 +412,8 @@ Una fuente Atom contiene diversas partes de información sobre la propia fuente.
 
 <P>
 </LI>
-<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Toda fuente necesita un identificador único global. Hay que mirar la RFC 4151<A NAME="tex2html76"
-  HREF="footnode.html#foot13208"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> para ver cómo crear uno.
+<LI><SPAN  CLASS="textbf">Línea 4:</SPAN> Toda fuente necesita un identificador único global. Hay que mirar la RFC 4151<A NAME="tex2html156"
+  HREF="footnode.html#foot13447"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> para ver cómo crear uno.
 
 <P>
 </LI>
@@ -528,8 +529,8 @@ Python puede analizar documentos <SPAN  CLASS="textsf">XML</SPAN> de diversas fo
 
 <P>
 </LI>
-<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> El punto de entrada primario de la librería es la función <SPAN  CLASS="textsf">parse()</SPAN> que puede tomar como parámetro el nombre de un fichero o un objeto de flujo. Esta función analiza el documento entero de una vez. Si la memoria es escasa, existen formas para analizar un documento XML de forma incremental<A NAME="tex2html77"
-  HREF="footnode.html#foot13209"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>.
+<LI><SPAN  CLASS="textbf">Línea 2:</SPAN> El punto de entrada primario de la librería es la función <SPAN  CLASS="textsf">parse()</SPAN> que puede tomar como parámetro el nombre de un fichero o un objeto de flujo. Esta función analiza el documento entero de una vez. Si la memoria es escasa, existen formas para analizar un documento XML de forma incremental<A NAME="tex2html158"
+  HREF="footnode.html#foot13448"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>.
 
 <P>
 </LI>
@@ -820,7 +821,8 @@ Existe una forma de buscar entre los elementos <SPAN  CLASS="textbf">descendient
 </OL>
 
 <P>
-En general, el método <SPAN  CLASS="textsf">findall()</SPAN> de ElementTree es una característica muy potente, pero el lenguaje de consulta puede ser un poco sorprendente. Está descrito oficialmente en http://effbot.org/zone/element-xpath.htmhttp://effbot.org/zone/element-xpath.htm(Soporte limitado a expresiones XPath). XPath es un estándar del W3C para consultar documentos XML. El lenguaje de consulta de ElementTree es suficientemente parecido a XPath para poder hacer búsquedas básicas, pero también suficientemente diferente como para desconcertarte si ya conoces XPath. 
+En general, el método <SPAN  CLASS="textsf">findall()</SPAN> de ElementTree es una característica muy potente, pero el lenguaje de consulta puede ser un poco sorprendente. Está descrito oficialmente en <A NAME="tex2html160"
+  HREF="http://effbot.org/zone/element-xpath.htm">http://effbot.org/zone/element-xpath.htm</A>(Soporte limitado a expresiones XPath). XPath es un estándar del W3C para consultar documentos XML. El lenguaje de consulta de ElementTree es suficientemente parecido a XPath para poder hacer búsquedas básicas, pero también suficientemente diferente como para desconcertarte si ya conoces XPath. 
 
 <P>
 Ahora vamos a ver una librería de terceros que extiende la <SPAN  CLASS="textsf">API</SPAN> de ElementTree para proporcionar un soporte completo de XPath.
@@ -832,11 +834,11 @@ Ahora vamos a ver una librería de terceros que extiende la <SPAN  CLASS="textsf
 </H1>
 
 <P>
-<SPAN  CLASS="textsf">lxml</SPAN><A NAME="tex2html78"
-  HREF="footnode.html#foot13213"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A> es una librería de terceros de código abierto que se desarrolla sobre el popular analizador <SPAN  CLASS="textsf">libxml2</SPAN><A NAME="tex2html79"
-  HREF="footnode.html#foot13214"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>. Proporciona una <SPAN  CLASS="textsf">API</SPAN> que es 100% compatible con ElementTree, y la extiende con soporte completo a Xpath 1.0 y otras cuantas bondades. Existe un instalador disponible para Windows<A NAME="tex2html80"
-  HREF="footnode.html#foot13215"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A>; los usuarios de Linux siempre deberían intentar usar las herramientas específicas de la distribución como <SPAN  CLASS="textsf">yum</SPAN> o <SPAN  CLASS="textsf">apt-get</SPAN> para instalar los binarios precompilados desde sus repositorios. En otro caso, necesitarás instalar los binarios manualmente<A NAME="tex2html81"
-  HREF="footnode.html#foot13216"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>.
+<SPAN  CLASS="textsf">lxml</SPAN><A NAME="tex2html161"
+  HREF="footnode.html#foot13452"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A> es una librería de terceros de código abierto que se desarrolla sobre el popular analizador <SPAN  CLASS="textsf">libxml2</SPAN><A NAME="tex2html163"
+  HREF="footnode.html#foot13453"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>. Proporciona una <SPAN  CLASS="textsf">API</SPAN> que es 100% compatible con ElementTree, y la extiende con soporte completo a Xpath 1.0 y otras cuantas bondades. Existe un instalador disponible para Windows<A NAME="tex2html165"
+  HREF="footnode.html#foot13454"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A>; los usuarios de Linux siempre deberían intentar usar las herramientas específicas de la distribución como <SPAN  CLASS="textsf">yum</SPAN> o <SPAN  CLASS="textsf">apt-get</SPAN> para instalar los binarios precompilados desde sus repositorios. En otro caso, necesitarás instalar los binarios manualmente<A NAME="tex2html167"
+  HREF="footnode.html#foot13455"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>.
 
 <P>
 <TABLE  WIDTH="100%">
@@ -1120,8 +1122,8 @@ La librería <SPAN  CLASS="textsf">ElementTree</SPAN> no ofrece un control fino 
 </LI>
 </OL>
 <BLOCKQUOTE>
-Podrías querer echarle un vistazo a <SPAN  CLASS="textsf">xmlwitch</SPAN><A NAME="tex2html82"
-  HREF="footnode.html#foot13219"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A>, otra librería de terceros para generar <SPAN  CLASS="textsf">XML</SPAN>. Hace uso extensivo de la sentencia <SPAN  CLASS="textsf">with</SPAN> para hacer la generación de código <SPAN  CLASS="textsf">XML</SPAN> más legible.
+Podrías querer echarle un vistazo a <SPAN  CLASS="textsf">xmlwitch</SPAN><A NAME="tex2html169"
+  HREF="footnode.html#foot13458"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A>, otra librería de terceros para generar <SPAN  CLASS="textsf">XML</SPAN>. Hace uso extensivo de la sentencia <SPAN  CLASS="textsf">with</SPAN> para hacer la generación de código <SPAN  CLASS="textsf">XML</SPAN> más legible.
 
 </BLOCKQUOTE>
 
@@ -1255,48 +1257,47 @@ Es importante reiterar que <SPAN  CLASS="textbf">no existe garantía de interope
 
 <UL>
 <LI><SPAN  CLASS="textsf">XML</SPAN> en la wikipedia.org: <BR>
-http://en.wikipedia.org/wiki/XMLhttp://en.wikipedia.org/wiki/XML
-
+<A NAME="tex2html171"
+  HREF="http://en.wikipedia.org/wiki/XML">http://en.wikipedia.org/wiki/XML</A>
 <P>
 </LI>
 <LI>La <SPAN  CLASS="textsf">API</SPAN> de <SPAN  CLASS="textsf">ElementTree</SPAN>: <BR>
 
-
 <P>
 </LI>
 <LI>Elementos y árboles de elementos <BR>
-http://effbot.org/zone/element.htmhttp://effbot.org/zone/element.htm
-
+<A NAME="tex2html173"
+  HREF="http://effbot.org/zone/element.htm">http://effbot.org/zone/element.htm</A>
 <P>
 </LI>
 <LI>Soporte de XPath en <SPAN  CLASS="textsf">ElementTree</SPAN> <BR>
-http://effbot.org/zone/element-xpath.htmhttp://effbot.org/zone/element-xpath.htm
-
+<A NAME="tex2html174"
+  HREF="http://effbot.org/zone/element-xpath.htm">http://effbot.org/zone/element-xpath.htm</A>
 <P>
 </LI>
 <LI>La función <SPAN  CLASS="textsf">iterparse</SPAN> de <SPAN  CLASS="textsf">ElementTree</SPAN> <BR>
-http://effbot.org/zone/element-iterparse.htmhttp://effbot.org/zone/element-iterparse.htm
-
+<A NAME="tex2html175"
+  HREF="http://effbot.org/zone/element-iterparse.htm">http://effbot.org/zone/element-iterparse.htm</A>
 <P>
 </LI>
 <LI><SPAN  CLASS="textsf">lxml</SPAN> <BR>
-http://codespeak.net/lxml/http://codespeak.net/lxml/
-
+<A NAME="tex2html176"
+  HREF="http://codespeak.net/lxml/">http://codespeak.net/lxml/</A>
 <P>
 </LI>
 <LI>Análisis de <SPAN  CLASS="textsf">XML</SPAN> y <SPAN  CLASS="textsf">HTML</SPAN> con <SPAN  CLASS="textsf">lxml</SPAN> <BR>
-http://codespeak.net/lxml/1.3/parsing.htmlhttp://codespeak.net/lxml/1.3/parsing.html
-
+<A NAME="tex2html177"
+  HREF="http://codespeak.net/lxml/1.3/parsing.html">http://codespeak.net/lxml/1.3/parsing.html</A>
 <P>
 </LI>
 <LI>XPath y <SPAN  CLASS="textsf">XSLT</SPAN> con <SPAN  CLASS="textsf">lxml</SPAN> <BR>
-http://codespeak.net/lxml/1.3/xpathxslt.htmlhttp://codespeak.net/lxml/1.3/xpathxslt.html
-
+<A NAME="tex2html178"
+  HREF="http://codespeak.net/lxml/1.3/xpathxslt.html">http://codespeak.net/lxml/1.3/xpathxslt.html</A>
 <P>
 </LI>
 <LI><SPAN  CLASS="textsf">xmlwitch</SPAN> <BR>
-http://github.com/galvez/xmlwitch/tree/masterhttp://github.com/galvez/xmlwitch/tree/master
-
+<A NAME="tex2html179"
+  HREF="http://github.com/galvez/xmlwitch/tree/master">http://github.com/galvez/xmlwitch/tree/master</A>
 <P>
 </LI>
 </UL>
@@ -1304,11 +1305,11 @@ http://github.com/galvez/xmlwitch/tree/masterhttp://github.com/galvez/xmlwitch/t
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<B> Siguiente:</B> <A NAME="tex2html780"
+<B> Siguiente:</B> <A NAME="tex2html983"
   HREF="node11.html">8. Serialización de Objetos</A>
-<B> Subir a:</B> <A NAME="tex2html778"
+<B> Subir a:</B> <A NAME="tex2html981"
   HREF="inmersionEnPython.html">Inmersión en Python 3</A>
-<B> Anterior:</B> <A NAME="tex2html772"
+<B> Anterior:</B> <A NAME="tex2html975"
   HREF="node9.html">6. Refactorizar</A></DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>

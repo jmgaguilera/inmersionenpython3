@@ -109,6 +109,8 @@
 \renewcommand{\cajaTextoAncho}[1]{\rawhtml <blockquote>#1</blockquote> \endrawhtml}
       %
 \renewcommand{\sqrt}[1]{sqrt(#1)}
+      %
+\renewcommand{\href}[2]{\htmladdnormallink{#2}{#1}}
 \setcounter{chapter}{-2}
 
 %
@@ -336,20 +338,20 @@
   \else\expandafter\vss\fi}%
 \providecommand{\selectlanguage}[1]{}%
 \makeatletter \tracingstats = 1 
-\providecommand{\Tau}{\textrm{T}}
-\providecommand{\Rho}{\textrm{R}}
-\providecommand{\Chi}{\textrm{X}}
-\providecommand{\Iota}{\textrm{J}}
-\providecommand{\Beta}{\textrm{B}}
-\providecommand{\Mu}{\textrm{M}}
-\providecommand{\Eta}{\textrm{H}}
-\providecommand{\Kappa}{\textrm{K}}
-\providecommand{\Epsilon}{\textrm{E}}
 \providecommand{\Alpha}{\textrm{A}}
-\providecommand{\omicron}{\textrm{o}}
+\providecommand{\Eta}{\textrm{H}}
 \providecommand{\Zeta}{\textrm{Z}}
+\providecommand{\Beta}{\textrm{B}}
+\providecommand{\Kappa}{\textrm{K}}
 \providecommand{\Omicron}{\textrm{O}}
+\providecommand{\Iota}{\textrm{J}}
 \providecommand{\Nu}{\textrm{N}}
+\providecommand{\Mu}{\textrm{M}}
+\providecommand{\Rho}{\textrm{R}}
+\providecommand{\Epsilon}{\textrm{E}}
+\providecommand{\Chi}{\textrm{X}}
+\providecommand{\omicron}{\textrm{o}}
+\providecommand{\Tau}{\textrm{T}}
 
 
 \begin{document}
@@ -452,9 +454,9 @@
 \stepcounter{chapter}
 \stepcounter{section}
 {\newpage\clearpage
-\lthtmlinlinemathA{tex2html_wrap_inline32305}%
+\lthtmlinlinemathA{tex2html_wrap_inline32292}%
 
-% latex2html id marker 32305
+% latex2html id marker 32292
 $ \reflectbox{R}$%
 \lthtmlinlinemathZ
 \lthtmlcheckvsize\clearpage}

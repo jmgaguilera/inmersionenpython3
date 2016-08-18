@@ -28,11 +28,11 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<B> Siguiente:</B> <A NAME="tex2html705"
+<B> Siguiente:</B> <A NAME="tex2html908"
   HREF="node7.html">4. Cadenas de texto</A>
-<B> Subir a:</B> <A NAME="tex2html703"
+<B> Subir a:</B> <A NAME="tex2html906"
   HREF="inmersionEnPython.html">Inmersión en Python 3</A>
-<B> Anterior:</B> <A NAME="tex2html697"
+<B> Anterior:</B> <A NAME="tex2html900"
   HREF="node5.html">2. Tipos de dato</A>
 <BR>
 <BR></DIV>
@@ -41,35 +41,35 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html706"
+<LI><A NAME="tex2html909"
   HREF="node6.html#SECTION00610000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN> Inmersión</A>
-<LI><A NAME="tex2html707"
+<LI><A NAME="tex2html910"
   HREF="node6.html#SECTION00620000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN> Trabajar con ficheros y directorios</A>
 <UL>
-<LI><A NAME="tex2html708"
+<LI><A NAME="tex2html911"
   HREF="node6.html#SECTION00621000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> El directorio de trabajo actual</A>
-<LI><A NAME="tex2html709"
+<LI><A NAME="tex2html912"
   HREF="node6.html#SECTION00622000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN> Trabajar con nombres de ficheros y directorios</A>
-<LI><A NAME="tex2html710"
+<LI><A NAME="tex2html913"
   HREF="node6.html#SECTION00623000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN> Listar directorios</A>
-<LI><A NAME="tex2html711"
+<LI><A NAME="tex2html914"
   HREF="node6.html#SECTION00624000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN> Obtener metadatos de ficheros</A>
-<LI><A NAME="tex2html712"
+<LI><A NAME="tex2html915"
   HREF="node6.html#SECTION00625000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">5</SPAN> Construcción de caminos absolutos</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html713"
+<LI><A NAME="tex2html916"
   HREF="node6.html#SECTION00630000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">3</SPAN> Listas por comprensión</A>
-<LI><A NAME="tex2html714"
+<LI><A NAME="tex2html917"
   HREF="node6.html#SECTION00640000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN> Diccionarios por comprensión</A>
 <UL>
-<LI><A NAME="tex2html715"
+<LI><A NAME="tex2html918"
   HREF="node6.html#SECTION00641000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Trucos que se pueden hacer</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html716"
+<LI><A NAME="tex2html919"
   HREF="node6.html#SECTION00650000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">5</SPAN> Conjuntos por comprensión</A>
-<LI><A NAME="tex2html717"
+<LI><A NAME="tex2html920"
   HREF="node6.html#SECTION00660000000000000000"><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">6</SPAN> Lecturas complementarias</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -82,6 +82,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <P>
 Nivel de dificultad:2 sobre 5
+
 <P>
 <DIV ALIGN="RIGHT">
 </DIV>
@@ -89,7 +90,8 @@ Nivel de dificultad:2 sobre 5
 no como en la ficción, para imaginar las cosas que no están realmente ahí,
 <BR>
 sino para entender aquellas que sí lo están.''
-<BR>--http://en.wikiquote.org/wiki/Richard_FeynmanRychard Feynman</I>
+<BR>--<A NAME="tex2html106"
+  HREF="http://en.wikiquote.org/wiki/Richard_Feynman">Rychard Feynman</A></I>
 </DIV>
 <P>
 
@@ -107,8 +109,10 @@ Este capítulo te explicará las listas por comprensión, diccionarios por compr
 </H1>
 
 <P>
-Python 3 posee un módulo denominado <SPAN  CLASS="textsf">os</SPAN> que es la contracción de ``operating system''<A NAME="tex2html66"
-  HREF="footnode.html#foot4729"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>. El módulo http://docs.python.org/3.1/library/os.html<SPAN  CLASS="textsf">os</SPAN> contiene un gran número de funciones para recuperar --y en algunos casos, modificar-- información sobre directorios, ficheros, procesos y variables del entorno local. Python hace un gran esfuerzo por ofrecer una <SPAN  CLASS="textsf">API</SPAN> unificada en todos los sistemas operativos que soporta, por lo que tus programas pueden funcionar en casi cualquier ordenador con el mínimo de código específico posible.
+Python 3 posee un módulo denominado <SPAN  CLASS="textsf">os</SPAN> que es la contracción de ``operating system''<A NAME="tex2html107"
+  HREF="footnode.html#foot4818"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>. El módulo <A NAME="tex2html108"
+  HREF="http://docs.python.org/3.1/library/os.html"><SPAN  CLASS="textsf">os</SPAN></A>
+contiene un gran número de funciones para recuperar --y en algunos casos, modificar-- información sobre directorios, ficheros, procesos y variables del entorno local. Python hace un gran esfuerzo por ofrecer una <SPAN  CLASS="textsf">API</SPAN> unificada en todos los sistemas operativos que soporta, por lo que tus programas pueden funcionar en casi cualquier ordenador con el mínimo de código específico posible.
 
 <P>
 
@@ -177,8 +181,8 @@ El módulo <SPAN  CLASS="textsf">os</SPAN> contiene dos funciones que te permite
 
 <P>
 </LI>
-<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Utiliza la función <SPAN  CLASS="textsf">os.getcwd()</SPAN> para recuperar el directorio de trabajo actual. Cuando ejecutas la consola interactiva, Python toma como directorio de trabajo actual aquél en el que te encontrases en el sistema operativo antes de entrar en la consola; si ejecutas la consola desde una opción de menú del sistema operativo, el directorio de trabajo será aquél en el que se encuentre el programa ejecutable de Python o tu directorio de trabajo por defecto<A NAME="tex2html67"
-  HREF="footnode.html#foot4756"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>.
+<LI><SPAN  CLASS="textit">Línea 2:</SPAN> Utiliza la función <SPAN  CLASS="textsf">os.getcwd()</SPAN> para recuperar el directorio de trabajo actual. Cuando ejecutas la consola interactiva, Python toma como directorio de trabajo actual aquél en el que te encontrases en el sistema operativo antes de entrar en la consola; si ejecutas la consola desde una opción de menú del sistema operativo, el directorio de trabajo será aquél en el que se encuentre el programa ejecutable de Python o tu directorio de trabajo por defecto<A NAME="tex2html109"
+  HREF="footnode.html#foot4845"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>.
 
 <P>
 </LI>
@@ -739,48 +743,48 @@ Por último mostraré la sintaxis para generar conjuntos por comprensión. Es mu
 <P>
 
 <UL>
-<LI>http://docs.python.org/3.1/library/os.htmlmódulo <SPAN  CLASS="textsf">os</SPAN>
-
+<LI><A NAME="tex2html110"
+  HREF="http://docs.python.org/3.1/library/os.html">módulo <SPAN  CLASS="textsf">os</SPAN></A>
 <P>
 </LI>
-<LI>http://www.doughellmann.com/PyMOTW/os/<SPAN  CLASS="textsf">os</SPAN> -- Portabilidad en el acceso a características específicas del sistema operativo
-
+<LI><A NAME="tex2html111"
+  HREF="http://www.doughellmann.com/PyMOTW/os/"><SPAN  CLASS="textsf">os</SPAN> -- Portabilidad en el acceso a características específicas del sistema operativo</A>
 <P>
 </LI>
-<LI>http://docs.python.org/3.1/library/os.path.htmlmódulo <SPAN  CLASS="textsf">os.path</SPAN>
-
+<LI><A NAME="tex2html112"
+  HREF="http://docs.python.org/3.1/library/os.path.html">módulo <SPAN  CLASS="textsf">os.path</SPAN></A>
 <P>
 </LI>
-<LI>http://www.doughellmann.com/PyMOTW/ospath/Manipulación de los nombres de fichero independiente de la plataforma -- <SPAN  CLASS="textsf">os.path</SPAN>
-
+<LI><A NAME="tex2html113"
+  HREF="http://www.doughellmann.com/PyMOTW/ospath/">Manipulación de los nombres de fichero independiente de la plataforma -- <SPAN  CLASS="textsf">os.path</SPAN></A>
 <P>
 </LI>
-<LI>http://docs.python.org/3.1/library/glob.htmlmódulo <SPAN  CLASS="textsf">glob</SPAN>
-
+<LI><A NAME="tex2html114"
+  HREF="http://docs.python.org/3.1/library/glob.html">módulo <SPAN  CLASS="textsf">glob</SPAN></A>
 <P>
 </LI>
-<LI>http://www.doughellmann.com/PyMOTW/glob/Patrones de búsqueda de ficheros -- <SPAN  CLASS="textsf">glob</SPAN>
-
+<LI><A NAME="tex2html115"
+  HREF="http://www.doughellmann.com/PyMOTW/glob/">Patrones de búsqueda de ficheros -- <SPAN  CLASS="textsf">glob</SPAN></A>
 <P>
 </LI>
-<LI>http://docs.python.org/3.1/library/time.htmlmódulo <SPAN  CLASS="textsf">time</SPAN>
-
+<LI><A NAME="tex2html116"
+  HREF="http://docs.python.org/3.1/library/time.html">módulo <SPAN  CLASS="textsf">time</SPAN></A>
 <P>
 </LI>
-<LI>http://www.doughellmann.com/PyMOTW/time/Funciones para manipulación de hora - <SPAN  CLASS="textsf">time</SPAN>
-
+<LI><A NAME="tex2html117"
+  HREF="http://www.doughellmann.com/PyMOTW/time/">Funciones para manipulación de hora - <SPAN  CLASS="textsf">time</SPAN></A>
 <P>
 </LI>
-<LI>http://docs.python.org/3.1/tutorial/datastructures.html#list-comprehensionsListas por comprensión
-
+<LI><A NAME="tex2html118"
+  HREF="http://docs.python.org/3.1/tutorial/datastructures.html#list-comprehensions">Listas por comprensión</A>
 <P>
 </LI>
-<LI>http://docs.python.org/3.1/tutorial/datastructures.html#nested-list-comprehensionsComprensiones anidadas
-
+<LI><A NAME="tex2html119"
+  HREF="http://docs.python.org/3.1/tutorial/datastructures.html#nested-list-comprehensions">Comprensiones anidadas</A>
 <P>
 </LI>
-<LI>http://docs.python.org/3.1/tutorial/datastructures.html#looping-techniquesTécnicas para hacer bucles
-
+<LI><A NAME="tex2html120"
+  HREF="http://docs.python.org/3.1/tutorial/datastructures.html#looping-techniques">Técnicas para hacer bucles</A>
 <P>
 </LI>
 </UL>
@@ -788,11 +792,11 @@ Por último mostraré la sintaxis para generar conjuntos por comprensión. Es mu
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<B> Siguiente:</B> <A NAME="tex2html705"
+<B> Siguiente:</B> <A NAME="tex2html908"
   HREF="node7.html">4. Cadenas de texto</A>
-<B> Subir a:</B> <A NAME="tex2html703"
+<B> Subir a:</B> <A NAME="tex2html906"
   HREF="inmersionEnPython.html">Inmersión en Python 3</A>
-<B> Anterior:</B> <A NAME="tex2html697"
+<B> Anterior:</B> <A NAME="tex2html900"
   HREF="node5.html">2. Tipos de dato</A></DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>

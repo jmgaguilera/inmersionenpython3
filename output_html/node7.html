@@ -28,11 +28,11 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<B> Siguiente:</B> <A NAME="tex2html727"
+<B> Siguiente:</B> <A NAME="tex2html930"
   HREF="node8.html">5. Clases e iteradores</A>
-<B> Subir a:</B> <A NAME="tex2html725"
+<B> Subir a:</B> <A NAME="tex2html928"
   HREF="inmersionEnPython.html">Inmersión en Python 3</A>
-<B> Anterior:</B> <A NAME="tex2html719"
+<B> Anterior:</B> <A NAME="tex2html922"
   HREF="node6.html">3. Comprensiones</A>
 <BR>
 <BR></DIV>
@@ -41,33 +41,33 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Apartados</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html728"
+<LI><A NAME="tex2html931"
   HREF="node7.html#SECTION00710000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Temas aburridos que debes conocer antes de la inmersión</A>
-<LI><A NAME="tex2html729"
+<LI><A NAME="tex2html932"
   HREF="node7.html#SECTION00720000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Unicode</A>
-<LI><A NAME="tex2html730"
+<LI><A NAME="tex2html933"
   HREF="node7.html#SECTION00730000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN> Inmersión</A>
-<LI><A NAME="tex2html731"
+<LI><A NAME="tex2html934"
   HREF="node7.html#SECTION00740000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN> Formatear cadenas</A>
 <UL>
-<LI><A NAME="tex2html732"
+<LI><A NAME="tex2html935"
   HREF="node7.html#SECTION00741000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Nombres de campos compuestos</A>
-<LI><A NAME="tex2html733"
+<LI><A NAME="tex2html936"
   HREF="node7.html#SECTION00742000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Especificaciones de formato</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html734"
+<LI><A NAME="tex2html937"
   HREF="node7.html#SECTION00750000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN> Otros métodos habituales de manipulación de cadenas</A>
 <UL>
-<LI><A NAME="tex2html735"
+<LI><A NAME="tex2html938"
   HREF="node7.html#SECTION00751000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> Troceado de cadenas</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html736"
+<LI><A NAME="tex2html939"
   HREF="node7.html#SECTION00760000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN> Cadenas de texto y Bytes</A>
-<LI><A NAME="tex2html737"
+<LI><A NAME="tex2html940"
   HREF="node7.html#SECTION00770000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN> Postdata: Codificación de  caracteres del código fuente de Python</A>
-<LI><A NAME="tex2html738"
+<LI><A NAME="tex2html941"
   HREF="node7.html#SECTION00780000000000000000"><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN> Lecturas recomendadas</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -80,6 +80,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <P>
 Nivel de dificultad:3 sobre 5
+
 <P>
 <DIV ALIGN="RIGHT">
 </DIV>
@@ -94,7 +95,11 @@ Nivel de dificultad:3 sobre 5
 </H1>
 
 <P>
-¿Sabías que la gente de http://en.wikipedia.org/wiki/Bougainville_ProvinceBougainville tiene el alfabeto más pequeño del mundo? El alfabeto http://en.wikipedia.org/wiki/Rotokas_alphabetRotokas está compuesto únicamente por 12 letras: A, E, G, I, K, O, P, R, S, T, U y V. En el otro lado del espectro los lenguajes como el Chino, Japonés y Koreano tienen miles de caracteres. El inglés, desde luego, tiene 26 letras --52 si cuentas las mayúsculas y minúsculas de forma separada-- más un puñado de símbolos de puntuación <SPAN  CLASS="textit">!@#$%&amp;?</SPAN>.
+¿Sabías que la gente de <A NAME="tex2html122"
+  HREF="http://en.wikipedia.org/wiki/Bougainville_Province">Bougainville</A>
+tiene el alfabeto más pequeño del mundo? El alfabeto <A NAME="tex2html123"
+  HREF="http://en.wikipedia.org/wiki/Rotokas_alphabet">Rotokas</A>
+está compuesto únicamente por 12 letras: A, E, G, I, K, O, P, R, S, T, U y V. En el otro lado del espectro los lenguajes como el Chino, Japonés y Koreano tienen miles de caracteres. El inglés, desde luego, tiene 26 letras --52 si cuentas las mayúsculas y minúsculas de forma separada-- más un puñado de símbolos de puntuación <SPAN  CLASS="textit">!@#$%&amp;?</SPAN>.
 
 <P>
 Cuando las personas hablan sobre ``texto'' piensan en ``caracteres y símbolos en la pantalla del ordenador''. Pero los ordenadores no conocen ni símbolos ni caracteres, conocen bits y bytes. Cada elemento textual que ves en la pantalla está almacenado con una <SPAN  CLASS="textsf">codificación de caracteres</SPAN> particular. Explicándolo de manera informal, la codificación de caracteres proporciona una conversión entre lo que ves en la pantalla y lo que el ordenador realmente almacena en memoria o en disco. Existen muchas codificaciones de caracteres diferentes, algunas optimizadas para determinados lenguajes como el ruso, el chino o el inglés, y otras que se pueden utilizar para diferentes lenguajes.
@@ -127,8 +132,8 @@ Ahora piensa en la aparición de las redes globales y en el correo y la web. Muc
 Ahora piensa en intentar almacenar diversos documentos de texto en el mismo lugar, como en una tabla de una misma base de datos que almacena todo el correo electrónico que hayas recibido. Aún necesitas almacenar la codificación de caracteres junto con cada correo electrónico para que se pueda leer apropiadamente. ¿Parece difícil? Prueba a buscar en tu base de datos de correos, eso significa convertir entre múltiples tablas de codificación de caracteres sobre la marcha. ¿No suena divertido?.
 
 <P>
-Piensa ahora en la posibilidad de documentos multilíngües, en donde aparecen caracteres en diferentes lenguajes<A NAME="tex2html68"
-  HREF="footnode.html#foot5929"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>. Y, por supuesto, querrás buscar el contenido de <SPAN  CLASS="textit">esos</SPAN> documentos.
+Piensa ahora en la posibilidad de documentos multilíngües, en donde aparecen caracteres en diferentes lenguajes<A NAME="tex2html121"
+  HREF="footnode.html#foot6053"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>. Y, por supuesto, querrás buscar el contenido de <SPAN  CLASS="textit">esos</SPAN> documentos.
 
 <P>
 Ahora llora un rato, porque todo lo que creías conocer sobre las cadenas de texto es erróneo, y no existe algo así como el ``texto plano''.
@@ -155,12 +160,12 @@ Existe una tabla de codificación Unicode que utiliza cuatro bytes por cada car�
 Incluso aunque existen muchos caracteres Unicode, resulta que la mayoría de la gente nunca usará nada más allá de los primeros 65535. Por eso existe otra codificación Unicode denominada <SPAN  CLASS="textsf">UTF-16</SPAN> (16 bits son 2 bytes) que codifica cada uno de los caracteres de 0 a 65535 como dos bytes. Además utiliza algunos ``trucos sucios'' por si necesitas representar aquellos caracteres que se usan raramente y que están más allá del 65535. La ventaja más obvia es que esta tabla de codificación de caracteres es el doble de eficiente que la de <SPAN  CLASS="textsf">UTF-32</SPAN> puesto que cada carácter requiere únicamente dos bytes para almacenarse, en lugar de cuatro bytes. Aún se puede encontrar fácilmente el enésimo carácter de una cadena en un tiempo constante, siempre que se asuma que no existen caracteres especiales de los que están por encima de 65535. Lo que suele ser una buena asunción... ¡hasta el momento en que no lo es!
 
 <P>
-También existen algunos inconvenientes no tan obvios tanto en <SPAN  CLASS="textsf">UTF-32</SPAN> y <SPAN  CLASS="textsf">UTF-8</SPAN>. Los ordenadores de sistemas diferentes suelen almacenar los bytes de diferentes formas. Esto significa que el carácter <SPAN  CLASS="textsf">U+4E2D</SPAN> podría almacenarse en <SPAN  CLASS="textsf">UTF-16</SPAN> bien como <SPAN  CLASS="textsf">4E 2D</SPAN> o como <SPAN  CLASS="textsf">2D 4E</SPAN>, dependiendo de que el sistema sea ``big-endian'' o ``little-endian''<A NAME="tex2html69"
-  HREF="footnode.html#foot5497"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> (para UTF-32 existen más posibilidades de ordenación de los bytes). Mientras tus documentos no dejen tu ordenador estás seguro --las diferentes aplicaciones del mismo ordenador utilizarán la misma ordenación de bytes. Pero en el momento que transfieras los documentos entre sistemas, tal vez a través de Internet, vas a necesitar una forma de indicar el orden en el que se han almacenado los bytes. De otra forma el sistema que recibe los datos no tiene forma de saber si la secuencia de dos bytes <SPAN  CLASS="textsf">4E 2D</SPAN> significa <SPAN  CLASS="textsf">U+4E2D</SPAN> o <SPAN  CLASS="textsf">U+2D4E</SPAN>.
+También existen algunos inconvenientes no tan obvios tanto en <SPAN  CLASS="textsf">UTF-32</SPAN> y <SPAN  CLASS="textsf">UTF-8</SPAN>. Los ordenadores de sistemas diferentes suelen almacenar los bytes de diferentes formas. Esto significa que el carácter <SPAN  CLASS="textsf">U+4E2D</SPAN> podría almacenarse en <SPAN  CLASS="textsf">UTF-16</SPAN> bien como <SPAN  CLASS="textsf">4E 2D</SPAN> o como <SPAN  CLASS="textsf">2D 4E</SPAN>, dependiendo de que el sistema sea ``big-endian'' o ``little-endian''<A NAME="tex2html124"
+  HREF="footnode.html#foot5621"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> (para UTF-32 existen más posibilidades de ordenación de los bytes). Mientras tus documentos no dejen tu ordenador estás seguro --las diferentes aplicaciones del mismo ordenador utilizarán la misma ordenación de bytes. Pero en el momento que transfieras los documentos entre sistemas, tal vez a través de Internet, vas a necesitar una forma de indicar el orden en el que se han almacenado los bytes. De otra forma el sistema que recibe los datos no tiene forma de saber si la secuencia de dos bytes <SPAN  CLASS="textsf">4E 2D</SPAN> significa <SPAN  CLASS="textsf">U+4E2D</SPAN> o <SPAN  CLASS="textsf">U+2D4E</SPAN>.
 
 <P>
-Para resolver <SPAN  CLASS="textit">este</SPAN> problema, las codificaciones multibyte de Unicode definen el ``Byte Orden Mark'' (BOM)<A NAME="tex2html70"
-  HREF="footnode.html#foot5502"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>, que es un carácter especial no imprimible que se puede incluir al comienzo de tu documento para indica qué ordenación de bytes tiene el documento. Para <SPAN  CLASS="textsf">UTF-16</SPAN> la marca de ordenación de bytes es <SPAN  CLASS="textsf">U+FEFF</SPAN>, por lo que si recibes un documento <SPAN  CLASS="textsf">UTF-16</SPAN> que comienza con los bytes <SPAN  CLASS="textsf">FF FE</SPAN>, ya sabes en qué forma vienen ordenados los bytes; si comienza con <SPAN  CLASS="textsf">FE FF</SPAN> sabes que el orden es el contrario.
+Para resolver <SPAN  CLASS="textit">este</SPAN> problema, las codificaciones multibyte de Unicode definen el ``Byte Orden Mark'' (BOM)<A NAME="tex2html125"
+  HREF="footnode.html#foot5626"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>, que es un carácter especial no imprimible que se puede incluir al comienzo de tu documento para indica qué ordenación de bytes tiene el documento. Para <SPAN  CLASS="textsf">UTF-16</SPAN> la marca de ordenación de bytes es <SPAN  CLASS="textsf">U+FEFF</SPAN>, por lo que si recibes un documento <SPAN  CLASS="textsf">UTF-16</SPAN> que comienza con los bytes <SPAN  CLASS="textsf">FF FE</SPAN>, ya sabes en qué forma vienen ordenados los bytes; si comienza con <SPAN  CLASS="textsf">FE FF</SPAN> sabes que el orden es el contrario.
 
 <P>
 Aún así, <SPAN  CLASS="textsf">UTF-16</SPAN> no es exactamente el ideal, especialmente si la mayor parte de los caracteres que utilizas son <SPAN  CLASS="textsf">ASCII</SPAN>. Si lo piensas, incluso una página web china contendrá muchos caracteres <SPAN  CLASS="textsf">ASCII</SPAN> --todos los elementos y atributos que rodean a los caracteres imprimibles chinos. Poder encontrar el ``enésimo'' carácter está bien, pero existe el problema de los caracteres que requieren más de dos bytes, lo que significa que no puedes <SPAN  CLASS="textit">garantizar</SPAN> que todos los caracteres ocupan exactamente dos bytes, por lo que en la práctica no puedes encontrar el carácter de la posición ``enésima'' en un tiempo constante a no ser que mantengas un índice separado. Y muchacho, te aseguro que hay mucho texto <SPAN  CLASS="textsf">ASCII</SPAN> por el mundo...
@@ -175,8 +180,8 @@ Otras personas valoraron estas preguntas y plantearon una solución:
 
 
 <P>
-<SPAN  CLASS="textsf">UTF-8</SPAN> es un sistema de codificación de <SPAN  CLASS="textit">longitud variable</SPAN> para Unicode. Esto significa que los caracteres pueden utilizar diferente número de bytes. Para los caracteres <SPAN  CLASS="textsf">ASCII</SPAN> utiliza un único byte por carácter. De hecho, utiliza exactamente los mismos bytes que <SPAN  CLASS="textsf">ASCII</SPAN> por lo que los 128 primeros caracteres son indistinguibles. Los caracteres ``latinos extendidos'' como la ñ o la ö utilizan dos bytes<A NAME="tex2html71"
-  HREF="footnode.html#foot5930"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>. Los caracteres chinos utilizan tres bytes, y los caracteres más ``raros'' utilizan cuatro.
+<SPAN  CLASS="textsf">UTF-8</SPAN> es un sistema de codificación de <SPAN  CLASS="textit">longitud variable</SPAN> para Unicode. Esto significa que los caracteres pueden utilizar diferente número de bytes. Para los caracteres <SPAN  CLASS="textsf">ASCII</SPAN> utiliza un único byte por carácter. De hecho, utiliza exactamente los mismos bytes que <SPAN  CLASS="textsf">ASCII</SPAN> por lo que los 128 primeros caracteres son indistinguibles. Los caracteres ``latinos extendidos'' como la ñ o la ö utilizan dos bytes<A NAME="tex2html126"
+  HREF="footnode.html#foot6054"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>. Los caracteres chinos utilizan tres bytes, y los caracteres más ``raros'' utilizan cuatro.
 
 <P>
 Desventajas: debido a que los caracteres pueden ocupar un número diferente de bytes, encontrar el carácter de la posición ``enésima'' es una operación de orden de complejidad <SPAN  CLASS="textsf">O(n)</SPAN> --lo que significa que cuanto más larga sea la cadena, más tiempo lleva encontrar un carácter específico. Asimismo, hay que andar codificando y decodificando entre bytes y caracteres.
@@ -445,7 +450,8 @@ Así es como funciona:
 
 <P>
 </LI>
-<LI><SPAN  CLASS="textsf">sys.modules['parahumanos']</SPAN> retorna el objeto <SPAN  CLASS="textsf">parahumanos</SPAN> que acabas de importar. El campo de reemplazo <SPAN  CLASS="textsf">sys.modules[parahumanos]</SPAN> se refiere al módulo <SPAN  CLASS="textsf">parahumanos</SPAN>. Observa que existe una ligera diferencia de sintaxis. En el código de Python, las claves del diccionario es de tipo cadena; para referirse a ellas, es necesario poner comillas alrededor del nombre del módulo (<SPAN  CLASS="textsf">'parahumanos'</SPAN>). Pero dentro de los campos de sustitución no se ponen las comillas alrededor del nombre de la clave del diccionario (<SPAN  CLASS="textsf">parahumanos</SPAN>). Según el http://www.python.org/dev/peps/pep-3101/PEP 3101: Formateo avanzado de cadenas: ``Las reglas para el parseo de la clave de un campo de sustitución son muy simples, si comienza por un dígito, se trata como numérica, en caso contrario se interpreta como una cadena''.
+<LI><SPAN  CLASS="textsf">sys.modules['parahumanos']</SPAN> retorna el objeto <SPAN  CLASS="textsf">parahumanos</SPAN> que acabas de importar. El campo de reemplazo <SPAN  CLASS="textsf">sys.modules[parahumanos]</SPAN> se refiere al módulo <SPAN  CLASS="textsf">parahumanos</SPAN>. Observa que existe una ligera diferencia de sintaxis. En el código de Python, las claves del diccionario es de tipo cadena; para referirse a ellas, es necesario poner comillas alrededor del nombre del módulo (<SPAN  CLASS="textsf">'parahumanos'</SPAN>). Pero dentro de los campos de sustitución no se ponen las comillas alrededor del nombre de la clave del diccionario (<SPAN  CLASS="textsf">parahumanos</SPAN>). Según el <A NAME="tex2html127"
+  HREF="http://www.python.org/dev/peps/pep-3101/">PEP 3101</A>: Formateo avanzado de cadenas: ``Las reglas para el parseo de la clave de un campo de sustitución son muy simples, si comienza por un dígito, se trata como numérica, en caso contrario se interpreta como una cadena''.
 
 <P>
 </LI>
@@ -505,8 +511,10 @@ Dentro del campo de sustitución se utiliza el símbolo de dos puntos (<SPAN  CL
 </TABLE>
 
 <P>
-Para conocer los detalles exactos de los especificadores de formato puedes consultar el apartado http://docs.python.org/3.1/library/string.html#format-specification-mini-languageMini-lenguaje de especificación de formato<A NAME="tex2html72"
-  HREF="footnode.html#foot5932"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A> de la documentación oficial de Python 3.
+Para conocer los detalles exactos de los especificadores de formato puedes consultar el apartado <A NAME="tex2html130"
+  HREF="http://docs.python.org/3.1/library/string.html#format-specification-mini-language">Mini-lenguaje de especificación de formato<A NAME="tex2html128"
+  HREF="footnode.html#foot6201"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A></A>
+de la documentación oficial de Python 3.
 
 <P>
 
@@ -617,8 +625,8 @@ Pongamos un caso muy común. Supón que tienes una cadena de texto en forma de p
 
 <P>
 <BLOCKQUOTE>
-El ejemplo anterior, explica un caso que se parece a lo que habría que hacer para reconocer los parámetros de una <SPAN  CLASS="textsf">URL</SPAN>. Pero en la vida real, el reconocimiento de los parámetros de una <SPAN  CLASS="textsf">URL</SPAN> es más complejo. Si vas a tener que reconocer los parámetros que recibes mediante una <SPAN  CLASS="textsf">URL</SPAN> utiliza la función de la librería <SPAN  CLASS="textsf">urlib.parse</SPAN> denominada <SPAN  CLASS="textsf">parse_qs()</SPAN><A NAME="tex2html73"
-  HREF="footnode.html#foot5933"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>, que reconoce los casos más complejos.
+El ejemplo anterior, explica un caso que se parece a lo que habría que hacer para reconocer los parámetros de una <SPAN  CLASS="textsf">URL</SPAN>. Pero en la vida real, el reconocimiento de los parámetros de una <SPAN  CLASS="textsf">URL</SPAN> es más complejo. Si vas a tener que reconocer los parámetros que recibes mediante una <SPAN  CLASS="textsf">URL</SPAN> utiliza la función de la librería <SPAN  CLASS="textsf">urlib.parse</SPAN> denominada <SPAN  CLASS="textsf">parse_qs()</SPAN><A NAME="tex2html131"
+  HREF="footnode.html#foot6057"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>, que reconoce los casos más complejos.
 
 </BLOCKQUOTE>
 
@@ -629,8 +637,8 @@ El ejemplo anterior, explica un caso que se parece a lo que habría que hacer pa
 </H2>
 
 <P>
-Cuando ya has definido una cadena puedes recuperar cualquier parte de ella creando una nueva cadena de texto. A esto se denomina troceado/particionado de cadenas<A NAME="tex2html74"
-  HREF="footnode.html#foot5754"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A>. Esto funciona de forma idéntica a como funciona para las listas, lo que tiene sentido, porque las cadenas de texto no son más que cadenas de caracteres.
+Cuando ya has definido una cadena puedes recuperar cualquier parte de ella creando una nueva cadena de texto. A esto se denomina troceado/particionado de cadenas<A NAME="tex2html133"
+  HREF="footnode.html#foot5878"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A>. Esto funciona de forma idéntica a como funciona para las listas, lo que tiene sentido, porque las cadenas de texto no son más que cadenas de caracteres.
 
 <P>
 <TABLE  WIDTH="100%">
@@ -907,8 +915,10 @@ Técnicamente la indicación de la codificación de caracteres puede estar en la
 </TABLE>
 
 <P>
-Para disponer de más información consulta la propuesta de mejora de Python http://www.python.org/dev/peps/pep-0263/PEP 263<A NAME="tex2html75"
-  HREF="footnode.html#foot5934"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN></SUP></A>.
+Para disponer de más información consulta la propuesta de mejora de Python <A NAME="tex2html136"
+  HREF="http://www.python.org/dev/peps/pep-0263/">PEP 263</A><A NAME="tex2html134"
+
+HREF="footnode.html#foot6058"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN></SUP></A>.
 
 <P>
 
@@ -922,12 +932,12 @@ Sobre Unicode en Python:
 <P>
 
 <UL>
-<LI>Unicode en Python - http://docs.python.org/3.0/howto/unicode.htmlhttp://docs.python.org/3.0/howto/unicode.html 
-
+<LI>Unicode en Python - <A NAME="tex2html137"
+  HREF="http://docs.python.org/3.0/howto/unicode.html">http://docs.python.org/3.0/howto/unicode.html</A>
 <P>
 </LI>
-<LI>Qué hay nuevo en Python 3: Texto y datos en lugar de Unicode y 8-bits - http://docs.python.org/3.0/whatsnew/3.0.html#text-vs-data-instead-of-unicode-vs-8-bithttp://docs.python.org/3.0/whatsnew/3.0.html#text-vs-data-instead-of-unicode-vs-8-bit
-
+<LI>Qué hay nuevo en Python 3: Texto y datos en lugar de Unicode y 8-bits - <A NAME="tex2html138"
+  HREF="http://docs.python.org/3.0/whatsnew/3.0.html#text-vs-data-instead-of-unicode-vs-8-bit">http://docs.python.org/3.0/whatsnew/3.0.html#text-vs-data-instead-of-unicode-vs-8-bit</A>
 <P>
 </LI>
 </UL>
@@ -939,27 +949,23 @@ Sobre Unicode en general:
 
 <UL>
 <LI>El mínimo absoluto que todo programador debe conocer positiva y absolutamente sobre Unicode y codificación de caracteres (¡Sin excusas!):
-<BR>
-http://www.joelonsoftware.com/articles/Unicode.htmlhttp://www.joelonsoftware.com/articles/Unicode.html
-
+<BR><A NAME="tex2html139"
+  HREF="http://www.joelonsoftware.com/articles/Unicode.html">http://www.joelonsoftware.com/articles/Unicode.html</A>
 <P>
 </LI>
 <LI>Sobre las bondades de Unicode:
-<BR>
-http://www.tbray.org/ongoing/When/200x/2003/04/06/Unicodehttp://www.tbray.org/ongoing/When/200x/2003/04/06/Unicode
-
+<BR><A NAME="tex2html140"
+  HREF="http://www.tbray.org/ongoing/When/200x/2003/04/06/Unicode">http://www.tbray.org/ongoing/When/200x/2003/04/06/Unicode</A>
 <P>
 </LI>
 <LI>Sobre cadenas de caracteres:
-<BR>
-http://www.tbray.org/ongoing/When/200x/2003/04/13/Stringshttp://www.tbray.org/ongoing/When/200x/2003/04/13/Strings
-
+<BR><A NAME="tex2html141"
+  HREF="http://www.tbray.org/ongoing/When/200x/2003/04/13/Strings">http://www.tbray.org/ongoing/When/200x/2003/04/13/Strings</A>
 <P>
 </LI>
 <LI>Caracteres y bytes:
-<BR>
-http://www.tbray.org/ongoing/When/200x/2003/04/26/UTFhttp://www.tbray.org/ongoing/When/200x/2003/04/26/UTF
-
+<BR><A NAME="tex2html142"
+  HREF="http://www.tbray.org/ongoing/When/200x/2003/04/26/UTF">http://www.tbray.org/ongoing/When/200x/2003/04/26/UTF</A>
 <P>
 </LI>
 </UL>
@@ -971,15 +977,13 @@ Sobre codificación de caracteres en otros formatos:
 
 <UL>
 <LI>Codificación de caracteres en XML:
-<BR>
-http://feedparser.org/docs/character-encoding.htmlhttp://feedparser.org/docs/character-encoding.html
-
+<BR><A NAME="tex2html143"
+  HREF="http://feedparser.org/docs/character-encoding.html">http://feedparser.org/docs/character-encoding.html</A>
 <P>
 </LI>
 <LI>Codificación de caracteres en HTML:
-<BR>
-http://blog.whatwg.org/the-road-to-html-5-character-encodinghttp://blog.whatwg.org/the-road-to-html-5-character-encoding
-
+<BR><A NAME="tex2html144"
+  HREF="http://blog.whatwg.org/the-road-to-html-5-character-encoding">http://blog.whatwg.org/the-road-to-html-5-character-encoding</A>
 <P>
 </LI>
 </UL>
@@ -991,27 +995,23 @@ Sobre cadenas y formateo de cadenas:
 
 <UL>
 <LI><SPAN  CLASS="textsf">string</SPAN>--Operaciones comunes sobre cadenas:
-<BR>
-http://docs.python.org/3.1/library/string.htmlhttp://docs.python.org/3.1/library/string.html
-
+<BR><A NAME="tex2html145"
+  HREF="http://docs.python.org/3.1/library/string.html">http://docs.python.org/3.1/library/string.html</A>
 <P>
 </LI>
 <LI>Sintaxis de formateo de cadenas de texto:
-<BR>
-http://docs.python.org/3.1/library/string.html#formatstringshttp://docs.python.org/3.1/library/string.html#formatstrings
-
+<BR><A NAME="tex2html146"
+  HREF="http://docs.python.org/3.1/library/string.html#formatstrings">http://docs.python.org/3.1/library/string.html#formatstrings</A>
 <P>
 </LI>
 <LI>Especificación del minilenguaje de formato:
-<BR>
-http://docs.python.org/3.1/library/string.html#format-specification-mini-languagehttp://docs.python.org/3.1/library/string.html#format-specification-mini-language
-
+<BR><A NAME="tex2html147"
+  HREF="http://docs.python.org/3.1/library/string.html#format-specification-mini-language">http://docs.python.org/3.1/library/string.html#format-specification-mini-language</A>
 <P>
 </LI>
 <LI><SPAN  CLASS="textsf">PEP 3101:</SPAN> Formateo avanzado de cadenas:
-<BR>
-http://www.python.org/dev/peps/pep-3101/http://www.python.org/dev/peps/pep-3101/
-
+<BR><A NAME="tex2html148"
+  HREF="http://www.python.org/dev/peps/pep-3101/">http://www.python.org/dev/peps/pep-3101/</A>
 <P>
 </LI>
 </UL>
@@ -1019,11 +1019,11 @@ http://www.python.org/dev/peps/pep-3101/http://www.python.org/dev/peps/pep-3101/
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<B> Siguiente:</B> <A NAME="tex2html727"
+<B> Siguiente:</B> <A NAME="tex2html930"
   HREF="node8.html">5. Clases e iteradores</A>
-<B> Subir a:</B> <A NAME="tex2html725"
+<B> Subir a:</B> <A NAME="tex2html928"
   HREF="inmersionEnPython.html">Inmersión en Python 3</A>
-<B> Anterior:</B> <A NAME="tex2html719"
+<B> Anterior:</B> <A NAME="tex2html922"
   HREF="node6.html">3. Comprensiones</A></DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>

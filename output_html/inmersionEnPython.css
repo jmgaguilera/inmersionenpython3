@@ -39,3 +39,61 @@ SPAN.roman		{   }
 SPAN.textsf		{ font-style: italic  }
 SPAN.arabic		{   }
 SPAN.textit		{ font-style: italic  }
+
+
+body {
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+body, ul, p {
+    font-family:  Lato, Helvetica, Arial, sans-serif;
+    font-size:  18px;
+    line-height: 1.5;
+    font-weight: 400;
+    color: #111;
+    background-color: #fdfdfd;
+    -webkit-text-size-adjust: 100%;
+}
+
+blockquote, pre {
+	margin-left: 10%;
+	margin-right: 10%;
+	background-color: #F0f0f0;
+}
+
+pre {
+	font-size: 16px;
+}
+
+DIV.navigation {
+    background-color: #466E7A;
+    color: #D0D0D0;
+}
+
+DIV.navigation A:hover {
+	text-decoration: underline;
+}
+
+
+DIV.navigation A {
+	color: #fdfdfd;
+	text-decoration: none;
+}
+
+ul li A {
+	text-decoration: none;
+}
+
+ul li A:hover {
+	text-decoration: underline;
+}
+
+
+.ChildLinks li A {
+	text-decoration: none;
+}
+
+.ChildLinks li A:hover {
+	text-decoration: underline;
+}
